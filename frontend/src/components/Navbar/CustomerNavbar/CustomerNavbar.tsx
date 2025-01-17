@@ -30,8 +30,7 @@ const CustomerNavbar: React.FC = () => {
                     <li><a href="#" className={styles.cusNavItem}>Gói Vaccine </a></li>
                     <li><a href="#" className={styles.cusNavItem}>Cẩm Nang</a></li>
                     <li><a href="#" className={styles.cusNavItem}>Điều Khoản và Dịch Vụ</a></li>
-                    <li><a href="#" className={styles.cusNavItem}>Tin Tức</a></li>
-                    
+                    <li><a href="#" className={styles.cusNavItem}>Tin Tức</a></li>                
                 </ul>
                 <div className={styles.authButtonLink}>
                     <Button className={styles.authButton}>

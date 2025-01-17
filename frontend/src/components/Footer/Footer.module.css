@@ -15,6 +15,7 @@
   width: 100vw;
   margin: 0;
   box-sizing: border-box;
+  margin-top: 20px;
 }
 
 
@@ -40,7 +41,7 @@
   font-size: 20px;
   margin-bottom: 15px;
   font-weight: bold;
-  color: #f5a623;
+  color: #FFB400;
 }
 
 
@@ -63,7 +64,7 @@
 }
 
 .footerLink:hover {
-  color: #f5a623;
+  color: #FFB400;
 }
 
 
@@ -100,6 +101,6 @@
 }
 
 .socialIcon:hover {
-  background-color: #f5a623;
+  background-color: #2A388F;
   color: white;
 }
