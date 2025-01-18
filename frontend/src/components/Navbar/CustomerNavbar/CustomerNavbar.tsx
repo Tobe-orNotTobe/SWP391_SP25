@@ -40,9 +40,6 @@ const CustomerNavbar: React.FC = () => {
                     <Button className="authButton">
                         <MdLogin size={23} />Đăng Kí 
                     </Button>
-                    <Button className="authButton">
-                        <AiOutlineSchedule size={23} />Đặt Lịch Ngay 
-                    </Button>
                 </div>
             </nav>
         </header>
