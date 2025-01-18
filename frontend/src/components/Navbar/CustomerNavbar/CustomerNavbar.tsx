@@ -5,7 +5,6 @@ import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { GiPositionMarker } from "react-icons/gi";
 import { Button } from "antd";
 import { MdLogin } from "react-icons/md";
-import { AiOutlineSchedule } from "react-icons/ai";
 
 const CustomerNavbar: React.FC = () => {
     return (

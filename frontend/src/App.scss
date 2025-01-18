@@ -1,9 +1,17 @@
+@font-face {
+    font-family: 'MyriadPro';
+    src: url('../../../assets/font/Myriad_Pro_Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 
-    font-family: "Roboto", serif;
+    font-family: 'MyriadPro',"Roboto", serif;
     font-optical-sizing: auto;
     font-style: normal;
       

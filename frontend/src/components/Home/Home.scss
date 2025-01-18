@@ -40,43 +40,43 @@
     box-sizing: border-box; /* Ensure padding does not exceed dimensions */
 }
 
-.content {
+.briefSmallContent {
     margin-top: 40px;
     margin-left: 70px;
     display: flex;
     gap: 20px;
 }
 
-.fullContent {
+.briefFullContent {
     text-align: right;
 }
 
-.fullContent a {
+.briefFullContent a {
     color: white;
 }
 
-.text {
+.briefContentText {
     flex: 1;
 }
 
-.text h1 {
+.briefContentText h1 {
     font-size: 24px;
     margin-bottom: 20px;
 }
 
-.text p {
+.briefContentText p {
     font-size: 16px;
     line-height: 1.6;
 }
 
-.image {
+.briefContentImage {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.image img {
+.briefContentImage img {
     max-width: 80%;
     height: auto;
     border-radius: 8px;

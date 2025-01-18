@@ -31,16 +31,16 @@ const Home: React.FC = () => {
       </div>
       <div className="briefContent">
         {briefContent.map((item, index) => (
-          <div key={index} className="content">
-            <div className="text">
+          <div key={index} className="briefSmallContent">
+            <div className="briefContentText">
               <h1>{item.title}</h1>
               <p>{item.paragraph1}</p>
               <p>{item.paragraph2}</p>
-              <div className="fullContent">
+              <div className="briefFullContent">
                 <a href="#">Xem Thêm</a>
               </div>
             </div>
-            <div className="image">
+            <div className="briefContentImage">
               <img
                 src={`../../../src/assets/homepage/${item.image}`}
                 alt={item.title}
