@@ -1,9 +1,3 @@
-@font-face {
-    font-family: 'MyriadPro';
-    src: url('../../../assets/font/Myriad_Pro_Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
   
   /* Custom cho tổng nguyên 1 phần navbarnavbar */
   .customerHeader {
@@ -76,7 +70,7 @@
   
   .mainNavbarContainer {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     background-color: #FFFFFF; /* Màu nền */
     padding: 5px 30px; /* Khoảng cách trong */
@@ -92,7 +86,7 @@
   }
   
   .cusNavItem {
-    margin: 0 15px;
+    margin: 0 5px;
     text-decoration: none; 
     color: #2A388F;
     font-size: 15px;
