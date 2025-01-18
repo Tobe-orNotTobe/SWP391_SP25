@@ -1,13 +1,12 @@
 
-import Auth from "./components/Auth/Auth"
-
+import HomePage from "./pages/HomePage"
 
 function App() {
 
 
   return (
     <>
-      <Auth/>
+      <HomePage/>
     </>
   )
 }

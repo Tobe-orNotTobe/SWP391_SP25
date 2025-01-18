@@ -1,0 +1,107 @@
+  @font-face {
+    font-family: 'MyriadPro';
+    src: url('../../../assets/font/Myriad_Pro_Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  
+  .footerContainer {
+    font-family: 'MyriadPro';
+    background-color: #2A388F;
+    color: #FFB400;
+    padding: 20px 0;
+    font-family: Arial, sans-serif;
+    width: 100vw;
+    margin: 0;
+    box-sizing: border-box;
+    margin-top: 20px;
+  }
+  
+  
+  .footerContent {
+    display: flex;
+    justify-content: space-around; 
+    flex-wrap: wrap;
+    gap: 20px; 
+    max-width: 1200px; 
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+  
+  .footerSection {
+    flex: 1;
+    margin: 10px;
+    min-width: 200px; 
+  }
+  
+  
+  .footerSectionTitle {
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #FFB400;
+  }
+  
+  
+  .footerList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footerListItem {
+    margin-bottom: 8px;
+    color: white;
+  }
+  
+  .footerLink {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+  }
+  
+  .footerLink:hover {
+    color: #FFB400;
+  }
+  
+  
+  .contactSectionIcon {
+    margin-right: 8px;
+  }
+  
+  
+  .mapSection {
+    margin-top: 20px;
+    padding-left: 20px; 
+  }
+  
+  
+  .socialMedia {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+  }
+  
+  .socialIcon {
+    background-color: white;
+    color: #333;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 8px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .socialIcon:hover {
+    background-color: #2A388F;
+    color: white;
+  }
+  

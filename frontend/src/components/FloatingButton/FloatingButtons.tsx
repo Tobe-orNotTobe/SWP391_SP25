@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./FloatingButtons.module.css";
+import "./FloatingButtons.scss"
 import { FaArrowUp, FaFacebookMessenger, FaPhoneAlt } from "react-icons/fa";
 
 const FloatingButtons: React.FC = () => {
@@ -18,11 +18,11 @@ const FloatingButtons: React.FC = () => {
   };
 
   return (
-    <div className={styles.floatingButtons}>
+    <div className="floatingButtons">
       {/* Scroll to Top Button */}
       {showScrollButton && (
         <button
-          className={styles.scrollToTop}
+          className="scrollToTop"
           onClick={scrollToTop}
           aria-label="Scroll to top"
         >
@@ -34,7 +34,7 @@ const FloatingButtons: React.FC = () => {
         href="https://www.messenger.com/t/yourpageid"
         target="_blank"
         rel="noopener noreferrer"
-        className={styles.messenger}
+        className="messenger"
         aria-label="Chat with us on Messenger"
       >
         <FaFacebookMessenger />
@@ -45,7 +45,7 @@ const FloatingButtons: React.FC = () => {
         href="https://zalo.me/yourpageid"
         target="_blank"
         rel="noopener noreferrer"
-        className={styles.zalo}
+        className="zalo"
         aria-label="Chat with us on Zalo"
       >
         <FaPhoneAlt />
