@@ -12,13 +12,14 @@ const CustomerNavbar: React.FC = () => {
         <header className="customerHeader">
             <div className="cusTopNavbar">
                 <div className="cusTopLogo">
-                    <span><img src={logo} alt="Logo" /></span>
+                    <img src={logo} alt="Logo" />
                 </div>
                 <div className="contactInfoTop">
-                    <span><GiPositionMarker size={22} />Lô E2a-7, Đ. D1, Long Thạnh Mỹ, TP.Thủ Đức, HCM</span>
+                    <span><GiPositionMarker size={22} /></span>
+                    <p>Lô E2a-7, Đ. D1, Long Thạnh Mỹ, TP.Thủ Đức, HCM</p>
                 </div>
                 <div className="hotLineTop">
-                    <span className="phoneNumber">091 222 4434</span>
+                    <span className="phoneNumber">Hotline: 091 222 4434</span>
                     <span className="timeSchedule">Mở cửa 7h30-17h/ T2-CN xuyên trưa</span>
                 </div>
             </div>
