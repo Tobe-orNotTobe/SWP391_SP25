@@ -1,0 +1,659 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6C9169A8-C8F8-4172-8B4E-16717E9475DF}|ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.common\\helper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6C9169A8-C8F8-4172-8B4E-16717E9475DF}|ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj|solutionrelative:childvaccinesystem.common\\helper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6C9169A8-C8F8-4172-8B4E-16717E9475DF}|ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.common\\helper\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6C9169A8-C8F8-4172-8B4E-16717E9475DF}|ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj|solutionrelative:childvaccinesystem.common\\helper\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\models\\childvaccinesystemdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\models\\childvaccinesystemdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\vaccinationrecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\vaccinationrecord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119041759_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\doctorworkschedules.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\doctorworkschedules.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\bookingdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\bookingdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\reaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\reaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\pricingpolicy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\pricingpolicy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\vaccinationschedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\vaccinationschedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\vaccine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\vaccine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\children.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\children.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040905_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040719_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040352_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040253_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035902_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035738_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035301_FirstMigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\combodetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\combodetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\combovaccine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\combovaccine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\vaccineinventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\vaccineinventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\feedback.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\feedback.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|solutionrelative:childvaccinesystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6C9169A8-C8F8-4172-8B4E-16717E9475DF}|ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.common\\childvaccinesystem.common.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{6C9169A8-C8F8-4172-8B4E-16717E9475DF}|ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj|solutionrelative:childvaccinesystem.common\\childvaccinesystem.common.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|solutionrelative:childvaccinesystem.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.api\\childvaccinesystem.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|solutionrelative:childvaccinesystem.api\\childvaccinesystem.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\childvaccinesystem.data.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\childvaccinesystem.data.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16266817-1093-4F75-8A46-DF1FACE6E259}|ChildVaccineSystem.Repository\\ChildVaccineSystem.Repository.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.repository\\childvaccinesystem.repository.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{16266817-1093-4F75-8A46-DF1FACE6E259}|ChildVaccineSystem.Repository\\ChildVaccineSystem.Repository.csproj|solutionrelative:childvaccinesystem.repository\\childvaccinesystem.repository.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F2BB6EF0-64C1-4229-BEBF-F629D10F0C5B}|ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.repositorycontract\\childvaccinesystem.repositorycontract.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{F2BB6EF0-64C1-4229-BEBF-F629D10F0C5B}|ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj|solutionrelative:childvaccinesystem.repositorycontract\\childvaccinesystem.repositorycontract.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00A1EBEB-BAF1-422C-BAE6-991C93C1DCF4}|ChildVaccineSystem.Service\\ChildVaccineSystem.Service.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.service\\childvaccinesystem.service.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{00A1EBEB-BAF1-422C-BAE6-991C93C1DCF4}|ChildVaccineSystem.Service\\ChildVaccineSystem.Service.csproj|solutionrelative:childvaccinesystem.service\\childvaccinesystem.service.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ADEFB207-6AC6-45FC-9740-CE4F1825ABF0}|ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.servicecontract\\childvaccinesystem.servicecontract.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{ADEFB207-6AC6-45FC-9740-CE4F1825ABF0}|ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj|solutionrelative:childvaccinesystem.servicecontract\\childvaccinesystem.servicecontract.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|d:\\code\\swp391\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\migrations\\20250119042104_firstmigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\migrations\\20250119042104_firstmigration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MappingProfile.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\Helper\\MappingProfile.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Common\\Helper\\MappingProfile.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\Helper\\MappingProfile.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Common\\Helper\\MappingProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T04:23:06.404Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "20250119042104_FirstMigration.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119042104_FirstMigration.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Migrations\\20250119042104_FirstMigration.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119042104_FirstMigration.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Migrations\\20250119042104_FirstMigration.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T04:21:04.313Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "20250119041759_FirstMigration.cs",
+              "DocumentMoniker": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119041759_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119041759_FirstMigration.cs",
+              "ToolTip": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119041759_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119041759_FirstMigration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T04:17:59.314Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "VaccinationRecord.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\VaccinationRecord.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\VaccinationRecord.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\VaccinationRecord.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\VaccinationRecord.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAA9wBwAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:42:20.042Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BookingDetail.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\BookingDetail.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\BookingDetail.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\BookingDetail.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\BookingDetail.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAYwBoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:45:29.559Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DoctorWorkSchedules.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\DoctorWorkSchedules.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\DoctorWorkSchedules.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\DoctorWorkSchedules.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\DoctorWorkSchedules.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:38:26.045Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\User.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\User.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\User.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\User.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAIwBEAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:42:20.681Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ChildVaccineSystemDBContext.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Models\\ChildVaccineSystemDBContext.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Models\\ChildVaccineSystemDBContext.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Models\\ChildVaccineSystemDBContext.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Models\\ChildVaccineSystemDBContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:33:57.184Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "APIResponse.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\Helper\\APIResponse.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Common\\Helper\\APIResponse.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\Helper\\APIResponse.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Common\\Helper\\APIResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T02:40:18.622Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Reaction.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Reaction.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\Reaction.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Reaction.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\Reaction.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:46:18.596Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Transaction.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Transaction.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\Transaction.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Transaction.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\Transaction.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:46:06.29Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PricingPolicy.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\PricingPolicy.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\PricingPolicy.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\PricingPolicy.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\PricingPolicy.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:45:50.404Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Booking.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\Booking.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Booking.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\Booking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:45:13.302Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "VaccinationSchedule.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\VaccinationSchedule.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\VaccinationSchedule.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\VaccinationSchedule.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\VaccinationSchedule.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:44:04.816Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Vaccine.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Vaccine.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\Vaccine.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Vaccine.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\Vaccine.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAYwBEAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:47:40.965Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Notification.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Notification.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\Notification.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Notification.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\Notification.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:48:21.431Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Children.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Children.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\Children.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Children.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\Children.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:40:31.618Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Role.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Role.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\Role.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Role.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\Role.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:48:28.078Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "20250119040905_FirstMigration.cs",
+              "DocumentMoniker": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040905_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040905_FirstMigration.cs",
+              "ToolTip": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040905_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040905_FirstMigration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T04:09:05.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "20250119040719_FirstMigration.cs",
+              "DocumentMoniker": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040719_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040719_FirstMigration.cs",
+              "ToolTip": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040719_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040719_FirstMigration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T04:07:20.008Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "20250119040352_FirstMigration.cs",
+              "DocumentMoniker": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040352_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040352_FirstMigration.cs",
+              "ToolTip": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040352_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040352_FirstMigration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T04:03:52.249Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "20250119040253_FirstMigration.cs",
+              "DocumentMoniker": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040253_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040253_FirstMigration.cs",
+              "ToolTip": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040253_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119040253_FirstMigration.cs",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAgwBIAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T04:02:54.193Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "20250119035902_FirstMigration.cs",
+              "DocumentMoniker": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035902_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035902_FirstMigration.cs",
+              "ToolTip": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035902_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035902_FirstMigration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:59:02.206Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "20250119035738_FirstMigration.cs",
+              "DocumentMoniker": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035738_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035738_FirstMigration.cs",
+              "ToolTip": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035738_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035738_FirstMigration.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:57:38.576Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "20250119035301_FirstMigration.cs",
+              "DocumentMoniker": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035301_FirstMigration.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035301_FirstMigration.cs",
+              "ToolTip": "D:\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035301_FirstMigration.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\PROJECT\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Migrations\\20250119035301_FirstMigration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:53:02.158Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "ComboDetail.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\ComboDetail.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\ComboDetail.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\ComboDetail.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\ComboDetail.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:46:55.46Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "ComboVaccine.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\ComboVaccine.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\ComboVaccine.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\ComboVaccine.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\ComboVaccine.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAABUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:47:03.056Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "VaccineInventory.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\VaccineInventory.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\VaccineInventory.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\VaccineInventory.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\VaccineInventory.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAA9wBkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:48:12.57Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Feedback.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Feedback.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\Feedback.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Feedback.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\Feedback.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T03:46:43.878Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\appsettings.json",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.API\\appsettings.json",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\appsettings.json",
+              "RelativeToolTip": "ChildVaccineSystem.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-01-19T03:24:16.609Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "ChildVaccineSystem.API.csproj",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj",
+              "RelativeToolTip": "ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-19T03:24:02.473Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "ChildVaccineSystem.RepositoryContract.csproj",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj",
+              "RelativeToolTip": "ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-19T03:24:02.395Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "ChildVaccineSystem.Service.csproj",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Service\\ChildVaccineSystem.Service.csproj",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Service\\ChildVaccineSystem.Service.csproj",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Service\\ChildVaccineSystem.Service.csproj",
+              "RelativeToolTip": "ChildVaccineSystem.Service\\ChildVaccineSystem.Service.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-19T03:24:02.368Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "ChildVaccineSystem.Common.csproj",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj",
+              "RelativeToolTip": "ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-19T03:24:00.642Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\Program.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.API\\Program.cs",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\Program.cs",
+              "RelativeToolTip": "ChildVaccineSystem.API\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T02:35:38.896Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "ChildVaccineSystem.Repository.csproj",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Repository\\ChildVaccineSystem.Repository.csproj",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Repository\\ChildVaccineSystem.Repository.csproj",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Repository\\ChildVaccineSystem.Repository.csproj",
+              "RelativeToolTip": "ChildVaccineSystem.Repository\\ChildVaccineSystem.Repository.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-19T03:24:02.419Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "ChildVaccineSystem.Data.csproj",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-19T03:24:02.444Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "ChildVaccineSystem.ServiceContract.csproj",
+              "DocumentMoniker": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj",
+              "ToolTip": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj",
+              "RelativeToolTip": "ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-01-19T03:24:02.321Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 276,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

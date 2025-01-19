@@ -1,0 +1,11 @@
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\bin\Debug\net8.0\ChildVaccineSystem.Service.deps.json
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\bin\Debug\net8.0\ChildVaccineSystem.Service.dll
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\bin\Debug\net8.0\ChildVaccineSystem.Service.pdb
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\obj\Debug\net8.0\ChildVaccineSystem.Service.GeneratedMSBuildEditorConfig.editorconfig
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\obj\Debug\net8.0\ChildVaccineSystem.Service.AssemblyInfoInputs.cache
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\obj\Debug\net8.0\ChildVaccineSystem.Service.AssemblyInfo.cs
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\obj\Debug\net8.0\ChildVaccineSystem.Service.csproj.CoreCompileInputs.cache
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\obj\Debug\net8.0\ChildVaccineSystem.Service.dll
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\obj\Debug\net8.0\refint\ChildVaccineSystem.Service.dll
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\obj\Debug\net8.0\ChildVaccineSystem.Service.pdb
+D:\PROJECT\ChildVaccineSystem\ChildVaccineSystem.Service\obj\Debug\net8.0\ref\ChildVaccineSystem.Service.dll
