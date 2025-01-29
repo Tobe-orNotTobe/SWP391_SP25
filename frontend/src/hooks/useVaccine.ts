@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { VaccineIntro } from "../types/Vaccine"
-import { getVaccineIntro } from "../apis/apiVaccine";
+import { apiGetVaccineIntro } from "../apis/apiVaccine";
+
 
 export const useVaccineIntro = () =>{
     const[vaccineIntro, setVaccineIntro] = useState<VaccineIntro[]>([]);
@@ -11,7 +12,7 @@ export const useVaccineIntro = () =>{
         const fetchVaccineIntro = async () =>{
             setLoading(true);
             try{
-                const data = await getVaccineIntro();
+                const data = await apiGetVaccineIntro();
                 setVaccineIntro(data);
             }catch (err){
                 setError("Error Fetching Vaccine Intro Data");

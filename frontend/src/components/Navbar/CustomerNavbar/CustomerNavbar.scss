@@ -13,7 +13,7 @@
   
   .cusTopNavbar {
     display: grid;
-    grid-template-columns: 1fr 1fr 3.5fr 1.6fr;
+    grid-template-columns: 1fr 1fr 4fr 1.6fr;
     align-items: center;
     background-color: #2A388F;
     padding: 2px 10px;
@@ -45,7 +45,7 @@
   }
   
   .contactInfoTop svg {
-    margin-right: 8px;
+    margin-right: -5px;
   }
   
   .hotLineTop {
@@ -121,6 +121,6 @@
   }
   
   .authButton svg {
-    margin-right: 2px; 
+    margin-right: 10px; 
   }
 }

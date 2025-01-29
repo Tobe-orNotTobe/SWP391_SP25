@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { BriefContent, ImgCarousel } from "../types/Decorative"
-import { getBrieftContent, getImgCarousel } from "../apis/apiDecorative";
+import { apiGetBrieftContent, apiGetImgCarousel } from "../apis/apiDecorative";
+
 
 export const useImgCarousel = () =>{
     const[imgCarousel, setImgCarousel] = useState<ImgCarousel[]>([]);
@@ -11,7 +12,7 @@ export const useImgCarousel = () =>{
             const fetchVaccineIntro = async () =>{
                 setLoading(true);
                 try{
-                    const data = await getImgCarousel();
+                    const data = await apiGetImgCarousel();
                     setImgCarousel(data);
                 }catch (err){
                     setError("Error Fetching Vaccine Intro Data");
@@ -36,7 +37,7 @@ export const useBriefContent = () =>{
             const fetchVaccineIntro = async () =>{
                 setLoading(true);
                 try{
-                    const data = await getBrieftContent();
+                    const data = await apiGetBrieftContent();
                     setBriefContent(data);
                 }catch (err){
                     setError("Error Fetching Vaccine Intro Data");

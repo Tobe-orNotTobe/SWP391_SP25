@@ -1,7 +1,7 @@
 import axiosInstance from "../utils/axiosInstance";
 import { VaccineIntro } from "../types/Vaccine";
 
-export const getVaccineIntro = async (): Promise<VaccineIntro[]> => {
+export const apiGetVaccineIntro = async (): Promise<VaccineIntro[]> => {
     try{
         const response = await axiosInstance.get("Vaccine/VaccineIntro.json");
         console.log(response)

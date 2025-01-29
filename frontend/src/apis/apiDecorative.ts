@@ -1,7 +1,7 @@
 import axios from "axios"
 import { BriefContent, ImgCarousel } from "../types/Decorative"
 
-export const getImgCarousel = async() : Promise<ImgCarousel[]> =>{
+export const apiGetImgCarousel = async() : Promise<ImgCarousel[]> =>{
     try{
         const response = await axios.get("Decorative/ImageCarousel.json");
         return response.data;
@@ -12,7 +12,7 @@ export const getImgCarousel = async() : Promise<ImgCarousel[]> =>{
 
 }
 
-export const getBrieftContent = async() : Promise<BriefContent[]> => {
+export const apiGetBrieftContent = async() : Promise<BriefContent[]> => {
     try{
         const response = await axios.get("Decorative/BrieftContent.json");
         return response.data;

@@ -14,7 +14,7 @@ const CustomerNavbar: React.FC = () => {
                     <img src={logo} alt="Logo" />
                 </div>
                 <div className="contactInfoTop">
-                    <span><GiPositionMarker size={22} /></span>
+                    <span><GiPositionMarker size={22}/></span>
                     <p>Lô E2a-7, Đ. D1, Long Thạnh Mỹ, TP.Thủ Đức, HCM</p>
                 </div>
                 <div className="hotLineTop">
