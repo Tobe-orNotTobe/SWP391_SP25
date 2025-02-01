@@ -8,3 +8,9 @@ export interface BriefContent{
     paragraph1:string;
     paragraph2:string;
 }
+
+export interface VaccineIntro{
+    id: string;
+    name: string;
+    image: string;
+}

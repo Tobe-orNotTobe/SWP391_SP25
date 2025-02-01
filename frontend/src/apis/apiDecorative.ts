@@ -1,7 +1,6 @@
 import axios from "axios"
-import { BriefContent, ImgCarousel } from "../types/Decorative"
 
-export const apiGetImgCarousel = async() : Promise<ImgCarousel[]> =>{
+export const apiGetImgCarousel = async() =>{
     try{
         const response = await axios.get("Decorative/ImageCarousel.json");
         return response.data;
@@ -12,12 +11,23 @@ export const apiGetImgCarousel = async() : Promise<ImgCarousel[]> =>{
 
 }
 
-export const apiGetBrieftContent = async() : Promise<BriefContent[]> => {
+export const apiGetBrieftContent = async() => {
     try{
         const response = await axios.get("Decorative/BrieftContent.json");
         return response.data;
     }catch (err){
         console.error("Error fetching data", err);
+        return [];
+    }
+}
+
+export const apiGetVaccineIntro = async () => {
+    try{
+        const response = await axios.get("Vaccine/VaccineIntro.json");
+        console.log(response)
+        return response.data;
+    }catch(error){
+        console.error("Error fetching data", error);
         return [];
     }
 }

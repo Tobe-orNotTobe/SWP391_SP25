@@ -1,14 +1,15 @@
 import React from "react";
-import CustomerNavbar from "../components/Navbar/CustomerNavbar/CustomerNavbar";
-import Register from "../components/Auth/Register";
 
-const SignUpPage : React.FC = () =>{
+import Login from "../components/Auth/Login";
+import CustomerNavbar from "../components/Navbar/CustomerNavbar/CustomerNavbar";
+
+
+const LogInPage : React.FC = () =>{
     return(
         <>
             <CustomerNavbar/>
-            <Register/>
+            <Login/>
         </>
     );
 }
-
-export default SignUpPage
+export default LogInPage

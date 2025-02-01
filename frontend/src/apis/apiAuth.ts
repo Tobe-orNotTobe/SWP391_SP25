@@ -1,9 +1,9 @@
 import axios from "axios";
-import { SignIn, SignUp } from "../types/Auth";
+import { LoginRequest, RegisterRequest } from "../types/request/AuthRequest";
 
-export const apiSignUp = async(user : SignUp) : Promise<SignUp[]> => {
+export const apiRegister = async(data : RegisterRequest) => {
     try{
-        const response = await axios.post("", user);
+        const response = await axios.post("", data);
         return response.data;
     }catch(error){
         console.error("Error fetching data", error);
@@ -11,9 +11,9 @@ export const apiSignUp = async(user : SignUp) : Promise<SignUp[]> => {
     }
 }
 
-export const apiSignIn = async(user : SignIn) : Promise<SignIn[]> =>{
+export const apiLogIn= async(data : LoginRequest) => {
     try{
-        const response = await axios.post("", user);
+        const response = await axios.post("", data);
         return response.data;
     }catch(error){
         console.error("Error fetching data", error);

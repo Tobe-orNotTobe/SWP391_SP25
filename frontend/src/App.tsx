@@ -2,8 +2,9 @@
 import "./App.scss"
 import { Route, BrowserRouter, Routes } from "react-router-dom"
 import HomePage from "./pages/HomePage"
-import SignInPage from "./pages/SignInPage"
-import SignUpPage from "./pages/SignUpPage"
+import LogInPage from "./pages/LogInPage"
+import RegisterPage from "./pages/RegisterPage"
+
 
 
 function App() {
@@ -13,9 +14,9 @@ function App() {
     <> 
       <BrowserRouter>
         <Routes>
-          <Route path="" element={<HomePage/>}/>
-          <Route path="/login" element={<SignInPage/>}/>
-          <Route path="/register" element={<SignUpPage/>}/>
+          <Route path="/homepage" element={<HomePage/>}/>
+          <Route path="/login" element={<LogInPage/>}/>
+          <Route path="/register" element={<RegisterPage/>}/>
         </Routes>
       </BrowserRouter>
 
