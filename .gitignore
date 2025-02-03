@@ -34,7 +34,6 @@ bin/
 *.nupkg
 *.snupkg
 
-
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -385,5 +384,3 @@ MigrationBackup/
 .ionide/
 
 # Fody - auto-generated XML schema
-FodyWeavers.xsd
-/BE/ChildVaccineSystem/.vs/ChildVaccineSystem/FileContentIndex/a2840364-13c8-42f6-8f92-5b2ac336cb7d.vsidx
