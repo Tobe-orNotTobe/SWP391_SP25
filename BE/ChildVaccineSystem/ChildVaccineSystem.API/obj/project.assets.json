@@ -4472,23 +4472,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\NQS\\.nuget\\packages\\": {},
+    "C:\\Users\\User\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj",
       "projectName": "ChildVaccineSystem.API",
-      "projectPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj",
-      "packagesPath": "C:\\Users\\NQS\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\obj\\",
+      "projectPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\NQS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4503,17 +4503,17 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj": {
-              "projectPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj"
+            "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj"
             },
-            "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj": {
-              "projectPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj"
+            "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj"
             },
-            "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj": {
-              "projectPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj"
+            "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.RepositoryContract\\ChildVaccineSystem.RepositoryContract.csproj"
             },
-            "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj": {
-              "projectPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj"
+            "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj"
             }
           }
         }

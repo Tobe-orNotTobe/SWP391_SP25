@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj": {}
+    "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj": {}
   },
   "projects": {
-    "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj": {
+    "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj",
         "projectName": "ChildVaccineSystem.Common",
-        "projectPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj",
-        "packagesPath": "C:\\Users\\NQS\\.nuget\\packages\\",
-        "outputPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\obj\\",
+        "projectPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\NQS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
