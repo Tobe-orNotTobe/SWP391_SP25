@@ -19,8 +19,6 @@ bin/
 
 # User-specific files
 *.rsuser
-*.suo
-*.user
 *.userosscache
 *.sln.docstates
 
