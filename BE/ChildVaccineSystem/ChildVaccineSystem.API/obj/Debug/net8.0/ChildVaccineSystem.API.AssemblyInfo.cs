@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChildVaccineSystem.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e651acddde45818576337a3b345cc7c54f20352f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae0748b2351de6f64e92ed23169c2e7a19bd2cdc")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChildVaccineSystem.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChildVaccineSystem.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
