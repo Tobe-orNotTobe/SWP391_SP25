@@ -1,12 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AutoMapper;
+using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.Data.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ChildVaccineSystem.Common.Helper
 {
-    internal class MappingProfile
+    public class MappingProfile : Profile
     {
+        public MappingProfile()
+        {
+            // Vaccine Mapping
+            CreateMap<Vaccine, VaccineDTO>().ReverseMap();
+        }
     }
 }
