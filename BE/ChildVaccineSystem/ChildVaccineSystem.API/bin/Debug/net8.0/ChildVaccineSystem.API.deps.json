@@ -9,14 +9,27 @@
       "ChildVaccineSystem.API/1.0.0": {
         "dependencies": {
           "ChildVaccineSystem.Common": "1.0.0",
-          "ChildVaccineSystem.Data": "1.0.0",
-          "ChildVaccineSystem.RepositoryContract": "1.0.0",
-          "ChildVaccineSystem.ServiceContract": "1.0.0",
+          "ChildVaccineSystem.Repository": "1.0.0",
+          "ChildVaccineSystem.Service": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "8.0.12",
           "Microsoft.EntityFrameworkCore.Design": "8.0.12",
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.12",
+          "Microsoft.EntityFrameworkCore.Tools": "8.0.12",
           "Swashbuckle.AspNetCore": "6.6.2"
         },
         "runtime": {
           "ChildVaccineSystem.API.dll": {}
+        }
+      },
+      "AutoMapper/13.0.1": {
+        "dependencies": {
+          "Microsoft.Extensions.Options": "8.0.2"
+        },
+        "runtime": {
+          "lib/net6.0/AutoMapper.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.1.0"
+          }
         }
       },
       "Azure.Core/1.38.0": {
@@ -414,6 +427,11 @@
             "assemblyVersion": "8.0.12.0",
             "fileVersion": "8.0.1224.60305"
           }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Tools/8.0.12": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Design": "8.0.12"
         }
       },
       "Microsoft.Extensions.ApiDescription.Server/6.0.5": {},
@@ -944,6 +962,12 @@
         }
       },
       "ChildVaccineSystem.Common/1.0.0": {
+        "dependencies": {
+          "AutoMapper": "13.0.1",
+          "ChildVaccineSystem.Data": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "8.0.12",
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.12"
+        },
         "runtime": {
           "ChildVaccineSystem.Common.dll": {
             "assemblyVersion": "1.0.0",
@@ -953,8 +977,6 @@
       },
       "ChildVaccineSystem.Data/1.0.0": {
         "dependencies": {
-          "ChildVaccineSystem.Common": "1.0.0",
-          "ChildVaccineSystem.ServiceContract": "1.0.0",
           "Microsoft.EntityFrameworkCore": "8.0.12",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.12"
         },
@@ -965,7 +987,26 @@
           }
         }
       },
+      "ChildVaccineSystem.Repository/1.0.0": {
+        "dependencies": {
+          "ChildVaccineSystem.Data": "1.0.0",
+          "ChildVaccineSystem.RepositoryContract": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "8.0.12",
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.12"
+        },
+        "runtime": {
+          "ChildVaccineSystem.Repository.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "ChildVaccineSystem.RepositoryContract/1.0.0": {
+        "dependencies": {
+          "ChildVaccineSystem.Data": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "8.0.12",
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.12"
+        },
         "runtime": {
           "ChildVaccineSystem.RepositoryContract.dll": {
             "assemblyVersion": "1.0.0",
@@ -973,7 +1014,30 @@
           }
         }
       },
+      "ChildVaccineSystem.Service/1.0.0": {
+        "dependencies": {
+          "AutoMapper": "13.0.1",
+          "ChildVaccineSystem.Data": "1.0.0",
+          "ChildVaccineSystem.Repository": "1.0.0",
+          "ChildVaccineSystem.RepositoryContract": "1.0.0",
+          "ChildVaccineSystem.ServiceContract": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "8.0.12",
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.12"
+        },
+        "runtime": {
+          "ChildVaccineSystem.Service.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "ChildVaccineSystem.ServiceContract/1.0.0": {
+        "dependencies": {
+          "ChildVaccineSystem.Data": "1.0.0",
+          "ChildVaccineSystem.RepositoryContract": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "8.0.12",
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.12"
+        },
         "runtime": {
           "ChildVaccineSystem.ServiceContract.dll": {
             "assemblyVersion": "1.0.0",
@@ -988,6 +1052,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AutoMapper/13.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/Fx1SbJ16qS7dU4i604Sle+U9VLX+WSNVJggk6MupKVkYvvBm4XqYaeFuf67diHefHKHs50uQIS2YEDFhPCakQ==",
+      "path": "automapper/13.0.1",
+      "hashPath": "automapper.13.0.1.nupkg.sha512"
     },
     "Azure.Core/1.38.0": {
       "type": "package",
@@ -1114,6 +1185,13 @@
       "sha512": "sha512-k97zTGXGdLI+FDx7sjuTlNrmO6uy6NuJsBITUHNNuaSHHP06cHJ8JJrdheHDQPEgMw9/e/9OglBSn/dANHRdWA==",
       "path": "microsoft.entityframeworkcore.sqlserver/8.0.12",
       "hashPath": "microsoft.entityframeworkcore.sqlserver.8.0.12.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Tools/8.0.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ePBSLgIkvvyU9HarTKFkvtOnqNfz3Ok107SxC3ZFnpwt7AJP7lWTWtJH+PTsIdCxeRyTOOVW88TlvY+7QrG02Q==",
+      "path": "microsoft.entityframeworkcore.tools/8.0.12",
+      "hashPath": "microsoft.entityframeworkcore.tools.8.0.12.nupkg.sha512"
     },
     "Microsoft.Extensions.ApiDescription.Server/6.0.5": {
       "type": "package",
@@ -1566,7 +1644,17 @@
       "serviceable": false,
       "sha512": ""
     },
+    "ChildVaccineSystem.Repository/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "ChildVaccineSystem.RepositoryContract/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ChildVaccineSystem.Service/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

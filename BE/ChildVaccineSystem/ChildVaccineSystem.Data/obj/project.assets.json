@@ -1494,26 +1494,6 @@
             "rid": "win"
           }
         }
-      },
-      "ChildVaccineSystem.Common/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "compile": {
-          "bin/placeholder/ChildVaccineSystem.Common.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/ChildVaccineSystem.Common.dll": {}
-        }
-      },
-      "ChildVaccineSystem.ServiceContract/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "compile": {
-          "bin/placeholder/ChildVaccineSystem.ServiceContract.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/ChildVaccineSystem.ServiceContract.dll": {}
-        }
       }
     }
   },
@@ -4016,22 +3996,10 @@
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt"
       ]
-    },
-    "ChildVaccineSystem.Common/1.0.0": {
-      "type": "project",
-      "path": "../ChildVaccineSystem.Common/ChildVaccineSystem.Common.csproj",
-      "msbuildProject": "../ChildVaccineSystem.Common/ChildVaccineSystem.Common.csproj"
-    },
-    "ChildVaccineSystem.ServiceContract/1.0.0": {
-      "type": "project",
-      "path": "../ChildVaccineSystem.ServiceContract/ChildVaccineSystem.ServiceContract.csproj",
-      "msbuildProject": "../ChildVaccineSystem.ServiceContract/ChildVaccineSystem.ServiceContract.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "ChildVaccineSystem.Common >= 1.0.0",
-      "ChildVaccineSystem.ServiceContract >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 8.0.12",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.12",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.12",
@@ -4039,23 +4007,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\NQS\\.nuget\\packages\\": {},
+    "C:\\Users\\User\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj",
       "projectName": "ChildVaccineSystem.Data",
-      "projectPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj",
-      "packagesPath": "C:\\Users\\NQS\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\obj\\",
+      "projectPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\NQS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4069,14 +4037,7 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {
-            "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj": {
-              "projectPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Common\\ChildVaccineSystem.Common.csproj"
-            },
-            "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj": {
-              "projectPath": "D:\\Code\\SWP391\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {

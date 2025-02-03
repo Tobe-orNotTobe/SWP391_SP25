@@ -1,28 +1,32 @@
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.Data.Models;
+using ChildVaccineSystem.Common.Helper;
+using ChildVaccineSystem.Repository;
+using ChildVaccineSystem.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Add services to the container
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add DbContext
 builder.Services.AddDbContext<ChildVaccineSystemDBContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-//builder.Services.AddIdentity<User, IdentityRole>()
-//     <ChildVaccineSystemDBContext>()
-//     .AddDefaultTokenProviders();
+// Add Repositories and Services to DI Container
+builder.Services.AddRepositories();
+builder.Services.AddServices();    
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
