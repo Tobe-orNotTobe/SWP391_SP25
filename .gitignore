@@ -12,15 +12,27 @@ bin/
 
 # Other temporary files
 *.cache
-*.vsidx
+*.dtbcache.v2
+*.futdcache.v2
 *.AssemblyReference.cache
 *.AssemblyInfoInputs.cache
-*.user
+*.suo
+*.vscode/
+*.csproj.nuget.dgspec.json
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+
+# Temporary logs
+*.log
 
 # User-specific files
+*.user
 *.rsuser
 *.userosscache
-*.sln.docstates
+
+# NuGet packages
+*.nupkg
+*.snupkg
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
