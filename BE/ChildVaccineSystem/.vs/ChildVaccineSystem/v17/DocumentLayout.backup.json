@@ -1,0 +1,122 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5A837E5D-E3C5-4278-8126-DE15FFF2A251}|ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj|c:\\users\\user\\desktop\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.servicecontract\\interfaces\\ivaccineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5A837E5D-E3C5-4278-8126-DE15FFF2A251}|ChildVaccineSystem.ServiceContract\\ChildVaccineSystem.ServiceContract.csproj|solutionrelative:childvaccinesystem.servicecontract\\interfaces\\ivaccineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|c:\\users\\user\\desktop\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|solutionrelative:childvaccinesystem.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|c:\\users\\user\\desktop\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|solutionrelative:childvaccinesystem.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|c:\\users\\user\\desktop\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1FD5F954-EE4E-4E45-B749-128EB24F192C}|ChildVaccineSystem.API\\ChildVaccineSystem.API.csproj|solutionrelative:childvaccinesystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|c:\\users\\user\\desktop\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\vaccinationschedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\vaccinationschedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|c:\\users\\user\\desktop\\swp391_sp25\\be\\childvaccinesystem\\childvaccinesystem.data\\entities\\vaccine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2DC767AF-FCE7-4C62-B8F7-3068E3D4B5A4}|ChildVaccineSystem.Data\\ChildVaccineSystem.Data.csproj|solutionrelative:childvaccinesystem.data\\entities\\vaccine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "IVaccineService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\Interfaces\\IVaccineService.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.ServiceContract\\Interfaces\\IVaccineService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.ServiceContract\\Interfaces\\IVaccineService.cs",
+              "RelativeToolTip": "ChildVaccineSystem.ServiceContract\\Interfaces\\IVaccineService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T10:01:34.944Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.API\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\appsettings.Development.json",
+              "RelativeToolTip": "ChildVaccineSystem.API\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-02-03T09:58:11.893Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\Program.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.API\\Program.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\Program.cs",
+              "RelativeToolTip": "ChildVaccineSystem.API\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T09:26:30.779Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\appsettings.json",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.API\\appsettings.json",
+              "ToolTip": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\appsettings.json",
+              "RelativeToolTip": "ChildVaccineSystem.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-02-03T09:25:38.412Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "VaccinationSchedule.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\VaccinationSchedule.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\VaccinationSchedule.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\VaccinationSchedule.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\VaccinationSchedule.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAqwBUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T09:33:17.872Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Vaccine.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Vaccine.cs",
+              "RelativeDocumentMoniker": "ChildVaccineSystem.Data\\Entities\\Vaccine.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.Data\\Entities\\Vaccine.cs",
+              "RelativeToolTip": "ChildVaccineSystem.Data\\Entities\\Vaccine.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T09:33:16.278Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
