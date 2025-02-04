@@ -15,3 +15,4 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<List<VaccineDTO>> GetVaccinesByTypeAsync(bool isNecessary);
     }
 }
+

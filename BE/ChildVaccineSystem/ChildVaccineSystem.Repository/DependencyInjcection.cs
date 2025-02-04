@@ -9,6 +9,7 @@ namespace ChildVaccineSystem.Repository
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IVaccineRepository, VaccineRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }
