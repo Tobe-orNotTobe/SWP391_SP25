@@ -1,0 +1,53 @@
+@font-face {
+    font-family: 'MyriadPro';
+    src: url('../../../assets/font/Myriad_Pro_Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+.floatingButtons {
+    font-family: 'MyriadPro';
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+  
+    .messenger,
+    .zalo,
+    .scrollToTop {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      text-decoration: none;
+      transition: transform 0.3s;
+  
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  
+    .messenger {
+      background-color: #0084ff;
+    }
+  
+    .zalo {
+      background-color: #32a7e2;
+    }
+  
+    .scrollToTop {
+      background-color: #555;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      color: white;
+    }
+  }
+  

@@ -1,0 +1,123 @@
+[
+    {
+        "id": "vcc01",
+        "name": "Vắc xin STAMARIL (Pháp) phòng bệnh sốt vàng",
+        "image": "../../../src/assets/vaccine/STAMARIL_Vaccine.jpg"
+    },
+    {
+        "id": "vcc02",
+        "name": "Vắc xin Typhoid VI (Việt Nam)", 
+        "image": "../../../src/assets/vaccine/TyphoidVI_Vaccine.png"
+    },
+    {
+        "id": "vcc03",
+        "name": "Vắc xin Jevax (Việt Nam)",
+        "image": "../../../src/assets/vaccine/JEVAX_Vaccine.jpg"
+    },
+    {
+        "id": "vcc04",
+        "name": "Vắc xin Engerix B (Bỉ)",
+        "image": "../../../src/assets/vaccine/EngerixB_Vaccine.jpg"
+    },
+    {
+        "id": "vcc05",
+        "name": "Vắc xin Infranrix IPV + Hib (Bỉ)",
+        "image": "../../../src/assets/vaccine/InfanrixIPVHib_Vaccine.jpg"
+    },
+    {
+        "id": "vcc06",
+        "name":"Vắc xin Measles – Mumps – Rubella (Ấn Độ)",
+        "image": "../../../src/assets/vaccine/MMR_Vaccine.jpg"
+    },
+    {
+        "id": "vcc07",
+        "name": "Vắc xin Varicella (Hàn Quốc)",
+        "image": "../../../src/assets/vaccine/Varicella_Vaccine.jpg"
+    },
+    {
+        "id": "vcc08",
+        "name": "Vắc xin Varivax (Mỹ)", 
+        "image": "../../../src/assets/vaccine/Variax_Vaccine.jpg"
+    },
+    {
+        "id": "vcc09",
+        "name": "Vắc xin GCFLU Quadrivalent phòng Cúm mùa",
+        "image": "../../../src/assets/vaccine/GCFlu_Vaccine.jpg"
+    },
+    {
+        "id": "vcc10",
+        "name": "Huyết thanh uốn ván (Việt Nam)",
+        "image": "../../../src/assets/vaccine/UonVan.jpg"
+    },
+    {
+        "id": "vcc11",
+        "name": "Vắc xin Quimihib (Cu ba)",
+        "image": "../../../src/assets/vaccine/Quimihib_Vaccine.jpg"
+    },
+    {
+        "id": "vcc12",
+        "name": "Vắc xin mOrcvax (Việt Nam)",
+        "image": "../../../src/assets/vaccine/mORCVAX_Vaccine.jpg"
+    },
+    {
+        "id": "vcc13",
+        "name": "Vắc xin Typhim VI (Pháp)",
+        "image": "../../../src/assets/vaccine/TyphimVI_Vaccine.jpg"
+    },
+    {
+        "id": "vcc14",
+        "name": "Vắc xin Twinrix (Bỉ)",
+        "image": "../../../src/assets/vaccine/Twinrix_Vaccine.jpg"
+    },
+    {
+        "id": "vcc15",
+        "name": "Vắc xin Havax (Việt Nam)",
+        "image": "../../../src/assets/vaccine/Havax_Vaccine.jpg"
+    },
+    {
+        "id": "vcc16",
+        "name": "Vắc xin Avaxim (Pháp)",
+        "image": "../../../src/assets/vaccine/Avaxim_Vaccine.jpg"
+    },
+    {
+        "id": "vcc17",
+        "name": "Vắc xin Imojev (Thái Lan)",
+        "image": "../../../src/assets/vaccine/Imojev_Vaccine.jpg"
+    },
+    {
+        "id": "vcc18",
+        "name": "Vắc xin Tetraxim (Pháp)",
+        "image":"../../../src/assets/vaccine/Tetraxim_Vaccine.jpg"
+    },
+    {
+        "id": "vcc19",
+        "name": "Vắc xin MMR II (Mỹ)",
+        "image": "../../../src/assets/vaccine/MMRII_Vaccine.jpg"
+    },
+    {
+        "id": "vcc20",
+        "name": "Vắc xin Mvvac (Việt Nam)",
+        "image": "../../../src/assets/vaccine/MVVAC_Vaccine.jpg"
+    },
+    {
+        "id": "vcc21",
+        "name": "Vắc xin Ivacflu-S (Việt Nam)",
+        "image": "../../../src/assets/vaccine/IVACFlu_S_Vaccine.jpg"
+    },
+    {
+        "id": "vcc22",
+        "name": "Vắc xin Mengoc BC (Cu ba)",
+        "image": "../../../src/assets/vaccine/Mengoc_Vaccine.jpg"
+    },
+    {
+        "id": "vcc23",
+        "name": "Vắc xin Rotavin (Việt Nam)",
+        "image": "../../../src/assets/vaccine/RotaTeq_Vaccine.jpg"
+    },
+    {
+        "id": "vcc24",
+        "name": "Vắc xin Rotarix (Bỉ)",
+        "image": "../../../src/assets/vaccine/Avaxim_Vaccine.jpg"
+    }
+
+]
