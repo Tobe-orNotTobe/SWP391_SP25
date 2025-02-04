@@ -80,11 +80,11 @@ The process includes the following steps:
     ```
 ## Technology Stack
 - **Frontend**: React + TypeScript + Vite.
-- **Backend**: C#.
+- **Backend**: C# (ASP .NET)
 - **Database**: MS SQL Server.
 
 ## Authors
-- Project Development Team: SWP391_SP25_Group_2.
+- Project Development Team: SWP391_SP25_Group_SideEffect.
 - Contact: ChildVaccaSWP391_SP25@gmail.com
 
 ## License

@@ -385,6 +385,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 
+.idea
+.vscode
+
 frontend/node_modules
 frontend/.idea
 frontend/.vscode
