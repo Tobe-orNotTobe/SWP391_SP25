@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSettings"));
 
 // Add DbContext
 builder.Services.AddDbContext<ChildVaccineSystemDBContext>(options =>
@@ -19,6 +20,15 @@ builder.Services.AddDbContext<ChildVaccineSystemDBContext>(options =>
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+//Add Identity services for authentication & user management
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<ChildVaccineSystemDBContext>()
+    .AddDefaultTokenProviders();
+
+//Add UserManager and SignInManager for dependency injection
+builder.Services.AddScoped<UserManager<User>>();
+builder.Services.AddScoped<SignInManager<User>>();
 
 // Add Repositories and Services to DI Container
 builder.Services.AddRepositories();

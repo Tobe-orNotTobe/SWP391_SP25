@@ -10,6 +10,7 @@ namespace ChildVaccineSystem.Repository
         {
             services.AddScoped<IVaccineRepository, VaccineRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IEmailRepository, EmailRepository>();
             return services;
         }
     }

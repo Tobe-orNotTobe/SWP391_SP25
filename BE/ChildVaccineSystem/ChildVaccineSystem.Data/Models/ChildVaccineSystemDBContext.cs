@@ -1,9 +1,10 @@
 ﻿using ChildVaccineSystem.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChildVaccineSystem.Data.Models
 {
-    public class ChildVaccineSystemDBContext : DbContext
+    public class ChildVaccineSystemDBContext : IdentityDbContext<User>
     {
         public ChildVaccineSystemDBContext(DbContextOptions<ChildVaccineSystemDBContext> options) : base(options)
         {

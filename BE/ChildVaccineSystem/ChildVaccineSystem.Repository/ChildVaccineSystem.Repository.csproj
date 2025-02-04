@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ChildVaccineSystem.Common\ChildVaccineSystem.Common.csproj" />
     <ProjectReference Include="..\ChildVaccineSystem.Data\ChildVaccineSystem.Data.csproj" />
     <ProjectReference Include="..\ChildVaccineSystem.RepositoryContract\ChildVaccineSystem.RepositoryContract.csproj" />
   </ItemGroup>
