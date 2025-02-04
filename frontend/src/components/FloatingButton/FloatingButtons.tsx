@@ -31,7 +31,7 @@ const FloatingButtons: React.FC = () => {
       )}
       {/* Messenger Button */}
       <a
-        href="https://www.messenger.com/t/yourpageid"
+        href="https://www.facebook.com/profile.php?id=100035700756928"
         target="_blank"
         rel="noopener noreferrer"
         className="messenger"
@@ -42,7 +42,7 @@ const FloatingButtons: React.FC = () => {
 
       {/* Zalo Button */}
       <a
-        href="https://zalo.me/yourpageid"
+        href="https://zalo.me/0816518989"
         target="_blank"
         rel="noopener noreferrer"
         className="zalo"

@@ -1,7 +1,8 @@
 import React from "react";
-import { FaGoogle, FaGithub, FaFacebookF } from "react-icons/fa";
+import { FaGoogle, FaGithub, FaFacebookF, FaEyeSlash, FaEye } from "react-icons/fa";
 import { useLogin } from "../../hooks/useAuth"; // Import the custom hook
 import "./Auth.scss";
+import { Link } from "react-router-dom";
 
 const Login: React.FC = () => {
     const {
@@ -11,6 +12,9 @@ const Login: React.FC = () => {
         setPassword,
         handleLoginSubmit,
         isLoading,
+        error,
+        showPassword,
+        togglePasswordVisibility,
     } = useLogin();
 
     return (
@@ -29,28 +33,35 @@ const Login: React.FC = () => {
                     </a>
                 </div>
                 <span>Hoặc Đăng Nhập Với Tài Khoản Đã Đăng Kí</span>
+                <label>Email: </label>
                 <input
                     type="email"
-                    placeholder="Email"
+                    placeholder="Nhập Địa Chỉ Email"
                     className="authInput"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    className="authInput"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+                <label>Mật Khẩu: </label>
+                <div className="passwordInputContainer">
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Nhập mật khẩu"
+                        className="authInput"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <span className="eyeIcon" onClick={togglePasswordVisibility}>
+                            {showPassword ? <FaEyeSlash/> : <FaEye/>}
+                    </span>
+                </div>          
+                {error && <p className="errorText">{error}</p>}
                 <button type="submit" className="authButton" disabled={isLoading}>
                     {isLoading ? "Đang Đăng Nhập..." : "Đăng Nhập"}
                 </button>
-                <span><a href="/register">Quên Mật Khẩu?</a></span>
+                <span><Link to="forgot-password">Quên Mật Khẩu?</Link></span>
             </form>
-
-            <hr />
-            <span>Chưa có tài khoản? <a href="/register">Đăng Kí Tại Đây</a></span>
+            
+            <span>Chưa có tài khoản? <Link to="/register">Đăng Kí Tại Đây</Link></span>
         </div>
     );
 };

@@ -5,13 +5,21 @@
     background: #fff;
     border-radius: 10px;
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); 
-    text-align: center;
-  
+    
+    label {
+        display: block;
+        text-align: left;
+        font-weight: bold;
+        margin-bottom: 5px;
+        margin-left: 10px;
+    }
+
     h1 {
         margin-top: 20px;
         font-size: 24px;
         margin-bottom: 15px;
         color: #333;
+        text-align: center;
     }
 
     .authSocialContainer {
@@ -48,6 +56,7 @@
         font-size: 14px;
         color: grey;
         margin-bottom: 15px;
+        text-align: center;
     }
 
     .authInput {
@@ -63,6 +72,30 @@
             border-color:#2A388F;
             box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
             outline: none;
+        }
+    }
+
+    .passwordInputContainer {
+        position: relative;
+        display: flex;
+        align-items: center;
+    
+        .passwordInput {
+            width: 100%;
+            padding-right: 40px; // Chừa chỗ cho icon con mắt
+        }
+    
+        .eyeIcon {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            color: #333;
+            font-size: 18px;
+            transition: 0.3s;
+    
+            &:hover {
+                color: #007bff;
+            }
         }
     }
 

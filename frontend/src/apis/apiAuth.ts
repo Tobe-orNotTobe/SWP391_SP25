@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LoginRequest, RegisterRequest } from "../types/request/AuthRequest";
+import { LoginRequest, RegisterRequest } from "../types/Auth";
 
 export const apiRegister = async(data : RegisterRequest) => {
     try{

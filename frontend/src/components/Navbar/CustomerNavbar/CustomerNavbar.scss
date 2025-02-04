@@ -13,7 +13,7 @@
   
   .cusTopNavbar {
     display: grid;
-    grid-template-columns: 1fr 1fr 4fr 1.6fr;
+    grid-template-columns: 1fr 6fr 4fr 3.5fr;
     align-items: center;
     background-color: #2A388F;
     padding: 2px 10px;
@@ -31,7 +31,8 @@
   
   
   .contactInfoTop, 
-  .hotLineTop {
+  .hotLineTop,
+  .bookingService{
     display: flex;
     justify-content: end;
     align-items: center;
@@ -46,6 +47,21 @@
   
   .contactInfoTop svg {
     margin-right: -5px;
+  }
+
+  .bookingService {
+    grid-column: 2;
+    font-size: 16px;
+  }
+
+  .bookingService a {
+    text-decoration: none ;
+    color: white; 
+}
+
+  .bookingService svg {
+    margin-right: 14px;
+    margin-bottom: -5px;
   }
   
   .hotLineTop {
@@ -103,6 +119,10 @@
     display: flex;
     align-items: center;
     gap: 10px; 
+  }
+
+  .authButtonLink a {
+    text-decoration: none; 
   }
   
   .authButton {
