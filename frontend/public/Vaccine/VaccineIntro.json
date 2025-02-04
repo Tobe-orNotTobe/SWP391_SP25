@@ -117,7 +117,37 @@
     {
         "id": "vcc24",
         "name": "Vắc xin Rotarix (Bỉ)",
-        "image": "../../../src/assets/vaccine/Avaxim_Vaccine.jpg"
+        "image": "../../../src/assets/vaccine/Rotarix_Vaccine.jpg"
+    },
+    {
+        "id": "vcc25",
+        "name": "Vaccine Rotateq (Mĩ)",
+        "image": "../../../src/assets/vaccine/Vaccine_Rotateq.jpg"
+    },
+    {
+        "id":"vcc26",
+        "name":"Vắc xin Priorix (Bỉ)",
+        "image": "../../../src/assets/vaccine/Vaccine_Priorix.jpg"
+    },
+    {
+        "id": "vcc27",
+        "name": "Vắc xin Heberbiovac (Cu ba)",
+        "image": "../../../src/assets/vaccine/Vaccine_Heberbiovac.jpg"
+    },
+    {
+        "id": "vcc28",
+        "name": "Vắc xin Pentaxim (Pháp)",
+        "image": "../../../src/assets/vaccine/Vaccine_Pentaxim.jpg"
+    },
+    {
+        "id": "vcc29",
+        "name": "Vắc xin Infanrix Hexa (Bỉ)",
+        "image": "../../../src/assets/vaccine/Vaccine_Infanrix_Hexa.jpg"
+    },
+    {
+        "id": "vcc30",
+        "name": "Vắc xin Influvac Tetra (Hà Lan)",
+        "image": "../../../src/assets/vaccine/Vaccine_Influvac_Tetra.jpg"
     }
 
 ]

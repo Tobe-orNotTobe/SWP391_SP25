@@ -49,23 +49,23 @@ export const useLogin = () => {
                 console.log("Login Successful", response);
 
                 notification.success({
-                    message: "Đăng Nhập Thành Công",  // Fixed notification usage
+                    message: "Đăng Nhập Thành Công",  
                 });
 
                 setTimeout(() => {
                     setIsLoading(false);
-                    navigate("/homepage");  // Corrected usage of navigate
+                    navigate("/homepage");  
                 }, 2000);
             }else{
                 notification.error({
                     message: "Đăng nhập thất bại", 
-                    description:"Tài Khoản Hoặc mật Khẩu bị sai" // Fixed notification usage
+                    description:"Tài Khoản Hoặc mật Khẩu bị sai" 
                 });
             }
         } catch (error) {
             console.log(error);
             notification.error({
-                message: "Đăng nhập thất bại, Tài Khoản Hoặc mật Khẩu bị sai",  // Fixed notification usage
+                message: "Đăng nhập thất bại, Tài Khoản Hoặc mật Khẩu bị sai",  
             });
             setError("Đăng nhập thất bại, Tài Khoản Hoặc mật Khẩu bị sai");
         } finally {

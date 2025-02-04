@@ -17,7 +17,7 @@ const CustomerNavbar: React.FC = () => {
                     <Link to="/homepage"><img src={logo} alt="Logo" /></Link>
                 </div>
                 <div className="bookingService">
-                    <span><Link to="/booking"><FaCalendarAlt size={22}/>Đăng Kí Tiêm</Link></span>
+                    <span><Link to="/booking"><FaCalendarAlt size={22}/>Đăng Kí Tiêm Tại Đây</Link></span>
                 </div>
                 <div className="contactInfoTop">
                     <span><GiPositionMarker size={22}/></span>

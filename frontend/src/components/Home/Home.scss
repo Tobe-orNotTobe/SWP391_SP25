@@ -1,12 +1,5 @@
-@font-face {
-    font-family: 'MyriadPro';
-    src: url('../../../assets/font/Myriad_Pro_Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
 
 .homeContainer {
-    font-family: 'MyriadPro', Arial, sans-serif;
     padding: 0; /* padding-top, padding-left/right, padding-bottom */
     width: 100%;
     max-width: 1200px;
@@ -81,3 +74,35 @@
     height: auto;
     border-radius: 8px;
 }
+
+.vaccineListContainer {
+    padding-top: 20px;
+}
+
+.titleHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    color: #2A388F;
+  
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  
+    span {
+      font-size: 16px;
+      
+      a {
+        text-decoration: none;
+        color: #2A388F; 
+        font-weight: 500;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
