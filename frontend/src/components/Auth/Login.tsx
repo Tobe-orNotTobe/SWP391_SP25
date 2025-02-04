@@ -60,7 +60,7 @@ const Login: React.FC = () => {
                 </button>
                 <span><Link to="forgot-password">Quên Mật Khẩu?</Link></span>
             </form>
-            
+            <hr/>
             <span>Chưa có tài khoản? <Link to="/register">Đăng Kí Tại Đây</Link></span>
         </div>
     );

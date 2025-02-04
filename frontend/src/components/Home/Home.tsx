@@ -37,18 +37,27 @@ const Home: React.FC = () => {
               <p>{item.paragraph1}</p>
               <p>{item.paragraph2}</p>
               <div className="briefFullContent">
-                <a href="#">Xem Thêm</a>
+                <a href="/introduction">Xem Thêm</a>
               </div>
             </div>
             <div className="briefContentImage">
-              <img
+              <img 
                 src={`../../../src/assets/homepage/${item.image}`}
                 alt={item.title}
               />
             </div>
           </div>
-        ))}
-        <div></div>
+        ))}        
+      </div>
+      <div className="vaacineListContainer">
+        <div className="vaacineHeader">
+          <h2>Danh Mục Vaccine</h2>
+          <span>Xem Tất Cả</span>
+        </div>
+        <hr></hr>
+        <div className="vaccineListIntro">
+          
+        </div>
       </div>
     </div>
   );

@@ -30,13 +30,13 @@ const CustomerNavbar: React.FC = () => {
             </div>
             <nav className="mainNavbarContainer">
                 <ul className="cusNavbarLink">
-                    <li><a href="/homepage" className="cusNavItem">Trang Chủ</a></li>
-                    <li><a href="#" className="cusNavItem">Giới Thiệu</a></li>
-                    <li><a href="#" className="cusNavItem">Vaccine </a></li>
-                    <li><a href="#" className="cusNavItem">Gói Vaccine </a></li>
-                    <li><a href="#" className="cusNavItem">Cẩm Nang</a></li>
-                    <li><a href="#" className="cusNavItem">Điều Khoản và Dịch Vụ</a></li>
-                    <li><a href="#" className="cusNavItem">Tin Tức</a></li>                
+                    <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
+                    <li><Link to="#" className="cusNavItem">Giới Thiệu</Link></li>
+                    <li><Link to="#" className="cusNavItem">Vaccine </Link></li>
+                    <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
+                    <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>
+                    <li><Link to="#" className="cusNavItem">Điều Khoản và Dịch Vụ</Link></li>
+                    <li><Link to="#" className="cusNavItem">Tin Tức</Link></li>                
                 </ul>
                 <div className="authButtonLink">
                     

@@ -178,7 +178,7 @@ export const useRegister = () => {
     const handleDoBChange = (value: string) => {
         setDob(value);
         if (!value) {
-            setErrorDoB("Vui lòng nhập ngày sinh.");
+            setErrorDoB("Không Được Để Trống Ngày Sinh");
         } else {
             setErrorDoB(null);
         }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./FloatingButtons.scss"
+import "./FloatingButtons.scss";
 import { FaArrowUp, FaFacebookMessenger, FaPhoneAlt } from "react-icons/fa";
 
 const FloatingButtons: React.FC = () => {
@@ -21,36 +21,33 @@ const FloatingButtons: React.FC = () => {
     <div className="floatingButtons">
       {/* Scroll to Top Button */}
       {showScrollButton && (
-        <button
-          className="scrollToTop"
-          onClick={scrollToTop}
-          aria-label="Scroll to top"
-        >
-          <FaArrowUp />
-        </button>
+        <div className="buttonWrapper">
+          <div className="buttonText">Lên đầu trang</div>
+          <button className="scrollToTop" onClick={scrollToTop} aria-label="Scroll to top">
+            <FaArrowUp />
+          </button>
+        </div>
       )}
+
       {/* Messenger Button */}
-      <a
-        href="https://www.facebook.com/profile.php?id=100035700756928"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="messenger"
-        aria-label="Chat with us on Messenger"
-      >
-        <FaFacebookMessenger />
-      </a>
+      <div className="buttonWrapper">
+        <div className="buttonText">Messenger - Chat với chúng tôi</div>
+        <a href="https://www.facebook.com/profile.php?id=100035700756928"
+          target="_blank" rel="noopener noreferrer"
+          className="messenger" aria-label="Chat with us on Messenger">
+          <FaFacebookMessenger size={30}/>
+        </a>
+      </div>
 
       {/* Zalo Button */}
-      <a
-        href="https://zalo.me/0816518989"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="zalo"
-        aria-label="Chat with us on Zalo"
-      >
-        <FaPhoneAlt />
-      </a>
-
+      <div className="buttonWrapper">
+        <div className="buttonText">Zalo - Hỗ trợ khách hàng</div>
+        <a href="https://zalo.me/0816518989"
+          target="_blank" rel="noopener noreferrer"
+          className="zalo" aria-label="Chat with us on Zalo">
+          <FaPhoneAlt size={30}/>
+        </a>
+      </div>
     </div>
   );
 };

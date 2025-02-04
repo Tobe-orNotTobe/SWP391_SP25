@@ -1,53 +1,73 @@
-@font-face {
-    font-family: 'MyriadPro';
-    src: url('../../../assets/font/Myriad_Pro_Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
-
 .floatingButtons {
-    font-family: 'MyriadPro';
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 1000;
-  
-    .messenger,
-    .zalo,
-    .scrollToTop {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 24px;
-      text-decoration: none;
-      transition: transform 0.3s;
-  
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-  
-    .messenger {
-      background-color: #0084ff;
-    }
-  
-    .zalo {
-      background-color: #32a7e2;
-    }
-  
-    .scrollToTop {
-      background-color: #555;
-      border: none;
-      cursor: pointer;
-      outline: none;
-      color: white;
-    }
-  }
-  
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: transform 0.3s;
+}
+
+.messenger,
+.zalo,
+.scrollToTop {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  animation: blink 1.5s infinite alternate; /* Hiệu ứng nhấp nháy */
+}
+
+.messenger { background-color: #0084ff; }
+.zalo { background-color: #32a7e2; }
+.scrollToTop { background-color: #555; border: none; outline: none; }
+
+/* Hiệu ứng Hover: Hiện Text */
+.buttonText {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.3s, transform 0.3s;
+  position: absolute;
+  right: 80px; /* Khoảng cách với icon */
+}
+
+/* Khi hover vào nút, hiển thị chữ */
+.buttonWrapper:hover .buttonText {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Hiệu ứng hover */
+.messenger:hover,
+.zalo:hover,
+.scrollToTop:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Hiệu ứng nhấp nháy */
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
