@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./FloatingButtons.scss";
-import { FaArrowUp, FaFacebookMessenger, FaPhoneAlt } from "react-icons/fa";
+import { FaArrowUp, FaCalendar, FaFacebookMessenger, FaPhoneAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const FloatingButtons: React.FC = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollButton(window.scrollY > 200); // Hiện nút khi cuộn quá 200px
+      setShowScrollButton(window.scrollY > 200);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -19,36 +20,39 @@ const FloatingButtons: React.FC = () => {
 
   return (
     <div className="floatingButtons">
-      {/* Scroll to Top Button */}
       {showScrollButton && (
-        <div className="buttonWrapper">
-          <div className="buttonText">Lên đầu trang</div>
-          <button className="scrollToTop" onClick={scrollToTop} aria-label="Scroll to top">
-            <FaArrowUp />
-          </button>
-        </div>
+        <button className="scrollToTop" onClick={scrollToTop} aria-label="Scroll to top">
+          <FaArrowUp size={30} />
+        </button>
       )}
 
-      {/* Messenger Button */}
       <div className="buttonWrapper">
-        <div className="buttonText">Messenger - Chat với chúng tôi</div>
-        <a href="https://www.facebook.com/profile.php?id=100035700756928"
+        <Link to="/booking"
           target="_blank" rel="noopener noreferrer"
-          className="messenger" aria-label="Chat with us on Messenger">
-          <FaFacebookMessenger size={30}/>
-        </a>
+          className="booking" aria-label="Đăng Ký Tiêm Ngay">
+          <FaCalendar size={30} /> <span>Đăng Kí Tiêm Ngay</span>
+        </Link>
       </div>
 
-      {/* Zalo Button */}
       <div className="buttonWrapper">
-        <div className="buttonText">Zalo - Hỗ trợ khách hàng</div>
-        <a href="https://zalo.me/0816518989"
+        <Link to="https://www.facebook.com/profile.php?id=100035700756928"
           target="_blank" rel="noopener noreferrer"
-          className="zalo" aria-label="Chat with us on Zalo">
-          <FaPhoneAlt size={30}/>
-        </a>
+          className="messenger-icon" aria-label="Chat với chúng tôi">
+          <FaFacebookMessenger size={30} />
+        </Link>
       </div>
+
+      <div className="buttonWrapper">
+        <Link to="https://zalo.me/0816518989"
+          target="_blank" rel="noopener noreferrer"
+          className="phone-icon" aria-label="Hỗ Trợ Khách Hàng">
+          <FaPhoneAlt size={30} />
+        </Link>
+      </div>
+      {/* Nút đăng ký tiêm giữ nguyên */}
+      
     </div>
+    
   );
 };
 

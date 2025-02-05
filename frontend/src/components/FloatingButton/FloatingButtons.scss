@@ -1,7 +1,7 @@
 .floatingButtons {
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  right: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -13,61 +13,120 @@
   align-items: center;
   position: relative;
   transition: transform 0.3s;
+  padding-bottom: 70px;
 }
 
-.messenger,
-.zalo,
-.scrollToTop {
-  width: 70px;
+.booking {
+  width: 150%;
   height: 70px;
+  border-radius: 5px 5px 0px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2A388F;
+  color: #FFB400;
+  font-size: 15px;
+  text-decoration: none;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  animation: zoomEffect 1.5s infinite alternate;
+}
+
+@keyframes zoomEffect {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.booking svg {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.booking span{
+  margin-right: 10px;
+}
+
+.booking::after {
+  content: "";
+  position: absolute;
+  bottom: -10px; 
+  right: -10px;  
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid currentColor;
+  transform: rotate(45deg);
+  filter: brightness(0.99); 
+}
+
+/* Messenger và Phone chỉ có icon, sát mép phải */
+.messenger-icon,
+.phone-icon {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 24px;
   text-decoration: none;
-  transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
-  animation: blink 1.5s infinite alternate; /* Hiệu ứng nhấp nháy */
+  transition: transform 0.3s;
+  position: fixed;
+  right: 10px;
 }
 
-.messenger { background-color: #0084ff; }
-.zalo { background-color: #32a7e2; }
-.scrollToTop { background-color: #555; border: none; outline: none; }
-
-
-.buttonText {
-  background-color: rgba(0, 0, 0, 0.8);
+.messenger-icon {
+  background-color: #0084ff;
   color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-size: 16px;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateX(10px);
-  transition: opacity 0.3s, transform 0.3s;
-  position: absolute;
-  right: 80px; /* Khoảng cách với icon */
+  bottom: 90px;
+  animation: shakeEffect 1s infinite alternate;
 }
 
-/* Khi hover vào nút, hiển thị chữ */
-.buttonWrapper:hover .buttonText {
-  opacity: 1;
-  transform: translateX(0);
+.phone-icon {
+  background-color: #32a7e2;
+  color: white;
+  bottom: 30px;
+  animation: shakeEffect 1s infinite alternate;
 }
 
-/* Hiệu ứng hover */
-.messenger:hover,
-.zalo:hover,
+@keyframes shakeEffect {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Hover Effect */
+.messenger-icon:hover,
+.phone-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Nút cuộn lên */
+.scrollToTop {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #555;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: fixed;
+  right: 10px;
+  bottom: 150px;
+  transition: transform 0.3s;
+}
+
 .scrollToTop:hover {
   transform: scale(1.1);
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* Hiệu ứng nhấp nháy */
-@keyframes blink {
-  0% { opacity: 1; }
-  50% { opacity: 0.6; }
-  100% { opacity: 1; }
 }
