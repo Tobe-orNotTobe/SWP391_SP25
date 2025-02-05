@@ -72,7 +72,7 @@ const Home: React.FC = () => {
               <Row gutter={[16, 16]}>
                 {chunk.map((item) => (
                   <Col key={item.id} xs={12} sm={12} md={6} lg={6}>
-                    <VaccineCard id={item.id} name={item.name} image={item.image} />
+                    <VaccineCard id={item.id} name={item.name} image={item.image} manufacturer={item.manufacturer} />
                   </Col>
                 ))}
               </Row>
