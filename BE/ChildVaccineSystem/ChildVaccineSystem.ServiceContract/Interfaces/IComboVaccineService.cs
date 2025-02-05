@@ -1,17 +1,12 @@
-﻿using ChildVaccineSystem.Data.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChildVaccineSystem.Data.DTO;
 
 namespace ChildVaccineSystem.ServiceContract.Interfaces
 {
     public interface IComboVaccineService
     {
-        Task<IEnumerable<ComboVaccineDTO>> GetAllAsync();
-        Task<ComboVaccineDTO> GetByIdAsync(int id);
-        Task<ComboVaccineDTO> CreateAsync(ComboVaccineDTO comboDto);
-        Task<bool> DeleteAsync(int id);
+        Task<List<ComboVaccineDTO>> GetAllAsync();
+        Task<ComboVaccineDTO?> GetByIdAsync(int id);
     }
 }

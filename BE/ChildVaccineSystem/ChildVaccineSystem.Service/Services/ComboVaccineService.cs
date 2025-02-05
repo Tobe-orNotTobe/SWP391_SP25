@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using ChildVaccineSystem.Data.DTO;
-using ChildVaccineSystem.Data.Entities;
-using ChildVaccineSystem.RepositoryContract.Interfaces;
-using ChildVaccineSystem.ServiceContract.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.RepositoryContract.Interfaces;
+using ChildVaccineSystem.ServiceContract.Interfaces;
 
 namespace ChildVaccineSystem.Service.Services
 {
@@ -22,27 +19,16 @@ namespace ChildVaccineSystem.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ComboVaccineDTO>> GetAllAsync()
+        public async Task<List<ComboVaccineDTO>> GetAllAsync()
         {
             var combos = await _comboRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<ComboVaccineDTO>>(combos);
+            return _mapper.Map<List<ComboVaccineDTO>>(combos);
         }
 
-        public async Task<ComboVaccineDTO> GetByIdAsync(int id)
+        public async Task<ComboVaccineDTO?> GetByIdAsync(int id)
         {
             var combo = await _comboRepository.GetByIdAsync(id);
             return _mapper.Map<ComboVaccineDTO>(combo);
-        }
-
-        public async Task<ComboVaccineDTO> CreateAsync(ComboVaccineDTO comboDto)
-        {
-            var combo = _mapper.Map<ComboVaccine>(comboDto);
-            return _mapper.Map<ComboVaccineDTO>(await _comboRepository.CreateAsync(combo, comboDto.VaccineIds));
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            return await _comboRepository.DeleteAsync(id);
         }
     }
 }

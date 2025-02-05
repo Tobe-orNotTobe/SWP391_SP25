@@ -1,12 +1,10 @@
-﻿using ChildVaccineSystem.Data.Entities;
-using ChildVaccineSystem.Data.Models;
-using ChildVaccineSystem.RepositoryContract.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ChildVaccineSystem.Data.Entities;
+using ChildVaccineSystem.RepositoryContract.Interfaces;
+using ChildVaccineSystem.Data.Models;
 
 namespace ChildVaccineSystem.Repository.Repositories
 {
@@ -22,7 +20,7 @@ namespace ChildVaccineSystem.Repository.Repositories
         public async Task<IEnumerable<ComboVaccine>> GetAllAsync()
         {
             return await _context.ComboVaccines
-                .Include(c => c.ComboDetails)
+                .Include(cv => cv.ComboDetails)
                 .ThenInclude(cd => cd.Vaccine)
                 .ToListAsync();
         }
@@ -30,38 +28,9 @@ namespace ChildVaccineSystem.Repository.Repositories
         public async Task<ComboVaccine?> GetByIdAsync(int id)
         {
             return await _context.ComboVaccines
-                .Include(c => c.ComboDetails)
+                .Include(cv => cv.ComboDetails)
                 .ThenInclude(cd => cd.Vaccine)
-                .FirstOrDefaultAsync(c => c.ComboId == id);
-        }
-
-        public async Task<ComboVaccine> CreateAsync(ComboVaccine combo, IEnumerable<int> vaccineIds)
-        {
-            _context.ComboVaccines.Add(combo);
-            await _context.SaveChangesAsync();
-
-            foreach (var vaccineId in vaccineIds)
-            {
-                var comboDetail = new ComboDetail
-                {
-                    ComboId = combo.ComboId,
-                    VaccineId = vaccineId
-                };
-                _context.ComboDetail.Add(comboDetail);
-            }
-
-            await _context.SaveChangesAsync();
-            return combo;
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var combo = await _context.ComboVaccines.FindAsync(id);
-            if (combo == null) return false;
-
-            _context.ComboVaccines.Remove(combo);
-            await _context.SaveChangesAsync();
-            return true;
+                .FirstOrDefaultAsync(cv => cv.ComboId == id);
         }
     }
 }

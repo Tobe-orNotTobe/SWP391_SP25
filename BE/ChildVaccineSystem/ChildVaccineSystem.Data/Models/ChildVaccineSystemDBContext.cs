@@ -69,7 +69,6 @@ namespace ChildVaccineSystem.Data.Models
                 .HasForeignKey(vr => vr.BookingDetailId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Cấu hình quan hệ giữa ComboVaccine và ComboDetail
             modelBuilder.Entity<ComboVaccine>()
                 .HasMany(cv => cv.ComboDetails)
                 .WithOne(cd => cd.ComboVaccine)

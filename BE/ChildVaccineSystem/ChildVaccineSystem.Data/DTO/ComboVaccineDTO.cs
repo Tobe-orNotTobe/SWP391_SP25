@@ -16,6 +16,6 @@ namespace ChildVaccineSystem.Data.DTO
         public int ValidityMonths { get; set; }
         public DateTime EffectiveDate { get; set; }
         public DateTime ExpiryDate { get; set; }
-        public List<int> VaccineIds { get; set; }  // Danh sách vaccine trong gói
+        public List<int> VaccineIds { get; set; }
     }
 }

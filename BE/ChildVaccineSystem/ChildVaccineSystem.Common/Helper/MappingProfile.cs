@@ -12,6 +12,10 @@ namespace ChildVaccineSystem.Common.Helper
         {
             // Vaccine Mapping
             CreateMap<Vaccine, VaccineDTO>().ReverseMap();
+
+            CreateMap<ComboVaccine, ComboVaccineDTO>()
+                .ForMember(dest => dest.VaccineIds, opt => opt.MapFrom(src => src.ComboDetails.Select(cd => cd.VaccineId)))
+                .ReverseMap();
         }
     }
 }
