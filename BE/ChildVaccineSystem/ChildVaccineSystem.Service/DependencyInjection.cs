@@ -10,7 +10,7 @@ namespace ChildVaccineSystem.Service
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IVaccineService, VaccineService>();
+            services.AddTransient<IVaccineService, VaccineService>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddScoped<APIResponse>();
             services.AddTransient<IComboVaccineService, ComboVaccineService>();

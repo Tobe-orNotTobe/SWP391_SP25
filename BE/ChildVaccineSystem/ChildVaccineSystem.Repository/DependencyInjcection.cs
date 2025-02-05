@@ -8,10 +8,14 @@ namespace ChildVaccineSystem.Repository
     {
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IVaccineRepository, VaccineRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IVaccineRepository, VaccineRepository>();
             services.AddTransient<IEmailRepository, EmailRepository>();
             services.AddTransient<IComboVaccineRepository, ComboVaccineRepository>();
+
+            //DI Unit of Work
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
             return services;
         }
     }
