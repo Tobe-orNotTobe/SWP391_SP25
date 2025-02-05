@@ -14,7 +14,7 @@ namespace ChildVaccineSystem.Data.Entities
         public BookingDetail BookingDetail { get; set; }
 
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; } 
         public User User { get; set; }
 
         [Required]
@@ -26,7 +26,7 @@ namespace ChildVaccineSystem.Data.Entities
 
         public int Sequence { get; set; }
 
-        public DateTime? NextDoseDate { get; set; }  
+        public DateTime? NextDoseDate { get; set; }
 
         [Required]
         public decimal DoseAmount { get; set; }

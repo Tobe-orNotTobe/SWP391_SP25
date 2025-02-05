@@ -11,8 +11,5 @@ namespace ChildVaccineSystem.Data.Entities
         public DateTime DateOfBirth { get; set; }
         public bool IsActive { get; set; } = true;
 
-        [ForeignKey("Role")]
-        public int RoleId { get; set; }
-        public IdentityRole? Role { get; set; }
     }
 }

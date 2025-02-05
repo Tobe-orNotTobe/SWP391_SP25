@@ -11,7 +11,6 @@ namespace ChildVaccineSystem.Data.Models
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingDetail> BookingDetails { get; set; }
         public DbSet<Children> Children { get; set; }
@@ -28,22 +27,24 @@ namespace ChildVaccineSystem.Data.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.User)
+                .WithMany()
+                .HasForeignKey(b => b.UserId)
+                .HasPrincipalKey(u => u.Id) 
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.User)
                 .WithMany()
                 .HasForeignKey(t => t.UserId)
+                .HasPrincipalKey(u => u.Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Booking)
                 .WithMany()
                 .HasForeignKey(t => t.BookingId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.User)
-                .WithMany()
-                .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Booking>()
@@ -56,7 +57,8 @@ namespace ChildVaccineSystem.Data.Models
                 .HasOne(vr => vr.User)
                 .WithMany()
                 .HasForeignKey(vr => vr.UserId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .HasPrincipalKey(u => u.Id)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<VaccinationRecord>()
                 .HasOne(vr => vr.BookingDetail)
@@ -65,4 +67,4 @@ namespace ChildVaccineSystem.Data.Models
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
-    }
+}
