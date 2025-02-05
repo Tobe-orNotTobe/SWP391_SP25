@@ -13,6 +13,7 @@ namespace ChildVaccineSystem.Service
             services.AddScoped<IVaccineService, VaccineService>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddScoped<APIResponse>();
+            services.AddTransient<IComboVaccineService, ComboVaccineService>();
             return services;
         }
     }

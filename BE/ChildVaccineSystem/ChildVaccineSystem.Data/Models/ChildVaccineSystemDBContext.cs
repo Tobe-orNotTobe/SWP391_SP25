@@ -23,6 +23,9 @@ namespace ChildVaccineSystem.Data.Models
         public DbSet<DoctorWorkSchedule> DoctorWorkSchedules { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
+        public DbSet<ComboDetail> ComboDetail { get; set; }
+
+        public DbSet<ComboVaccine> ComboVaccines { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -65,6 +68,13 @@ namespace ChildVaccineSystem.Data.Models
                 .WithMany()
                 .HasForeignKey(vr => vr.BookingDetailId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Cấu hình quan hệ giữa ComboVaccine và ComboDetail
+            modelBuilder.Entity<ComboVaccine>()
+                .HasMany(cv => cv.ComboDetails)
+                .WithOne(cd => cd.ComboVaccine)
+                .HasForeignKey(cd => cd.ComboId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
