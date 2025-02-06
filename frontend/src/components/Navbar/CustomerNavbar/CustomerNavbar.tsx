@@ -31,7 +31,7 @@ const CustomerNavbar: React.FC = () => {
             <nav className="mainNavbarContainer">
                 <ul className="cusNavbarLink">
                     <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
-                    <li><Link to="#" className="cusNavItem">Giới Thiệu</Link></li>
+                    <li><Link to="/introduction" className="cusNavItem">Giới Thiệu</Link></li>
                     <li><Link to="#" className="cusNavItem">Vaccine </Link></li>
                     <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
                     <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>
