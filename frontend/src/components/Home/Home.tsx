@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router";
 import { Carousel, Row, Col } from "antd";
-import { useBriefContent, useImgCarousel, useVaccineIntro } from "../../hooks/useDecorative";
-import { VaccineCard } from "../Card/Card";
+import { useBriefContent, useImgCarousel, useVaccineIntro, useVaccineServiceIntro } from "../../hooks/useDecorative";
+import { ServiceCard, VaccineCard } from "../Card/Card";
 
 import "./Home.scss"
 
@@ -10,6 +10,7 @@ const Home: React.FC = () => {
   const { imgCarousel, loading, error } = useImgCarousel();
   const { briefContent } = useBriefContent();
   const {vaccineIntro} = useVaccineIntro();
+  const {vaccineServiceIntro} = useVaccineServiceIntro();
 
   if (loading) {
     return <p>Loading...</p>;
@@ -86,6 +87,22 @@ const Home: React.FC = () => {
           <h2>Dịch Vụ Tiêm Chủng</h2>
         </div>
         <hr></hr>
+        <div className="vaccineServiceIntro">
+            <Row gutter={[16, 16]}>
+              {vaccineServiceIntro.slice(0,5).map((service) => (
+                <Col key={service.id} xs={12} sm={12} md={6} lg={6}>
+                  <ServiceCard id={service.id} name={service.name} image={service.image}/>
+                </Col>
+                ))}
+            </Row>
+        </div>
+      </div>
+      <div className="blogListContainer">
+        <div className="titleHeader">
+          <h2>Tin Tức</h2>
+        </div>
+        <hr></hr>      
+
       </div>
     </div>
   );

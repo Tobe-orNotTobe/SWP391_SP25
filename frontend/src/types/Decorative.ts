@@ -15,3 +15,9 @@ export interface VaccineIntro{
     manufacturer: string;
     image: string;
 }
+
+export interface VaccineService {
+    id: string;
+    name: string;
+    image: string; 
+}

@@ -1,9 +1,47 @@
-.cardContainer img{
+
+//Cái nầy là cho cái Card để hiển thị thông tin Vaccine trên Hompage
+.cardVaccineContainer img{
   width: 100%;
   height: 170px;
   padding-top: 10px;
 }
 
-.cardTitle{
+.cardVaccineTitle{
     padding-top: 15px;
+}
+
+//Còn cái này là cho các tên của loại service mà trang web sẽ phục vụ trên homepagehomepage|
+.cardServiceContainer {
+  margin-top: 10px;
+  width: 16rem;
+  height: 16rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contentOverplay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(0.0004px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardServiceTitle {
+   /* Nền trắng mờ */
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: White;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
 }

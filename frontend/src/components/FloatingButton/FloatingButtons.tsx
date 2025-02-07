@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./FloatingButtons.scss";
-import { FaArrowUp, FaCalendar, FaFacebookMessenger, FaPhoneAlt } from "react-icons/fa";
+import { FaArrowUp, FaCalendarAlt, FaFacebookMessenger, FaPhoneAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const FloatingButtons: React.FC = () => {
@@ -30,7 +30,7 @@ const FloatingButtons: React.FC = () => {
         <Link to="/booking"
           target="_blank" rel="noopener noreferrer"
           className="booking" aria-label="Đăng Ký Tiêm Ngay">
-          <FaCalendar size={30} /> <span>Đăng Kí Tiêm Ngay</span>
+          <FaCalendarAlt size={30} /> <span>Đăng Kí Tiêm Ngay</span>
         </Link>
       </div>
 

@@ -120,12 +120,6 @@
         "image": "../../../src/assets/vaccine/MVVAC_Vaccine.jpg"
     },
     {
-        "id": "vcc20",
-        "name": "Vắc xin Mvvac",
-        "manufacturer": "Việt Nam",
-        "image": "../../../src/assets/vaccine/MVVAC_Vaccine.jpg"
-    },
-    {
         "id": "vcc21",
         "name": "Vắc xin Ivacflu-S",
         "manufacturer": "Việt Nam",
@@ -292,5 +286,11 @@
         "name": "Vắc xin Qdenga",
         "manufacturer": "Đức",
         "image": "../../../src/assets/vaccine/Vaccine_Qdenga.png"
+    },
+    {
+        "id": "vcc50",
+        "name": "Vắc xin Mvvac",
+        "manufacturer": "Việt Nam",
+        "image": "../../../src/assets/vaccine/MVVAC_Vaccine.jpg"
     }
 ]

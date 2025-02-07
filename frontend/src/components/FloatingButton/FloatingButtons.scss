@@ -13,7 +13,7 @@
   align-items: center;
   position: relative;
   transition: transform 0.3s;
-  padding-bottom: 70px;
+  padding-bottom: 60px;
 }
 
 .booking {
@@ -64,7 +64,7 @@
   filter: brightness(0.99); 
 }
 
-/* Messenger và Phone chỉ có icon, sát mép phải */
+
 .messenger-icon,
 .phone-icon {
   width: 50px;
@@ -125,8 +125,10 @@
   right: 10px;
   bottom: 150px;
   transition: transform 0.3s;
+  z-index: 5000;
 }
 
 .scrollToTop:hover {
   transform: scale(1.1);
 }
+
