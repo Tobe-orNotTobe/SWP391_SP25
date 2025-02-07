@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router";
 import { Carousel, Row, Col } from "antd";
-import { useBriefContent, useImgCarousel, useVaccineIntro, useVaccineServiceIntro } from "../../hooks/useDecorative";
+import { useBriefContent, useImgCarousel } from "../../hooks/useDecorative"
+import { useVaccineIntro, useVaccineServiceIntro } from "../../hooks/useVaccine";
 import { ServiceCard, VaccineCard } from "../Card/Card";
 
 import "./Home.scss"

@@ -9,15 +9,10 @@ export interface BriefContent{
     paragraph2: string;
 }
 
-export interface VaccineIntro{
+export interface BlogIntro {
     id: string;
-    name: string;
-    manufacturer: string;
+    title: string;
+    briefContent: string;
     image: string;
 }
 
-export interface VaccineService {
-    id: string;
-    name: string;
-    image: string; 
-}
