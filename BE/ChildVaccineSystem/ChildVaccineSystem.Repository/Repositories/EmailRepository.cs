@@ -34,6 +34,10 @@ namespace ChildVaccineSystem.Repository.Repositories
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_emailSetting.Email));
+            if (string.IsNullOrEmpty(request.toEmail) || !request.toEmail.Contains("@"))
+            {
+                throw new Exception("Invalid recipient email: " + request.toEmail);
+            }
             email.To.Add(MailboxAddress.Parse(request.toEmail));
             email.Subject = request.Subject;
 
@@ -98,10 +102,10 @@ namespace ChildVaccineSystem.Repository.Repositories
                 </p>
                 <p>If you did not request a password reset, please ignore this email. Your account remains secure.</p>
                 <p>Best regards,</p>
-                <p><strong>Cursus Team</strong></p>
+                <p><strong>ChildVaccineSystem</strong></p>
             </div>
             <div class='email-footer'>
-                <p>&copy; 2024 Cursus. All rights reserved.</p>
+                <p>&copy; 2025 ChildVaccineSystem. All rights reserved.</p>
             </div>
         </div>
     </body>

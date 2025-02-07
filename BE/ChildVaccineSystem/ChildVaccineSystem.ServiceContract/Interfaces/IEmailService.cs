@@ -11,8 +11,8 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
     public interface IEmailService
     {
         public void SendEmail(EmailRequestDTO request);
-        public void SendEmailConfirmation(string username, string confirmLink);    
-        Task SendEmailAsync(User user, string resetLink);
+        public void SendEmailConfirmation(string username, string confirmLink);        
+        Task SendEmailForgotPassword(string email, string resetLink);
 
     }
 }
