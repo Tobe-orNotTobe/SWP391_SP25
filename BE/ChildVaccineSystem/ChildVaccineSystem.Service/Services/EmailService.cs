@@ -34,29 +34,38 @@ namespace ChildVaccineSystem.Service.Services
 
         }
 
-        public void SendEmailConfirmation(string username, string confirmLink)
+        public void SendEmailConfirmation(string email, string confirmLink)
         {
+            if (string.IsNullOrEmpty(email) || !email.Contains("@"))
+            {
+                throw new Exception("Invalid email address: " + email);
+            }
+
             EmailRequestDTO request = new EmailRequestDTO
             {
                 Subject = "Cursus Email Confirmation",
-                Body = "",
-                toEmail = username
+                toEmail = email,
+                Body = $"Click vào link sau để xác nhận tài khoản: {confirmLink}"
             };
             _emailRepository.SendEmailConfirmation(request, confirmLink);
 
         }
 
-        public async Task SendEmailAsync(User user, string resetLink)
+        public async Task SendEmailForgotPassword(string email, string resetLink)
         {
-            var emailRequest = new EmailRequestDTO
+            if (string.IsNullOrEmpty(email) || !email.Contains("@"))
             {
-                Subject = "Password Reset Request",
-                toEmail = user.Email // Sử dụng email thực của người dùng
+                throw new Exception("Invalid email address: " + email);
+            }
+
+            var request = new EmailRequestDTO
+            {
+                Subject = "Reset Your Password",
+                toEmail = email,
+                Body = $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>"
             };
 
-            _emailRepository.SendEmailForgotPassword(emailRequest, resetLink);
-
+            _emailRepository.SendEmailForgotPassword(request, resetLink);
         }
-
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChildVaccineSystem.Data.DTO
 {
-    public class LoginDTO
+    public class LoginRequestDTO
     {
-        public string Account { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
     }
 }

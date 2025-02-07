@@ -3,6 +3,7 @@ using ChildVaccineSystem.Service.Services;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 using ChildVaccineSystem.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ChildVaccineSystem.Service
 {
@@ -14,6 +15,7 @@ namespace ChildVaccineSystem.Service
             services.AddTransient<IEmailService, EmailService>();
             services.AddScoped<APIResponse>();
             services.AddTransient<IComboVaccineService, ComboVaccineService>();
+            services.AddTransient<IAuthService, AuthService>();
             return services;
         }
     }
