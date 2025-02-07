@@ -4,6 +4,7 @@ using ChildVaccineSystem.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChildVaccineSystem.Data.Migrations
 {
     [DbContext(typeof(ChildVaccineSystemDBContext))]
-    partial class ChildVaccineSystemDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250205012541_SecondMigration")]
+    partial class SecondMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,68 +131,6 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Children");
-                });
-
-            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.ComboDetail", b =>
-                {
-                    b.Property<int>("ComboDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComboDetailId"));
-
-                    b.Property<int>("ComboId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VaccineId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ComboDetailId");
-
-                    b.HasIndex("ComboId");
-
-                    b.HasIndex("VaccineId");
-
-                    b.ToTable("ComboDetail");
-                });
-
-            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.ComboVaccine", b =>
-                {
-                    b.Property<int>("ComboId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComboId"));
-
-                    b.Property<string>("ComboName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAtUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EffectiveDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ValidityMonths")
-                        .HasColumnType("int");
-
-                    b.HasKey("ComboId");
-
-                    b.ToTable("ComboVaccines");
                 });
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.DoctorWorkSchedule", b =>
@@ -738,25 +679,6 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.ComboDetail", b =>
-                {
-                    b.HasOne("ChildVaccineSystem.Data.Entities.ComboVaccine", "ComboVaccine")
-                        .WithMany("ComboDetails")
-                        .HasForeignKey("ComboId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ChildVaccineSystem.Data.Entities.Vaccine", "Vaccine")
-                        .WithMany()
-                        .HasForeignKey("VaccineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ComboVaccine");
-
-                    b.Navigation("Vaccine");
-                });
-
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.DoctorWorkSchedule", b =>
                 {
                     b.HasOne("ChildVaccineSystem.Data.Entities.Booking", "Booking")
@@ -904,11 +826,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.ComboVaccine", b =>
-                {
-                    b.Navigation("ComboDetails");
                 });
 #pragma warning restore 612, 618
         }
