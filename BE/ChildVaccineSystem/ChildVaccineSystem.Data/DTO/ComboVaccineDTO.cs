@@ -8,7 +8,7 @@ namespace ChildVaccineSystem.Data.DTO
 {
     public class ComboVaccineDTO
     {
-        public int ComboId { get; set; } // Should be excluded from Create requests
+        public int ComboId { get; set; } 
         public string ComboName { get; set; }
         public string Description { get; set; }
         public decimal TotalPrice { get; set; }
@@ -16,6 +16,8 @@ namespace ChildVaccineSystem.Data.DTO
         public int ValidityMonths { get; set; }
         public DateTime EffectiveDate { get; set; }
         public DateTime ExpiryDate { get; set; }
+        public int ScheduleId { get; set; } 
+
         public List<int> VaccineIds { get; set; }
     }
 }
