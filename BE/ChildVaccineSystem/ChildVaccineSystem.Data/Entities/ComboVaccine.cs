@@ -23,8 +23,7 @@ namespace ChildVaccineSystem.Data.Entities
         public DateTime CreatedAtUpdatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
-    }
-
+    
 		[ForeignKey("Schedule")]
 		public int ScheduleId { get; set; }
 		public VaccinationSchedule Schedule { get; set; }
