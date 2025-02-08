@@ -52,38 +52,71 @@ namespace ChildVaccineSystem.Service.Services
             var refreshToken = GenerateRefreshToken();
             return new LoginResponseDTO
             {
-                User = _mapper.Map<UserDTO>(user),
+                //User = _mapper.Map<UserDTO>(user),
                 Token = token,
-                RefreshToken = refreshToken,
-                Role = await _userManager.GetRolesAsync(user)
+                //RefreshToken = refreshToken,
+                //Role = await _userManager.GetRolesAsync(user)
             };
         }
 
 
         public async Task<User> RegisterAsync(UserRegisterDTO dto)
         {
+            // Validate if email is null or empty
+            if (string.IsNullOrWhiteSpace(dto.Email) || !dto.Email.Contains("@"))
+                throw new Exception("Invalid email address.");
+
+            // Validate if username is null or empty
+            if (string.IsNullOrWhiteSpace(dto.UserName))
+                throw new Exception("Username cannot be empty.");
+
+            // Check if email already exists
             var userExists = await _userManager.FindByEmailAsync(dto.Email);
             if (userExists != null)
                 throw new Exception("Email already exists.");
 
+            // Check if username already exists
+            var usernameExists = await _userManager.FindByNameAsync(dto.UserName);
+            if (usernameExists != null)
+                throw new Exception("Username already exists.");
+
+            // Validate password complexity (at least 6 characters as an example)
+            if (string.IsNullOrWhiteSpace(dto.Password) || dto.Password.Length < 6)
+                throw new Exception("Password must be at least 6 characters long, including at least 1 uppercase letter, 1 lowercase letter, 1 special character, and 1 numeric character");
+
+            // Map DTO to User entity
             var user = _mapper.Map<User>(dto);
+
+            // Attempt to create the user
             var result = await _userManager.CreateAsync(user, dto.Password);
-
             if (!result.Succeeded)
-                throw new Exception("User registration failed.");
+            {
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                throw new Exception($"User registration failed: {errors}");
+            }
 
+            // Check if role exists, if not, create it
             if (!await _roleManager.RoleExistsAsync(dto.Role))
-                await _roleManager.CreateAsync(new IdentityRole(dto.Role));
+            {
+                var roleResult = await _roleManager.CreateAsync(new IdentityRole(dto.Role));
+                if (!roleResult.Succeeded)
+                {
+                    var roleErrors = string.Join("; ", roleResult.Errors.Select(e => e.Description));
+                    throw new Exception($"Role creation failed: {roleErrors}");
+                }
+            }
 
+            // Assign role to the user
             await _userManager.AddToRoleAsync(user, dto.Role);
 
-            // Send confirmation email
+            // Generate confirmation email token and send email
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmLink = $"{_configuration["AppSettings:FrontendUrl"]}/confirm-email?email={user.Email}&token={token}";
             _emailService.SendEmailConfirmation(user.Email, confirmLink);
 
             return user;
         }
+
 
         public async Task<bool> ConfirmEmailAsync(string email, string token)
         {
@@ -107,10 +140,10 @@ namespace ChildVaccineSystem.Service.Services
 
             return new LoginResponseDTO
             {
-                User = _mapper.Map<UserDTO>(user),
+                //User = _mapper.Map<UserDTO>(user),
                 Token = newToken,
-                RefreshToken = newRefreshToken,
-                Role = await _userManager.GetRolesAsync(user)
+                //RefreshToken = newRefreshToken,
+                //Role = await _userManager.GetRolesAsync(user)
             };
         }
 
