@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,9 @@ namespace ChildVaccineSystem.Data.Entities
 
         public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
 
-    }
+		[ForeignKey("Schedule")]
+		public int ScheduleId { get; set; }
+		public VaccinationSchedule Schedule { get; set; }
+	}
 
 }
