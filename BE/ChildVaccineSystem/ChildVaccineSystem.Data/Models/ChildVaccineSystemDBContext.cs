@@ -9,6 +9,7 @@ namespace ChildVaccineSystem.Data.Models
         public ChildVaccineSystemDBContext(DbContextOptions<ChildVaccineSystemDBContext> options) : base(options)
         {
         }
+        public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
 
         public DbSet<User> Users { get; set; }
         public DbSet<Booking> Bookings { get; set; }
@@ -74,6 +75,18 @@ namespace ChildVaccineSystem.Data.Models
                 .WithOne(cd => cd.ComboVaccine)
                 .HasForeignKey(cd => cd.ComboId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ComboDetail>()
+    .HasOne(cd => cd.Vaccine)
+    .WithMany()
+    .HasForeignKey(cd => cd.VaccineId)
+    .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ComboVaccine>()
+    .HasMany(cv => cv.ComboDetails)
+    .WithOne(cd => cd.ComboVaccine)
+    .HasForeignKey(cd => cd.ComboId)
+    .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
