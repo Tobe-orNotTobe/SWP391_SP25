@@ -12,5 +12,7 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         Task<Vaccine?> UpdateAsync(int id, Vaccine vaccine);
         Task<bool> DeleteAsync(int id);
         Task<IEnumerable<Vaccine>> GetVaccinesByTypeAsync(bool isNecessary);
+        Task<IEnumerable<int>> GetAllIdsAsync();
+
     }
 }

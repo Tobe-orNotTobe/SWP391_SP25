@@ -11,6 +11,7 @@ namespace ChildVaccineSystem.Service
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+
             services.AddTransient<IVaccineService, VaccineService>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddScoped<APIResponse>();

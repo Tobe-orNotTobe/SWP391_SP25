@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ChildVaccineSystem.Common.Helper
 {
@@ -13,10 +13,17 @@ namespace ChildVaccineSystem.Common.Helper
             // Vaccine Mapping
             CreateMap<Vaccine, VaccineDTO>().ReverseMap();
 
+            // ComboVaccine Mapping
             CreateMap<ComboVaccine, ComboVaccineDTO>()
-                .ForMember(dest => dest.VaccineIds, opt => opt.MapFrom(src => src.ComboDetails.Select(cd => cd.VaccineId)))
-                .ReverseMap();
+                .ForMember(dest => dest.VaccineIds,
+                    opt => opt.MapFrom(src => src.ComboDetails.Select(cd => cd.VaccineId)))
+                .ReverseMap()
+                .ForMember(dest => dest.ComboDetails,
+                    opt => opt.MapFrom(src => src.VaccineIds.Select(id => new ComboDetail { VaccineId = id })))
+                .ForMember(dest => dest.CreatedAtUpdatedAt,
+                    opt => opt.MapFrom(src => DateTime.UtcNow));
 
+            // User Mapping
             CreateMap<User, UserDTO>();
 
             CreateMap<UserRegisterDTO, User>()
@@ -26,9 +33,8 @@ namespace ChildVaccineSystem.Common.Helper
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
-                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true)) 
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true)) // Default to true
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
-            
         }
     }
 }

@@ -16,6 +16,10 @@ namespace ChildVaccineSystem.Repository.Repositories
         {
             _context = context;
         }
+        public async Task<IEnumerable<int>> GetAllIdsAsync()
+        {
+            return await _context.Vaccines.Select(v => v.VaccineId).ToListAsync();
+        }
 
         public async Task<IEnumerable<Vaccine>> GetAllAsync()
         {

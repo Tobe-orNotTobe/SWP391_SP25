@@ -8,7 +8,7 @@ namespace ChildVaccineSystem.Data.DTO
 {
     public class ComboVaccineDTO
     {
-        public int ComboId { get; set; }
+        public int ComboId { get; set; } // Should be excluded from Create requests
         public string ComboName { get; set; }
         public string Description { get; set; }
         public decimal TotalPrice { get; set; }
