@@ -8,9 +8,9 @@ namespace ChildVaccineSystem.Data.DTO
 {
     public class LoginResponseDTO
     {
-        public UserDTO User { get; set; }
+        //public UserDTO User { get; set; }
         public string Token { get; set; }
-        public string RefreshToken { get; set; }
-        public IEnumerable<string> Role { get; set; }
+        //public string RefreshToken { get; set; }
+        //public IEnumerable<string> Role { get; set; }
     }
 }
