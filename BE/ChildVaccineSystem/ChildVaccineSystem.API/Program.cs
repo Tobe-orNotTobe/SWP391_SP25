@@ -5,6 +5,9 @@ using ChildVaccineSystem.Repository;
 using ChildVaccineSystem.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSettings"));
 
 // Add DbContext
 builder.Services.AddDbContext<ChildVaccineSystemDBContext>(options =>
@@ -19,6 +23,44 @@ builder.Services.AddDbContext<ChildVaccineSystemDBContext>(options =>
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Add JWT Configuration
+var jwtSecret = builder.Configuration["JWT:Key"]; ;
+if (string.IsNullOrEmpty(jwtSecret))
+{
+    throw new ArgumentNullException(nameof(jwtSecret), "JWT Secret cannot be null or empty.");
+}
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+    };
+
+});
+
+//Add Identity services for authentication & user management
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<ChildVaccineSystemDBContext>()
+    .AddDefaultTokenProviders();
+
+//Add UserManager and SignInManager for dependency injection
+builder.Services.AddScoped<UserManager<User>>();
+builder.Services.AddScoped<SignInManager<User>>();
 
 // Add Repositories and Services to DI Container
 builder.Services.AddRepositories();

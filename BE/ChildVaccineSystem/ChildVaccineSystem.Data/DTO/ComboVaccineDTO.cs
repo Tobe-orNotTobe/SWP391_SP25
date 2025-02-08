@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChildVaccineSystem.Data.Entities
+namespace ChildVaccineSystem.Data.DTO
 {
-    public class ComboVaccine
+    public class ComboVaccineDTO
     {
-        [Key]
         public int ComboId { get; set; }
         public string ComboName { get; set; }
         public string Description { get; set; }
@@ -18,10 +16,6 @@ namespace ChildVaccineSystem.Data.Entities
         public int ValidityMonths { get; set; }
         public DateTime EffectiveDate { get; set; }
         public DateTime ExpiryDate { get; set; }
-        public DateTime CreatedAtUpdatedAt { get; set; }
-
-        public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
-
+        public List<int> VaccineIds { get; set; }
     }
-
 }
