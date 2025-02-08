@@ -21,3 +21,14 @@ export const apiGetBrieftContent = async() => {
     }
 }
 
+
+export const apiGetBlogIntro = async() => {
+    try {
+        const response = await axios.get("Blog/BlogIntro.json");
+        return response.data;
+    } catch (err) {
+        console.error("Error Fetching Data", err);
+        return [];
+    }
+
+}

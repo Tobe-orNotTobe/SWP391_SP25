@@ -106,3 +106,24 @@
       }
     }
   }
+
+.blogListContainer {
+    padding: 20px 0;
+}
+
+.blogIntro {
+    .slick-list {
+        padding: 0 !important;
+    }
+}
+
+.blogRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.blogCardContainer {
+    flex: 1;
+    max-width: 25%; /* 4 phần tử trên một hàng */
+}

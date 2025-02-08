@@ -1,23 +1,24 @@
 import React from "react";
 import { Link } from "react-router";
 import { Carousel, Row, Col } from "antd";
-import { useBriefContent, useImgCarousel } from "../../hooks/useDecorative"
+import { useBlogIntro, useBriefContent, useImgCarousel } from "../../hooks/useDecorative"
 import { useVaccineIntro, useVaccineServiceIntro } from "../../hooks/useVaccine";
-import { ServiceCard, VaccineCard } from "../Card/Card";
+import { BlogCard, ServiceCard, VaccineCard } from "../Card/Card";
 
 import "./Home.scss"
 
 const Home: React.FC = () => {
   const { imgCarousel, loading, error } = useImgCarousel();
-  const { briefContent } = useBriefContent();
-  const {vaccineIntro} = useVaccineIntro();
-  const {vaccineServiceIntro} = useVaccineServiceIntro();
+  const { briefContent, loading : briefContentLoading, error : briefContentError } = useBriefContent();
+  const {vaccineIntro, loading: vaccineIntroLoading, error: vaccineIntroError} = useVaccineIntro();
+  const {vaccineServiceIntro, loading: vaccineServiceIntroLoading, error: vaccineServiceError} = useVaccineServiceIntro();
+  const {blogIntro, loading: blogIntroLoading, error : blogIntroError} = useBlogIntro();
 
-  if (loading) {
+  if (loading || briefContentLoading || vaccineIntroLoading || vaccineServiceIntroLoading || blogIntroLoading) {
     return <p>Loading...</p>;
   }
 
-  if (error) {
+  if (error || briefContentError || vaccineIntroError || vaccineServiceError || blogIntroError) {
     return <p>Error: {error}</p>;
   }
 
@@ -90,7 +91,7 @@ const Home: React.FC = () => {
         <hr></hr>
         <div className="vaccineServiceIntro">
             <Row gutter={[16, 16]}>
-              {vaccineServiceIntro.slice(0,5).map((service) => (
+              {vaccineServiceIntro.slice(0,4).map((service) => (
                 <Col key={service.id} xs={12} sm={12} md={6} lg={6}>
                   <ServiceCard id={service.id} name={service.name} image={service.image}/>
                 </Col>
@@ -98,12 +99,22 @@ const Home: React.FC = () => {
             </Row>
         </div>
       </div>
-      <div className="blogListContainer">
+      <div className="">
         <div className="titleHeader">
-          <h2>Tin Tức</h2>
+          <h2>Tin Tức Và Cầm Nang</h2>
         </div>
-        <hr></hr>      
-
+        <hr></hr>
+        <div className="blogIntro">
+            <Row gutter={[16, 16]}>
+              {blogIntro.slice(0, 4).map((blog, index) => (
+                <div key={index}>
+                  <Col key={blog.id} xs={24} sm={12} md={6} lg={6}>
+                    <BlogCard id={blog.id} title={blog.title} image={blog.image} briefContent={blog.briefContent} />
+                  </Col>
+                </div>
+              ))}
+            </Row>
+          </div>
       </div>
     </div>
   );

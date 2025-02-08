@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
-import { BriefContent, ImgCarousel} from "../types/Decorative"
+import { BlogIntro, BriefContent, ImgCarousel} from "../types/Decorative"
 
-import { apiGetBrieftContent, apiGetImgCarousel } from "../apis/apiDecorative";
+import { apiGetBlogIntro, apiGetBrieftContent, apiGetImgCarousel } from "../apis/apiDecorative";
 
 
 export const useImgCarousel = () =>{
@@ -54,3 +54,28 @@ export const useBriefContent = () =>{
         return {briefContent, loading, error};  
 }
 
+export const useBlogIntro = () => {
+    const [blogIntro, setBlogIntro] = useState<BlogIntro[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
+
+    useEffect(() => {
+        const fetchBlogIntro = async () =>{
+            setLoading(true)
+            try{
+                const data = await apiGetBlogIntro();
+                setBlogIntro(data);
+                console.log(data);
+            } catch (err) {
+                setError("Error fetching Blog Intro Data");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchBlogIntro();
+    }, []);
+
+    return {blogIntro, loading, error};
+}
