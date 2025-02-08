@@ -1,5 +1,5 @@
 export interface LoginRequest {
-    email: string;
+    username: string;
     password: string;
 }
 
@@ -23,6 +23,9 @@ export interface RegisterResponse {
 }
 
 export interface TokenDecode {
-    token: string;
-    
+    token: string; 
+}
+
+export interface ForgotPassword {
+    email: string;
 }

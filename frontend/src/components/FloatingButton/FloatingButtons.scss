@@ -18,14 +18,14 @@
 
 .booking {
   width: 150%;
-  height: 70px;
+  height: 40px;
   border-radius: 5px 5px 0px 5px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #2A388F;
-  color: #FFB400;
-  font-size: 15px;
+  color: white;
+  font-size: 12px;
   text-decoration: none;
   transition: transform 0.3s ease-in-out;
   cursor: pointer;
@@ -59,7 +59,7 @@
   height: 0;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
-  border-bottom: 15px solid currentColor;
+  border-bottom: 15px solid #2A388F;
   transform: rotate(45deg);
   filter: brightness(0.99); 
 }

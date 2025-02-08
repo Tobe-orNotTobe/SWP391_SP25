@@ -5,7 +5,7 @@ import { notification } from "antd";
 import { useNavigate} from "react-router-dom";  
 
 export const useLogin = () => {
-    const [email, setEmail] = useState<string>("");
+    const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -16,18 +16,13 @@ export const useLogin = () => {
         setShowPassword((prev)=> !prev)
     }
 
-    const validateEmail = (email: string) => {
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return regex.test(email);
-    };
-
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null); 
-        const data : LoginRequest = {email, password};
+        const data : LoginRequest = {username, password};
 
         
-        if (!email || !password) {
+        if (!username || !password) {
             setError("Tài khoản và mật khẩu không được để trống");
             notification.error({
                 message:"Đăng Nhập Thất Bại"
@@ -35,10 +30,6 @@ export const useLogin = () => {
             return;
         }
 
-        if (!validateEmail(email)) {
-            setError("Email sai định dạng");
-            return;
-        }
 
         setIsLoading(true);
 
@@ -74,8 +65,8 @@ export const useLogin = () => {
     };
 
     return {
-        email,
-        setEmail,
+        username,
+        setUsername,
         password,
         setPassword,
         handleLoginSubmit,

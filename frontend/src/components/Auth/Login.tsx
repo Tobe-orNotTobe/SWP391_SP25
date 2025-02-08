@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 
 const Login: React.FC = () => {
     const {
-        email,
-        setEmail,
+        username,
+        setUsername,
         password,
         setPassword,
         handleLoginSubmit,
@@ -22,24 +22,24 @@ const Login: React.FC = () => {
             <form onSubmit={handleLoginSubmit}>
                 <h1>Trang Đăng Nhập</h1>
                 <div className="authSocialContainer">
-                    <a href="https://www.linkedin.com/in/freewebsitecode/" className="social">
+                    <a href="#" className="social">
                         <FaGoogle />
                     </a>
-                    <a href="https://twitter.com/freewebsitecode" className="social">
+                    <a href="#" className="social">
                         <FaGithub />
                     </a>
-                    <a href="https://www.facebook.com/FreeWebsiteCode/" className="social">
+                    <a href="#" className="social">
                         <FaFacebookF />
                     </a>
                 </div>
                 <span>Hoặc Đăng Nhập Với Tài Khoản Đã Đăng Kí</span>
-                <label>Email: </label>
+                <label>Tên Đăng Nhập: </label>
                 <input
-                    type="email"
-                    placeholder="Nhập Địa Chỉ Email"
+                    type="text"
+                    placeholder="Nhập tên đăng nhập"
                     className="authInput"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                 />
                 <label>Mật Khẩu: </label>
                 <div className="passwordInputContainer">

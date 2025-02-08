@@ -30,7 +30,7 @@ const FloatingButtons: React.FC = () => {
         <Link to="/booking"
           target="_blank" rel="noopener noreferrer"
           className="booking" aria-label="Đăng Ký Tiêm Ngay">
-          <FaCalendarAlt size={30} /> <span>Đăng Kí Tiêm Ngay</span>
+          <FaCalendarAlt size={24} /> <span>Đăng Kí Tiêm Ngay</span>
         </Link>
       </div>
 
