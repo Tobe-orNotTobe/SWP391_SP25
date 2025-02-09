@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router";
 import { Carousel, Row, Col } from "antd";
-import { useBlogIntro, useBriefContent, useImgCarousel } from "../../hooks/useDecorative"
+import {  useBriefContent, useImgCarousel, useNewsIntro } from "../../hooks/useDecorative"
 import { useVaccineIntro, useVaccineServiceIntro } from "../../hooks/useVaccine";
-import { BlogCard, ServiceCard, VaccineCard } from "../Card/Card";
+import { NewsCard, ServiceCard, VaccineCard } from "../Card/Card";
 
 import "./Home.scss"
 
@@ -12,7 +12,7 @@ const Home: React.FC = () => {
   const { briefContent, loading : briefContentLoading, error : briefContentError } = useBriefContent();
   const {vaccineIntro, loading: vaccineIntroLoading, error: vaccineIntroError} = useVaccineIntro();
   const {vaccineServiceIntro, loading: vaccineServiceIntroLoading, error: vaccineServiceError} = useVaccineServiceIntro();
-  const {blogIntro, loading: blogIntroLoading, error : blogIntroError} = useBlogIntro();
+  const {newsIntro, loading: blogIntroLoading, error : blogIntroError} = useNewsIntro();
 
   if (loading || briefContentLoading || vaccineIntroLoading || vaccineServiceIntroLoading || blogIntroLoading) {
     return <p>Loading...</p>;
@@ -26,6 +26,13 @@ const Home: React.FC = () => {
   const vaccineChunks = [];
   for (let i = 0; i < vaccineIntro.length; i += chunkSize) {
     vaccineChunks.push(vaccineIntro.slice(i, i + chunkSize));
+  }
+
+
+  const newsChunkSize = 4;
+  const newsChunks = [];
+  for (let i = 0; i < newsIntro.length; i += newsChunkSize) {
+    newsChunks.push(newsIntro.slice(i, i + newsChunkSize));
   }
 
   return (
@@ -99,21 +106,25 @@ const Home: React.FC = () => {
             </Row>
         </div>
       </div>
-      <div className="">
+      <div className="newsListContainer">
         <div className="titleHeader">
           <h2>Tin Tức Và Cầm Nang</h2>
         </div>
         <hr></hr>
-        <div className="blogIntro">
-            <Row gutter={[16, 16]}>
-              {blogIntro.slice(0, 4).map((blog, index) => (
+        <div className="newsIntro">
+          <Carousel autoplay dots={false}>
+              {newsChunks.map((chunk, index) => (
                 <div key={index}>
-                  <Col key={blog.id} xs={24} sm={12} md={6} lg={6}>
-                    <BlogCard id={blog.id} title={blog.title} image={blog.image} briefContent={blog.briefContent} />
-                  </Col>
+                  <Row gutter={[16, 16]}>
+                    {chunk.map((news) => (
+                      <Col key={news.id} xs={24} sm={12} md={6} lg={6}>
+                        <NewsCard id={news.id} title={news.title} image={news.image} briefContent={news.briefContent} />
+                      </Col>
+                    ))}
+                  </Row>
                 </div>
               ))}
-            </Row>
+            </Carousel>
           </div>
       </div>
     </div>

@@ -54,8 +54,8 @@ export const useBriefContent = () =>{
         return {briefContent, loading, error};  
 }
 
-export const useBlogIntro = () => {
-    const [blogIntro, setBlogIntro] = useState<BlogIntro[]>([]);
+export const useNewsIntro = () => {
+    const [newsIntro, setNewsIntro] = useState<BlogIntro[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
@@ -64,7 +64,7 @@ export const useBlogIntro = () => {
             setLoading(true)
             try{
                 const data = await apiGetBlogIntro();
-                setBlogIntro(data);
+                setNewsIntro(data);
                 console.log(data);
             } catch (err) {
                 setError("Error fetching Blog Intro Data");
@@ -77,5 +77,5 @@ export const useBlogIntro = () => {
         fetchBlogIntro();
     }, []);
 
-    return {blogIntro, loading, error};
+    return {newsIntro, loading, error};
 }

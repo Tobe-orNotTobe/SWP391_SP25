@@ -27,14 +27,14 @@ export const ServiceCard : React.FC<VaccineService> = ({id, name, image}) => {
 }
  
 
-export const BlogCard : React.FC<BlogIntro> = ({id, title, briefContent, image}) => {
+export const NewsCard : React.FC<BlogIntro> = ({id, title, briefContent, image}) => {
     return(
         <>
-            <div key={id} className="blogContainer">
-                <img src={image} alt={id} className="cardBlogImg"/>
-                <h3 className="blogTitlte">{title}</h3>
-                <hr className="blogDivider"></hr>
-                <div className="blogBriefContent">{briefContent}</div>
+            <div key={id} className="newsContainer">
+                <img src={image} alt={id} className="cardNewsImg"/>
+                <h3 className="newsTitlte">{title}</h3>
+                <hr className="newsDivider"></hr>
+                <div className="newsBriefContent">{briefContent}</div>
             </div>
         </>
     );
