@@ -1,10 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useRegister } from "../../hooks/useAuth";
+import { useLoginGoogle, useRegister } from "../../hooks/useAuth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+
 
 const Register: React.FC = () => {
     const register = useRegister();
+    const {handleGoogleLogin} = useLoginGoogle();
+
+  
     return (
         <div className="authContainer">
             <form onSubmit={register.handleRegisterSubmit} className="registerForm">
@@ -17,7 +22,9 @@ const Register: React.FC = () => {
                             placeholder="Username" 
                             value={register.username} 
                             onChange={(e) => register.handleUsernameChange(e.target.value)}  
-                            className="authInput" />
+                            className="authInput" 
+                            required
+                        />
                         {register.errorUsername && <p className="errorText">{register.errorUsername}</p>}
                         
                         <label>Email: </label>
@@ -26,7 +33,9 @@ const Register: React.FC = () => {
                             placeholder="Email" 
                             value={register.email} 
                             onChange={(e) => register.handleEmailChange(e.target.value)}  
-                            className="authInput"/>
+                            className="authInput"
+                            required
+                        />
                         {register.errorEmail && <p className="errorText">{register.errorEmail}</p>}
                         
                         <label>Mật Khẩu: </label>
@@ -86,9 +95,20 @@ const Register: React.FC = () => {
                         {register.errorDoB && <p className="errorText">{register.errorDoB}</p>}
                     </div>
                 </div>
-                
+                <br/>
                 {register.errorGeneral && <p className="errorText">{register.errorGeneral}</p>}
                 <button type="submit" className="authButton" disabled={register.isLoading}>Đăng Kí</button>
+
+                <div className="divider">
+                                <span>hoặc</span>
+                            </div>
+                
+                            <div className="authSocialContainer">
+                                <button type="button" className="googleButton" onClick={handleGoogleLogin}>
+                                    <FcGoogle className="googleIcon" />
+                                    Đăng nhập với Google
+                                </button>
+                            </div>
                 
                 <span>Đã có tài khoản? <Link to="/login">Đăng Nhập</Link></span>
             </form>

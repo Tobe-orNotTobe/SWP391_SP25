@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LoginRequest, RegisterRequest } from "../types/Auth";
+import { ForgotPasswordRequest, LoginRequest, RegisterRequest } from "../types/Auth";
 
 export const apiRegister = async(data : RegisterRequest) => {
     try{
@@ -18,5 +18,15 @@ export const apiLogIn= async(data : LoginRequest) => {
     }catch(error){
         console.error("Error fetching data", error);
         return [];
+    }
+}
+
+export const apiForgotPassword = async (data : ForgotPasswordRequest) => {
+    try{
+        const response = await axios.post("", data);
+        return response.data;
+    }catch(err){
+        console.log(err);
+        return[];
     }
 }

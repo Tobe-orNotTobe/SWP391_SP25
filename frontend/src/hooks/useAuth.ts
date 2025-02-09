@@ -1,8 +1,12 @@
+import axios from "axios";
+
 import React, { useState } from "react";
-import { apiLogIn, apiRegister } from "../apis/apiAuth";
-import { LoginRequest, RegisterRequest } from "../types/Auth";
+import { apiForgotPassword, apiLogIn, apiRegister } from "../apis/apiAuth";
+import { ForgotPasswordRequest, LoginRequest, RegisterRequest } from "../types/Auth";
 import { notification } from "antd";  
 import { useNavigate} from "react-router-dom";  
+
+
 
 export const useLogin = () => {
     const [username, setUsername] = useState<string>("");
@@ -37,6 +41,8 @@ export const useLogin = () => {
             const response = await apiLogIn(data);
 
             if (response.token) {
+
+                localStorage.setItem("token", response.token);
                 console.log("Login Successful", response);
 
                 notification.success({
@@ -255,3 +261,61 @@ export const useRegister = () => {
         errorGeneral,
     };
 };
+
+export const useLoginGoogle = () => {
+
+    const handleGoogleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+    }
+
+    return {handleGoogleLogin}
+
+
+}
+
+
+export const useForgotPassWord  = () => {
+    const [email, setEmail] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
+
+   
+
+    const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const data: ForgotPasswordRequest = { email };
+
+        if (!email.trim()) {
+            setError("Vui lòng nhập email.");
+            return;
+        }
+
+        setLoading(true);
+        setError(null); 
+
+        try {
+            const response = await apiForgotPassword(data);
+            if (response.status === 200) { 
+                navigate('/verify-otp');
+            } else {
+                setError(response.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.");
+            }
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                if (err.response?.status === 404) {
+                    setError("Email không tồn tại.");
+                } else {
+                    setError(err.response?.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.");
+                }
+            } else {
+                setError("Đã xảy ra lỗi không xác định. Vui lòng thử lại.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { email, setEmail, loading, error, handleForgotPasswordSubmit };
+}

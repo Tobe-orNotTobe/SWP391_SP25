@@ -26,6 +26,11 @@ export interface TokenDecode {
     token: string; 
 }
 
-export interface ForgotPassword {
+export interface ForgotPasswordRequest{
     email: string;
+}
+
+
+export interface TokenResponse {
+    role: string;
 }
