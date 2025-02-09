@@ -109,11 +109,58 @@
     border-radius: 2px;
     transition: background-color 0.3s, color 0.3s;
   }
-  
+
   .cusNavItem:hover {
     background-color: #2A388F;
     color: #FFFFFF;
   }
+
+    /* Định dạng dropdown */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Ẩn dropdown mặc định */
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      margin-top: 11px;
+      left: 0;
+      background-color: white;
+      min-width: 150px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      list-style: none;
+      padding: 0;
+    }
+
+    .dropdown-menu li {
+      padding: 10px;
+    }
+
+    .dropdown-menu li a {
+      text-decoration: none;
+      color: #2A388F;
+      display: block;
+    }
+
+    .dropdown-menu li:hover {
+      background-color: #2A388F;
+
+      a {
+        color: white;
+      }
+    }
+
+    //.dropdown-menu a:hover {
+    //  color: white;
+    //}
+
+    /* Hiển thị dropdown khi hover */
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
   
   .authButtonLink {
     display: flex;

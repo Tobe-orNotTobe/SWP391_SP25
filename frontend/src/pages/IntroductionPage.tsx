@@ -1,10 +1,10 @@
 import FloatingButtons from "../components/FloatingButton/FloatingButtons";
 import Footer from "../components/Footer/Footer";
-import Introduction from "../components/Introduction/Introduction.tsx";
+import {Introduction, AboutUs, OurTeam} from "../components/Introduction/Introduction.tsx";
 import CustomerNavbar from "../components/Navbar/CustomerNavbar/CustomerNavbar";
 import React from "react"
 
-const IntroductionPage: React.FC = () => {
+export const IntroductionPage: React.FC = () => {
     return (
       <>
         <CustomerNavbar/>
@@ -15,4 +15,24 @@ const IntroductionPage: React.FC = () => {
     );
 }
 
-export default IntroductionPage;
+export const AboutUsPage: React.FC = () => {
+    return (
+        <>
+            <CustomerNavbar/>
+            <AboutUs/>
+            <FloatingButtons/>
+            <Footer/>
+        </>
+    );
+}
+
+export const OurTeamPage: React.FC = () => {
+    return (
+        <>
+            <CustomerNavbar/>
+            <OurTeam/>
+            <FloatingButtons/>
+            <Footer/>
+        </>
+    );
+}

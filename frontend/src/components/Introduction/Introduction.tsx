@@ -2,7 +2,7 @@ import React from "react"
 import {Link} from "react-router-dom"
 import "./Introduction.scss"
 
-const Introduction: React.FC = () => {
+export const Introduction: React.FC = () => {
 
     return (
         <>
@@ -408,4 +408,138 @@ const Introduction: React.FC = () => {
 
 }
 
-export default Introduction
+export const AboutUs: React.FC = () => {
+
+    return (
+      <>
+          <div className="introductionContainer">
+              <Link style={{textDecoration: "none", color: "#2A388F"}} to="/homepage">Trang chủ</Link>
+              <span className="separator"> » </span>
+              <Link style={{textDecoration: "none", color: "#2A388F"}} to="/introduction"> Giới thiệu</Link>
+              <span className="separator"> » </span>
+              <span>Về chúng tôi</span>
+
+              <div style={{paddingTop: "20px"}} className="introductionTitle">
+                  <h1 className="gt-title">Về chúng tôi</h1>
+              </div>
+
+              <p style={{textAlign: "center", paddingBottom: "10px"}}>
+                    <span style={{color: "#000080", fontSize: "14pt"}}>
+                        <strong>SIDE_EFFECT - TIÊN PHONG TRONG DỊCH VỤ TIÊM CHỦNG TRẺ EM</strong>
+                    </span><br/>
+                  <span style={{color: "#000080", fontSize: "14pt"}}><strong>AN TOÀN, UY TÍN, CHẤT LƯỢNG ĐƯỢC HÀNG CHỤC TRIỆU GIA ĐÌNH TIN TƯỞNG LỰA CHỌN!</strong></span>
+              </p>
+
+              <h2><b style={{color: "#2a388f", fontSize: "30px"}}>1. Sứ Mệnh Của Chúng Tôi</b></h2>
+
+              <p className="introductionText">
+                  Side_Effect được thành lập với một tầm nhìn rõ ràng: đảm bảo rằng mọi trẻ em đều có cơ hội được tiêm
+                  chủng đầy đủ, đúng lịch và an toàn nhất. Chúng tôi hiểu rằng tiêm chủng không chỉ là một biện pháp y
+                  tế quan trọng mà còn là chìa khóa để xây dựng một thế hệ tương lai khỏe mạnh, vững chắc. Với sứ mệnh
+                  đó, Side_Effect không chỉ cung cấp dịch vụ tiêm chủng mà còn ứng dụng công nghệ tiên tiến để tối ưu
+                  hóa quá trình theo dõi, quản lý và nhắc nhở lịch tiêm cho trẻ em.
+              </p>
+
+              <p className="introductionText">
+                  Chúng tôi cam kết mang đến sự an tâm tuyệt đối cho phụ huynh khi đưa con đến tiêm chủng, đồng thời
+                  nâng cao nhận thức cộng đồng về tầm quan trọng của vắc-xin trong việc bảo vệ sức khỏe. Mỗi mũi tiêm
+                  tại Side_Effect không chỉ là một liều vắc-xin mà còn là sự cam kết về chất lượng, trách nhiệm và sự
+                  tận tâm.
+              </p>
+
+              <h2><b style={{color: "#2a388f", fontSize: "30px"}}>2. Tầm Nhìn Tương Lai</b></h2>
+
+              <p className="introductionText">
+                  Với mục tiêu xây dựng một nền tảng tiêm chủng thông minh, an toàn và tiện lợi nhất, Side_Effect không
+                  ngừng đổi mới và nâng cao chất lượng dịch vụ. Chúng tôi hướng đến việc mở rộng hệ thống trên toàn
+                  quốc, mang đến dịch vụ tiêm chủng hiện đại cho nhiều trẻ em hơn nữa.
+              </p>
+
+              <p className="introductionText">
+                  Bên cạnh đó, Side_Effect đang nghiên cứu và phát triển thêm các công nghệ tiên tiến như theo dõi sức
+                  khỏe trẻ bằng cảm biến y tế, phân tích dữ liệu di truyền để đề xuất phác đồ tiêm chủng cá nhân hóa,
+                  nhằm đảm bảo rằng mỗi bé đều nhận được sự bảo vệ tối ưu nhất.
+              </p>
+
+              <h2><b style={{color: "#2a388f", fontSize: "30px"}}>3. Đồng Hành Cùng Gia Đình Bạn</b></h2>
+
+              <p className="introductionText">
+                  Tại Side_Effect, mỗi mũi tiêm không chỉ giúp bảo vệ trẻ trước bệnh tật mà còn mang đến sự an tâm trọn
+                  vẹn cho cả gia đình. Chúng tôi không chỉ giúp trẻ em được tiêm chủng đầy đủ mà còn đồng hành cùng phụ
+                  huynh trên hành trình bảo vệ sức khỏe con trẻ.
+              </p>
+
+              <p className="introductionText">
+                  Hãy để Side_Effect trở thành người bạn đồng hành đáng tin cậy của gia đình bạn, giúp mỗi mũi tiêm
+                  không chỉ là một biện pháp y tế, mà còn là nền tảng cho một tương lai khỏe mạnh.
+              </p>
+
+          </div>
+      </>
+    );
+}
+
+export const OurTeam: React.FC = () => {
+
+    return (
+        <>
+            <div className="introductionContainer">
+                <Link style={{textDecoration: "none", color: "#2A388F"}} to="/homepage">Trang chủ</Link>
+                <span className="separator"> » </span>
+                <Link style={{textDecoration: "none", color: "#2A388F"}} to="/introduction"> Giới thiệu</Link>
+                <span className="separator"> » </span>
+                <span>Đội ngũ</span>
+
+                <div style={{paddingTop: "20px"}} className="introductionTitle">
+                    <h1 className="gt-title">Đội ngũ</h1>
+                </div>
+
+                <p style={{textAlign: "center", paddingBottom: "10px"}}>
+                    <span style={{color: "#000080", fontSize: "14pt"}}>
+                        <strong>SIDE_EFFECT - TIÊN PHONG TRONG DỊCH VỤ TIÊM CHỦNG TRẺ EM</strong>
+                    </span><br/>
+                    <span style={{color: "#000080", fontSize: "14pt"}}><strong>AN TOÀN, UY TÍN, CHẤT LƯỢNG ĐƯỢC HÀNG CHỤC TRIỆU GIA ĐÌNH TIN TƯỞNG LỰA CHỌN!</strong></span>
+                </p>
+
+                <p className="introductionText">
+                    Tại Side_Effect, chúng tôi tự hào sở hữu đội ngũ y bác sĩ và chuyên gia y tế có trình độ chuyên môn
+                    cao, luôn đặt sự an toàn và hiệu quả lên hàng đầu. Mỗi bác sĩ tại Side_Effect không chỉ là những
+                    người giàu kinh nghiệm trong lĩnh vực nhi khoa và miễn dịch học, mà còn thường xuyên tham gia các
+                    chương trình đào tạo, hội thảo quốc tế để cập nhật kiến thức về vắc-xin và phương pháp tiêm chủng
+                    tiên tiến nhất.
+                </p>
+
+                <p className="introductionText">
+                    Sự khác biệt của Side_Effect đến từ việc xây dựng một quy trình tuyển chọn và đào tạo nghiêm ngặt.
+                    Chúng tôi chỉ hợp tác với các bác sĩ, chuyên gia có chứng chỉ hành nghề được công nhận bởi các tổ
+                    chức y tế hàng đầu thế giới. Không chỉ có chuyên môn vững vàng, họ còn được huấn luyện về kỹ năng
+                    giao tiếp, tâm lý trẻ em và quy trình chăm sóc sau tiêm để mang đến trải nghiệm nhẹ nhàng, thoải mái
+                    nhất cho cả bé và phụ huynh.
+                </p>
+
+                <p className="introductionText">
+                    Mọi quy trình tiêm chủng tại Side_Effect đều được kiểm soát chặt chẽ theo tiêu chuẩn của Tổ chức Y
+                    tế Thế giới (WHO) và Bộ Y tế, đảm bảo từ khâu bảo quản vắc-xin, chuẩn bị dụng cụ y tế, đến thao tác
+                    tiêm đều tuân thủ quy trình an toàn tuyệt đối. Chúng tôi cũng áp dụng các công nghệ tiên tiến như hệ
+                    thống theo dõi nhiệt độ tự động, đảm bảo vắc-xin luôn được bảo quản ở điều kiện lý tưởng để giữ
+                    nguyên hiệu quả.
+                </p>
+
+                <p className="introductionText">
+                    Bên cạnh đó, đội ngũ chuyên gia của Side_Effect không chỉ dừng lại ở việc thực hiện tiêm chủng mà
+                    còn đóng vai trò là những người tư vấn tận tâm, đồng hành cùng phụ huynh trong suốt hành trình bảo
+                    vệ sức khỏe cho con. Chúng tôi sẵn sàng giải đáp mọi thắc mắc về lịch tiêm, giúp phụ huynh lựa chọn
+                    những loại vắc-xin phù hợp nhất với thể trạng của bé, cũng như hướng dẫn chi tiết cách theo dõi và
+                    xử lý các phản ứng sau tiêm nếu có.
+                </p>
+
+                <p className="introductionText">
+                    Với triết lý đặt trẻ em và gia đình lên hàng đầu, đội ngũ y bác sĩ của Side_Effect không ngừng cải
+                    tiến dịch vụ, nâng cao tay nghề và ứng dụng công nghệ tiên tiến để mang đến trải nghiệm tiêm chủng
+                    an toàn, hiện đại và toàn diện nhất.
+                </p>
+            </div>
+        </>
+    );
+}
+

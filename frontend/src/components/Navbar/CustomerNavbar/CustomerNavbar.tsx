@@ -31,7 +31,14 @@ const CustomerNavbar: React.FC = () => {
             <nav className="mainNavbarContainer">
                 <ul className="cusNavbarLink">
                     <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
-                    <li><Link to="/introduction" className="cusNavItem">Giới Thiệu</Link></li>
+                    <li className="dropdown">
+                        <Link to="/introduction" className="cusNavItem">Giới thiệu</Link>
+                        <ul className="dropdown-menu">
+                            <li><Link to="/about-us">Về Chúng Tôi</Link></li>
+                            <li><Link to="/team">Đội Ngũ</Link></li>
+                        </ul>
+                    </li>
+
                     <li><Link to="#" className="cusNavItem">Vaccine </Link></li>
                     <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
                     <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>
