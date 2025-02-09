@@ -43,7 +43,7 @@ namespace ChildVaccineSystem.Service.Services
 
             EmailRequestDTO request = new EmailRequestDTO
             {
-                Subject = "Cursus Email Confirmation",
+                Subject = "ChildVaccine Email Confirmation",
                 toEmail = email,
                 Body = $"Click vào link sau để xác nhận tài khoản: {confirmLink}"
             };

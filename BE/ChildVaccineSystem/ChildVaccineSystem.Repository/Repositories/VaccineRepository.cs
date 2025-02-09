@@ -33,6 +33,14 @@ namespace ChildVaccineSystem.Repository.Repositories
 
         public async Task<Vaccine> CreateAsync(Vaccine vaccine)
         {
+            bool scheduleExists = await _context.VaccinationSchedules
+                .AnyAsync(s => s.ScheduleId == vaccine.ScheduleId);
+
+            if (!scheduleExists)
+            {
+                throw new Exception($"ScheduleId {vaccine.ScheduleId} does not exist.");
+            }
+
             _context.Vaccines.Add(vaccine);
             await _context.SaveChangesAsync();
             return vaccine;
@@ -42,6 +50,15 @@ namespace ChildVaccineSystem.Repository.Repositories
         {
             var existingVaccine = await _context.Vaccines.FindAsync(id);
             if (existingVaccine == null) return null;
+
+            // Validate ScheduleId before updating
+            bool scheduleExists = await _context.VaccinationSchedules
+                .AnyAsync(s => s.ScheduleId == vaccine.ScheduleId);
+
+            if (!scheduleExists)
+            {
+                throw new Exception($"ScheduleId {vaccine.ScheduleId} does not exist.");
+            }
 
             existingVaccine.Name = vaccine.Name;
             existingVaccine.Description = vaccine.Description;
@@ -64,6 +81,7 @@ namespace ChildVaccineSystem.Repository.Repositories
             await _context.SaveChangesAsync();
             return existingVaccine;
         }
+
 
         public async Task<bool> DeleteAsync(int id)
         {

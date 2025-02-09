@@ -9,7 +9,7 @@ namespace ChildVaccineSystem.Data.Models
         public ChildVaccineSystemDBContext(DbContextOptions<ChildVaccineSystemDBContext> options) : base(options)
         {
         }
-        public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
+        //public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
 
         public DbSet<User> Users { get; set; }
         public DbSet<Booking> Bookings { get; set; }

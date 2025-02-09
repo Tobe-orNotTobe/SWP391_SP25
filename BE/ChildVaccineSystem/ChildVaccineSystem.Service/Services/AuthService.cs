@@ -52,10 +52,7 @@ namespace ChildVaccineSystem.Service.Services
             var refreshToken = GenerateRefreshToken();
             return new LoginResponseDTO
             {
-                //User = _mapper.Map<UserDTO>(user),
                 Token = token,
-                //RefreshToken = refreshToken,
-                //Role = await _userManager.GetRolesAsync(user)
             };
         }
 
@@ -69,6 +66,10 @@ namespace ChildVaccineSystem.Service.Services
             // Validate if username is null or empty
             if (string.IsNullOrWhiteSpace(dto.UserName))
                 throw new Exception("Username cannot be empty.");
+
+            // Validate phone number format
+            if (string.IsNullOrWhiteSpace(dto.PhoneNumber) || !IsValidPhoneNumber(dto.PhoneNumber))
+                throw new Exception("Invalid phone number format. Phone number must start with 0 and be at most 10 digits long.");
 
             // Check if email already exists
             var userExists = await _userManager.FindByEmailAsync(dto.Email);
@@ -117,6 +118,14 @@ namespace ChildVaccineSystem.Service.Services
             return user;
         }
 
+        // Method to validate phone number
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            // Phone number must start with '0' and be exactly 10 digits long
+            return phoneNumber.Length <= 10 && phoneNumber.StartsWith("0") && phoneNumber.All(char.IsDigit);
+        }
+
+
 
         public async Task<bool> ConfirmEmailAsync(string email, string token)
         {
@@ -140,10 +149,7 @@ namespace ChildVaccineSystem.Service.Services
 
             return new LoginResponseDTO
             {
-                //User = _mapper.Map<UserDTO>(user),
                 Token = newToken,
-                //RefreshToken = newRefreshToken,
-                //Role = await _userManager.GetRolesAsync(user)
             };
         }
 
