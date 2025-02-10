@@ -1,9 +1,10 @@
 import axios from "axios";
 import { ForgotPasswordRequest, LoginRequest, RegisterRequest } from "../types/Auth";
+import axiosInstance from "../utils/axiosInstance";
 
 export const apiRegister = async(data : RegisterRequest) => {
     try{
-        const response = await axios.post("", data);
+        const response = await axiosInstance.post("/api/Auth/register", data);
         return response.data;
     }catch(error){
         console.error("Error fetching data", error);
@@ -13,7 +14,7 @@ export const apiRegister = async(data : RegisterRequest) => {
 
 export const apiLogIn= async(data : LoginRequest) => {
     try{
-        const response = await axios.post("", data);
+        const response = await axiosInstance.post("/api/Auth/login", data);
         return response.data;
     }catch(error){
         console.error("Error fetching data", error);
