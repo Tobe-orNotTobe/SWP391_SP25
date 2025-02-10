@@ -1,0 +1,81 @@
+.custom-layout {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+
+  // Sidebar Design
+  .sidebar {
+    width: 250px;
+    background-color: #2a388f;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .logo {
+      text-align: center;
+
+      h1 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+
+      img {
+        width: 120px;
+        height: auto;
+      }
+    }
+
+    .nav {
+      width: 100%;
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+      }
+      li {
+        width: 100%;
+        transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+
+        a {
+          display: block;
+          padding: 12px 10px;
+          color: white;
+          text-decoration: none;
+          font-size: 16px;
+          transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.88);
+            color: #313131;
+          }
+        }
+        // Hiệu ứng active tab
+        &.active {
+          background: rgba(255, 255, 255, 0.88);
+          font-weight: bold;
+        
+          a {
+            color: #313131 !important; // Đảm bảo màu chữ thay đổi
+          }
+        }
+        
+        
+      }
+    }
+  }
+
+  // Content Area
+  .content {
+    flex: 1;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    margin: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
