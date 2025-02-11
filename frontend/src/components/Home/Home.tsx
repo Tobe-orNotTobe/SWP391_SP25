@@ -108,7 +108,7 @@ const Home: React.FC = () => {
       </div>
       <div className="newsListContainer">
         <div className="titleHeader">
-          <h2>Tin Tức Và Cầm Nang</h2>
+          <h2>Tin Tức</h2>
         </div>
         <hr></hr>
         <div className="newsIntro">
