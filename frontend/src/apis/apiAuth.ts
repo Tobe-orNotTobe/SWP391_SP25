@@ -1,9 +1,10 @@
 import axios from "axios";
 import { ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest } from "../types/Auth";
+import axiosInstance from "../utils/axiosInstance";
 
 export const apiRegister = async(data : RegisterRequest) => {
     try{
-        const response = await axios.post("", data);
+        const response = await axiosInstance.post("", data);
         return response.data;
     }catch(error){
         console.error("Error fetching data", error);
@@ -13,7 +14,7 @@ export const apiRegister = async(data : RegisterRequest) => {
 
 export const apiLogIn= async(data : LoginRequest) => {
     try{
-        const response = await axios.post("", data);
+        const response = await axiosInstance.post("", data);
         return response.data;
     }catch(error){
         console.error("Error fetching data", error);
@@ -23,7 +24,7 @@ export const apiLogIn= async(data : LoginRequest) => {
 
 export const apiForgotPassword = async (data : ForgotPasswordRequest) => {
     try{
-        const response = await axios.post("", data);
+        const response = await axiosInstance.post("", data);
         return response.data;
     }catch(err){
         console.log(err);
@@ -33,7 +34,7 @@ export const apiForgotPassword = async (data : ForgotPasswordRequest) => {
 
 export const apiVerifyOTP = async (data : OTPRequest) => {
     try{
-        const response = await axios.post("", data);
+        const response = await axiosInstance.post("", data);
         return response.data;
     }catch(err){
         console.log(err);

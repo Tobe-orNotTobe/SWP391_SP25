@@ -4,10 +4,9 @@ import { Route, BrowserRouter, Routes } from "react-router-dom"
 import HomePage from "./pages/HomePage"
 import LogInPage from "./pages/LogInPage"
 import RegisterPage from "./pages/RegisterPage"
-import ForgotPasswordPage from "./pages/ForgotPassword"
+import {ForgotPasswordPage, VerifiyOTPPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
 import {IntroductionPage, AboutUsPage, OurTeamPage} from "./pages/IntroductionPage"
-import VerifiyOTPPage from "./pages/VerifyOTPPage"
-import ResetPasswordPage from "./pages/ResetPasswordPage"
+
 
 
 

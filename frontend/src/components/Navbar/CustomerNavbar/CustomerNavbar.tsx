@@ -4,11 +4,18 @@ import logo from "../../../assets/navbar/Logo_Navbar.png";
 
 import { GiPositionMarker } from "react-icons/gi";
 import { Button } from "antd";
-import { MdLogin } from "react-icons/md";
+import { MdLogin} from "react-icons/md";
 import { Link } from "react-router-dom";
-import { FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaUserCircle } from "react-icons/fa";
+import { IsLoginSuccessFully } from "../../../validations/isLogginSuccessfully";
 
 const CustomerNavbar: React.FC = () => {
+    const { username } = IsLoginSuccessFully();
+
+    // const handleLogout = () => {
+    //     localStorage.removeItem("token");
+    //     window.location.reload(); 
+    // };
 
     return (
         <header className="customerHeader">
@@ -46,19 +53,30 @@ const CustomerNavbar: React.FC = () => {
                     <li><Link to="#" className="cusNavItem">Điều Khoản và Dịch Vụ</Link></li>
                     <li><Link to="#" className="cusNavItem">Blog</Link></li>                
                 </ul>
+
                 <div className="authButtonLink">
+                    {username ? (
+                        
+                        <div className="loggedInUser">
+                            <span className="welcomeText"><FaUserCircle size={24}/>Xin chào, {username}</span>
+
+                        </div>
+                    ) : (
+                       
+                        <>
+                            <Link to="/login">
+                                <Button className="authButton">
+                                    <MdLogin size={23} /> Đăng Nhập
+                                </Button>
+                            </Link>
                     
-                    <Link to="/login">
-                        <Button className="authButton">
-                            <MdLogin size={23} /> Đăng Nhập
-                        </Button>
-                    </Link>
-            
-                    <Link to="/register">
-                        <Button className="authButton">
-                            <MdLogin size={23} /> Đăng Kí
-                        </Button>
-                    </Link>
+                            <Link to="/register">
+                                <Button className="authButton">
+                                    <MdLogin size={23} /> Đăng Kí
+                                </Button>
+                            </Link>
+                        </>
+                    )}
                 </div>
             </nav>
         </header>
