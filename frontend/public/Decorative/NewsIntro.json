@@ -1,74 +1,21 @@
 [
     {
-        "id": "bl01",
-        "title": "Bị cảm cúm ăn gì, kiêng gì nhanh khỏi? 6 loại thực phẩm trị cúm",
-        "briefContent" : "Bị cảm cúm ăn gì nhanh khỏi? Kiêng ăn gì để cải thiện và điều trị bệnh hiệu quả nhất? Việc ăn uống lành mạnh, đảm bảo dinh dưỡng là phương pháp rất tốt để hỗ trợ nâng cao đề kháng, phòng ngừa biến chứng và sớm hồi phục sức khỏe...",
-        "image": ""
+        "id": "news01",
+        "title": "Tăng gấp 5 lần lượng người dân tiêm cúm tại VNVC",
+        "briefContent" : "Tình hình tiêm chủng vắc xin phòng bệnh cúm của người dân tiếp tục tăng cao trên cả nước, Hệ thống tiêm chủng VNVC ghi nhận mức tăng đã trên 500% chỉ trong 5 ngày và tiếp tục có dấu hiệu tăng mạnh, nhất là sau thông tin nhiều ca biến chứng nặng do cúm trên toàn quốc.",
+        "image": "../../../src/assets/news/newsIntro_1st.png"
     },
     {
-        "id": "bl02",
-        "title" : "Bị sốt xuất huyết nên ăn gì và kiêng ăn gì cho nhanh khỏi?",
-        "briefContent": "Phát ban sốt xuất huyết là một triệu chứng của trường hợp mắc sốt xuất huyết thường xảy ra ở ngày thứ 7, dấu hiệu cho thấy sắp khỏi bệnh. Tuy không phải là một căn bệnh xa lạ nhưng được WHO xếp vào một trong mười mối đe dọa hàng đầu với sức khỏe cộng đồng....",
-        "image": ""
+        "id": "news02",
+        "title" : "Nhật Bản công bố ca mắc cúm mùa đang bùng phát cao kỷ lục, bệnh này nguy hiểm thế nào?",
+        "briefContent": "Bệnh cúm mùa đang gia tăng bất thường ở Nhật Bản, gây ra hàng triệu ca mắc từ đầu năm 2024 đến hôm nay. Mới đây, thông tin nữ minh tinh Từ Hy Viên qua đời vì bệnh cúm mùa ở Nhật Bản và viêm phổi đã khiến cộng đồng quan tâm đến virus cúm, loại virus thường gặp nhưng đã gây ra nhiều đại dịch chết hàng triệu người trên thế giới.",
+        "image": "../../../src/assets/news/newsIntro_2nd.jpg"
     },
     {
-        "id": "bl03",
-        "title": "Điều trị cúm A cho trẻ: 4 bước mẹ cần biết để trẻ mau hết bệnh",
-        "briefContent": "Điều trị cúm A cho trẻ có thể dùng thuốc hạ sốt, bổ sung nước điện giải, tăng cường dinh dưỡng, vệ sinh mũi họng, hạn chế tiếp xúc với trẻ khác hoặc những người bị suy giảm miễn dịch,…",
-        "image" : ""
-    },
-    {
-        "id": "bl04",
-        "title": "Điều trị cúm A cho trẻ: 4 bước mẹ cần biết để trẻ mau hết bệnh",
-        "briefContent": "Điều trị cúm A cho trẻ có thể dùng thuốc hạ sốt, bổ sung nước điện giải, tăng cường dinh dưỡng, vệ sinh mũi họng, hạn chế tiếp xúc với trẻ khác hoặc những người bị suy giảm miễn dịch,…",
-        "image" : ""
-    },
-    {
-        "id": "bl05",
-        "title": "Bị cảm cúm ăn gì, kiêng gì nhanh khỏi? 6 loại thực phẩm trị cúm",
-        "briefContent" : "Bị cảm cúm ăn gì nhanh khỏi? Kiêng ăn gì để cải thiện và điều trị bệnh hiệu quả nhất? Việc ăn uống lành mạnh, đảm bảo dinh dưỡng là phương pháp rất tốt để hỗ trợ nâng cao đề kháng, phòng ngừa biến chứng và sớm hồi phục sức khỏe...",
-        "image": ""
-    },
-    {
-        "id": "bl06",
-        "title" : "Bị sốt xuất huyết nên ăn gì và kiêng ăn gì cho nhanh khỏi?",
-        "briefContent": "Phát ban sốt xuất huyết là một triệu chứng của trường hợp mắc sốt xuất huyết thường xảy ra ở ngày thứ 7, dấu hiệu cho thấy sắp khỏi bệnh. Tuy không phải là một căn bệnh xa lạ nhưng được WHO xếp vào một trong mười mối đe dọa hàng đầu với sức khỏe cộng đồng....",
-        "image": ""
-    },
-    {
-        "id": "bl07",
-        "title": "Điều trị cúm A cho trẻ: 4 bước mẹ cần biết để trẻ mau hết bệnh",
-        "briefContent": "Điều trị cúm A cho trẻ có thể dùng thuốc hạ sốt, bổ sung nước điện giải, tăng cường dinh dưỡng, vệ sinh mũi họng, hạn chế tiếp xúc với trẻ khác hoặc những người bị suy giảm miễn dịch,…",
-        "image" : ""
-    },
-    {
-        "id": "bl08",
-        "title": "Điều trị cúm A cho trẻ: 4 bước mẹ cần biết để trẻ mau hết bệnh",
-        "briefContent": "Điều trị cúm A cho trẻ có thể dùng thuốc hạ sốt, bổ sung nước điện giải, tăng cường dinh dưỡng, vệ sinh mũi họng, hạn chế tiếp xúc với trẻ khác hoặc những người bị suy giảm miễn dịch,…",
-        "image" : ""
-    },
-    {
-        "id": "bl09",
-        "title": "Bị cảm cúm ăn gì, kiêng gì nhanh khỏi? 6 loại thực phẩm trị cúm",
-        "briefContent" : "Bị cảm cúm ăn gì nhanh khỏi? Kiêng ăn gì để cải thiện và điều trị bệnh hiệu quả nhất? Việc ăn uống lành mạnh, đảm bảo dinh dưỡng là phương pháp rất tốt để hỗ trợ nâng cao đề kháng, phòng ngừa biến chứng và sớm hồi phục sức khỏe...",
-        "image": ""
-    },
-    {
-        "id": "bl10",
-        "title" : "Bị sốt xuất huyết nên ăn gì và kiêng ăn gì cho nhanh khỏi?",
-        "briefContent": "Phát ban sốt xuất huyết là một triệu chứng của trường hợp mắc sốt xuất huyết thường xảy ra ở ngày thứ 7, dấu hiệu cho thấy sắp khỏi bệnh. Tuy không phải là một căn bệnh xa lạ nhưng được WHO xếp vào một trong mười mối đe dọa hàng đầu với sức khỏe cộng đồng....",
-        "image": ""
-    },
-    {
-        "id": "bl11",
-        "title": "Điều trị cúm A cho trẻ: 4 bước mẹ cần biết để trẻ mau hết bệnh",
-        "briefContent": "Điều trị cúm A cho trẻ có thể dùng thuốc hạ sốt, bổ sung nước điện giải, tăng cường dinh dưỡng, vệ sinh mũi họng, hạn chế tiếp xúc với trẻ khác hoặc những người bị suy giảm miễn dịch,…",
-        "image" : ""
-    },
-    {
-        "id": "bl12",
-        "title": "Điều trị cúm A cho trẻ: 4 bước mẹ cần biết để trẻ mau hết bệnh",
-        "briefContent": "Điều trị cúm A cho trẻ có thể dùng thuốc hạ sốt, bổ sung nước điện giải, tăng cường dinh dưỡng, vệ sinh mũi họng, hạn chế tiếp xúc với trẻ khác hoặc những người bị suy giảm miễn dịch,…",
-        "image" : ""
+        "id": "news03",
+        "title": "Các vắc xin cần tiêm sau kỳ nghỉ Tết Nguyên Đán",
+        "briefContent": "Sau Tết Nguyên Đán 2025, các chuyên gia y tế cảnh báo về nguy cơ gia tăng số ca mắc các bệnh truyền nhiễm trên cả nước, đặc biệt là cúm mùa và các bệnh hô hấp. Từ đầu năm 2025 đến nay, Việt Nam ghi nhận 912 trường hợp mắc cúm, các trường hợp mắc chủ yếu là cúm A/H1N1, A/H3N2 và cúm B. ",
+        "image" : "../../../src/assets/news/newsIntro_3rd.jpg"
     }
+    
 ]

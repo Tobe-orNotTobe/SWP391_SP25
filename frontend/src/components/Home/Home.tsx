@@ -29,7 +29,7 @@ const Home: React.FC = () => {
   }
 
 
-  const newsChunkSize = 4;
+  const newsChunkSize = 3;
   const newsChunks = [];
   for (let i = 0; i < newsIntro.length; i += newsChunkSize) {
     newsChunks.push(newsIntro.slice(i, i + newsChunkSize));
@@ -117,7 +117,7 @@ const Home: React.FC = () => {
                 <div key={index}>
                   <Row gutter={[16, 16]}>
                     {chunk.map((news) => (
-                      <Col key={news.id} xs={24} sm={12} md={6} lg={6}>
+                     <Col key={news.id} xs={24} sm={12} md={8} lg={8}>
                         <NewsCard id={news.id} title={news.title} image={news.image} briefContent={news.briefContent} />
                       </Col>
                     ))}
