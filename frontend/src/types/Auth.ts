@@ -32,5 +32,16 @@ export interface ForgotPasswordRequest{
 
 
 export interface TokenResponse {
-    role: string;
+    role: string; 
+    sub: string;  
+    iat: number;  
+    exp: number;  
+}
+
+export interface OTPRequest {
+    otp: string;
+}
+
+export interface ResetPasswordRequest {
+    confirmPassword: string;
 }
