@@ -4,8 +4,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-    token: string;
-    message: string;
+    token: string;   
 }
 
 export interface RegisterRequest {
@@ -19,22 +18,9 @@ export interface RegisterRequest {
     role : string;
 }
 
-export interface RegisterResponseSuccess {
-    message: string;
-}
-
-export interface RegisterResponseError {
-    error : string;
-}
-
 export interface TokenDecode {
     token: string; 
 }
-
-export interface ForgotPasswordRequest{
-    email: string;
-}
-
 
 export interface TokenResponse {
     "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string
@@ -46,6 +32,15 @@ export interface TokenResponse {
     aud: string;
 }
 
+export interface ConfirmPassWord {
+    email: string;
+    token: string;
+}
+
+
+export interface ForgotPasswordRequest{
+    email: string;
+}
 export interface OTPRequest {
     otp: string;
 }

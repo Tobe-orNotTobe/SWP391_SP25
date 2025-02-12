@@ -1,8 +1,8 @@
 import axios from "axios";
 
-import React, { useState} from "react";
-import { apiForgotPassword, apiLogIn, apiRegister, apiResetPassword, apiVerifyOTP } from "../apis/apiAuth";
-import { ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest} from "../types/Auth";
+import React, { useState, } from "react";
+import {  apiForgotPassword, apiLogIn, apiRegister, apiResetPassword, apiVerifyOTP } from "../apis/apiAuth";
+import {  ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest} from "../types/Auth";
 import { notification } from "antd";  
 import { useNavigate} from "react-router-dom";  
 

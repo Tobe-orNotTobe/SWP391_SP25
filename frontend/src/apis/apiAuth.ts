@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest } from "../types/Auth";
+import { ConfirmPassWord, ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest } from "../types/Auth";
 import axiosInstance from "../utils/axiosInstance";
 
 export const apiRegister = async(data : RegisterRequest) => {
@@ -29,6 +29,23 @@ export const apiLogIn= async(data : LoginRequest) => {
         return { message: "An unexpected error occurred" };
     }
 }
+
+
+export const apiConfirmPassword = async (data : ConfirmPassWord) => {
+    try{
+        const response = await axios.post("", data);
+        return response.data
+    }catch(error){
+        if (axios.isAxiosError(error)) {
+            console.error("Error fetching data", error.response?.data || error.message);
+            return error.response?.data || { message: "An error occurred" };
+        }
+        console.error("Unexpected error:", error);
+        return { message: "An unexpected error occurred" };
+    }
+}
+
+
 
 export const apiForgotPassword = async (data : ForgotPasswordRequest) => {
     try{

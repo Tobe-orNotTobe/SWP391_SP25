@@ -6,6 +6,7 @@ import LogInPage from "./pages/LogInPage"
 import RegisterPage from "./pages/RegisterPage"
 import {ForgotPasswordPage, VerifiyOTPPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
 import {IntroductionPage, AboutUsPage, OurTeamPage} from "./pages/IntroductionPage"
+import ConfirmPassword from "./components/Auth/ConfirmEmail"
 
 
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/about-us" element={<AboutUsPage/>}/>
           <Route path="/team" element={<OurTeamPage/>}/>
           <Route path="/verify-otp" element={<VerifiyOTPPage/>}></Route>
+          <Route path="/confirm-password" element={<ConfirmPassword/>}></Route>
           <Route path="/reset-password" element={<ResetPasswordPage/>}></Route>
         </Routes>
       </BrowserRouter>
