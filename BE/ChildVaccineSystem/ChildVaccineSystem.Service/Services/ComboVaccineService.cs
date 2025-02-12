@@ -3,93 +3,79 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.Data.DTO.ComboVaccine;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 
 namespace ChildVaccineSystem.Service.Services
 {
-    public class ComboVaccineService : IComboVaccineService
-    {
-        private readonly IComboVaccineRepository _comboVaccineRepository;
-        private readonly IVaccineRepository _vaccineRepository;
-        private readonly IMapper _mapper;
+	public class ComboVaccineService : IComboVaccineService
+	{
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly IMapper _mapper;
 
-        public ComboVaccineService(IComboVaccineRepository comboVaccineRepository, IVaccineRepository vaccineRepository, IMapper mapper)
-        {
-            _comboVaccineRepository = comboVaccineRepository;
-            _vaccineRepository = vaccineRepository;
-            _mapper = mapper;
-        }
+		public ComboVaccineService(IUnitOfWork unitOfWork, IComboVaccineRepository comboVaccineRepository, IVaccineRepository vaccineRepository, IMapper mapper)
+		{
+			_unitOfWork = unitOfWork;
+			_mapper = mapper;
+		}
 
-        public async Task<IEnumerable<ComboVaccineDTO>> GetAllAsync()
-        {
-            var combos = await _comboVaccineRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<ComboVaccineDTO>>(combos);
-        }
+		public async Task<IEnumerable<ComboVaccineDTO>> GetAllAsync()
+		{
+			var combos = await _unitOfWork.ComboVaccines.GetAll();
+			return _mapper.Map<IEnumerable<ComboVaccineDTO>>(combos);
+		}
 
-        public async Task<ComboVaccineDTO> GetByIdAsync(int id)
-        {
-            var combo = await _comboVaccineRepository.GetByIdAsync(id);
-            if (combo == null)
-                throw new Exception("ComboVaccine not found.");
-            return _mapper.Map<ComboVaccineDTO>(combo);
-        }
+		public async Task<ComboVaccineDTO> GetByIdAsync(int id)
+		{
+			var combo = await _unitOfWork.ComboVaccines.GetById(id);
+			if (combo == null)
+				throw new Exception("ComboVaccine not found.");
+			return _mapper.Map<ComboVaccineDTO>(combo);
+		}
 
-        public async Task<ComboVaccineDTO> CreateAsync(ComboVaccineDTO comboDto)
-        {
-            // Validate VaccineIds
-            var existingVaccineIds = await _vaccineRepository.GetAllIdsAsync();
-            var invalidVaccineIds = comboDto.VaccineIds.Except(existingVaccineIds).ToList();
-            if (invalidVaccineIds.Any())
-            {
-                throw new Exception($"The following VaccineIds do not exist: {string.Join(", ", invalidVaccineIds)}");
-            }
+		public async Task<ComboVaccineDTO> CreateAsync(CreateComboVaccineDTO comboDto)
+		{
+			// Map DTO to Entity
+			var combo = _mapper.Map<ComboVaccine>(comboDto);
 
-            // Validate ScheduleId
-            var scheduleIdExists = await _comboVaccineRepository.ValidateScheduleIdAsync(comboDto.ScheduleId);
-            if (!scheduleIdExists)
-            {
-                throw new Exception($"ScheduleId {comboDto.ScheduleId} does not exist.");
-            }
+			// Save ComboVaccine
+			var createdCombo = await _unitOfWork.ComboVaccines.AddAsync(combo);
 
-            // Map DTO to Entity
-            var combo = _mapper.Map<ComboVaccine>(comboDto);
+			await _unitOfWork.CompleteAsync();
 
-            // Save ComboVaccine
-            var createdCombo = await _comboVaccineRepository.CreateAsync(combo);
-            return _mapper.Map<ComboVaccineDTO>(createdCombo);
-        }
+			var fullCombo = await _unitOfWork.ComboVaccines.GetById(createdCombo.ComboId);
 
-        public async Task<ComboVaccineDTO> UpdateAsync(int id, ComboVaccineDTO comboDto)
-        {
-            if (id != comboDto.ComboId)
-                throw new Exception("Mismatch between provided ComboId and DTO ComboId.");
+			return _mapper.Map<ComboVaccineDTO>(fullCombo);
+		}
 
-            // Validate VaccineIds
-            var existingVaccineIds = await _vaccineRepository.GetAllIdsAsync();
-            var invalidVaccineIds = comboDto.VaccineIds.Except(existingVaccineIds).ToList();
-            if (invalidVaccineIds.Any())
-            {
-                throw new Exception($"The following VaccineIds do not exist: {string.Join(", ", invalidVaccineIds)}");
-            }
+		public async Task<ComboVaccineDTO> UpdateAsync(int id, UpdateComboVaccineDTO comboDto)
+		{
+			var existingCombo = await _unitOfWork.ComboVaccines.GetById(id);
+			if (existingCombo == null) return null;
 
-            // Validate ScheduleId
-            var scheduleIdExists = await _comboVaccineRepository.ValidateScheduleIdAsync(comboDto.ScheduleId);
-            if (!scheduleIdExists)
-            {
-                throw new Exception($"ScheduleId {comboDto.ScheduleId} does not exist.");
-            }
 
-            var combo = _mapper.Map<ComboVaccine>(comboDto);
-            var updatedCombo = await _comboVaccineRepository.UpdateAsync(combo);
-            return _mapper.Map<ComboVaccineDTO>(updatedCombo);
-        }
+			_mapper.Map(comboDto, existingCombo);
 
-        public async Task<bool> DeleteAsync(int id)
-        {
-            return await _comboVaccineRepository.DeleteAsync(id);
-        }
-    }
+			var updatedCombo = await _unitOfWork.ComboVaccines.UpdateAsync(existingCombo);
+
+			await _unitOfWork.CompleteAsync();
+
+			var fullCombo = await _unitOfWork.ComboVaccines.GetById(updatedCombo.ComboId);
+
+			return _mapper.Map<ComboVaccineDTO>(fullCombo);
+		}
+
+		public async Task<bool> DeleteAsync(int id)
+		{
+			var combo = await _unitOfWork.ComboVaccines.GetAsync(c => c.ComboId == id);
+
+			if (combo == null) return false;
+
+			await _unitOfWork.ComboVaccines.DeleteAsync(combo);
+			await _unitOfWork.CompleteAsync();
+			return true;
+		}
+	}
 }

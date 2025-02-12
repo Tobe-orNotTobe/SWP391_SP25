@@ -9,95 +9,83 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChildVaccineSystem.Repository.Repositories
 {
-    public class ComboVaccineRepository : IComboVaccineRepository
-    {
-        private readonly ChildVaccineSystemDBContext _context;
+	public class ComboVaccineRepository : Repository<ComboVaccine>, IComboVaccineRepository
+	{
+		private readonly ChildVaccineSystemDBContext _context;
 
-        public ComboVaccineRepository(ChildVaccineSystemDBContext context)
-        {
-            _context = context;
-        }
+		public ComboVaccineRepository(ChildVaccineSystemDBContext context) : base(context) => _context = context;
 
-        public async Task<IEnumerable<ComboVaccine>> GetAllAsync()
-        {
-            return await _context.ComboVaccines
-                .Include(cv => cv.ComboDetails)
-                .ThenInclude(cd => cd.Vaccine)
-                .AsNoTracking()
-                .ToListAsync();
-        }
+		public async Task<IEnumerable<ComboVaccine>> GetAll()
+		{
+			return await _context.ComboVaccines
+				.Include(cv => cv.ComboDetails)
+				.ThenInclude(cd => cd.Vaccine)
+				.AsNoTracking()
+				.ToListAsync();
+		}
 
-        public async Task<ComboVaccine> GetByIdAsync(int id)
-        {
-            return await _context.ComboVaccines
-                .Include(cv => cv.ComboDetails)
-                .ThenInclude(cd => cd.Vaccine)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(cv => cv.ComboId == id);
-        }
+		public async Task<ComboVaccine> GetById(int id)
+		{
+			return await _context.ComboVaccines
+				.Include(cv => cv.ComboDetails)
+				.ThenInclude(cd => cd.Vaccine)
+				.AsNoTracking()
+				.FirstOrDefaultAsync(cv => cv.ComboId == id);
+		}
 
-        public async Task<bool> ValidateScheduleIdAsync(int scheduleId)
-        {
-            return await _context.VaccinationSchedules.AnyAsync(s => s.ScheduleId == scheduleId);
-        }
+		public async Task<bool> ValidateScheduleIdAsync(int scheduleId)
+		{
+			return await _context.VaccinationSchedules.AnyAsync(s => s.ScheduleId == scheduleId);
+		}
 
-        public async Task<ComboVaccine> CreateAsync(ComboVaccine combo)
-        {
-            // Add combo vaccine
-            _context.ComboVaccines.Add(combo);
-            await _context.SaveChangesAsync();
-            return combo;
-        }
+		public async Task<ComboVaccine> UpdateAsync(ComboVaccine combo)
+		{
+			var existingCombo = await _context.ComboVaccines
+				.Include(cv => cv.ComboDetails)
+				.FirstOrDefaultAsync(cv => cv.ComboId == combo.ComboId);
 
+			if (existingCombo == null)
+			{
+				throw new Exception("ComboVaccine not found.");
+			}
 
-        public async Task<ComboVaccine> UpdateAsync(ComboVaccine combo)
-        {
-            var existingCombo = await _context.ComboVaccines
-                .Include(cv => cv.ComboDetails)
-                .FirstOrDefaultAsync(cv => cv.ComboId == combo.ComboId);
+			// Update fields
+			existingCombo.ComboName = combo.ComboName;
+			existingCombo.Description = combo.Description;
+			existingCombo.TotalPrice = combo.TotalPrice;
+			existingCombo.IsActive = combo.IsActive;
+			existingCombo.ValidityMonths = combo.ValidityMonths;
+			existingCombo.EffectiveDate = combo.EffectiveDate;
+			existingCombo.ExpiryDate = combo.ExpiryDate;
 
-            if (existingCombo == null)
-            {
-                throw new Exception("ComboVaccine not found.");
-            }
+			// Update ComboDetails
+			_context.ComboDetails.RemoveRange(existingCombo.ComboDetails);
+			existingCombo.ComboDetails = combo.ComboDetails;
 
-            // Update fields
-            existingCombo.ComboName = combo.ComboName;
-            existingCombo.Description = combo.Description;
-            existingCombo.TotalPrice = combo.TotalPrice;
-            existingCombo.IsActive = combo.IsActive;
-            existingCombo.ValidityMonths = combo.ValidityMonths;
-            existingCombo.EffectiveDate = combo.EffectiveDate;
-            existingCombo.ExpiryDate = combo.ExpiryDate;
+			_context.ComboVaccines.Update(existingCombo);
+			await _context.SaveChangesAsync();
 
-            // Update ComboDetails
-            _context.ComboDetails.RemoveRange(existingCombo.ComboDetails);
-            existingCombo.ComboDetails = combo.ComboDetails;
+			return existingCombo;
+		}
 
-            _context.ComboVaccines.Update(existingCombo);
-            await _context.SaveChangesAsync();
+		public async Task<bool> DeleteAsync(int id)
+		{
+			var combo = await _context.ComboVaccines
+				.Include(c => c.ComboDetails) // Include related ComboDetails
+				.FirstOrDefaultAsync(c => c.ComboId == id);
 
-            return existingCombo;
-        }
+			if (combo == null)
+				return false;
 
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var combo = await _context.ComboVaccines
-                .Include(c => c.ComboDetails) // Include related ComboDetails
-                .FirstOrDefaultAsync(c => c.ComboId == id);
+			// Remove related ComboDetails explicitly
+			_context.ComboDetail.RemoveRange(combo.ComboDetails);
 
-            if (combo == null)
-                return false;
+			// Remove the ComboVaccine
+			_context.ComboVaccines.Remove(combo);
 
-            // Remove related ComboDetails explicitly
-            _context.ComboDetail.RemoveRange(combo.ComboDetails);
+			await _context.SaveChangesAsync();
+			return true;
+		}
 
-            // Remove the ComboVaccine
-            _context.ComboVaccines.Remove(combo);
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-    }
+	}
 }
