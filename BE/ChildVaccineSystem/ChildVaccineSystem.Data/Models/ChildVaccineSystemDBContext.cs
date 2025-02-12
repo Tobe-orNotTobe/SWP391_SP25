@@ -147,7 +147,7 @@ namespace ChildVaccineSystem.Data.Models
 
 			modelBuilder.Entity<ComboVaccine>()
 				.HasOne(cv => cv.Schedule)
-				.WithMany()
+				.WithMany(s => s.ComboVaccines)
 				.HasForeignKey(cv => cv.ScheduleId)
 				.OnDelete(DeleteBehavior.Restrict);
 

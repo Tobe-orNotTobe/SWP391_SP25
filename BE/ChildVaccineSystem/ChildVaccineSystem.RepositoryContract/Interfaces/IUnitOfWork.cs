@@ -6,6 +6,11 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IVaccineRepository Vaccines { get; }
-        Task<int> CompleteAsync();
+
+		IComboVaccineRepository ComboVaccines { get; }
+		IComboDetailRepository ComboDetails { get; }
+		IVaccinationScheduleRepository VaccinationSchedules { get; }
+
+		Task<int> CompleteAsync();
     }
 }

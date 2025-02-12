@@ -3,6 +3,7 @@ using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -81,12 +82,25 @@ namespace ChildVaccineSystem.Service.Services
             if (usernameExists != null)
                 throw new Exception("Username already exists.");
 
+            // Check if phone number already exists
+            var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber == dto.PhoneNumber);
+            if (phoneExists)
+                throw new Exception("Phone number already exists.");
+
             // Validate password complexity (at least 6 characters as an example)
             if (string.IsNullOrWhiteSpace(dto.Password) || dto.Password.Length < 6)
-                throw new Exception("Password must be at least 6 characters long, including at least 1 uppercase letter, 1 lowercase letter, 1 special character, and 1 numeric character");
+                throw new Exception("Password must be at least 6 characters long, including at least 1 uppercase letter, 1 lowercase letter, 1 special character, and 1 numeric character.");
+
+            // Assign default role as "Customer"
+            string defaultRole = "Customer";
 
             // Map DTO to User entity
             var user = _mapper.Map<User>(dto);
+
+            // Set the default role to "Customer"
+            user.PhoneNumber = dto.PhoneNumber; // Ensure phone number is saved
+            user.UserName = dto.UserName;
+            user.Email = dto.Email;
 
             // Attempt to create the user
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -96,10 +110,10 @@ namespace ChildVaccineSystem.Service.Services
                 throw new Exception($"User registration failed: {errors}");
             }
 
-            // Check if role exists, if not, create it
-            if (!await _roleManager.RoleExistsAsync(dto.Role))
+            // Check if "Customer" role exists, if not, create it
+            if (!await _roleManager.RoleExistsAsync(defaultRole))
             {
-                var roleResult = await _roleManager.CreateAsync(new IdentityRole(dto.Role));
+                var roleResult = await _roleManager.CreateAsync(new IdentityRole(defaultRole));
                 if (!roleResult.Succeeded)
                 {
                     var roleErrors = string.Join("; ", roleResult.Errors.Select(e => e.Description));
@@ -107,8 +121,8 @@ namespace ChildVaccineSystem.Service.Services
                 }
             }
 
-            // Assign role to the user
-            await _userManager.AddToRoleAsync(user, dto.Role);
+            // Assign role "Customer" to the user
+            await _userManager.AddToRoleAsync(user, defaultRole);
 
             // Generate confirmation email token and send email
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -222,7 +236,7 @@ namespace ChildVaccineSystem.Service.Services
 
         public Task LogoutAsync(string refreshToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

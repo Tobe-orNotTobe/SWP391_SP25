@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using ChildVaccineSystem.Common.Helper;
+using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
 using ChildVaccineSystem.ServiceContract.Interfaces;
-using ChildVaccineSystem.Data.DTO;
-using ChildVaccineSystem.Common.Helper;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace ChildVaccineSystem.API.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class VaccineController : ControllerBase
+	public class VaccinationScheduleController : ControllerBase
 	{
-		private readonly IVaccineService _vaccineService;
+		private readonly IVaccinationScheduleService _scheduleService;
 		private readonly APIResponse _response;
 
-		public VaccineController(IVaccineService vaccineService, APIResponse response)
+		public VaccinationScheduleController(IVaccinationScheduleService scheduleService, APIResponse response)
 		{
-			_vaccineService = vaccineService;
+			_scheduleService = scheduleService;
 			_response = response;
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetAll()
+		public async Task<ActionResult<APIResponse>> GetAll()
 		{
-			var result = await _vaccineService.GetAllVaccinesAsync();
+			var result = await _scheduleService.GetAllSchedulesAsync();
 
 			if (!result.Any())
 			{
@@ -34,6 +31,7 @@ namespace ChildVaccineSystem.API.Controllers
 				return BadRequest(_response);
 			}
 
+			
 			_response.IsSuccess = true;
 			_response.StatusCode = HttpStatusCode.OK;
 			_response.Result = result;
@@ -41,15 +39,14 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetById(int id)
+		public async Task<ActionResult<APIResponse>> GetById(int id)
 		{
-			var result = await _vaccineService.GetVaccineByIdAsync(id);
-
+			var result = await _scheduleService.GetScheduleByIdAsync(id);
 			if (result == null)
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.NotFound;
-				_response.ErrorMessages.Add("Vaccine not found");
+				_response.ErrorMessages.Add("Schedule not found");
 				return NotFound(_response);
 			}
 
@@ -60,9 +57,9 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] CreateVaccineDTO vaccineDto)
+		public async Task<ActionResult<APIResponse>> Create([FromBody] CreateVaccinationScheduleDTO scheduleDto)
 		{
-			var result = await _vaccineService.CreateVaccineAsync(vaccineDto);
+			var result = await _scheduleService.CreateScheduleAsync(scheduleDto);
 
 			if (result == null)
 			{
@@ -80,7 +77,7 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Update(int id, [FromBody] UpdateVaccineDTO vaccineDto)
+		public async Task<ActionResult<APIResponse>> Update(int id, [FromBody] UpdateVaccinationScheduleDTO scheduleDto)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -93,54 +90,34 @@ namespace ChildVaccineSystem.API.Controllers
 				return BadRequest(_response);
 			}
 
-			var updatedVaccine = await _vaccineService.UpdateVaccineAsync(id, vaccineDto);
-
-			if (updatedVaccine == null)
+			var updatedSchedule = await _scheduleService.UpdateScheduleAsync(id, scheduleDto);
+			if (updatedSchedule == null)
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.NotFound;
-				_response.ErrorMessages.Add("Vaccine not found");
+				_response.ErrorMessages.Add("Schedule not found");
 				return NotFound(_response);
 			}
 
-			_response.Result = updatedVaccine;
+			_response.Result = updatedSchedule;
 			_response.StatusCode = HttpStatusCode.OK;
 			return Ok(_response);
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> Delete(int id)
+		public async Task<ActionResult<APIResponse>> Delete(int id)
 		{
-			var isDeleted = await _vaccineService.DeleteVaccineAsync(id);
-
+			var isDeleted = await _scheduleService.DeleteScheduleAsync(id);
 			if (isDeleted == false)
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.NotFound;
-				_response.ErrorMessages.Add("Vaccine not found");
+				_response.ErrorMessages.Add("Schedule not found");
 				return NotFound(_response);
 			}
 
 			_response.Result = isDeleted;
 			_response.StatusCode = HttpStatusCode.OK;
-			return Ok(_response);
-		}
-
-		[HttpGet("type/{isNecessary}")]
-		public async Task<IActionResult> GetByType(bool isNecessary)
-		{
-			var result = await _vaccineService.GetVaccinesByTypeAsync(isNecessary);
-
-			if (result == null)
-			{
-				_response.IsSuccess = false;
-				_response.StatusCode = HttpStatusCode.BadRequest;
-				return BadRequest(_response);
-			}
-
-			_response.IsSuccess = true;
-			_response.StatusCode = HttpStatusCode.OK;
-			_response.Result = result;
 			return Ok(_response);
 		}
 	}

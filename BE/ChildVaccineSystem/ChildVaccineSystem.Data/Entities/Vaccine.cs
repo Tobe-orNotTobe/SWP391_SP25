@@ -30,7 +30,7 @@ namespace ChildVaccineSystem.Data.Entities
         public double Distance { get; set; }
 
         [ForeignKey("Schedule")]
-        public int ScheduleId { get; set; }
-        public VaccinationSchedule Schedule { get; set; }
+        public int? ScheduleId { get; set; }
+        public VaccinationSchedule? Schedule { get; set; }
     }
 }

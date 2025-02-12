@@ -13,9 +13,11 @@ namespace ChildVaccineSystem.Repository
             services.AddTransient<IEmailRepository, EmailRepository>();
             services.AddTransient<IComboVaccineRepository, ComboVaccineRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+			services.AddTransient<IComboDetailRepository, ComboDetailRepository>();
+			services.AddTransient<IVaccinationScheduleRepository, VaccinationScheduleRepository>();
 
-            //DI Unit of Work
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+			//DI Unit of Work
+			services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

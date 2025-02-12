@@ -25,8 +25,8 @@ namespace ChildVaccineSystem.Data.Entities
         public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
     
 		[ForeignKey("Schedule")]
-		public int ScheduleId { get; set; }
-		public VaccinationSchedule Schedule { get; set; }
+		public int? ScheduleId { get; set; }
+		public VaccinationSchedule? Schedule { get; set; }
 	}
 
 }
