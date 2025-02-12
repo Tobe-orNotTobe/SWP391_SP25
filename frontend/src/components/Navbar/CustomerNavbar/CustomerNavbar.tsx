@@ -4,18 +4,19 @@ import logo from "../../../assets/navbar/Logo_Navbar.png";
 
 import { GiPositionMarker } from "react-icons/gi";
 import { Button } from "antd";
-import { MdLogin} from "react-icons/md";
+import { MdLogin, MdLogout} from "react-icons/md";
 import { Link } from "react-router-dom";
 import { FaCalendarAlt, FaUserCircle } from "react-icons/fa";
-import { IsLoginSuccessFully } from "../../../validations/isLogginSuccessfully";
+import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully";
+import { IoIosNotifications } from "react-icons/io";
 
 const CustomerNavbar: React.FC = () => {
-    const { username } = IsLoginSuccessFully();
+    const { username, role } = IsLoginSuccessFully();
 
-    // const handleLogout = () => {
-    //     localStorage.removeItem("token");
-    //     window.location.reload(); 
-    // };
+    const handleLogout = () => {
+        localStorage.clear();
+        window.location.reload(); 
+    };
 
     return (
         <header className="customerHeader">
@@ -58,8 +59,13 @@ const CustomerNavbar: React.FC = () => {
                     {username ? (
                         
                         <div className="loggedInUser">
-                            <span className="welcomeText"><FaUserCircle size={24}/>Xin chào, {username}</span>
-
+                            <li className="dropdown">
+                                <Link to = "#"><span className="cusNavItem" style={{color : "blue"}}><FaUserCircle size={24}/>Xin chào, {role} {username}</span></Link>
+                                <ul className="dropdown-menu">
+                                    <li><Link to="/about-us"><IoIosNotifications size={23}/>Thông Báo</Link></li>
+                                    <li><span style={{color : "blue"}}onClick={handleLogout}><MdLogout size={23}/> Đăng Xuất </span></li>
+                                </ul>
+                            </li>
                         </div>
                     ) : (
                        

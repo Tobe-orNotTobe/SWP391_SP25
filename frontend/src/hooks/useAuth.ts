@@ -2,7 +2,7 @@ import axios from "axios";
 
 import React, { useState} from "react";
 import { apiForgotPassword, apiLogIn, apiRegister, apiResetPassword, apiVerifyOTP } from "../apis/apiAuth";
-import { ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest } from "../types/Auth";
+import { ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest} from "../types/Auth";
 import { notification } from "antd";  
 import { useNavigate} from "react-router-dom";  
 
@@ -87,14 +87,14 @@ export const useRegister = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    const [username, setUsername] = useState<string>("");
+    const [userName, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [fullName, setFullName] = useState<string>("");
     const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [address, setAddress] = useState<string>("");
-    const [doB, setDob] = useState<string>("");
+    const [dateOfBirth, setDob] = useState<string>("");
 
     
     const [errorUsername, setErrorUsername] = useState<string | null>(null);
@@ -185,55 +185,65 @@ export const useRegister = () => {
     const handleRegisterSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorGeneral(null);
-
-        handleUsernameChange(username);
+    
+        handleUsernameChange(userName);
         handleEmailChange(email);
         handlePasswordChange(password);
         handleConfirmPasswordChange(confirmPassword);
         handlePhoneNumberChange(phoneNumber);
         handleAddressChange(address);
-        handleDoBChange(doB);
-        
-        const data : RegisterRequest = {email, confirmPassword, username, fullName, phoneNumber, address, doB}
-        
+        handleDoBChange(dateOfBirth);
+    
+        const data: RegisterRequest = { email, password, userName, fullName, phoneNumber, address, dateOfBirth, role: "User" };
+    
         if (errorUsername || errorEmail || errorPassword || errorConfirmPassword || errorPhoneNumber || errorAddress || errorDoB) {
             notification.error({
                 message: "Đăng Kí Thất Bại",
+                description: "Vui lòng kiểm tra lại thông tin nhập vào.",
             });
+            return;
         }
-
-
+    
         setIsLoading(true);
+    
         try {
             const response = await apiRegister(data);
-            if (response.status === 200) {
+    
+            if (response.message) {
+               
                 notification.success({
                     message: "Đăng Kí Thành Công",
-                    description: "Bạn sẽ được chuyển đến trang Login trong ít giây.",
+                    description: response.message || "Vui lòng kiểm tra email của bạn để xác nhận.",
                 });
-                setTimeout(() => {
-                    navigate("/login");
-                }, 2000);
-            }else{
-                notification.error({
-                    message:"Đăng Kí Thất Bại",
-                })
+                navigate("/login");
+            } else {
+                
+                throw new Error(response.error || "Đăng ký thất bại");
             }
-        } catch (error) {
-            console.error(error);
-            notification.error({
-                message:"Đăng Kí Thất Bại",
-                description:"Lỗi Server"
-            })
-        } finally {
+        } catch (error: unknown) {
             setIsLoading(false);
-        }
-    };
 
+            let errorMessage = "Đã có lỗi xảy ra, vui lòng thử lại.";
+    
+            if (axios.isAxiosError(error) && error.response?.data?.error) {
+                errorMessage = error.response.data.error;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+    
+            notification.error({
+                message: "Đăng Kí Thất Bại",
+                description: errorMessage,
+            });
+    
+            console.error("Lỗi đăng ký:", error);
+        }
+    };     
+    
     return {
         showPassword,
         togglePasswordVisibility,
-        username,
+        userName,
         handleUsernameChange,
         email,
         handleEmailChange,
@@ -247,7 +257,7 @@ export const useRegister = () => {
         handlePhoneNumberChange,
         address,
         handleAddressChange,
-        doB,
+        dateOfBirth,
         handleDoBChange,
         isLoading,
         handleRegisterSubmit,

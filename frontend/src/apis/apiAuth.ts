@@ -4,21 +4,29 @@ import axiosInstance from "../utils/axiosInstance";
 
 export const apiRegister = async(data : RegisterRequest) => {
     try{
-        const response = await axiosInstance.post("", data);
+        const response = await axiosInstance.post("/api/Auth/register", data);
         return response.data;
-    }catch(error){
-        console.error("Error fetching data", error);
-        return [];
+    }catch(error : unknown){
+        if (axios.isAxiosError(error)) {
+            console.error("Error fetching data", error.response?.data || error.message);
+            return error.response?.data || { message: "An error occurred" };
+        }
+        console.error("Unexpected error:", error);
+        return { message: "An unexpected error occurred" };
     }
 }
 
 export const apiLogIn= async(data : LoginRequest) => {
     try{
-        const response = await axiosInstance.post("", data);
+        const response = await axiosInstance.post("/api/Auth/login", data);
         return response.data;
     }catch(error){
-        console.error("Error fetching data", error);
-        return [];
+        if (axios.isAxiosError(error)) {
+            console.error("Error fetching data", error.response?.data || error.message);
+            return error.response?.data || { message: "An error occurred" };
+        }
+        console.error("Unexpected error:", error);
+        return { message: "An unexpected error occurred" };
     }
 }
 

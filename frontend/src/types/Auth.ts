@@ -9,17 +9,22 @@ export interface LoginResponse {
 }
 
 export interface RegisterRequest {
-    email: string;
-    confirmPassword: string;
-    username: string;
     fullName: string;
+    userName: string;
+    email: string;
     phoneNumber: string;
-    address: string;
-    doB: string; 
+    address: string;   
+    dateOfBirth: string;
+    password: string;   
+    role : string;
 }
 
-export interface RegisterResponse {
+export interface RegisterResponseSuccess {
     message: string;
+}
+
+export interface RegisterResponseError {
+    error : string;
 }
 
 export interface TokenDecode {
@@ -32,10 +37,13 @@ export interface ForgotPasswordRequest{
 
 
 export interface TokenResponse {
-    role: string; 
-    sub: string;  
-    iat: number;  
+    "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string;
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress" : string;
+    sub: string;   
     exp: number;  
+    iss: string;
+    aud: string;
 }
 
 export interface OTPRequest {
