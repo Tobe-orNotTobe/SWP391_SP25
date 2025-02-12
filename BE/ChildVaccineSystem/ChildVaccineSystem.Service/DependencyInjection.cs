@@ -17,7 +17,8 @@ namespace ChildVaccineSystem.Service
             services.AddScoped<APIResponse>();
             services.AddTransient<IComboVaccineService, ComboVaccineService>();
             services.AddTransient<IAuthService, AuthService>();
-            return services;
+			services.AddTransient<IVaccinationScheduleService, VaccinationScheduleService>();
+			return services;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace ChildVaccineSystem.Repository.Repositories
 
 		public IComboVaccineRepository ComboVaccines { get; }
 		public IComboDetailRepository ComboDetails { get; }
+		public IVaccinationScheduleRepository VaccinationSchedules { get; }
 
 
 		public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository)
@@ -21,6 +22,8 @@ namespace ChildVaccineSystem.Repository.Repositories
             Vaccines = vaccineRepository;
             ComboVaccines = comboVaccineRepository;
             ComboDetails = comboDetailRepository;
+			VaccinationSchedules = vaccinationScheduleRepository;
+
 		}
 
 		public async Task<int> CompleteAsync()
