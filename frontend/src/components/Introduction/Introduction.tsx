@@ -1,6 +1,8 @@
 import React from "react"
 import {Link} from "react-router-dom"
 import "./Introduction.scss"
+import VisionImage from "../../assets/introduction/Vision.png";
+import MissionImage from "../../assets/introduction/Mission.png"
 
 export const Introduction: React.FC = () => {
 
@@ -408,19 +410,19 @@ export const Introduction: React.FC = () => {
 
 }
 
-export const AboutUs: React.FC = () => {
+export const Vision: React.FC = () => {
 
     return (
       <>
           <div className="introductionContainer">
               <Link style={{textDecoration: "none", color: "#2A388F"}} to="/homepage">Trang chủ</Link>
               <span className="separator"> » </span>
-              <Link style={{textDecoration: "none", color: "#2A388F"}} to="/introduction"> Giới thiệu</Link>
+              <Link style={{textDecoration: "none", color: "#2A388F"}} to="/about-us"> Giới thiệu</Link>
               <span className="separator"> » </span>
-              <span>Về chúng tôi</span>
+              <span>Tầm nhìn</span>
 
               <div style={{paddingTop: "20px"}} className="introductionTitle">
-                  <h1 className="gt-title">Về chúng tôi</h1>
+                  <h1 className="gt-title">Tầm nhìn</h1>
               </div>
 
               <p style={{textAlign: "center", paddingBottom: "10px"}}>
@@ -430,52 +432,114 @@ export const AboutUs: React.FC = () => {
                   <span style={{color: "#000080", fontSize: "14pt"}}><strong>AN TOÀN, UY TÍN, CHẤT LƯỢNG ĐƯỢC HÀNG CHỤC TRIỆU GIA ĐÌNH TIN TƯỞNG LỰA CHỌN!</strong></span>
               </p>
 
-              <h2><b style={{color: "#2a388f", fontSize: "30px"}}>1. Sứ Mệnh Của Chúng Tôi</b></h2>
-
               <p className="introductionText">
-                  Side_Effect được thành lập với một tầm nhìn rõ ràng: đảm bảo rằng mọi trẻ em đều có cơ hội được tiêm
-                  chủng đầy đủ, đúng lịch và an toàn nhất. Chúng tôi hiểu rằng tiêm chủng không chỉ là một biện pháp y
-                  tế quan trọng mà còn là chìa khóa để xây dựng một thế hệ tương lai khỏe mạnh, vững chắc. Với sứ mệnh
-                  đó, Side_Effect không chỉ cung cấp dịch vụ tiêm chủng mà còn ứng dụng công nghệ tiên tiến để tối ưu
-                  hóa quá trình theo dõi, quản lý và nhắc nhở lịch tiêm cho trẻ em.
+                  Với tầm nhìn dài hạn, Side_Effect đặt mục tiêu xây dựng một nền tảng tiêm chủng thông minh, an toàn và
+                  tiện lợi nhất, mang lại trải nghiệm tiêm chủng vượt trội cho mọi gia đình. Chúng tôi không ngừng đổi
+                  mới, nghiên cứu và ứng dụng các công nghệ tiên tiến để nâng cao chất lượng dịch vụ, đảm bảo rằng mỗi
+                  trẻ em đều được tiếp cận với những phương pháp tiêm chủng tiên tiến nhất.
               </p>
 
               <p className="introductionText">
-                  Chúng tôi cam kết mang đến sự an tâm tuyệt đối cho phụ huynh khi đưa con đến tiêm chủng, đồng thời
-                  nâng cao nhận thức cộng đồng về tầm quan trọng của vắc-xin trong việc bảo vệ sức khỏe. Mỗi mũi tiêm
-                  tại Side_Effect không chỉ là một liều vắc-xin mà còn là sự cam kết về chất lượng, trách nhiệm và sự
-                  tận tâm.
-              </p>
-
-              <h2><b style={{color: "#2a388f", fontSize: "30px"}}>2. Tầm Nhìn Tương Lai</b></h2>
-
-              <p className="introductionText">
-                  Với mục tiêu xây dựng một nền tảng tiêm chủng thông minh, an toàn và tiện lợi nhất, Side_Effect không
-                  ngừng đổi mới và nâng cao chất lượng dịch vụ. Chúng tôi hướng đến việc mở rộng hệ thống trên toàn
-                  quốc, mang đến dịch vụ tiêm chủng hiện đại cho nhiều trẻ em hơn nữa.
+                  Side_Effect đang từng bước mở rộng hệ thống cơ sở trên toàn quốc, hướng tới việc đưa dịch vụ tiêm
+                  chủng hiện đại, tiêu chuẩn cao đến gần hơn với tất cả các gia đình, bất kể khu vực địa lý. Việc phát
+                  triển các trung tâm tiêm chủng đạt chuẩn quốc tế không chỉ giúp nâng cao độ phủ của dịch vụ mà còn tối
+                  ưu hóa quy trình tiêm chủng, giảm tải cho các cơ sở y tế hiện tại.
               </p>
 
               <p className="introductionText">
-                  Bên cạnh đó, Side_Effect đang nghiên cứu và phát triển thêm các công nghệ tiên tiến như theo dõi sức
-                  khỏe trẻ bằng cảm biến y tế, phân tích dữ liệu di truyền để đề xuất phác đồ tiêm chủng cá nhân hóa,
-                  nhằm đảm bảo rằng mỗi bé đều nhận được sự bảo vệ tối ưu nhất.
-              </p>
-
-              <h2><b style={{color: "#2a388f", fontSize: "30px"}}>3. Đồng Hành Cùng Gia Đình Bạn</b></h2>
-
-              <p className="introductionText">
-                  Tại Side_Effect, mỗi mũi tiêm không chỉ giúp bảo vệ trẻ trước bệnh tật mà còn mang đến sự an tâm trọn
-                  vẹn cho cả gia đình. Chúng tôi không chỉ giúp trẻ em được tiêm chủng đầy đủ mà còn đồng hành cùng phụ
-                  huynh trên hành trình bảo vệ sức khỏe con trẻ.
+                  Song song với đó, Side_Effect đầu tư mạnh mẽ vào nghiên cứu và phát triển những công nghệ đột phá, mở
+                  ra những hướng đi mới trong lĩnh vực tiêm chủng. Chúng tôi đang triển khai các dự án theo dõi sức khỏe
+                  trẻ bằng cảm biến y tế, giúp giám sát phản ứng sau tiêm theo thời gian thực, cung cấp dữ liệu chính
+                  xác để bác sĩ có thể can thiệp kịp thời nếu cần thiết. Bên cạnh đó, việc ứng dụng trí tuệ nhân tạo
+                  trong phân tích dữ liệu di truyền giúp đề xuất phác đồ tiêm chủng cá nhân hóa, đảm bảo rằng mỗi trẻ em
+                  không chỉ được tiêm đầy đủ mà còn phù hợp với thể trạng riêng biệt của mình.
               </p>
 
               <p className="introductionText">
-                  Hãy để Side_Effect trở thành người bạn đồng hành đáng tin cậy của gia đình bạn, giúp mỗi mũi tiêm
-                  không chỉ là một biện pháp y tế, mà còn là nền tảng cho một tương lai khỏe mạnh.
+                  Với những bước tiến này, Side_Effect cam kết tiếp tục phát triển và hoàn thiện hệ thống, tạo ra một
+                  môi trường tiêm chủng hiện đại, nơi mà sự an toàn, chính xác và tiện lợi được đặt lên hàng đầu, giúp
+                  phụ huynh hoàn toàn yên tâm khi đồng hành cùng chúng tôi trên hành trình bảo vệ sức khỏe của con mình.
               </p>
+
+              <figure style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}>
+                  <img src={VisionImage} width="800" height="534"/>
+                  <figcaption id="caption-attachment-84785" className="wp-caption-text"
+                              style={{fontStyle: "italic", fontSize: "17px"}}> Side_Effect đặt mục tiêu xây dựng một nền tảng tiêm chủng thông minh, an toàn và
+                      tiện lợi nhất.
+                  </figcaption>
+              </figure>
 
           </div>
       </>
+    );
+}
+
+export  const Mission: React.FC = () => {
+
+    return (
+        <>
+            <div className="introductionContainer">
+                <Link style={{textDecoration: "none", color: "#2A388F"}} to="/homepage">Trang chủ</Link>
+                <span className="separator"> » </span>
+                <Link style={{textDecoration: "none", color: "#2A388F"}} to="/about-us"> Giới thiệu</Link>
+                <span className="separator"> » </span>
+                <span>Sứ mệnh</span>
+
+                <div style={{paddingTop: "20px"}} className="introductionTitle">
+                    <h1 className="gt-title">Sứ mệnh</h1>
+                </div>
+
+                <p style={{textAlign: "center", paddingBottom: "10px"}}>
+                    <span style={{color: "#000080", fontSize: "14pt"}}>
+                        <strong>SIDE_EFFECT - TIÊN PHONG TRONG DỊCH VỤ TIÊM CHỦNG TRẺ EM</strong>
+                    </span><br/>
+                    <span style={{color: "#000080", fontSize: "14pt"}}><strong>AN TOÀN, UY TÍN, CHẤT LƯỢNG ĐƯỢC HÀNG CHỤC TRIỆU GIA ĐÌNH TIN TƯỞNG LỰA CHỌN!</strong></span>
+                </p>
+
+                <p className="introductionText">
+                    Tại Side_Effect, chúng tôi tin rằng mỗi trẻ em đều xứng đáng có một khởi đầu khỏe mạnh và được bảo
+                    vệ toàn diện trước các bệnh truyền nhiễm. Sứ mệnh của chúng tôi không chỉ là cung cấp dịch vụ tiêm
+                    chủng mà còn tạo ra một hệ thống chăm sóc y tế hiện đại, giúp phụ huynh dễ dàng theo dõi, quản lý và
+                    đảm bảo lịch trình tiêm chủng cho con em mình.
+                </p>
+
+                <p className="introductionText">
+                    Chúng tôi cam kết đặt sự an toàn và sức khỏe của trẻ em lên hàng đầu. Mỗi mũi tiêm không chỉ là một
+                    liều vắc-xin mà còn là lá chắn bảo vệ, mang đến sự an tâm cho gia đình và góp phần xây dựng một cộng
+                    đồng khỏe mạnh. Để hiện thực hóa điều này, Side_Effect luôn đảm bảo quy trình tiêm chủng đạt tiêu
+                    chuẩn cao nhất, từ việc tuyển chọn vắc-xin đến quy trình lưu trữ, vận chuyển và thực hiện tiêm.
+                </p>
+
+                <p className="introductionText">
+                    Bên cạnh đó, chúng tôi không ngừng ứng dụng công nghệ tiên tiến để nâng cao trải nghiệm người dùng
+                    và tối ưu hóa hiệu quả của hệ thống tiêm chủng. Công nghệ dữ liệu lớn (Big Data) giúp phân tích và
+                    nhắc lịch tiêm tự động, trí tuệ nhân tạo (AI) hỗ trợ cá thể hóa lộ trình tiêm phù hợp với từng trẻ,
+                    và hồ sơ sức khỏe điện tử (EHR) giúp theo dõi toàn diện lịch sử tiêm chủng.
+                </p>
+
+                <p className="introductionText">
+                    Sứ mệnh của Side_Effect không dừng lại ở việc bảo vệ sức khỏe cá nhân mà còn mở rộng ra tầm nhìn
+                    cộng đồng. Chúng tôi mong muốn góp phần nâng cao nhận thức về tầm quan trọng của tiêm chủng, giúp xã
+                    hội chủ động phòng ngừa dịch bệnh, hướng tới một tương lai nơi tất cả trẻ em đều được tiếp cận dịch
+                    vụ y tế chất lượng cao.
+                </p>
+
+                <p className="introductionText">
+                    Với tinh thần không ngừng đổi mới và phát triển, chúng tôi sẽ tiếp tục mở rộng hệ thống, hợp tác với
+                    các tổ chức y tế và nghiên cứu những phương pháp tiên tiến nhất để nâng cao hiệu quả của quá trình
+                    tiêm chủng. Side_Effect không chỉ là một cơ sở tiêm chủng mà còn là một đối tác đồng hành cùng gia
+                    đình trên hành trình bảo vệ sức khỏe cho thế hệ tương lai.
+                </p>
+
+                <figure style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}>
+                    <img src={MissionImage} width="800" height="534"/>
+                    <figcaption id="caption-attachment-84785" className="wp-caption-text"
+                                style={{fontStyle: "italic", fontSize: "17px"}}> Sứ mệnh của chúng tôi là tạo ra một hệ thống y tế chăm sóc hiện đại.
+                    </figcaption>
+                </figure>
+
+            </div>
+        </>
     );
 }
 
@@ -486,7 +550,7 @@ export const OurTeam: React.FC = () => {
             <div className="introductionContainer">
                 <Link style={{textDecoration: "none", color: "#2A388F"}} to="/homepage">Trang chủ</Link>
                 <span className="separator"> » </span>
-                <Link style={{textDecoration: "none", color: "#2A388F"}} to="/introduction"> Giới thiệu</Link>
+                <Link style={{textDecoration: "none", color: "#2A388F"}} to="/about-us"> Giới thiệu</Link>
                 <span className="separator"> » </span>
                 <span>Đội ngũ</span>
 
