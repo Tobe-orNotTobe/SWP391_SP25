@@ -16,6 +16,8 @@ namespace ChildVaccineSystem.Data.Entities
         public int AgeRangeEnd { get; set; }
         public int RecommendedDose { get; set; }
         public string Notes { get; set; }
-    }
+
+		public virtual ICollection<ComboVaccine> ComboVaccines { get; set; }
+	}
 
 }
