@@ -5,10 +5,10 @@ import HomePage from "./pages/HomePage"
 import LogInPage from "./pages/LogInPage"
 import RegisterPage from "./pages/RegisterPage"
 import {ForgotPasswordPage, VerifiyOTPPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
-import {IntroductionPage, AboutUsPage, OurTeamPage} from "./pages/IntroductionPage"
 import ConfirmPassword from "./components/Auth/ConfirmEmail"
 
-
+import {IntroductionPage, VisionPage, MissionPage, OurTeamPage} from "./pages/IntroductionPage"
+import ChildRegistrationPage from "./pages/ChildRegistrationPage.tsx";
 
 
 function App() {
@@ -23,12 +23,19 @@ function App() {
           <Route path="/login" element={<LogInPage/>}/>
           <Route path="/register" element={<RegisterPage/>}/>
           <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
-          <Route path="/introduction" element={<IntroductionPage/>}/>
-          <Route path="/about-us" element={<AboutUsPage/>}/>
+
+          <Route path="/about-us" element={<IntroductionPage/>}/>
+          <Route path="/vision" element={<VisionPage/>}/>
+          <Route path="/mission" element={<MissionPage/>}/>
+
           <Route path="/team" element={<OurTeamPage/>}/>
           <Route path="/verify-otp" element={<VerifiyOTPPage/>}></Route>
           <Route path="/confirm-password" element={<ConfirmPassword/>}></Route>
           <Route path="/reset-password" element={<ResetPasswordPage/>}></Route>
+
+          {/*Lưu ý: Trang này phải đăng nhập mới sử dụng được*/}
+          <Route path="/child-register" element={<ChildRegistrationPage/>}/>
+
         </Routes>
       </BrowserRouter>
     </>

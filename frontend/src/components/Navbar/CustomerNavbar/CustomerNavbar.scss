@@ -10,79 +10,6 @@
     z-index: 1000; /* Đảm bảo luôn trên cùng */
     transition: background-color 0.3s; /* Tạo hiệu ứng khi thay đổi */
   
-  
-  .cusTopNavbar {
-    display: grid;
-    grid-template-columns: 1fr 8fr 3.5fr 3fr;
-    align-items: center;
-    background-color: #2A388F;
-    padding: 2px 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
-  
-  .cusTopLogo {
-    margin-left: 20px;
-    display: flex;
-    img {
-      height: 100%;
-      width: 150px;
-    }
-  }
-  
-  
-  .contactInfoTop, 
-  .hotLineTop,
-  .bookingService{
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    color: #fff;
-    gap: 5px;
-  }
-  
-  .contactInfoTop {
-    grid-column: 3;
-    font-size: 16px;
-  }
-  
-  .contactInfoTop svg {
-    margin-right: -5px;
-  }
-
-  .bookingService {
-    grid-column: 2;
-    font-size: 16px;
-  }
-
-  .bookingService a {
-    text-decoration: none ;
-    color: white; 
-}
-
-  .bookingService svg {
-    margin-right: 14px;
-    margin-bottom: -5px;
-  }
-  
-  .hotLineTop {
-    grid-column: 4;
-    flex-direction: column;
-    align-items: center;
-    padding-left: 80px;
-    justify-content: center;
-  }
-  
-  .phoneNumber {
-    font-weight: 900;
-    color: #FFB400;
-    font-size: 20px;
-  }
-  
-  .timeSchedule {
-    font-size: 12px;
-    color: #FFFFFF;
-  }
-  
   .mainNavbarContainer {
     display: flex;
     justify-content: space-around;
@@ -115,15 +42,16 @@
     color: #FFFFFF;
   }
 
-    /* Định dạng dropdown */
-    .dropdown {
+    .cusNavDropdown {
       position: relative;
       display: inline-block;
     }
 
-    /* Ẩn dropdown mặc định */
-    .dropdown-menu {
-      display: none;
+    .cusNavDropdown-menu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px); /* Di chuyển lên 10px */
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
       position: absolute;
       margin-top: 11px;
       left: 0;
@@ -132,19 +60,26 @@
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       list-style: none;
       padding: 0;
+      border-radius: 5px;
     }
 
-    .dropdown-menu li {
+    .cusNavDropdown:hover .cusNavDropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .cusNavDropdown-menu li {
       padding: 10px;
     }
 
-    .dropdown-menu li a {
+    .cusNavDropdown-menu li a {
       text-decoration: none;
       color: #2A388F;
       display: block;
     }
 
-    .dropdown-menu li:hover {
+    .cusNavDropdown-menu li:hover {
       background-color: #2A388F;
 
       a {
@@ -152,17 +87,41 @@
       }
     }
 
-    //.dropdown-menu a:hover {
-    //  color: white;
-    //}
-
-    /* Hiển thị dropdown khi hover */
-    .dropdown:hover .dropdown-menu {
-      display: block;
+    .cusNavDropdownSub {
+      position: relative;
     }
 
-  
-  .authButtonLink {
+    .cusNavDropdown-submenu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-10px);
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+      position: absolute;
+      left: 100%; /* Đẩy submenu qua bên phải */
+      top: 0;
+      background-color: white;
+      min-width: 150px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      list-style: none;
+      padding: 0;
+      border-radius: 5px;
+    }
+
+    .cusNavDropdownSub:hover .cusNavDropdown-submenu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    .cusNavDropdown-link {
+      color: #2A388F !important;
+
+      &:hover {
+        color: white !important;
+      }
+    }
+
+    .authButtonLink {
     display: flex;
     align-items: center;
     gap: 10px; 
@@ -191,3 +150,76 @@
     margin-right: 10px; 
   }
 }
+
+
+  .cusTopNavbar {
+    display: grid;
+    grid-template-columns: 1fr 8fr 3.5fr 3fr;
+    align-items: center;
+    background-color: #2A388F;
+    padding: 2px 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .cusTopLogo {
+    margin-left: 20px;
+    display: flex;
+    img {
+      height: 100%;
+      width: 150px;
+    }
+  }
+
+
+  .contactInfoTop,
+  .hotLineTop,
+  .bookingService{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    color: #fff;
+    gap: 5px;
+  }
+
+  .contactInfoTop {
+    grid-column: 3;
+    font-size: 16px;
+  }
+
+  .contactInfoTop svg {
+    margin-right: -5px;
+  }
+
+  .bookingService {
+    grid-column: 2;
+    font-size: 16px;
+  }
+
+  .bookingService a {
+    text-decoration: none ;
+    color: white;
+  }
+
+  .bookingService svg {
+    margin-right: 14px;
+    margin-bottom: -5px;
+  }
+
+  .hotLineTop {
+    grid-column: 4;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 80px;
+    justify-content: center;
+  }
+
+  .phoneNumber {
+    font-weight: 900;
+    color: #FFB400;
+    font-size: 20px;
+  }
+
+  .timeSchedule {
+    font-size: 12px;
+    color: #FFFFFF;
+  }
