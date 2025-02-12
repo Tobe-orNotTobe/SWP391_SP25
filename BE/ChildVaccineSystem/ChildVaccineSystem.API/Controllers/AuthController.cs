@@ -1,6 +1,7 @@
 ﻿using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.DTO.Category;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChildVaccineSystem.API.Controllers
@@ -16,6 +17,7 @@ namespace ChildVaccineSystem.API.Controllers
             _authService = authService;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDTO dto)
         {
@@ -30,6 +32,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string token)
         {
@@ -44,6 +47,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
@@ -58,7 +62,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO model)
         {
@@ -78,7 +82,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
-
+        [AllowAnonymous]
         [HttpPost("forget-password")]
         public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordRequestDTO model)
         {
@@ -98,6 +102,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO dto)
         {
