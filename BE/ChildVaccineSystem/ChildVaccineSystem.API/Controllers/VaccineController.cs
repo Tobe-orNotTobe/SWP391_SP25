@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ChildVaccineSystem.ServiceContract.Interfaces;
-using ChildVaccineSystem.Data.DTO.VaccineDTO;
+using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Common.Helper;
 using System.Net;
 
