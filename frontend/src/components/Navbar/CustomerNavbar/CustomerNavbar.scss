@@ -2,14 +2,14 @@
   /* Custom cho tổng nguyên 1 phần navbarnavbar */
   .customerHeader {
     width: 100%;
-    height: 120px; /* Đặt cố định navbar */
+    height: 50px; /* Đặt cố định navbar */
     top: 0; /* Canh trên cùng */
     right: 0;
     left: 0;
     position: sticky;
     z-index: 1000; /* Đảm bảo luôn trên cùng */
     transition: background-color 0.3s; /* Tạo hiệu ứng khi thay đổi */
-  
+
   .mainNavbarContainer {
     display: flex;
     justify-content: space-around;
