@@ -5,10 +5,9 @@ import HomePage from "./pages/HomePage"
 import LogInPage from "./pages/LogInPage"
 import RegisterPage from "./pages/RegisterPage"
 import {ForgotPasswordPage, VerifiyOTPPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
-import ConfirmPassword from "./components/Auth/ConfirmEmail"
-
 import {IntroductionPage, VisionPage, MissionPage, OurTeamPage} from "./pages/IntroductionPage"
 import ChildRegistrationPage from "./pages/ChildRegistrationPage.tsx";
+import ConfirmEmail from "./components/Auth/ConfirmEmail.tsx";
 
 
 function App() {
@@ -30,7 +29,7 @@ function App() {
 
           <Route path="/team" element={<OurTeamPage/>}/>
           <Route path="/verify-otp" element={<VerifiyOTPPage/>}></Route>
-          <Route path="/confirm-password" element={<ConfirmPassword/>}></Route>
+          <Route path="/confirm-email" element={<ConfirmEmail/>}></Route>
           <Route path="/reset-password" element={<ResetPasswordPage/>}></Route>
 
           {/*Lưu ý: Trang này phải đăng nhập mới sử dụng được*/}

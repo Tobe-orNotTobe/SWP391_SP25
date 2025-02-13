@@ -36,9 +36,9 @@ export const useLogin = () => {
 
 
         setIsLoading(true);
-
+        const response = await apiLogIn(data);
         try {
-            const response = await apiLogIn(data);
+
 
             if (response.token) {
 
@@ -55,14 +55,15 @@ export const useLogin = () => {
                 }, 2000);
             }else{
                 notification.error({
-                    message: "Đăng nhập thất bại", 
-                    description:"Tài Khoản Hoặc mật Khẩu bị sai" 
+                    message: "Đăng Nhập Thành Công",
+                    description: response.error,
                 });
             }
         } catch (error) {
             console.log(error);
             notification.error({
-                message: "Đăng nhập thất bại, Tài Khoản Hoặc mật Khẩu bị sai",  
+                message: "Đăng nhập thất bại",
+                description: response.error,
             });
             setError("Đăng nhập thất bại, Tài Khoản Hoặc mật Khẩu bị sai");
         } finally {

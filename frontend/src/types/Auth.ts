@@ -32,7 +32,7 @@ export interface TokenResponse {
     aud: string;
 }
 
-export interface ConfirmPassWord {
+export interface ConfirmEmailRequest {
     email: string;
     token: string;
 }

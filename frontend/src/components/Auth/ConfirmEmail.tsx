@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { apiConfirmPassword } from "../../apis/apiAuth";
+import {apiConfirmEmail} from "../../apis/apiAuth";
 import { FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
 import "./Auth.scss";
-import {ConfirmPassWord} from "../../types/Auth.ts";
+import {ConfirmEmailRequest  } from "../../types/Auth.ts";
 
-const ConfirmPassword: React.FC = () => {
+
+const ConfirmEmail: React.FC = () => {
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
   const token = searchParams.get("token");
@@ -21,14 +22,17 @@ const ConfirmPassword: React.FC = () => {
         return;
       }
 
-      const data : ConfirmPassWord = {email, token};
+      const data : ConfirmEmailRequest   = {email, token};
 
       try {
-        const response = await apiConfirmPassword(data);
+        const response = await apiConfirmEmail(data);
 
         if (response && response.message) {
           setStatus(response.message);
           setStatusType("success");
+
+          setTimeout(() => setStatusType("success"), 3000);
+
         } else {
           setStatus("Xác nhận thất bại! Vui lòng thử lại.");
           setStatusType("error");
@@ -67,4 +71,4 @@ const ConfirmPassword: React.FC = () => {
   );
 };
 
-export default ConfirmPassword;
+export default ConfirmEmail;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ConfirmPassWord, ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest } from "../types/Auth";
+import { ConfirmEmailRequest, ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest } from "../types/Auth";
 import axiosInstance from "../utils/axiosInstance";
 
 export const apiRegister = async(data : RegisterRequest) => {
@@ -31,19 +31,13 @@ export const apiLogIn= async(data : LoginRequest) => {
 }
 
 
-export const apiConfirmPassword = async (data : ConfirmPassWord) => {
-    try{
-        const response = await axios.post("", data);
-        return response.data
-    }catch(error){
-        if (axios.isAxiosError(error)) {
-            console.error("Error fetching data", error.response?.data || error.message);
-            return error.response?.data ;
-        }
-        console.error("Unexpected error:", error);
-        return { message: "An unexpected error occurred" };
-    }
-}
+export const apiConfirmEmail = async (data : ConfirmEmailRequest) => {
+    const response = await fetch(
+        `https://localhost:7134/api/Auth/confirm-email?email=${encodeURIComponent(data.email)}&token=${encodeURIComponent(data.token)}`
+    );
+    return response.json();
+};
+
 
 
 
