@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { apiConfirmPassword } from "../../apis/apiAuth";
 import { FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
-import "./Auth.scss"; 
+import "./Auth.scss";
+import {ConfirmPassWord} from "../../types/Auth.ts";
 
 const ConfirmPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -20,7 +21,8 @@ const ConfirmPassword: React.FC = () => {
         return;
       }
 
-      const response = await apiConfirmPassword({ email, token });
+      const data : ConfirmPassWord = {email, token};
+      const response = await apiConfirmPassword(data);
 
       if (response.message) {
         setStatus(response.message);
