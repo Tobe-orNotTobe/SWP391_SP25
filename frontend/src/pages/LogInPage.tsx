@@ -8,9 +8,11 @@ import FloatingButtons from "../components/FloatingButton/FloatingButtons";
 const LogInPage : React.FC = () =>{
     return(
         <>
-            <CustomerNavbar/>
-            <Login/>
-            <FloatingButtons/>
+         <div className="loginBackGround" style={{height:'100vh'}}>
+             <CustomerNavbar/>
+             <Login/>
+             <FloatingButtons/>
+         </div>
         </>
     );
 }

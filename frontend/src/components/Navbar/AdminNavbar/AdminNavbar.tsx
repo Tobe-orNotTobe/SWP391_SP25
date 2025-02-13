@@ -1,11 +1,12 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState} from 'react';
 import './adminNavbar.scss';
+import Logo_Navbar from "../../../assets/navbar/Logo_Navbar.png"
+// interface AdminNavbarProps {
+//   children: ReactNode;
+// }
 
-interface AdminNavbarProps {
-  children: ReactNode;
-}
-
-const AdminNavbar: React.FC<AdminNavbarProps> = ({ children }) => {
+// const AdminNavbar: React.FC<AdminNavbarProps> = ({ children }) => {
+const AdminNavbar: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('Đăng cẩm nang');
 
   const tabs: string[] = ['Đăng cẩm nang', 'About', 'Contact'];
@@ -15,7 +16,7 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ children }) => {
       <aside className="sidebar">
         <div className="logo">
           <h1>Custom Layout</h1>
-          <img src="logo.png" alt="Logo" />
+          <img src={Logo_Navbar} alt="Logo" />
         </div>
         <nav className="nav">
           <ul>

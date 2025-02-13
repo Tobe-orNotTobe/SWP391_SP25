@@ -46,21 +46,16 @@
   text-align: center;
 }
 
-
-// Còn cái này là dành cho blog card container
-
 .newsContainer {
-  margin-top: 15px;
-  background: #f0f0f0; // Màu xám nhẹ
+  margin-top: 15px; 
   padding: 16px;
-  width: 285px;
-  height: 550px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  height: 100%;
   transition: transform 0.3s ease-in-out;
   text-align: left;
 
   &:hover {
-    transform: translateY(-5px);
+    cursor: pointer;
   }
 
   img {
