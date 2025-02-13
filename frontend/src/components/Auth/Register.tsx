@@ -68,6 +68,15 @@ const Register: React.FC = () => {
                     </div>
                     
                     <div className="formColumn">
+                        <label>Họ và tên: </label>
+                        <input
+                            type="text"
+                            placeholder="full name"
+                            value={register.fullName}
+                            onChange={(e) => register.handlefullNameChange(e.target.value)}
+                            className="authInput"
+                        />
+                        {register.errorFullName && <p className="errorText">{register.errorFullName}</p>}
                         <label>Số điện thoại: </label>
                         <input 
                             type="text" 

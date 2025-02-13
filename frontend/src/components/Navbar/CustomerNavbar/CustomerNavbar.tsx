@@ -1,18 +1,21 @@
 import React from "react";
 import './CustomerNavbar.scss';
 import logo from "../../../assets/navbar/Logo_Navbar.png";
-import { MdNavigateNext } from "react-icons/md";
+import {MdNavigateNext} from "react-icons/md";
 
-import { GiPositionMarker } from "react-icons/gi";
-import { Button } from "antd";
-import { MdLogin, MdLogout} from "react-icons/md";
-import { Link } from "react-router-dom";
-import { FaCalendarAlt, FaUserCircle } from "react-icons/fa";
-import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully";
-import { IoIosNotifications } from "react-icons/io";
+import {GiPositionMarker} from "react-icons/gi";
+
+import {MdLogin, MdLogout} from "react-icons/md";
+import {Link} from "react-router-dom";
+import {FaCalendarAlt, FaUserCircle} from "react-icons/fa";
+import {IsLoginSuccessFully} from "../../../validations/IsLogginSuccessfully";
+import {IoIosNotifications} from "react-icons/io";
+import {Button} from "antd";
+import {TbMoodKid} from "react-icons/tb";
+import {BsCalendar2MinusFill} from "react-icons/bs";
 
 const CustomerNavbar: React.FC = () => {
-    const { username, role } = IsLoginSuccessFully();
+    const {username, role} = IsLoginSuccessFully();
 
     const handleLogout = () => {
         localStorage.clear();
@@ -70,36 +73,58 @@ const CustomerNavbar: React.FC = () => {
                         <li><Link to="#" className="cusNavItem">Điều Khoản và Dịch Vụ</Link></li>
                         <li><Link to="#" className="cusNavItem">Blog</Link></li>
                     </ul>
-                <div className="authButtonLink">
-                    {username ? (
+                    <div className="authButtonLink">
+                        {username ? (
+                            <div className="loggedInUser">
+                                <li className="user-dropdown">
+                                    <Link to="#" className="user-dropdown-toggle">
+                                        <div className="cusNavItem" style={{display: "flex", alignItems: "center"}}>
+                                            <FaUserCircle size={24} style={{marginRight: "8px"}}/>
+                                            <span>Xin chào, {role} {username}</span>
+                                        </div>
+                                    </Link>
+                                    <ul className="user-dropdown-menu">
+                                        <li>
+                                            <Link to="/notifications" className="user-dropdown-item">
+                                                <IoIosNotifications size={23}/> Thông Báo
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/kids" className="user-dropdown-item">
+                                                <TbMoodKid size={23}/> Trẻ của bạn
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/history" className="user-dropdown-item">
+                                                <BsCalendar2MinusFill  size={20}/> Lịch sử tiêm
+                                            </Link>
+                                        </li>
 
-                        <div className="loggedInUser">
-                            <li className="dropdown">
-                                <Link to = "#"><span className="cusNavItem" style={{color : "blue"}}><FaUserCircle size={24}/>Xin chào, {role} {username}</span></Link>
-                                <ul className="dropdown-menu">
-                                    <li><Link to="/about-us"><IoIosNotifications size={23}/>Thông Báo</Link></li>
-                                    <li><span style={{color : "blue"}}onClick={handleLogout}><MdLogout size={23}/> Đăng Xuất </span></li>
-                                </ul>
-                            </li>
-                        </div>
-                    ) : (
-                        <>
-                            <Link to="/login">
+                                        <li>
+                                            <span onClick={handleLogout} className="user-dropdown-item">
+                                              <MdLogout size={23}/> Đăng Xuất
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </div>
+                        ) : (
+                            <>
+                                <Link to="/login">
+                                    <Button className="authButton">
+                                    <MdLogin size={23}/> Đăng Nhập
+                                    </Button>
+                                </Link>
+                                <Link to="/register">
                                 <Button className="authButton">
-                                    <MdLogin size={23} /> Đăng Nhập
-                                </Button>
-                            </Link>
-
-                            <Link to="/register">
-                                <Button className="authButton">
-                                    <MdLogin size={23} /> Đăng Kí
-                                </Button>
-                            </Link>
-                        </>
-                    )}
-                </div>
-            </nav>
-        </header>
+                                        <MdLogin size={23}/> Đăng Kí
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                </nav>
+            </header>
         </>
     );
 };

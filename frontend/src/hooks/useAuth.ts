@@ -105,11 +105,21 @@ export const useRegister = () => {
     const [errorAddress, setErrorAddress] = useState<string | null>(null);
     const [errorDoB, setErrorDoB] = useState<string | null>(null);
     const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
+    const [errorFullName, setErrorFullName] = useState<string | null>(null);
 
     const [isLoading, setIsLoading] = useState(false);
 
     const togglePasswordVisibility = () =>{
         setShowPassword((prev)=> !prev)
+    }
+
+    const handlefullNameChange = (value :  string) => {
+        setFullName(value);
+        if(!value) {
+            setErrorFullName("Không được để trống tên")
+        }else{
+            setErrorFullName(null);
+        }
     }
 
     const handleUsernameChange = (value: string) => {
@@ -193,6 +203,7 @@ export const useRegister = () => {
         handlePhoneNumberChange(phoneNumber);
         handleAddressChange(address);
         handleDoBChange(dateOfBirth);
+        handlefullNameChange(fullName);
     
         const data: RegisterRequest = { email, password, userName, fullName, phoneNumber, address, dateOfBirth, role: "User" };
     
@@ -252,7 +263,7 @@ export const useRegister = () => {
         confirmPassword,
         handleConfirmPasswordChange,
         fullName,
-        setFullName,
+        handlefullNameChange,
         phoneNumber,
         handlePhoneNumberChange,
         address,
@@ -269,6 +280,7 @@ export const useRegister = () => {
         errorAddress,
         errorDoB,
         errorGeneral,
+        errorFullName
     };
 };
 
