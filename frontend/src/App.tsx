@@ -4,7 +4,7 @@ import { Route, BrowserRouter, Routes } from "react-router-dom"
 import HomePage from "./pages/HomePage"
 import LogInPage from "./pages/LogInPage"
 import RegisterPage from "./pages/RegisterPage"
-import {ForgotPasswordPage, VerifiyOTPPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
+import {ForgotPasswordPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
 import {IntroductionPage, VisionPage, MissionPage, OurTeamPage} from "./pages/IntroductionPage"
 import ChildRegistrationPage from "./pages/ChildRegistrationPage.tsx";
 import ConfirmEmail from "./components/Auth/ConfirmEmail.tsx";
@@ -28,7 +28,7 @@ function App() {
           <Route path="/mission" element={<MissionPage/>}/>
 
           <Route path="/team" element={<OurTeamPage/>}/>
-          <Route path="/verify-otp" element={<VerifiyOTPPage/>}></Route>
+
           <Route path="/confirm-email" element={<ConfirmEmail/>}></Route>
           <Route path="/reset-password" element={<ResetPasswordPage/>}></Route>
 

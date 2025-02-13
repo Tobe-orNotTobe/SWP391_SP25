@@ -10,7 +10,7 @@ const ForgotPassword : React.FC = () => {
         <>
             <div className="authContainer">
                 <h1>Nhập email đã đăng kí</h1>
-                <form onClick={handleForgotPasswordSubmit}>
+                <form onSubmit={handleForgotPasswordSubmit}>
                     <label>Email đã đăng kí: </label>
                     <input 
                         type="email" 

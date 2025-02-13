@@ -14,6 +14,8 @@ const ConfirmEmail: React.FC = () => {
   const [status, setStatus] = useState<string>("Đang xác nhận...");
   const [statusType, setStatusType] = useState<"loading" | "success" | "error">("loading");
 
+
+
   useEffect(() => {
     const confirmEmail = async () => {
       if (!email || !token) {
@@ -27,13 +29,16 @@ const ConfirmEmail: React.FC = () => {
       try {
         const response = await apiConfirmEmail(data);
 
-        if (response && response.message) {
+        if (response.message) {
           setStatus(response.message);
           setStatusType("success");
 
-          setTimeout(() => setStatusType("success"), 3000);
+          setTimeout(() => {
+            setStatusType("success");
+            navigate("/login");
+          }, 3000);
 
-        } else {
+        } else if (response.errors) {
           setStatus("Xác nhận thất bại! Vui lòng thử lại.");
           setStatusType("error");
         }

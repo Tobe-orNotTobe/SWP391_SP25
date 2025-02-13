@@ -41,10 +41,9 @@ export interface ConfirmEmailRequest {
 export interface ForgotPasswordRequest{
     email: string;
 }
-export interface OTPRequest {
-    otp: string;
-}
 
 export interface ResetPasswordRequest {
-    confirmPassword: string;
+    email: string;
+    token: string;
+    newPassword: string;
 }

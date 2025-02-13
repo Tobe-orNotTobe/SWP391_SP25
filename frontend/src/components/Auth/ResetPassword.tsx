@@ -2,20 +2,23 @@ import React from "react";
 import { useResetPassword } from "../../hooks/useAuth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+
 const ResetPassword : React.FC = () => {
 
+
     const ResetPassword = useResetPassword();
+
     return(
         <>
             <div className="authContainer">
-                <form onClick={ResetPassword.handleSubmitResetPassword}> 
+                <form onSubmit={ResetPassword.handleSubmitResetPassword}>
                     <h1>Đặt Lại Mật Khẩu</h1>                
                     <label>Mật Khẩu: </label>
                     <div className="passwordInputContainer">
                         <input 
                             type={ResetPassword.showPassword ? "text" : "password"} 
                             placeholder="Password" 
-                            value={ResetPassword.password} 
+                            value={ResetPassword.newPassword}
                             onChange={(e) => ResetPassword.handlePasswordChange(e.target.value)}  
                             className="authInput"/>
                         <span className="eyeIcon" onClick={ResetPassword.togglePasswordVisibility}>

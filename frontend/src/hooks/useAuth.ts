@@ -1,8 +1,8 @@
 import axios from "axios";
 
-import React, { useState, } from "react";
-import {  apiForgotPassword, apiLogIn, apiRegister, apiResetPassword, apiVerifyOTP } from "../apis/apiAuth";
-import {  ForgotPasswordRequest, LoginRequest, OTPRequest, RegisterRequest, ResetPasswordRequest} from "../types/Auth";
+import React, {useEffect, useState,} from "react";
+import {  apiForgotPassword, apiLogIn, apiRegister, apiResetPassword } from "../apis/apiAuth";
+import {  ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest} from "../types/Auth";
 import { notification } from "antd";  
 import { useNavigate} from "react-router-dom";  
 
@@ -143,8 +143,8 @@ export const useRegister = () => {
 
     const handlePasswordChange = (value: string) => {
         setPassword(value);
-        if (!/^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(value)) {
-            setErrorPassword("Mật khẩu cần ít nhất 1 chữ hoa, 1 ký tự đặc biệt, tối thiểu 6 ký tự.");
+        if ((!/^(?=.*[A-Z])(?=.*[a-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(value))) {
+            setErrorPassword("Mật khẩu cần ít nhất 1 chữ hoa, 1 chữ thường, 1 ký tự đặc biệt, tối thiểu 6 ký tự.");
         } else {
             setErrorPassword(null);
         }
@@ -316,25 +316,20 @@ export const useForgotPassWord  = () => {
         }
 
         setLoading(true);
-        setError(null); 
+        setError(null);
 
         try {
             const response = await apiForgotPassword(data);
-            if (response.status === 200) { 
-                navigate('/verify-otp');
+
+            if (response.message) {
+                notification.success({ message: response.message, description: "Vui Lòng check hộp thư email của bạn" });
+                setTimeout(() => navigate("/login"), 5000);
             } else {
-                setError(response.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.");
+                notification.error({ message: response.error || "Lỗi Server" });
             }
-        } catch (err) {
-            if (axios.isAxiosError(err)) {
-                if (err.response?.status === 404) {
-                    setError("Email không tồn tại.");
-                } else {
-                    setError(err.response?.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.");
-                }
-            } else {
-                setError("Đã xảy ra lỗi không xác định. Vui lòng thử lại.");
-            }
+        } catch (error) {
+            console.error(error);
+            notification.error({ message: "Đổi Mật Khẩu Thất Bại", description: "Lỗi Server" });
         } finally {
             setLoading(false);
         }
@@ -344,119 +339,69 @@ export const useForgotPassWord  = () => {
 }
 
 
-export const useVerifyOTP = () => {
-
-   const [otp, setOTP] = useState<string>("");
-   const [loading, setLoading]= useState<boolean>(false);
-   const [error, setError] = useState<string | null>(null);
-   const [success, setSuccess] = useState<string>("");
-
-   const navigate = useNavigate();
-
-   const handleVerifyOTPSubmit  = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        setLoading(true);
-        setError("");
-        setSuccess("");
-
-        const data : OTPRequest = {otp}
-
-        try {
-            const response = await apiVerifyOTP(data);
-            if (response.status === 200) { 
-                navigate('/reset-password');
-            } else {
-                setError(response.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.");
-            }
-        } catch (err) {
-            if (axios.isAxiosError(err)) {
-                if (err.response?.status === 404) {
-                    setError("OTP không hợp lệ hoặc hết hạn");
-                } else {
-                    setError(err.response?.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.");
-                }
-            } else {
-                setError("Đã xảy ra lỗi không xác định. Vui lòng thử lại.");
-            } 
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return {otp, setOTP ,loading, error, success, handleVerifyOTPSubmit}
-
-}
-
-
 export const useResetPassword = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [password, setPassword] = useState<string>("");
+    const [newPassword, setNewPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+
     const [errorPassword, setErrorPassword] = useState<string | null>(null);
     const [errorConfirmPassword, setErrorConfirmPassword] = useState<string | null>(null);
+
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    const [token, setToken] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+
+    useEffect(() => {
+        const getSearchParams = () => {
+            const query = new URLSearchParams(window.location.search);
+            const rawToken = window.location.search.split("token=")[1]?.split("&")[0] || "";
+            setToken(decodeURIComponent(rawToken));
+            setEmail(query.get("email") || "");
+        };
+        getSearchParams();
+    }, [location.search]);
 
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
 
-    const handlePasswordChange = (value: string) => {
-        setPassword(value);
-        if (!/^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(value)) {
-            setErrorPassword("Mật khẩu cần ít nhất 1 chữ hoa, 1 ký tự đặc biệt, tối thiểu 6 ký tự.");
-        } else {
-            setErrorPassword(null);
-        }
-
-        if (confirmPassword && value !== confirmPassword) {
-            setErrorConfirmPassword("Mật khẩu xác nhận không khớp");
-        } else {
-            setErrorConfirmPassword(null);
-        }
+    const validatePassword = (newPassword : string) => {
+        return /^(?=.*[A-Z])(?=.*[a-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(newPassword);
     };
 
-    const handleConfirmPasswordChange = (value: string) => {
+    const handlePasswordChange = (value : string) => {
+        setNewPassword(value);
+        setErrorPassword(validatePassword(value) ? null : "Mật khẩu cần ít nhất 1 chữ hoa, 1 chữ thường, 1 ký tự đặc biệt, tối thiểu 6 ký tự.");
+        setErrorConfirmPassword(confirmPassword && value !== confirmPassword ? "Mật khẩu xác nhận không khớp" : null);
+    };
+
+    const handleConfirmPasswordChange = (value : string) => {
         setConfirmPassword(value);
-        if (password && value !== password) {
-            setErrorConfirmPassword("Mật khẩu xác nhận không khớp");
-        } else {
-            setErrorConfirmPassword(null);
-        }
+        setErrorConfirmPassword(value !== newPassword ? "Mật khẩu xác nhận không khớp" : null);
     };
 
-    const handleSubmitResetPassword = async (e: React.FormEvent) => {
+    const handleSubmitResetPassword = async (e : React.FormEvent) => {
         e.preventDefault();
 
-        handlePasswordChange(password);
-        handleConfirmPasswordChange(confirmPassword);
 
         if (errorPassword || errorConfirmPassword) return;
 
-        const data: ResetPasswordRequest = { confirmPassword };
+        const data  : ResetPasswordRequest = {email, token, newPassword}
+
         setIsLoading(true);
         try {
             const response = await apiResetPassword(data);
-            if (response.status === 200) {
-                notification.success({
-                    message: "Đổi Mật Khẩu Thành Công",
-                    description: "Bạn sẽ được chuyển đến trang Login trong ít giây.",
-                });
-                setTimeout(() => {
-                    navigate("/login");
-                }, 2000);
+            if (response.message) {
+                notification.success({ message: response.message, description: "Bạn sẽ được chuyển đến trang Login trong ít giây." });
+                setTimeout(() => navigate("/login"), 2000);
             } else {
-                notification.error({
-                    message: "Đổi Mật Khẩu Thất Bại",
-                });
+                notification.error({ message: response.error || "Lỗi Server" });
             }
         } catch (error) {
             console.error(error);
-            notification.error({
-                message: "Đổi Mật Khẩu Thất Bại",
-                description: "Lỗi Server"
-            });
+            notification.error({ message: "Đổi Mật Khẩu Thất Bại", description: "Lỗi Server" });
         } finally {
             setIsLoading(false);
         }
@@ -467,7 +412,7 @@ export const useResetPassword = () => {
         togglePasswordVisibility,
         errorConfirmPassword,
         errorPassword,
-        password,
+        newPassword,
         confirmPassword,
         handlePasswordChange,
         handleConfirmPasswordChange,
