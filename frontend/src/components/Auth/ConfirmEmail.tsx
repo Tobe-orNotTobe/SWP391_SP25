@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { apiConfirmPassword } from "../../apis/apiAuth";
 import { FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
-import "./Auth.scss"; 
+import "./Auth.scss";
+import {ConfirmPassWord} from "../../types/Auth.ts";
 
 const ConfirmPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -20,14 +21,21 @@ const ConfirmPassword: React.FC = () => {
         return;
       }
 
-      const response = await apiConfirmPassword({ email, token });
+      const data : ConfirmPassWord = {email, token};
 
-      if (response.message) {
-        setStatus(response.message);
-        setStatusType("success");
-        setTimeout(() => navigate("/login"), 3000);
-      } else {
-        setStatus(response.message || "Lỗi xác nhận email! 😥");
+      try {
+        const response = await apiConfirmPassword(data);
+
+        if (response && response.message) {
+          setStatus(response.message);
+          setStatusType("success");
+        } else {
+          setStatus("Xác nhận thất bại! Vui lòng thử lại.");
+          setStatusType("error");
+        }
+      } catch (error) {
+        console.error("API Error:", error);
+        setStatus("Lỗi xác nhận! Vui lòng kiểm tra lại.");
         setStatusType("error");
       }
     };
@@ -36,26 +44,26 @@ const ConfirmPassword: React.FC = () => {
   }, [email, token, navigate]);
 
   return (
-    <div className="confirm-password">
-      {statusType === "loading" && (
-        <div className="status status--loading">
-          <FaSpinner className="status__icon status__icon--spin" />
-          <span>{status}</span>
-        </div>
-      )}
-      {statusType === "success" && (
-        <div className="status status--success">
-          <FaCheckCircle size={40}className="status__icon" />
-          <span>{status}</span>
-        </div>
-      )}
-      {statusType === "error" && (
-        <div className="status status--error">
-          <FaTimesCircle className="status__icon" />
-          <span>{status}</span>
-        </div>
-      )}
-    </div>
+      <div className="confirm-password">
+        {statusType === "loading" && (
+            <div className="status status--loading">
+              <FaSpinner className="status__icon status__icon--spin" />
+              <span>{status}</span>
+            </div>
+        )}
+        {statusType === "success" && (
+            <div className="status status--success">
+              <FaCheckCircle size={40} className="status__icon" />
+              <span>{status}</span>
+            </div>
+        )}
+        {statusType === "error" && (
+            <div className="status status--error">
+              <FaTimesCircle className="status__icon" />
+              <span>{status}</span>
+            </div>
+        )}
+      </div>
   );
 };
 

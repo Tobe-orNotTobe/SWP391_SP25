@@ -9,7 +9,7 @@ export const apiRegister = async(data : RegisterRequest) => {
     }catch(error : unknown){
         if (axios.isAxiosError(error)) {
             console.error("Error fetching data", error.response?.data || error.message);
-            return error.response?.data || { message: "An error occurred" };
+            return error.response?.data;
         }
         console.error("Unexpected error:", error);
         return { message: "An unexpected error occurred" };
@@ -23,7 +23,7 @@ export const apiLogIn= async(data : LoginRequest) => {
     }catch(error){
         if (axios.isAxiosError(error)) {
             console.error("Error fetching data", error.response?.data || error.message);
-            return error.response?.data || { message: "An error occurred" };
+            return error.response?.data;
         }
         console.error("Unexpected error:", error);
         return { message: "An unexpected error occurred" };
@@ -38,7 +38,7 @@ export const apiConfirmPassword = async (data : ConfirmPassWord) => {
     }catch(error){
         if (axios.isAxiosError(error)) {
             console.error("Error fetching data", error.response?.data || error.message);
-            return error.response?.data || { message: "An error occurred" };
+            return error.response?.data;
         }
         console.error("Unexpected error:", error);
         return { message: "An unexpected error occurred" };
