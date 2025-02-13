@@ -33,12 +33,16 @@ namespace ChildVaccineSystem.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string token)
+        [HttpPost("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest model)
         {
             try
             {
-                var result = await _authService.ConfirmEmailAsync(email, token);
+                var result = await _authService.ConfirmEmailAsync(model.Email, model.Token);
+
+                if (!result)
+                    return BadRequest(new { Error = "Invalid or expired token." });
+
                 return Ok(new { Message = "Email confirmed successfully." });
             }
             catch (Exception ex)
@@ -46,6 +50,7 @@ namespace ChildVaccineSystem.API.Controllers
                 return BadRequest(new { Error = ex.Message });
             }
         }
+
 
         [AllowAnonymous]
         [HttpPost("login")]

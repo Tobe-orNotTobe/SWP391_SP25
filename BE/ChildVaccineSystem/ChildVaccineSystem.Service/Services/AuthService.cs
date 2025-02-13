@@ -147,9 +147,19 @@ namespace ChildVaccineSystem.Service.Services
             if (user == null)
                 throw new Exception("User not found.");
 
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+            string decodedToken = Uri.UnescapeDataString(token).Replace(" ", "+");
+
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Email confirmation failed: {errors}");
+            }
+
             return result.Succeeded;
         }
+
 
         public async Task<LoginResponseDTO> RefreshTokenAsync(string refreshToken)
         {
@@ -174,6 +184,10 @@ namespace ChildVaccineSystem.Service.Services
                 throw new Exception("User not found.");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            string decodedToken = Uri.UnescapeDataString(token)
+                .Replace(" ", "+");
+
             var resetLink = $"{_configuration["AppSettings:FrontendUrl"]}/reset-password?email={email}&token={token}";
 
             await _emailService.SendEmailForgotPassword(email, resetLink);
