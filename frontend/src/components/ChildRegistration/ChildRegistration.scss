@@ -1,0 +1,108 @@
+.childRegistrationContainer {
+  width: 1000px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+  margin: 50px auto;
+
+  .childRegistrationTitle {
+    font-weight: bold;
+    justify-content: center;
+    display: flex;
+    padding-bottom: 25px;
+    font-size: 28px;
+  }
+
+  .childRegistrationForm {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    .childRegistrationLabel {
+      font-weight: bold;
+    }
+
+    .childRegistrationInput {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.4);
+      }
+
+      select {
+        appearance: none;
+        background-color: white;
+        cursor: pointer;
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+      }
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+
+    .childRegistrationFormColumn {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .childRegistrationFormColumn:first-child {
+      border-right: 2px solid #ddd; /* Đường kẻ phân chia */
+      padding-right: 20px;
+    }
+
+    .childRegistrationFormColumn:last-child {
+      padding-left: 20px;
+    }
+
+    .childRegistrationButtonContainer {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .childRegistrationButton {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      background: #2A388F;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+
+      &:hover {
+        background: #0056b3;
+        box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.4);
+      }
+    }
+
+
+  }
+
+}
+

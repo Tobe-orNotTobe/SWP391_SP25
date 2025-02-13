@@ -6,9 +6,11 @@ import FloatingButtons from "../components/FloatingButton/FloatingButtons";
 const RegisterPage : React.FC = () =>{
     return(
         <>
-            <CustomerNavbar/>
-            <Register/>
-            <FloatingButtons/>
+            <div className="registerBackGround" style={{height:'100vh'}}>
+                <CustomerNavbar/>
+                <Register/>
+                <FloatingButtons/>
+            </div>
         </>
     );
 }
