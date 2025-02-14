@@ -177,7 +177,7 @@
       background: white;
       border: 1px solid #ccc;
       border-radius: 4px;
-      min-width: 150px;
+      min-width: 250px;
       padding: 0;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
@@ -186,6 +186,7 @@
         padding: 10px;
         display: flex;
         align-items: center;
+       
         gap: 8px;
 
         &:hover {
@@ -194,7 +195,7 @@
 
         a, span {
           text-decoration: none;
-          color: black;
+          color: #2A388F;
           display: flex;
           align-items: center;
           width: 100%;
@@ -212,7 +213,7 @@
       gap: 8px;
       padding: 0px;
       text-decoration: none;
-      color: black;
+      color: #2A388F;
       width: 100%;
       cursor: pointer;
 

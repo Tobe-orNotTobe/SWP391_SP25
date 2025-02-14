@@ -13,6 +13,7 @@ import {IoIosNotifications} from "react-icons/io";
 import {Button} from "antd";
 import {TbMoodKid} from "react-icons/tb";
 import {BsCalendar2MinusFill} from "react-icons/bs";
+import { ImProfile } from "react-icons/im";
 
 const CustomerNavbar: React.FC = () => {
     const {username, role} = IsLoginSuccessFully();
@@ -84,6 +85,11 @@ const CustomerNavbar: React.FC = () => {
                                         </div>
                                     </Link>
                                     <ul className="user-dropdown-menu">
+                                        <li>
+                                            <Link to="/your-profile" className="user-dropdown-item">
+                                                <ImProfile size={23}/> Thông tin tài khoản
+                                            </Link>
+                                        </li>
                                         <li>
                                             <Link to="/notifications" className="user-dropdown-item">
                                                 <IoIosNotifications size={23}/> Thông Báo
