@@ -67,7 +67,7 @@ const CustomerNavbar: React.FC = () => {
                             </ul>
                         </li>
 
-                        <li><Link to="#" className="cusNavItem">Vaccine </Link></li>
+                        <li><Link to="/vaccine-list" className="cusNavItem">Vaccine </Link></li>
                         <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
                         <li><Link to="#" className="cusNavItem">Tin Tức</Link></li>
                         <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>

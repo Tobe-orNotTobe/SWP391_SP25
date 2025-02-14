@@ -8,6 +8,7 @@ import {ForgotPasswordPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
 import {IntroductionPage, VisionPage, MissionPage, OurTeamPage} from "./pages/IntroductionPage"
 import ChildRegistrationPage from "./pages/ChildRegistrationPage.tsx";
 import ConfirmEmail from "./components/Auth/ConfirmEmail.tsx";
+import VaccineListPage from "./pages/VaccineListPage.tsx"
 
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
           <Route path="/login" element={<LogInPage/>}/>
           <Route path="/register" element={<RegisterPage/>}/>
           <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
+
+          <Route path="/vaccine-list" element={<VaccineListPage/>}/>
 
           <Route path="/about-us" element={<IntroductionPage/>}/>
           <Route path="/vision" element={<VisionPage/>}/>
