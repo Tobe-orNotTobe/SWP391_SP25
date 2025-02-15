@@ -21,9 +21,12 @@ namespace ChildVaccineSystem.Common.Helper
 
 			CreateMap<UpdateVaccineDTO, Vaccine>()
 				.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+           
+			CreateMap<Vaccine, VaccineBasicDTO>()
+			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.VaccineId));
 
-			// ComboVaccine Mapping
-			CreateMap<ComboVaccine, ComboVaccineDTO>()
+            // ComboVaccine Mapping
+            CreateMap<ComboVaccine, ComboVaccineDTO>()
 				.ForMember(dest => dest.Vaccines,
 					opt => opt.MapFrom(src => src.ComboDetails.Select(cd => cd.Vaccine)))
 				.ReverseMap();

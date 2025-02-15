@@ -69,5 +69,11 @@ namespace ChildVaccineSystem.Services
             var filteredVaccines = vaccines.Where(v => v.IsNecessary == isNecessary).ToList();
             return _mapper.Map<List<VaccineDTO>>(filteredVaccines);
         }
+        public async Task<List<VaccineBasicDTO>> GetBasicVaccinesAsync()
+        {
+            var vaccines = await _unitOfWork.Vaccines.GetAllAsync();
+            return _mapper.Map<List<VaccineBasicDTO>>(vaccines);
+        }
+
     }
 }

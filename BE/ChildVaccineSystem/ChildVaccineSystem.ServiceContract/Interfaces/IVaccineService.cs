@@ -14,6 +14,8 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<VaccineDTO> UpdateVaccineAsync(int id, UpdateVaccineDTO updatedVaccineDto);
         Task<bool> DeleteVaccineAsync(int id);
         Task<List<VaccineDTO>> GetVaccinesByTypeAsync(bool isNecessary);
+        Task<List<VaccineBasicDTO>> GetBasicVaccinesAsync();
+
     }
 }
 

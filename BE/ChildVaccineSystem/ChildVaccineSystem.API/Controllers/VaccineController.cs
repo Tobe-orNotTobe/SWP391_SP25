@@ -144,5 +144,13 @@ namespace ChildVaccineSystem.API.Controllers
 			_response.Result = result;
 			return Ok(_response);
 		}
-	}
+
+        [HttpGet("basic")]
+        public async Task<IActionResult> GetBasicVaccines()
+        {
+            var vaccines = await _vaccineService.GetBasicVaccinesAsync();
+            return Ok(vaccines);
+        }
+
+    }
 }
