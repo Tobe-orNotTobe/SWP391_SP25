@@ -15,14 +15,17 @@ namespace ChildVaccineSystem.Repository.Repositories
 		public IComboDetailRepository ComboDetails { get; }
 		public IVaccinationScheduleRepository VaccinationSchedules { get; }
 
-
-		public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository)
+        public IBookingRepository Bookings { get; private set; }
+        public IBookingDetailRepository BookingDetails { get; private set; }
+        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository)
         {
             _context = context;
             Vaccines = vaccineRepository;
             ComboVaccines = comboVaccineRepository;
             ComboDetails = comboDetailRepository;
 			VaccinationSchedules = vaccinationScheduleRepository;
+            Bookings = bookingRepository;
+            BookingDetails = bookingDetailRepository;
 
 		}
 

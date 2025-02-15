@@ -2,8 +2,10 @@
 using System.Linq;
 using AutoMapper;
 using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.Data.DTO.Booking;
 using ChildVaccineSystem.Data.DTO.ComboVaccine;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
+using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Data.Entities;
 
 namespace ChildVaccineSystem.Common.Helper
@@ -60,6 +62,10 @@ namespace ChildVaccineSystem.Common.Helper
 			CreateMap<UpdateVaccinationScheduleDTO, VaccinationSchedule>()
 				.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-		}
+            //Bookings
+            CreateMap<Booking, BookingDTO>().ReverseMap();
+            CreateMap<BookingDetail, BookingDetailDTO>().ReverseMap();
+
+        }
 	}
 }

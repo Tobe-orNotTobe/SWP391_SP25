@@ -36,9 +36,8 @@ namespace ChildVaccineSystem.Data.Models
 
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.User)
-                .WithMany()
+                .WithMany(u => u.Bookings)
                 .HasForeignKey(b => b.UserId)
-                .HasPrincipalKey(u => u.Id) 
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Transaction>()
@@ -81,9 +80,8 @@ namespace ChildVaccineSystem.Data.Models
 
 			modelBuilder.Entity<Children>()
 				.HasOne(c => c.User)
-				.WithMany()
-				.HasForeignKey(c => c.UserId)
-				.HasPrincipalKey(u => u.Id)
+                .WithMany(u => u.Children)
+                .HasForeignKey(c => c.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<DoctorWorkSchedule>()
@@ -117,8 +115,8 @@ namespace ChildVaccineSystem.Data.Models
 			// Booking Relationships
 			modelBuilder.Entity<BookingDetail>()
 				.HasOne(bd => bd.Booking)
-				.WithMany()
-				.HasForeignKey(bd => bd.BookingId)
+                .WithMany(b => b.BookingDetails)
+                .HasForeignKey(bd => bd.BookingId)
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<DoctorWorkSchedule>()
