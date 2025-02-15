@@ -5,7 +5,10 @@ import HomePage from "./pages/HomePage"
 import LogInPage from "./pages/LogInPage"
 import RegisterPage from "./pages/RegisterPage"
 import ForgotPasswordPage from "./pages/ForgotPassword"
-import {IntroductionPage, VisionPage, MissionPage, OurTeamPage} from "./pages/IntroductionPage"
+import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx"
+import MissionPage from "./pages/Introduction/MissionPage.tsx";
+import VisionPage from "./pages/Introduction/VisionPage.tsx";
+import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
 import ChildRegistrationPage from "./pages/ChildRegistrationPage.tsx";
 
 
