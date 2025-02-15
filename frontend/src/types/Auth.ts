@@ -3,10 +3,6 @@ export interface LoginRequest {
     password: string;
 }
 
-export interface LoginResponse {
-    token: string;   
-}
-
 export interface RegisterRequest {
     fullName: string;
     userName: string;
@@ -16,10 +12,6 @@ export interface RegisterRequest {
     dateOfBirth: string;
     password: string;   
     role : string;
-}
-
-export interface TokenDecode {
-    token: string; 
 }
 
 export interface TokenResponse {
