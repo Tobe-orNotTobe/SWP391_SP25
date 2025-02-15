@@ -6,11 +6,14 @@ import LogInPage from "./pages/AuthPage/Login/LoginPage.tsx"
 import RegisterPage from "./pages/AuthPage/Register/RegisterPage.tsx"
 import ForgotPasswordPage from "./pages/AuthPage/ForgotPassword/ForgotPasswordPage.tsx"
 import ResetPasswordPage from "./pages/AuthPage/ResetPassword/ResetPasswordPage.tsx"
-import {IntroductionPage, VisionPage, MissionPage, OurTeamPage} from "./pages/IntroductionPage"
+
 import ChildRegistrationPage from "./pages/ChildRegistrationPage.tsx";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
 import VaccineListPage from "./pages/VaccineListPage/VaccineListPage.tsx"
-
+import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx"
+import MissionPage from "./pages/Introduction/MissionPage.tsx";
+import VisionPage from "./pages/Introduction/VisionPage.tsx";
+import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
 
 function App() {
 
