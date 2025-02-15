@@ -1,14 +1,15 @@
 
 import "./App.scss"
 import { Route, BrowserRouter, Routes } from "react-router-dom"
-import HomePage from "./pages/HomePage"
-import LogInPage from "./pages/LogInPage"
-import RegisterPage from "./pages/RegisterPage"
-import {ForgotPasswordPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
+import HomePage from "./pages/HomePage/HomePage.tsx"
+import LogInPage from "./pages/AuthPage/Login/LoginPage.tsx"
+import RegisterPage from "./pages/AuthPage/Register/RegisterPage.tsx"
+import ForgotPasswordPage from "./pages/AuthPage/ForgotPassword/ForgotPasswordPage.tsx"
+import ResetPasswordPage from "./pages/AuthPage/ResetPassword/ResetPasswordPage.tsx"
 import {IntroductionPage, VisionPage, MissionPage, OurTeamPage} from "./pages/IntroductionPage"
 import ChildRegistrationPage from "./pages/ChildRegistrationPage.tsx";
-import ConfirmEmail from "./components/Auth/ConfirmEmail.tsx";
-import VaccineListPage from "./pages/VaccineListPage.tsx"
+import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
+import VaccineListPage from "./pages/VaccineListPage/VaccineListPage.tsx"
 
 
 function App() {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import {apiConfirmEmail} from "../../apis/apiAuth";
+import {apiConfirmEmail} from "../../apis/apiAuth.ts";
 import { FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
-import "./Auth.scss";
+import "./ConfirmEmail.scss"
 import {ConfirmEmailRequest  } from "../../types/Auth.ts";
 
 
@@ -13,7 +13,6 @@ const ConfirmEmail: React.FC = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState<string>("Đang xác nhận...");
   const [statusType, setStatusType] = useState<"loading" | "success" | "error">("loading");
-
 
 
   useEffect(() => {

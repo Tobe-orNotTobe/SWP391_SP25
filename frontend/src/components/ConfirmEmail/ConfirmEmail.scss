@@ -1,0 +1,43 @@
+.confirm-password {
+    text-align: center;
+    margin-top: 300px;
+    
+    
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 70px;
+      font-weight: bold;
+      gap: 10px;
+  
+      &--loading {
+        color: #007bff;
+      }
+  
+      &--success {
+        color: #28a745;
+      }
+  
+      &--error {
+        color: #dc3545;
+      }
+  
+      &__icon {
+        font-size: 3.5rem;
+  
+        &--spin {
+          animation: spin 1s linear infinite;
+        }
+      }
+    }
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }

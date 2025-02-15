@@ -1,13 +1,15 @@
 import React from "react";
-import { useForgotPassWord } from "../../hooks/useAuth";
+import { useForgotPassWord } from "./useForgotPassword";
+import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNavbar";
+import "../Auth.scss"
 
-const ForgotPassword : React.FC = () => {
+const ForgotPasswordPage : React.FC = () => {
 
     const {email, loading, error, setEmail,handleForgotPasswordSubmit} = useForgotPassWord();
 
-
     return(
         <>
+            <CustomerNavbar/>
             <div className="authContainer">
                 <h1>Nhập email đã đăng kí</h1>
                 <form onSubmit={handleForgotPasswordSubmit}>
@@ -25,9 +27,10 @@ const ForgotPassword : React.FC = () => {
                     {loading ? "Đang gửi..." : "Gửi yêu cầu"}
                     </button>
                 </form>
-            </div>
+            </div>    
+        
         </>
     );
 }
 
-export default ForgotPassword;
+export default ForgotPasswordPage
