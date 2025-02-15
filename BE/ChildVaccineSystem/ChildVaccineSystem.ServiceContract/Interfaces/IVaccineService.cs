@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.Data.DTO.Vaccine;
 
 namespace ChildVaccineSystem.ServiceContract.Interfaces
 {

@@ -6,6 +6,7 @@ using ChildVaccineSystem.ServiceContract.Interfaces;
 using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Common.Helper;
 using System.Net;
+using ChildVaccineSystem.Data.DTO.Vaccine;
 
 namespace ChildVaccineSystem.API.Controllers
 {
