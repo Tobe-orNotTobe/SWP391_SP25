@@ -16,3 +16,8 @@ export interface BlogIntro {
     image: string;
 }
 
+export interface LoadingRedirectProps {
+    message: string;
+    delay: number; 
+    to: string; 
+}

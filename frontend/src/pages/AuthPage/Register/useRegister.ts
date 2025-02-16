@@ -9,6 +9,8 @@ export const useRegister = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
+    const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
+
     const [userName, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -143,12 +145,17 @@ export const useRegister = () => {
             const response = await apiRegister(data);
     
             if (response.message) {
-               
+                  
                 notification.success({
                     message: "Đăng Kí Thành Công",
                     description: response.message || "Vui lòng kiểm tra email của bạn để xác nhận.",
                 });
-                navigate("/login");
+                
+                setIsRedirecting(true);
+                setTimeout(() => {
+                    setIsRedirecting(false);
+                    navigate("/login");
+                }, 5000); 
             } else {
                 
                 throw new Error(response.error || "Đăng ký thất bại");
@@ -202,6 +209,7 @@ export const useRegister = () => {
         errorAddress,
         errorDoB,
         errorGeneral,
-        errorFullName
+        errorFullName,
+        isRedirecting
     };
 };

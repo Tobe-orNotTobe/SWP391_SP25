@@ -8,6 +8,7 @@ export const useLogin = () => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();  
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -45,13 +46,16 @@ export const useLogin = () => {
                     message: "Đăng Nhập Thành Công",  
                 });
 
+                setIsLoading(false);
+                setIsRedirecting(true);
+
                 setTimeout(() => {
-                    setIsLoading(false);
-                    navigate("/homepage");  
-                }, 2000);
+                    setIsRedirecting(false);
+                    navigate("/homepage");
+                }, 5000); 
             }else{
                 notification.error({
-                    message: "Đăng Nhập Thành Công",
+                    message: "Đăng nhập thất bại",
                     description: response.error,
                 });
             }
@@ -77,6 +81,7 @@ export const useLogin = () => {
         isLoading,
         togglePasswordVisibility,
         error,
+        isRedirecting
     };
 };
 

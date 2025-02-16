@@ -1,21 +1,23 @@
 .loginBackGround {
     background-image: url('../../assets/auth/background04.jpg'); /* Đường dẫn đến ảnh */
-    background-size: cover; /* Ảnh phủ toàn bộ màn hình */
-    background-position: center; /* Căn giữa ảnh */
-    background-repeat: no-repeat; /* Không lặp lại ảnh */
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    min-height: 100vh;
 }
 
 .registerBackGround {
     background-image: url('../../assets/auth/background05.jpg'); /* Đường dẫn đến ảnh */
     background-size: cover; /* Ảnh phủ toàn bộ màn hình */
     background-position: center; /* Căn giữa ảnh */
-    background-repeat: no-repeat; /* Không lặp lại ảnh */
+    background-repeat: no-repeat;
+    min-height: 100vh; /* Không lặp lại ảnh */
 }
 
 .authContainer {
     width: 600px;
-    //margin: 50px auto;
-    padding: 40px;
+    margin: 50px auto;
+    padding: 50px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
