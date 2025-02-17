@@ -6,6 +6,7 @@ import LogInPage from "./pages/LogInPage"
 import RegisterPage from "./pages/RegisterPage"
 import {ForgotPasswordPage, VerifiyOTPPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
 import {IntroductionPage, AboutUsPage, OurTeamPage} from "./pages/IntroductionPage"
+import VaccinationRegistrationPage from "./pages/Customer/VaccinationRegistrationPage"
 
 
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/team" element={<OurTeamPage/>}/>
           <Route path="/verify-otp" element={<VerifiyOTPPage/>}></Route>
           <Route path="/reset-password" element={<ResetPasswordPage/>}></Route>
+          <Route path="/booking" element={<VaccinationRegistrationPage/>}></Route>
         </Routes>
       </BrowserRouter>
     </>
