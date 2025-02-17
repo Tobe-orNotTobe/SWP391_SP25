@@ -4,8 +4,10 @@ using AutoMapper;
 using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.DTO.Booking;
 using ChildVaccineSystem.Data.DTO.ComboVaccine;
+using ChildVaccineSystem.Data.DTO.InjectionSchedule;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
 using ChildVaccineSystem.Data.DTO.Vaccine;
+using ChildVaccineSystem.Data.DTO.VaccineScheduleDetail;
 using ChildVaccineSystem.Data.Entities;
 
 namespace ChildVaccineSystem.Common.Helper
@@ -57,18 +59,33 @@ namespace ChildVaccineSystem.Common.Helper
 				.ForMember(dest => dest.Id, opt => opt.Ignore());
 
 			// VaccinationSchedule Mappings
-			CreateMap<VaccinationSchedule, VaccinationScheduleDTO>()
-				 .ForMember(dest => dest.ComboVaccines, opt => opt.MapFrom(src => src.ComboVaccines)).ReverseMap();
+			CreateMap<VaccinationSchedule, VaccinationScheduleDTO>().ReverseMap();
 
 			CreateMap<CreateVaccinationScheduleDTO, VaccinationSchedule>();
 
 			CreateMap<UpdateVaccinationScheduleDTO, VaccinationSchedule>()
-				.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+				.ForMember(dest => dest.ScheduleId, opt => opt.Ignore());
 
-            //Bookings
-            CreateMap<Booking, BookingDTO>().ReverseMap();
+			// VaccinationScheduleDetail Mappings
+			CreateMap<VaccineScheduleDetail, VaccineScheduleDetailDTO>()
+			.ForMember(dest => dest.VaccineName,
+					  opt => opt.MapFrom(src => src.Vaccine.Name));
+
+			CreateMap<CreateVaccineScheduleDetailDTO, VaccineScheduleDetail>();
+
+			CreateMap<UpdateVaccineScheduleDetailDTO, VaccineScheduleDetail>();
+
+			//Bookings
+			CreateMap<Booking, BookingDTO>().ReverseMap();
             CreateMap<BookingDetail, BookingDetailDTO>().ReverseMap();
 
-        }
+			// InjectionSchedule Mappings
+			CreateMap<InjectionSchedule, InjectionScheduleDTO>();
+
+			CreateMap<CreateInjectionScheduleDTO, InjectionSchedule>()
+				.ForMember(dest => dest.VaccineScheduleDetailId,
+					  opt => opt.Ignore());
+			CreateMap<UpdateInjectionScheduleDTO, InjectionSchedule>();
+		}
 	}
 }

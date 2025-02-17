@@ -12,12 +12,17 @@ namespace ChildVaccineSystem.Data.Entities
     {
         [Key]
         public int ScheduleId { get; set; }
-        public int AgeRangeStart { get; set; }
-        public int AgeRangeEnd { get; set; }
-        public int RecommendedDose { get; set; }
+		[Required]
+		[Range(0, int.MaxValue)]
+		public int AgeRangeStart { get; set; }
+
+		[Required]
+		[Range(0, int.MaxValue)]
+		public int AgeRangeEnd { get; set; }
+
         public string Notes { get; set; }
 
-		public virtual ICollection<ComboVaccine> ComboVaccines { get; set; }
+		public virtual ICollection<VaccineScheduleDetail> VaccineScheduleDetails { get; set; }
 	}
 
 }

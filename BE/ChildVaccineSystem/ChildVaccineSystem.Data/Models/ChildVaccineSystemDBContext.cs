@@ -143,12 +143,6 @@ namespace ChildVaccineSystem.Data.Models
 				.HasForeignKey(cd => cd.VaccineId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<ComboVaccine>()
-				.HasOne(cv => cv.Schedule)
-				.WithMany(s => s.ComboVaccines)
-				.HasForeignKey(cv => cv.ScheduleId)
-				.OnDelete(DeleteBehavior.Restrict);
-
 			modelBuilder.Entity<VaccineInventory>()
 				.HasOne(vi => vi.Vaccine)
 				.WithMany()
@@ -161,18 +155,33 @@ namespace ChildVaccineSystem.Data.Models
 				.HasForeignKey(r => r.VaccineId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<Vaccine>()
-				.HasOne(v => v.Schedule)
-				.WithMany()
-				.HasForeignKey(v => v.ScheduleId)
-				.OnDelete(DeleteBehavior.Restrict);
-
+			
 			// VaccinationRecord Relationships
 			modelBuilder.Entity<Reaction>()
 				.HasOne(r => r.VaccinationRecord)
 				.WithMany()
 				.HasForeignKey(r => r.VaccinationRecordId)
 				.OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<InjectionSchedule>()
+				.HasOne(i => i.VaccineScheduleDetail)
+				.WithMany(d => d.InjectionSchedules)
+				.HasForeignKey(i => i.VaccineScheduleDetailId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			modelBuilder.Entity<VaccineScheduleDetail>(entity =>
+			{
+
+				entity.HasOne(d => d.Schedule)
+				  .WithMany(s => s.VaccineScheduleDetails)
+				  .HasForeignKey(d => d.ScheduleId)
+				  .OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasOne(d => d.Vaccine)
+				.WithMany(v => v.VaccineScheduleDetails)
+				.HasForeignKey(d => d.VaccineId)
+				.OnDelete(DeleteBehavior.Restrict);
+			});
 		}
 	}
 }

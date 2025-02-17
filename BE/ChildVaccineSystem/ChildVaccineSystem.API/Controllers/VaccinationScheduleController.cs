@@ -20,25 +20,39 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpGet]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<APIResponse>> GetAll()
 		{
-			var result = await _scheduleService.GetAllSchedulesAsync();
+			try
+			{
+				var result = await _scheduleService.GetAllSchedulesAsync();
 
-			if (!result.Any())
+				if (!result.Any())
+				{
+					_response.IsSuccess = false;
+					_response.StatusCode = HttpStatusCode.BadRequest;
+					return BadRequest(_response);
+				}
+
+
+				_response.IsSuccess = true;
+				_response.StatusCode = HttpStatusCode.OK;
+				_response.Result = result;
+				return Ok(_response);
+			}
+			catch (Exception ex)
 			{
 				_response.IsSuccess = false;
-				_response.StatusCode = HttpStatusCode.BadRequest;
-				return BadRequest(_response);
+				_response.StatusCode = HttpStatusCode.InternalServerError;
+				_response.ErrorMessages.Add($"Error retrieving schedules: {ex.Message}");
+				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
-
-			
-			_response.IsSuccess = true;
-			_response.StatusCode = HttpStatusCode.OK;
-			_response.Result = result;
-			return Ok(_response);
 		}
 
 		[HttpGet("{id}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<ActionResult<APIResponse>> GetById(int id)
 		{
 			var result = await _scheduleService.GetScheduleByIdAsync(id);
@@ -57,51 +71,110 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpPost]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<APIResponse>> Create([FromBody] CreateVaccinationScheduleDTO scheduleDto)
 		{
-			var result = await _scheduleService.CreateScheduleAsync(scheduleDto);
-
-			if (result == null)
+			try
 			{
-				_response.IsSuccess = false;
-				_response.StatusCode = HttpStatusCode.BadRequest;
-				_response.ErrorMessages.Add("Create failure");
-				return NotFound(_response);
-			}
-
-			_response.IsSuccess = true;
-			_response.StatusCode = HttpStatusCode.OK;
-			_response.Result = result;
-
-			return Ok(_response);
-		}
-
-		[HttpPut("{id}")]
-		public async Task<ActionResult<APIResponse>> Update(int id, [FromBody] UpdateVaccinationScheduleDTO scheduleDto)
-		{
-			if (!ModelState.IsValid)
-			{
-				_response.IsSuccess = false;
-				_response.StatusCode = HttpStatusCode.BadRequest;
-				_response.ErrorMessages = ModelState.Values
+				if (!ModelState.IsValid)
+				{
+					_response.StatusCode = HttpStatusCode.BadRequest;
+					_response.IsSuccess = false;
+					_response.ErrorMessages = ModelState.Values
 						.SelectMany(v => v.Errors)
 						.Select(e => e.ErrorMessage)
 						.ToList();
+					return BadRequest(_response);
+				}
+				var result = await _scheduleService.CreateScheduleAsync(scheduleDto);
+
+				_response.Result = result;
+				_response.StatusCode = HttpStatusCode.Created;
+				_response.IsSuccess = true;
+				return CreatedAtAction(nameof(GetById), new { id = result.ScheduleId }, _response);
+			}
+
+			catch (ArgumentException ex)
+			{
+				_response.StatusCode = HttpStatusCode.BadRequest;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add(ex.Message);
 				return BadRequest(_response);
 			}
 
-			var updatedSchedule = await _scheduleService.UpdateScheduleAsync(id, scheduleDto);
-			if (updatedSchedule == null)
+			catch (InvalidOperationException ex)
 			{
+				_response.StatusCode = HttpStatusCode.Conflict;
 				_response.IsSuccess = false;
-				_response.StatusCode = HttpStatusCode.NotFound;
-				_response.ErrorMessages.Add("Schedule not found");
-				return NotFound(_response);
+				_response.ErrorMessages.Add(ex.Message);
+				return Conflict(_response);
 			}
 
-			_response.Result = updatedSchedule;
-			_response.StatusCode = HttpStatusCode.OK;
-			return Ok(_response);
+			catch (Exception ex)
+			{
+				_response.StatusCode = HttpStatusCode.InternalServerError;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add($"Error creating schedule: {ex.Message}");
+				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+			}
+		}
+
+		[HttpPut("{id}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		public async Task<ActionResult<APIResponse>> Update(int id, [FromBody] UpdateVaccinationScheduleDTO scheduleDto)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+				{
+					_response.IsSuccess = false;
+					_response.StatusCode = HttpStatusCode.BadRequest;
+					_response.ErrorMessages = ModelState.Values
+							.SelectMany(v => v.Errors)
+							.Select(e => e.ErrorMessage)
+							.ToList();
+					return BadRequest(_response);
+				}
+
+				var updatedSchedule = await _scheduleService.UpdateScheduleAsync(id, scheduleDto);
+				if (updatedSchedule == null)
+				{
+					_response.IsSuccess = false;
+					_response.StatusCode = HttpStatusCode.NotFound;
+					_response.ErrorMessages.Add("Schedule not found");
+					return NotFound(_response);
+				}
+
+				_response.Result = updatedSchedule;
+				_response.StatusCode = HttpStatusCode.OK;
+				return Ok(_response);
+			}
+			catch (ArgumentException ex)
+			{
+				_response.StatusCode = HttpStatusCode.BadRequest;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add(ex.Message);
+				return BadRequest(_response);
+			}
+			catch (InvalidOperationException ex)
+			{
+				_response.StatusCode = HttpStatusCode.Conflict;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add(ex.Message);
+				return Conflict(_response);
+			}
+			catch (Exception ex)
+			{
+				_response.StatusCode = HttpStatusCode.InternalServerError;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add($"Error updating schedule: {ex.Message}");
+				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+			}
 		}
 
 		[HttpDelete("{id}")]

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ChildVaccineSystem.Data.Models;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ChildVaccineSystem.Repository.Repositories
 {
@@ -17,7 +18,10 @@ namespace ChildVaccineSystem.Repository.Repositories
 
         public IBookingRepository Bookings { get; private set; }
         public IBookingDetailRepository BookingDetails { get; private set; }
-        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository)
+		public IInjectionScheduleRepository InjectionSchedules { get; }
+		public IVaccineScheduleDetailRepository VaccineScheduleDetails { get; }
+
+		public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -25,7 +29,9 @@ namespace ChildVaccineSystem.Repository.Repositories
             ComboDetails = comboDetailRepository;
 			VaccinationSchedules = vaccinationScheduleRepository;
             Bookings = bookingRepository;
-            BookingDetails = bookingDetailRepository;
+            BookingDetails = bookingDetailRepository; 
+            InjectionSchedules = injectionScheduleRepository;
+			VaccineScheduleDetails = vaccineScheduleDetailRepository;
 
 		}
 
@@ -33,8 +39,12 @@ namespace ChildVaccineSystem.Repository.Repositories
         {
             return await _context.SaveChangesAsync();
         }
+		public async Task<IDbContextTransaction> BeginTransactionAsync()
+		{
+			return await _context.Database.BeginTransactionAsync();
+		}
 
-        public void Dispose()
+		public void Dispose()
         {
             _context.Dispose();
         }
