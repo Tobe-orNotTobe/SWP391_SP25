@@ -14,7 +14,8 @@ import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx"
 import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
-import ManagerDashBoard from "./pages/Manager/ManagerDashBoard.tsx"
+import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx"
+import ManagerVaccine from "./pages/Manager/ManagerVaccine/ManagerVaccine.tsx"
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
 
           {/*Lưu ý: Trang này phải đăng nhập và có role là Mananger mới sử dụng được*/}
           <Route path="/manager/dashboard" element={<ManagerDashBoard/>}/>
+          <Route path="/manager/vaccine" element={<ManagerVaccine/>}/>
 
         </Routes>
       </BrowserRouter>

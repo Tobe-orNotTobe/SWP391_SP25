@@ -10,3 +10,17 @@ export interface VaccineService {
     name: string;
     image: string; 
 }
+
+export interface VaccineDetail {
+    id: number;
+    name: string;
+    description: string;
+    manufacturer: string;
+    sideEffect: string;
+    diseasePrevented: string;
+    price: number;
+    status: boolean;
+    isNecessary: boolean;
+    image: string;
+    injectionsCount: number;
+}

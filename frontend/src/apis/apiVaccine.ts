@@ -22,3 +22,15 @@ export const apiGetVaccineServiceIntro = async () => {
         return [];
     }
 }
+
+export const apiGetVaccineDetail = async () => {
+
+    try{
+        const response = await axios.get("Vaccine/VaccineDetail.json");
+        console.log(response);
+        return response.data;
+    }catch(error){
+        console.error(error)
+        return [];
+    }
+}
