@@ -22,5 +22,12 @@ export interface VaccineDetail {
     status: boolean;
     isNecessary: boolean;
     image: string;
+    injectionSite: string;
+    notes: string;
+    vaccineInteractions: string;
+    undesirableEffects: string;
+    preserve: string;
     injectionsCount: number;
+    distance: number;
+    scheduleId: number;
 }

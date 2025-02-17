@@ -8,6 +8,7 @@ import { ServiceCard, VaccineCard, NewsCard} from "../../components/Card/Card";
 import {Row, Col} from "antd";
 import { Footer } from "antd/es/layout/layout";
 import "./HomePage.scss"
+import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
 const HomePage : React.FC  = () => {
 
     const { imgCarousel, loading, error } = useImgCarousel();
@@ -132,6 +133,7 @@ const HomePage : React.FC  = () => {
                     </div>
                 </div>
             </div>
+            <FloatingButtons/>
             <Footer/>     
         </>
     );

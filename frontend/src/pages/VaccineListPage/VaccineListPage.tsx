@@ -5,6 +5,8 @@ import { Row, Col, Pagination } from "antd";
 import { useVaccineIntro } from "../../hooks/useVaccine";
 import { Footer } from "antd/es/layout/layout";
 import "./VaccineListPage.scss"
+import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
+import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
 
 const VaccineListPage : React.FC = () => {
 
@@ -27,6 +29,7 @@ const VaccineListPage : React.FC = () => {
 
     return (
         <>
+            <CustomerNavbar/>
             <div className="vaccineListContainer">
                 <span>
                     <Link style={{textDecoration: "none", color: "#2A388F"}} to="/homepage">Trang chủ</Link><span
@@ -58,6 +61,7 @@ const VaccineListPage : React.FC = () => {
                 </div>
     
             </div>
+            <FloatingButtons/>
             <Footer/>
         </>
     );
