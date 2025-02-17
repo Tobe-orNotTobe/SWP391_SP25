@@ -9,7 +9,7 @@ import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx"
 import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
-import ChildRegistrationPage from "./pages/ChildRegistrationPage.tsx";
+import ChildRegistrationPage from "./pages/ChildRegistration/ChildRegistrationPage.tsx";
 
 
 function App() {
