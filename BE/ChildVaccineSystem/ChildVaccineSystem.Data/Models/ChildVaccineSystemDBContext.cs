@@ -30,7 +30,9 @@ namespace ChildVaccineSystem.Data.Models
         public DbSet<ComboDetail> ComboDetail { get; set; }
 
         public DbSet<ComboVaccine> ComboVaccines { get; set; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		public DbSet<InjectionSchedule> InjectionSchedules { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -164,10 +166,10 @@ namespace ChildVaccineSystem.Data.Models
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<InjectionSchedule>()
-				.HasOne(i => i.VaccineScheduleDetail)
-				.WithMany(d => d.InjectionSchedules)
-				.HasForeignKey(i => i.VaccineScheduleDetailId)
-				.OnDelete(DeleteBehavior.Cascade);
+						.HasOne(i => i.VaccineScheduleDetail)
+						.WithMany(d => d.InjectionSchedules)
+						.HasForeignKey(i => i.VaccineScheduleDetailId)
+						.OnDelete(DeleteBehavior.Cascade);
 
 			modelBuilder.Entity<VaccineScheduleDetail>(entity =>
 			{
