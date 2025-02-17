@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
 using ChildVaccineSystem.ServiceContract.Interfaces;
@@ -68,5 +69,11 @@ namespace ChildVaccineSystem.Services
             var filteredVaccines = vaccines.Where(v => v.IsNecessary == isNecessary).ToList();
             return _mapper.Map<List<VaccineDTO>>(filteredVaccines);
         }
+        public async Task<List<VaccineBasicDTO>> GetBasicVaccinesAsync()
+        {
+            var vaccines = await _unitOfWork.Vaccines.GetAllAsync();
+            return _mapper.Map<List<VaccineBasicDTO>>(vaccines);
+        }
+
     }
 }

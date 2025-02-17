@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.Data.DTO.Vaccine;
 
 namespace ChildVaccineSystem.ServiceContract.Interfaces
 {
@@ -13,6 +14,8 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<VaccineDTO> UpdateVaccineAsync(int id, UpdateVaccineDTO updatedVaccineDto);
         Task<bool> DeleteVaccineAsync(int id);
         Task<List<VaccineDTO>> GetVaccinesByTypeAsync(bool isNecessary);
+        Task<List<VaccineBasicDTO>> GetBasicVaccinesAsync();
+
     }
 }
 

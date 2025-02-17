@@ -15,14 +15,20 @@ namespace ChildVaccineSystem.Data.Entities
 
         [ForeignKey("Booking")]
         public int BookingId { get; set; }
-        public Booking Booking { get; set; }
-
+        public Booking Booking { get; set; } 
         [ForeignKey("Vaccine")]
-        public int VaccineId { get; set; }
+        public int? VaccineId { get; set; } 
         public Vaccine Vaccine { get; set; }
+
+        [ForeignKey("ComboVaccine")]
+        public int? ComboId { get; set; }  
+        public ComboVaccine ComboVaccine { get; set; }
 
         [ForeignKey("Children")]
         public int ChildId { get; set; }
         public Children Children { get; set; }
+
+        public DateTime InjectionDate { get; set; }
     }
+
 }

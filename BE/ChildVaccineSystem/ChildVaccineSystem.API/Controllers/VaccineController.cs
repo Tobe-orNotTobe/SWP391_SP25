@@ -6,6 +6,7 @@ using ChildVaccineSystem.ServiceContract.Interfaces;
 using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Common.Helper;
 using System.Net;
+using ChildVaccineSystem.Data.DTO.Vaccine;
 
 namespace ChildVaccineSystem.API.Controllers
 {
@@ -143,5 +144,13 @@ namespace ChildVaccineSystem.API.Controllers
 			_response.Result = result;
 			return Ok(_response);
 		}
-	}
+
+        [HttpGet("basic")]
+        public async Task<IActionResult> GetBasicVaccines()
+        {
+            var vaccines = await _vaccineService.GetBasicVaccinesAsync();
+            return Ok(vaccines);
+        }
+
+    }
 }

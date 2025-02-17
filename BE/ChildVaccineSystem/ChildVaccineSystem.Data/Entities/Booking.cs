@@ -13,7 +13,7 @@ namespace ChildVaccineSystem.Data.Entities
         public string UserId { get; set; } 
         public User User { get; set; }
 
-        public string ServicePackageId { get; set; }
+        public string? ServicePackageId { get; set; }
         public DateTime BookingDate { get; set; }
         public decimal TotalPrice { get; set; }
         public string Notes { get; set; }
@@ -22,5 +22,7 @@ namespace ChildVaccineSystem.Data.Entities
         [ForeignKey("PricingPolicy")]
         public int PricingPolicyId { get; set; }
         public PricingPolicy PricingPolicy { get; set; }
+        public ICollection<BookingDetail> BookingDetails { get; set; }
+
     }
 }
