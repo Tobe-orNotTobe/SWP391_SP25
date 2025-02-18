@@ -1,11 +1,7 @@
 import axios from "axios";
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from "../config/cloudinaryConfig";
 
-/**
- * Hàm upload ảnh lên Cloudinary
- * @param {Blob} file - Ảnh được upload
- * @returns {Promise<string>} - Trả về URL ảnh đã upload
- */
+
 export const uploadImageToCloudinary = async (file: Blob): Promise<string> => {
   const formData = new FormData();
   formData.append("file", file);

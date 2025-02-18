@@ -1,6 +1,7 @@
 
 import axios from "axios";
 import axiosInstance from "../utils/axiosInstance.ts";
+import {VaccineDetail} from "../types/Vaccine.ts";
 
 export const apiGetVaccineIntro = async () => {
     try{
@@ -32,5 +33,27 @@ export const apiGetVaccineDetail = async () => {
     }catch(error){
         console.error(error)
         return {};
+    }
+}
+
+export const apiDeleteVaccine = async (id: number) => {
+    try {
+        const response = await axiosInstance.delete(`/api/Vaccine/${id}`);
+        console.log("Deleted vaccine:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting vaccine:", error);
+        throw error;
+    }
+};
+
+export const apiAddVaccine = async (data : VaccineDetail) => {
+    try{
+        const response = await axiosInstance.post("/api/Vaccine", data);
+        console.log(response)
+        return response.data;
+    }catch (error){
+        console.error("Error deleting vaccine:", error);
+        throw error;
     }
 }

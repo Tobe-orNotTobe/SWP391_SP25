@@ -17,6 +17,7 @@ import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx"
 import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/ManagerVaccinePage.tsx"
 import ManagerComboVaccine from "./pages/Manager/ManagerComboVaccine/ManagerComboVaccine.tsx";
+import NotFound from "./components/NotFound/NotFound.tsx"
 
 function App() {
 
@@ -49,6 +50,8 @@ function App() {
           <Route path="/manager/dashboard" element={<ManagerDashBoard/>}/>
           <Route path="/manager/vaccine" element={<ManagerVaccinePage/>}/>
           <Route path="/manager/comboVaccine" element={<ManagerComboVaccine/>}/>
+
+          <Route path="*" element={<NotFound/>}/>
         </Routes>
       </BrowserRouter>
     </>

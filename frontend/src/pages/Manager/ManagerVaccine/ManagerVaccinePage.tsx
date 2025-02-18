@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Table, Modal, Form, Input, InputNumber, Switch, Upload } from "antd";
 import { TiPlusOutline } from "react-icons/ti";
-import {useImageUpload, useVaccineModal} from "./useManagerVaccine";
+import { useVaccineModal} from "./useManagerVaccine";
 import { VaccineDetail } from "../../../types/Vaccine.ts";
 import ManagerLayout from "../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
 import "./ManagerVaccinePage.scss"
@@ -9,32 +9,32 @@ import "./ManagerVaccinePage.scss"
 import { useVaccineDetail } from "../../../hooks/useVaccine.ts";
 
 const ManagerVaccine: React.FC = () => {
-   const
-       {
-           file,
-           setFile,
-           handleUploadImage,
-           imageUrl,
-       } = useImageUpload()
-
-
-    const { vaccineDetail } = useVaccineDetail();
 
     const {
+        form,
+
+        file,
+        imageUrl,
+        deletingId,
 
         isModalOpen,
         isEditMode,
-        form,
+        isDetailModalOpen,
+
+        selectedVaccine,
+        setIsModalOpen,
+        setFile,
+
         handleDelete,
         handleCreate,
         handleEdit,
         handleSubmit,
-        setIsModalOpen,
-        isDetailModalOpen,
-        selectedVaccine,
+        handleUploadImage,
         handleDetailClick,
         handleDetailModalClose,
     } = useVaccineModal();
+
+    const { vaccineDetail } = useVaccineDetail();
 
     const columns = [
         { title: "ID", dataIndex: "vaccineId", key: "id" },
@@ -110,6 +110,7 @@ const ManagerVaccine: React.FC = () => {
                         Chỉnh sửa
                     </Button>
                     <Button
+                        loading={deletingId === record.vaccineId}
                         onClick={() => handleDelete(record.vaccineId)}
                         style={{ color: "white", marginLeft: 10, backgroundColor: "#dc3545" }}
                     >
@@ -141,7 +142,7 @@ const ManagerVaccine: React.FC = () => {
             {/* Modal Chi Tiết Vaccine */}
             <Modal
                 title="Chi Tiết Vaccine"
-                visible={isDetailModalOpen}
+                open={isDetailModalOpen}
                 onCancel={handleDetailModalClose}
                 footer={null}
                 width={1000}
@@ -177,7 +178,7 @@ const ManagerVaccine: React.FC = () => {
             {/* Modal Thêm/Sửa Vaccine */}
             <Modal
                 title={isEditMode ? "Cập nhật Vaccine" : "Thêm Vaccine"}
-                visible={isModalOpen}
+                open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 onOk={() => form.submit()}
                 width={1000}
@@ -189,21 +190,23 @@ const ManagerVaccine: React.FC = () => {
                             <Form.Item
                                 label="Hình ảnh"
                                 name="image"
-                                rules={[{required: true, message: "Vui lòng tải ảnh lên"}]}
+                                rules={[{ required: true, message: "Vui lòng tải ảnh lên" }]}
                             >
+                            <div>
                                 <Upload
                                     accept="image/*"
                                     showUploadList={false}
                                     beforeUpload={async (file: File) => {
                                         setFile(file);
-                                        handleUploadImage(file);
-                                        return false;
+                                        await handleUploadImage(file);  // Upload ảnh khi người dùng chọn
+                                        return false;  // Không để file được tự động upload
                                     }}
                                 >
-                                <Button>Upload ảnh</Button>
+                                    <Button>Upload ảnh</Button>
                                 </Upload>
                                 {file && <p>{file.name}</p>}
-                                {imageUrl && <img src={imageUrl} alt="Vaccine" style={{width: "100%", marginTop: 10}}/>}
+                                {imageUrl && <img src={imageUrl} alt="Vaccine" style={{ width: "100%", marginTop: 10 }} />}
+                            </div>
                             </Form.Item>
                         </div>
 

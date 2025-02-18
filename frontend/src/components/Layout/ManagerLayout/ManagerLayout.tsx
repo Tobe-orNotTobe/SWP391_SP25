@@ -23,6 +23,25 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
     window.localStorage.clear();
   };
 
+  // Định nghĩa các items cho Menu
+  const menuItems = [
+    {
+      key: 'mamaner-dashboard',
+      icon: <AppstoreOutlined />,
+      label: <Link to="/manager/dashboard">Trang Dashboard</Link>
+    },
+    {
+      key: 'comboVaccine',
+      icon: <GoPackage />,
+      label: <Link to="/manager/comboVaccine">Quản lý Combo Vaccine</Link>
+    },
+    {
+      key: 'vaccine',
+      icon: <MedicineBoxOutlined />,
+      label: <Link to="/manager/vaccine">Quản lý Vaccine</Link>
+    }
+  ];
+
   return (
       <Layout className="manager-layout">
         <Header className="manager-header">
@@ -52,18 +71,8 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
                 mode="inline"
                 selectedKeys={[selectedMenu]}
                 onClick={({ key }) => setSelectedMenu(key)}
-            >
-              <Menu.Item key='mamaner-dashboard' icon={<AppstoreOutlined/>}>
-                <Link to="/manager/dashboard" >Trang Dashboard</Link>
-              </Menu.Item>
-              <Menu.Item key="comboVaccine" icon={<GoPackage/>}>
-                <Link to="/manager/comboVaccine">Quản lý Combo Vaccine</Link>
-              </Menu.Item>
-              <Menu.Item key="vaccine" icon={<MedicineBoxOutlined />}>
-                <Link to="/manager/vaccine">Quản lý Vaccine</Link>
-              </Menu.Item>
-
-            </Menu>
+                items={menuItems} // Sử dụng items prop thay vì Menu.Item
+            />
           </Sider>
 
           <Layout className="content-layout">
