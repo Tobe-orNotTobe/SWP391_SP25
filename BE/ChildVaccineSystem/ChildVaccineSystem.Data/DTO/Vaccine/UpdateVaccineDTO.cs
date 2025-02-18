@@ -23,7 +23,6 @@ namespace ChildVaccineSystem.Data.DTO.Vaccine
 		public string? UndesirableEffects { get; set; }
 		public string? Preserve { get; set; }
 		public int? InjectionsCount { get; set; }
-		public double? Distance { get; set; }
-		public int? ScheduleId { get; set; }
+
 	}
 }
