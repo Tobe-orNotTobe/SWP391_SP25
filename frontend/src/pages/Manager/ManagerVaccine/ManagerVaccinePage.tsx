@@ -179,7 +179,7 @@ const ManagerVaccine: React.FC = () => {
                 dataSource={vaccineDetail}
                 rowKey="id"
                 pagination={{
-                    pageSize: 6,  // Số vaccine hiển thị mỗi trang
+                    pageSize: 6, 
                     showSizeChanger: false,  // Không cho phép thay đổi số lượng vaccine mỗi trang
                 }}
             />
