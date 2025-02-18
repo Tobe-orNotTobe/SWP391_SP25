@@ -66,7 +66,9 @@ export const useVaccineDetail = () => {
             setLoading(true);
             try{
                 const data = await apiGetVaccineDetail();
-                setVaccineDetail(data);
+                if (data && data.result) {
+                    setVaccineDetail(data.result);
+                }
             }catch (err){
                 console.log(err);
                 setError("Error Fetching Vaccine Package Intro Data");

@@ -5,7 +5,6 @@ export const decodeToken = (token: string | null) : TokenResponse | null => {
     if (!token) {
         return null;
     }
-
     try{
         const decoded : TokenResponse =jwtDecode(token);
         return decoded;

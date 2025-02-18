@@ -1,5 +1,6 @@
 
 import axios from "axios";
+import axiosInstance from "../utils/axiosInstance.ts";
 
 export const apiGetVaccineIntro = async () => {
     try{
@@ -24,13 +25,12 @@ export const apiGetVaccineServiceIntro = async () => {
 }
 
 export const apiGetVaccineDetail = async () => {
-
     try{
-        const response = await axios.get("Vaccine/VaccineDetail.json");
+        const response = await axiosInstance.get("/api/Vaccine");
         console.log(response);
         return response.data;
     }catch(error){
         console.error(error)
-        return [];
+        return {};
     }
 }

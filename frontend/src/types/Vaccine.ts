@@ -11,8 +11,9 @@ export interface VaccineService {
     image: string; 
 }
 
+
 export interface VaccineDetail {
-    id: number;
+    vaccineId: number;
     name: string;
     description: string;
     manufacturer: string;
@@ -28,6 +29,11 @@ export interface VaccineDetail {
     undesirableEffects: string;
     preserve: string;
     injectionsCount: number;
-    distance: number;
-    scheduleId: number;
+}
+
+export interface GetVaccineResponse {
+    statusCode: number;
+    isSuccess: boolean;
+    errorMessages: string[];
+    result: VaccineDetail[];
 }
