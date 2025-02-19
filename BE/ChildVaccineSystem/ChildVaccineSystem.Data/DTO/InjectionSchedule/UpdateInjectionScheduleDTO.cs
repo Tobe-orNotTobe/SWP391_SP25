@@ -17,7 +17,7 @@ namespace ChildVaccineSystem.Data.DTO.InjectionSchedule
 		[Range(0, int.MaxValue, ErrorMessage = "Injection month must be non-negative")]
 		public int InjectionMonth { get; set; }
 		[Required]
-		public bool isRequired { get; set; }
+		public bool IsRequired { get; set; }
 		public string Notes { get; set; }
 	}
 }

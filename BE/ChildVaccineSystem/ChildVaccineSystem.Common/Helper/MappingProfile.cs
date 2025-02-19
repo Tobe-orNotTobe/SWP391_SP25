@@ -60,17 +60,21 @@ namespace ChildVaccineSystem.Common.Helper
 				.ForMember(dest => dest.Id, opt => opt.Ignore());
 
 			// VaccinationSchedule Mappings
-			CreateMap<VaccinationSchedule, VaccinationScheduleDTO>().ReverseMap();
+			CreateMap<VaccinationSchedule, VaccinationScheduleDTO>()
+				.ForMember(dest => dest.VaccineScheduleDetails, opt => opt.MapFrom(src => src.VaccineScheduleDetails))
+				.ReverseMap();
 
-			CreateMap<CreateVaccinationScheduleDTO, VaccinationSchedule>();
+			CreateMap<CreateVaccinationScheduleDTO, VaccinationSchedule>()
+				.ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes ?? string.Empty));
+
 
 			CreateMap<UpdateVaccinationScheduleDTO, VaccinationSchedule>()
 				.ForMember(dest => dest.ScheduleId, opt => opt.Ignore());
 
 			// VaccinationScheduleDetail Mappings
 			CreateMap<VaccineScheduleDetail, VaccineScheduleDetailDTO>()
-			.ForMember(dest => dest.VaccineName,
-					  opt => opt.MapFrom(src => src.Vaccine.Name));
+				.ForMember(dest => dest.InjectionSchedules, opt => opt.MapFrom(src => src.InjectionSchedules))
+				.ForMember(dest => dest.VaccineName, opt => opt.MapFrom(src => src.Vaccine.Name));
 
 			CreateMap<CreateVaccineScheduleDetailDTO, VaccineScheduleDetail>();
 
@@ -84,8 +88,10 @@ namespace ChildVaccineSystem.Common.Helper
 			CreateMap<InjectionSchedule, InjectionScheduleDTO>();
 
 			CreateMap<CreateInjectionScheduleDTO, InjectionSchedule>()
+				.ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes ?? string.Empty))
 				.ForMember(dest => dest.VaccineScheduleDetailId,
 					  opt => opt.Ignore());
+
 			CreateMap<UpdateInjectionScheduleDTO, InjectionSchedule>();
 
             //Children

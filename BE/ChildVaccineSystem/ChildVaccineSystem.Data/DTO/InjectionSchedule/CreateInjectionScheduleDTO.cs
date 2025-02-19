@@ -16,8 +16,8 @@ namespace ChildVaccineSystem.Data.DTO.InjectionSchedule
 		[Required]
 		[Range(0, int.MaxValue)]
 		public int InjectionMonth { get; set; }
-
-		public bool IsRequired { get; set; }
+		[Required]
+		public bool IsRequired { get; set; } = false;
 		public string? Notes { get; set; }
 	}
 }
