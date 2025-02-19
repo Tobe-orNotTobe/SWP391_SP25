@@ -21,7 +21,8 @@ namespace ChildVaccineSystem.Repository.Repositories
 		public IInjectionScheduleRepository InjectionSchedules { get; }
 		public IVaccineScheduleDetailRepository VaccineScheduleDetails { get; }
 
-		public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository)
+        public IChildrenRepository Children { get; }
+		public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -32,6 +33,7 @@ namespace ChildVaccineSystem.Repository.Repositories
             BookingDetails = bookingDetailRepository; 
             InjectionSchedules = injectionScheduleRepository;
 			VaccineScheduleDetails = vaccineScheduleDetailRepository;
+            Children = childrenRepository;
 
 		}
 
