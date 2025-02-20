@@ -1,163 +1,83 @@
-import { useState } from "react";
-import {Form, notification} from "antd";
-import { VaccineDetail } from "../../../types/Vaccine.ts";
-
-
-import {apiAddVaccine, apiDeleteVaccine} from "../../../apis/apiVaccine.ts";
-import {uploadImageToCloudinary} from "../../../utils/cloudinary.ts";
-
-
-
-export const useVaccineModal = () => {
-
+import { useState, useEffect } from "react";
+import { Form, notification } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
+import { VaccineDetail } from "../../../types/Vaccine";
+import { apiAddVaccine, apiUpdateVaccine } from "../../../apis/apiVaccine";
+import { useVaccineDetail } from "../../../hooks/useVaccine";
+import { uploadImageToCloudinary } from "../../../utils/cloudinary";
+export const useVaccineForm = () => {
   const [form] = Form.useForm();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const isEditMode = !!id;
 
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { vaccineDetail } = useVaccineDetail();
 
+  useEffect(() => {
+    if (isEditMode && vaccineDetail) {
+      const currentVaccine = Array.isArray(vaccineDetail) 
+        ? vaccineDetail.find(v => v.vaccineId === Number(id))
+        : null;
 
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedVaccine, setSelectedVaccine] = useState<VaccineDetail | null>(null);
-
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+      if (currentVaccine) {
+        form.setFieldsValue(currentVaccine);
+        setImageUrl(currentVaccine.image);
+      }
+    }
+  }, [isEditMode, id, vaccineDetail, form]);
 
   const handleUploadImage = async (file: File) => {
     try {
-      const response = await uploadImageToCloudinary(file);  // Lấy secure_url từ Cloudinary
+      const response = await uploadImageToCloudinary(file);
       setImageUrl(response);
-      form.setFieldsValue({
-        image: response,
-      });
+      form.setFieldsValue({ image: response });
+      return false;
     } catch (error) {
-      console.log(error)
+      console.error(error);
       notification.error({
         message: "Lỗi tải ảnh",
         description: "Đã có lỗi xảy ra khi tải ảnh lên.",
       });
+      return false;
     }
   };
 
-
-  const handleCreate = () => {
-    setIsEditMode(false);
-    form.resetFields();
-    setIsModalOpen(true);
-  };
-
-
-  const handleEdit = (record: VaccineDetail) => {
-    setIsEditMode(true);
-    form.setFieldsValue(record);
-    setIsModalOpen(true);
-  };
-
-
   const handleSubmit = async (values: VaccineDetail) => {
-    console.log("Dữ liệu gửi lên:", values);
-
+    setLoading(true);
     try {
-
-      const response = await apiAddVaccine(values);
-
+      let response;
+      
+      if (isEditMode) {
+        response = await apiUpdateVaccine(id, values); // Cập nhật vaccine (PUT)
+      } else {
+        response = await apiAddVaccine(values); // Thêm mới vaccine (POST)
+      }
 
       if (response.isSuccess) {
-
         notification.success({
           message: "Thành công",
-          description: "Đã Thêm Vaccine Thành Công"
+          description: isEditMode ? "Đã cập nhật vaccine thành công" : "Đã thêm vaccine thành công",
         });
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        setTimeout(() => navigate("/manager/vaccines"), 1000);
       } else {
         notification.error({
-          message: "Có lỗi xảy ra khi thêm vaccine",
+          message: "Có lỗi xảy ra",
           description: response?.message || "Lỗi không xác định",
         });
       }
-
-      setIsModalOpen(false);
-
     } catch (error) {
       console.error("Error submitting vaccine:", error);
       notification.error({
         message: "Lỗi khi gửi thông tin vaccine",
         description: "Không thể gửi dữ liệu lên server. Vui lòng thử lại!",
       });
-    }
-  };
-
-
-  const handleDelete = async (vaccineId: number) => {
-    try {
-      setDeletingId(vaccineId);
-      const response = await apiDeleteVaccine(vaccineId);
-
-      if(response.isSuccess ) {
-        notification.success({
-          message : response.message,
-          description : "Đã Xóa Thành Công"
-        })
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-
-        await new Promise(resolve => setTimeout(resolve, 500));
-      }else{
-        notification.error ({
-          message : response.message,
-          description : "Có lỗi xảy ra"
-        })
-      }
-    } catch (error) {
-      console.error("Delete error:", error);
     } finally {
-      setDeletingId(null);
+      setLoading(false);
     }
   };
 
-
-
-  const handleDetailClick = (record: VaccineDetail) => {
-    setSelectedVaccine(record);
-    setIsDetailModalOpen(true);
-  };
-
-
-  const handleDetailModalClose = () => {
-    setSelectedVaccine(null);
-    setIsDetailModalOpen(false);
-  };
-
-  return {
-    form,
-
-    file,
-    imageUrl,
-    deletingId,
-
-    isModalOpen,
-    isEditMode,
-    isDetailModalOpen,
-
-    selectedVaccine,
-
-    setIsModalOpen,
-    setFile,
-
-    handleDelete,
-    handleCreate,
-    handleEdit,
-    handleSubmit,
-    handleUploadImage,
-    handleDetailClick,
-    handleDetailModalClose,
-
-  };
+  return { form, file, setFile, imageUrl, loading, handleUploadImage, handleSubmit, isEditMode, navigate };
 };
-

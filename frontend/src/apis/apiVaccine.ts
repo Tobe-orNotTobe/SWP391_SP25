@@ -50,10 +50,21 @@ export const apiDeleteVaccine = async (id: number) => {
 export const apiAddVaccine = async (data : VaccineDetail) => {
     try{
         const response = await axiosInstance.post("/api/Vaccine", data);
-        console.log(response)
+        console.log(response);
         return response.data;
     }catch (error){
         console.error("Error deleting vaccine:", error);
         throw error;
     }
 }
+
+export const apiUpdateVaccine = async (id: string, data: VaccineDetail) => {
+    try {
+        const response = await axiosInstance.put(`/api/Vaccine/${id}`, data);
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error("Error updating vaccine:", error);
+        throw error;
+    }
+};

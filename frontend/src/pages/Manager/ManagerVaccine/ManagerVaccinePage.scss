@@ -1,4 +1,48 @@
 // De dinh dang css cho phang thong tin duoc in ra tu bang thoi chu hong gi dau
+
+
+.manager-vaccine-page-container{
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Đẩy tiêu đề sang trái, nút sang phải */
+      padding-right: 20px;
+      padding-bottom: 15px; /* Căn nút gần rìa phải */
+  }
+
+  .add-button {
+      margin-left: auto; /* Đảm bảo nút luôn nằm bên phải */
+  }
+
+
+}
+
+.vaccine-action-buttons{
+  
+
+  .detail-button{
+    color: white;
+    background-color: #007bff;
+    margin-left: 10px;
+  }
+
+  .edit-button{
+    color: white;
+    background-color: #28a745;
+    margin-left: 10px;
+  }
+
+  .delete-button{
+    color: white;
+    background-color: #dc3545;
+    margin-left: 10px;
+  }
+
+}
+
+
+
 .vaccine-detail-manager-container {
   display: flex;
   flex-wrap: wrap;
@@ -19,7 +63,10 @@
     min-width: 200px;
     padding-left: 20px;
   }
+  
 }
+
+
 
 //Dinh dang cho cac thong tin popups khi nhan vao nut chi tiet ne
 
@@ -38,7 +85,7 @@
     max-width: 40%;
 
     img {
-      width: 100%;
+      width: 50%;
       height: auto;
       border-radius: 8px;
       margin-bottom: 10px;
@@ -47,5 +94,119 @@
   .vaccine-detail-mananger-popups-right {
     flex: 1;
     padding-left: 10px;
+  }
+}
+
+// cái này là cho vaccine form  để thêm và chỉnh sửa nè
+
+.vaccine-form-page {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-bottom: 40px;
+  
+  .vaccine-form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    
+    .back-button {
+      margin-right: 16px;
+    }
+    
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+    }
+  }
+  
+  .vaccine-form-container {
+    display: flex;
+    gap: 32px;
+    
+    @media (max-width: 992px) {
+      flex-direction: column;
+    }
+    
+    .vaccine-form-left {
+      flex: 0 0 300px;
+      
+      .image-upload-container {
+        .image-upload {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          
+          .upload-button {
+            margin-bottom: 16px;
+          }
+          
+          .file-name {
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #666;
+          }
+          
+          .image-preview {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            
+            img {
+              width: 100%;
+              height: auto;
+              display: block;
+            }
+          }
+        }
+      }
+    }
+    
+    .vaccine-form-right {
+      flex: 1;
+      
+      .form-row {
+        display: flex;
+        gap: 24px;
+        margin-bottom: 16px;
+        
+        @media (max-width: 768px) {
+          flex-direction: column;
+          gap: 0;
+        }
+        
+        .form-item {
+          flex: 1;
+        }
+        
+        &.status-row {
+          .form-item {
+            margin-right: 48px;
+          }
+        }
+      }
+      
+      .ant-input-number {
+        width: 100%;
+      }
+    }
+  }
+  
+  .form-actions {
+    margin-top: 32px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    
+    .cancel-button {
+      min-width: 100px;
+    }
+    
+    .submit-button {
+      min-width: 100px;
+    }
   }
 }
