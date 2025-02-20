@@ -39,13 +39,17 @@ namespace ChildVaccineSystem.Service.Services
             return _mapper.Map<ChildrenDTO>(child);
         }
 
-        public async Task<ChildrenDTO> CreateChildAsync(CreateChildrenDTO childDto)
+        public async Task<ChildrenDTO> CreateChildAsync(CreateChildrenDTO childDto, string userId)
         {
             var child = _mapper.Map<Children>(childDto);
+
+            child.UserId = userId;
+
             var createdChild = await _unitOfWork.Children.AddAsync(child);
-            await _unitOfWork.CompleteAsync(); 
+            await _unitOfWork.CompleteAsync();
             return _mapper.Map<ChildrenDTO>(createdChild);
         }
+
 
         public async Task<ChildrenDTO> UpdateChildAsync(int id, UpdateChildrenDTO updatedChildDto)
         {
@@ -54,7 +58,7 @@ namespace ChildVaccineSystem.Service.Services
 
             _mapper.Map(updatedChildDto, existingChild);
             var updatedChild = await _unitOfWork.Children.UpdateAsync(existingChild);
-            await _unitOfWork.CompleteAsync();  
+            await _unitOfWork.CompleteAsync();
             return _mapper.Map<ChildrenDTO>(updatedChild);
         }
         public async Task<bool> DeleteChildAsync(int id)
@@ -63,7 +67,7 @@ namespace ChildVaccineSystem.Service.Services
             if (existingChild == null) return false;
 
             await _unitOfWork.Children.DeleteAsync(existingChild);
-            await _unitOfWork.CompleteAsync();  
+            await _unitOfWork.CompleteAsync();
             return true;
         }
     }

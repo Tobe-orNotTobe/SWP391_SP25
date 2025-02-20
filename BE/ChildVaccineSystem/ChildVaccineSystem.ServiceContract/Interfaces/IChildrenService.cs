@@ -12,7 +12,7 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<List<ChildrenDTO>> GetAllChildrenAsync();
         Task<ChildrenDTO> GetChildByIdAsync(int id);
         Task<List<ChildrenDTO>> GetChildrenByUserIdAsync(string userId);
-        Task<ChildrenDTO> CreateChildAsync(CreateChildrenDTO childDto);
+        Task<ChildrenDTO> CreateChildAsync(CreateChildrenDTO childDto, string userId);
         Task<ChildrenDTO> UpdateChildAsync(int id, UpdateChildrenDTO updatedChildDto);
         Task<bool> DeleteChildAsync(int id);
     }

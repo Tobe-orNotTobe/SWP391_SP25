@@ -13,6 +13,5 @@ namespace ChildVaccineSystem.Data.DTO.Children
         public string Gender { get; set; }
         public string MedicalHistory { get; set; }
         public string RelationToUser { get; set; }
-        public string UserId { get; set; }
     }
 }
