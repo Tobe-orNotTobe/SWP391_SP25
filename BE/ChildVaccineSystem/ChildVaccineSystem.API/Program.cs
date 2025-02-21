@@ -78,6 +78,11 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireAuthenticatedUser().RequireRole("Admin"));
+});
+
 // Add CORS Configuration
 builder.Services.AddCors(options =>
 {

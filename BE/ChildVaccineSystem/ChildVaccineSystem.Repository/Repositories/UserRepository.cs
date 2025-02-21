@@ -53,5 +53,47 @@ namespace ChildVaccineSystem.Repository.Repositories
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<bool> CreateUserAsync(User user)
+        {
+            _context.Users.Add(user);
+            return true;
+        }
+        public async Task<bool> UpdateUserAsync(User user)
+        {
+            _context.Users.Update(user);
+            return true;
+        }
+        public async Task<bool> DeleteUserAsync(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return false;
+            _context.Users.Remove(user);
+            return true;
+        }
+        public async Task<bool> ActivateUserAsync(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return false;
+            user.IsActive = true;
+            return true;
+        }
+        public async Task<bool> DeactivateUserAsync(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return false;
+            user.IsActive = false;
+            return true;
+        }
+        public async Task<IEnumerable<User>> SearchUsersAsync(string keyword)
+        {
+            return await _context.Users.Where(u => u.FullName.Contains(keyword) || u.Email.Contains(keyword)).ToListAsync();
+        }
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return await _context.Users.ToListAsync();
+        }
     }
 }

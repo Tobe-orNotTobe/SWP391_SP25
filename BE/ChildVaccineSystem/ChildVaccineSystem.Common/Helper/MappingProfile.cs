@@ -2,8 +2,8 @@
 using System.Linq;
 using AutoMapper;
 using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.Data.DTO.Auth;
 using ChildVaccineSystem.Data.DTO.Booking;
-using ChildVaccineSystem.Data.DTO.Children;
 using ChildVaccineSystem.Data.DTO.ComboVaccine;
 using ChildVaccineSystem.Data.DTO.InjectionSchedule;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
@@ -13,7 +13,7 @@ using ChildVaccineSystem.Data.Entities;
 
 namespace ChildVaccineSystem.Common.Helper
 {
-	public class MappingProfile : Profile
+    public class MappingProfile : Profile
 	{
 		public MappingProfile()
 		{
@@ -60,21 +60,17 @@ namespace ChildVaccineSystem.Common.Helper
 				.ForMember(dest => dest.Id, opt => opt.Ignore());
 
 			// VaccinationSchedule Mappings
-			CreateMap<VaccinationSchedule, VaccinationScheduleDTO>()
-				.ForMember(dest => dest.VaccineScheduleDetails, opt => opt.MapFrom(src => src.VaccineScheduleDetails))
-				.ReverseMap();
+			CreateMap<VaccinationSchedule, VaccinationScheduleDTO>().ReverseMap();
 
-			CreateMap<CreateVaccinationScheduleDTO, VaccinationSchedule>()
-				.ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes ?? string.Empty));
-
+			CreateMap<CreateVaccinationScheduleDTO, VaccinationSchedule>();
 
 			CreateMap<UpdateVaccinationScheduleDTO, VaccinationSchedule>()
 				.ForMember(dest => dest.ScheduleId, opt => opt.Ignore());
 
 			// VaccinationScheduleDetail Mappings
 			CreateMap<VaccineScheduleDetail, VaccineScheduleDetailDTO>()
-				.ForMember(dest => dest.InjectionSchedules, opt => opt.MapFrom(src => src.InjectionSchedules))
-				.ForMember(dest => dest.VaccineName, opt => opt.MapFrom(src => src.Vaccine.Name));
+			.ForMember(dest => dest.VaccineName,
+					  opt => opt.MapFrom(src => src.Vaccine.Name));
 
 			CreateMap<CreateVaccineScheduleDetailDTO, VaccineScheduleDetail>();
 
@@ -88,16 +84,9 @@ namespace ChildVaccineSystem.Common.Helper
 			CreateMap<InjectionSchedule, InjectionScheduleDTO>();
 
 			CreateMap<CreateInjectionScheduleDTO, InjectionSchedule>()
-				.ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes ?? string.Empty))
 				.ForMember(dest => dest.VaccineScheduleDetailId,
 					  opt => opt.Ignore());
-
 			CreateMap<UpdateInjectionScheduleDTO, InjectionSchedule>();
-
-            //Children
-            CreateMap<Children, ChildrenDTO>().ReverseMap();
-            CreateMap<CreateChildrenDTO, Children>();
-            CreateMap<UpdateChildrenDTO, Children>();
-        }
+		}
 	}
 }
