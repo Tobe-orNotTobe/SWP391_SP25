@@ -6,7 +6,7 @@ import RegisterPage from "./pages/AuthPage/Register/RegisterPage.tsx";
 import ForgotPasswordPage from "./pages/AuthPage/ForgotPassword/ForgotPasswordPage.tsx";
 import ResetPasswordPage from "./pages/AuthPage/ResetPassword/ResetPasswordPage.tsx";
 
-import ChildRegistrationPage from "./pages/ChildRegistrationPage.tsx";
+
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
 import VaccineListPage from "./pages/VaccineListPage/VaccineListPage.tsx";
 import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
@@ -43,13 +43,19 @@ function App() {
         <Route path="/vision" element={<VisionPage />} />
         <Route path="/our-team" element={<OurTeamPage />} />
 
-        {/* Các trang dành cho manager */}
+        {/*Lưu ý: Trang này phải đăng nhập và có role là Customer mới sử dụng được*/}
+        <Route path="/child-register" element={<ChildRegistrationPage/>}/>
+
+        {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}
         <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
         <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
         <Route path="/manager/vaccine-combos" element={<ManagerComboVaccine />} />
+        <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
+        <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
 
-          {/*Lưu ý: Trang này phải đăng nhập mới sử dụng được*/}
-          <Route path="/child-register" element={<ChildRegistrationPage/>}/>
+
+
+
 
         {/* Trang 404 */}
         <Route path="*" element={<NotFound />} />
