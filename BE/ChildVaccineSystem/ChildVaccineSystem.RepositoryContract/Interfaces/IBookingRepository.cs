@@ -9,7 +9,6 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
 {
     public interface IBookingRepository : IRepository<Booking>
     {
-        Task<IEnumerable<Booking>> GetUserBookingsAsync(string userId);
-        Task<Booking> GetBookingWithDetailsAsync(int bookingId);
+        Task<bool> HasConflictingBookingAsync(string userId, DateTime bookingDate);
     }
 }

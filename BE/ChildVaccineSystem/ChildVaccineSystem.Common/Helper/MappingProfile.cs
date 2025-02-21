@@ -4,6 +4,8 @@ using AutoMapper;
 using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.DTO.Auth;
 using ChildVaccineSystem.Data.DTO.Booking;
+using ChildVaccineSystem.Data.DTO.Booking.BookingDetail;
+using ChildVaccineSystem.Data.DTO.Children;
 using ChildVaccineSystem.Data.DTO.ComboVaccine;
 using ChildVaccineSystem.Data.DTO.InjectionSchedule;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
@@ -76,12 +78,30 @@ namespace ChildVaccineSystem.Common.Helper
 
 			CreateMap<UpdateVaccineScheduleDetailDTO, VaccineScheduleDetail>();
 
-			//Bookings
-			CreateMap<Booking, BookingDTO>().ReverseMap();
-            CreateMap<BookingDetail, BookingDetailDTO>().ReverseMap();
+            //Booking
+            CreateMap<CreateBookingDTO, Booking>()
+                .ForMember(dest => dest.BookingDetails, opt => opt.Ignore())
+                .ForMember(dest => dest.TotalPrice, opt => opt.Ignore())
+                .ForMember(dest => dest.Status, opt => opt.Ignore());
 
-			// InjectionSchedule Mappings
-			CreateMap<InjectionSchedule, InjectionScheduleDTO>();
+            CreateMap<CreateBookingDetailDTO, BookingDetail>()
+                .ForMember(dest => dest.Price, opt => opt.Ignore());
+
+            CreateMap<Booking, BookingDTO>()
+                .ForMember(dest => dest.ChildName,
+                    opt => opt.MapFrom(src => src.Children.FullName))
+                .ForMember(dest => dest.BookingDetails,
+                    opt => opt.MapFrom(src => src.BookingDetails));
+
+            CreateMap<BookingDetail, BookingDetailDTO>();
+
+            //Children
+            CreateMap<Children, ChildrenDTO>().ReverseMap();
+            CreateMap<CreateChildrenDTO, Children>();
+            CreateMap<UpdateChildrenDTO, Children>();
+
+            // InjectionSchedule Mappings
+            CreateMap<InjectionSchedule, InjectionScheduleDTO>();
 
 			CreateMap<CreateInjectionScheduleDTO, InjectionSchedule>()
 				.ForMember(dest => dest.VaccineScheduleDetailId,

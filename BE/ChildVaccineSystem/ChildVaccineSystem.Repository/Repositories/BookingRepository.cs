@@ -1,4 +1,5 @@
 ﻿using ChildVaccineSystem.Data.Entities;
+using ChildVaccineSystem.Data.Enum;
 using ChildVaccineSystem.Data.Models;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -19,22 +20,12 @@ namespace ChildVaccineSystem.Repository.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Booking>> GetUserBookingsAsync(string userId)
+        public async Task<bool> HasConflictingBookingAsync(string userId, DateTime bookingDate)
         {
             return await _context.Bookings
-                .Include(b => b.BookingDetails)
-                .Where(b => b.UserId == userId)
-                .ToListAsync();
-        }
-
-        public async Task<Booking> GetBookingWithDetailsAsync(int bookingId)
-        {
-            return await _context.Bookings
-                .Include(b => b.BookingDetails)
-                .ThenInclude(d => d.Vaccine)
-                .Include(b => b.BookingDetails)
-                .ThenInclude(d => d.ComboVaccine)
-                .FirstOrDefaultAsync(b => b.BookingId == bookingId);
+                .AnyAsync(b => b.UserId == userId &&
+                             b.BookingDate.Date == bookingDate.Date &&
+                             b.Status != BookingStatus.Cancelled);
         }
     }
 }

@@ -9,6 +9,5 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
 {
     public interface IBookingDetailRepository : IRepository<BookingDetail>
     {
-        Task<IEnumerable<BookingDetail>> GetBookingDetailsByBookingIdAsync(int bookingId);
     }
 }
