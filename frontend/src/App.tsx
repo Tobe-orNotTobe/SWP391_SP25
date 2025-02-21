@@ -10,6 +10,7 @@ import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
 import ChildRegistrationPage from "./pages/ChildRegistration/ChildRegistrationPage.tsx";
+import ChildHistoryPage from "./pages/ChildHistory/ChildHistoryPage.tsx";
 
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
 
           {/*Lưu ý: Trang này phải đăng nhập mới sử dụng được*/}
           <Route path="/child-register" element={<ChildRegistrationPage/>}/>
-
+          <Route path={"/child-history"} element={<ChildHistoryPage/>}/>
         </Routes>
       </BrowserRouter>
     </>
