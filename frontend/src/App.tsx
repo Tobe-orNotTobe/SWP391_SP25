@@ -13,15 +13,18 @@ import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
 import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
+import ChildRegistrationPage from "./pages/ChildRegistration/ChildRegistrationPage.tsx";
 
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
 import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/ManagerVaccinePage.tsx";
 import ManagerComboVaccine from "./pages/Manager/ManagerComboVaccine/ManagerComboVaccine.tsx";
-import VaccineFormPage from "./pages/Manager/ManagerVaccine/VaccineFormPage.tsx"; 
+import VaccineFormPage from "./pages/Manager/ManagerVaccine/VaccineFormPage.tsx";
 
 import NotFound from "./components/NotFound/NotFound.tsx";
 
 function App() {
+
+
   return (
     <BrowserRouter>
       <Routes>
@@ -45,9 +48,8 @@ function App() {
         <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
         <Route path="/manager/vaccine-combos" element={<ManagerComboVaccine />} />
 
-        {/* Thêm các route cho trang riêng biệt */}
-        <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
-        <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
+          {/*Lưu ý: Trang này phải đăng nhập mới sử dụng được*/}
+          <Route path="/child-register" element={<ChildRegistrationPage/>}/>
 
         {/* Trang 404 */}
         <Route path="*" element={<NotFound />} />

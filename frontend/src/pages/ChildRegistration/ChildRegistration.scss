@@ -19,8 +19,46 @@
     gap: 20px;
     flex-wrap: wrap;
 
+    .imageUploadContainer {
+      //width: 100%;
+      height: 435px;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        background-color: #ececec;
+      }
+    }
+
+    .uploadIcon {
+      font-size: 50px;
+      color: #aaa;
+    }
+
+    .uploadedImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .hiddenInput {
+      display: none;
+    }
+
     .childRegistrationLabel {
       font-weight: bold;
+    }
+
+    .childRegistrationSelect {
+      margin-bottom: 10px;
     }
 
     .childRegistrationInput {
