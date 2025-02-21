@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Button, Table, Modal, notification } from "antd";
 import { TiPlusOutline } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
+import { TbListDetails } from "react-icons/tb";
+import { MdDeleteOutline } from "react-icons/md";
+import { FiEdit2 } from "react-icons/fi";
 import { VaccineDetail } from "../../../types/Vaccine.ts";
 import ManagerLayout from "../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
 import { useVaccineDetail } from "../../../hooks/useVaccine.ts";
@@ -109,14 +112,14 @@ const ManagerVaccinePage: React.FC = () => {
                         onClick={() => handleDetailClick(record)}
                         className="detail-button"
                     >
-                        Chi tiết
+                        <TbListDetails/>Chi tiết
                     </Button>
                     <Button
                         onClick={() => handleEdit(record)}
                         className="edit-button"
     
                     >
-                        Chỉnh sửa
+                        <FiEdit2/>Chỉnh sửa
                     </Button>
                     <Button
                         loading={deletingId === record.vaccineId}
@@ -124,7 +127,7 @@ const ManagerVaccinePage: React.FC = () => {
                         className="delete-button"
                         
                     >
-                        Xóa
+                       <MdDeleteOutline/> Xóa
                     </Button>
                 </div>
             ),
@@ -159,7 +162,7 @@ const ManagerVaccinePage: React.FC = () => {
                     open={isDetailModalOpen}
                     onCancel={handleDetailModalClose}
                     footer={null}
-                    width={1500}
+                    width={1000}
                     className="vaccine-detail-modal"
                 >
                     {selectedVaccine && (

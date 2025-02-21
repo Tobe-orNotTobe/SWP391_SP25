@@ -33,12 +33,12 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
     {
       key: 'comboVaccine',
       icon: <GoPackage />,
-      label: <Link to="/manager/comboVaccine">Quản lý Combo Vaccine</Link>
+      label: <Link to="/manager/vaccine-combos">Quản lý Combo Vaccine</Link>
     },
     {
       key: 'vaccine',
       icon: <MedicineBoxOutlined />,
-      label: <Link to="/manager/vaccine">Quản lý Vaccine</Link>
+      label: <Link to="/manager/vaccines">Quản lý Vaccine</Link>
     }
   ];
 
