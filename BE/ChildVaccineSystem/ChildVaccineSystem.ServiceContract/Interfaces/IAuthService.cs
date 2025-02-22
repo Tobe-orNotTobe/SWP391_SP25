@@ -1,4 +1,4 @@
-﻿using ChildVaccineSystem.Data.DTO;
+﻿using ChildVaccineSystem.Data.DTO.Auth;
 using ChildVaccineSystem.Data.Entities;
 using System;
 using System.Collections.Generic;

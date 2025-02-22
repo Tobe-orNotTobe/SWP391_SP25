@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChildVaccineSystem.Data.DTO
+namespace ChildVaccineSystem.Data.DTO.Auth
 {
-    public class UserRegisterDTO
+    public class RegisterAccountDTO
     {
         public string FullName { get; set; }
         public string UserName { get; set; }

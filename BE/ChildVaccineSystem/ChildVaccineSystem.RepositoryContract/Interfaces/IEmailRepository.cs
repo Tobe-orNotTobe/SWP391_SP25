@@ -1,4 +1,4 @@
-﻿using ChildVaccineSystem.Data.DTO;
+﻿using ChildVaccineSystem.Data.DTO.Email;
 using System;
 using System.Collections.Generic;
 using System.Linq;

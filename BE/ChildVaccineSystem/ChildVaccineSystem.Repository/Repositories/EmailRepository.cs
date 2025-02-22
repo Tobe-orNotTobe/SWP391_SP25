@@ -1,5 +1,4 @@
 ﻿using ChildVaccineSystem.Common.Helper;
-using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
@@ -13,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+using ChildVaccineSystem.Data.DTO.Email;
 
 
 

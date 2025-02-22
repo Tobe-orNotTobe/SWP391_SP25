@@ -14,7 +14,33 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Add Swagger with Authentication support
+builder.Services.AddSwaggerGen(options =>
+{
+options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+{
+    Name = "Authorization",
+    Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+    Scheme = "Bearer",
+    BearerFormat = "JWT",
+    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+    Description = "Enter 'Bearer' [space] and then your token."
+});
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSettings"));
 
 // Add DbContext
@@ -52,17 +78,22 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//// Add CORS Configuration
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowFrontend", policy =>
-//    {
-//        policy.WithOrigins("http://localhost:3000", "https://your-frontend-domain.com") // Replace with your frontend domains
-//              .AllowAnyHeader()
-//              .AllowAnyMethod()
-//              .AllowCredentials();
-//    });
-//});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireAuthenticatedUser().RequireRole("Admin"));
+});
+
+// Add CORS Configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:7979") // URL Font-end
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 // Add Identity services
 builder.Services.AddIdentity<User, IdentityRole>()
@@ -79,6 +110,42 @@ builder.Services.AddServices();
 
 var app = builder.Build();
 
+// Create default roles and admin user
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+
+    // Define default roles
+    var roles = new[] { "Admin", "Staff", "Manager", "Customer", "Doctor" };
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    // Create default admin user
+    var adminEmail = "admin@gmail.com";
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        var newUser = new User
+        {
+            UserName = "admin",
+            Email = adminEmail,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(newUser, "Admin12345@");
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(newUser, "Admin");
+        }
+    }
+}
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -93,7 +160,7 @@ else
 }
 
 app.UseHttpsRedirection();
-//app.UseCors("AllowFrontend"); // Enable CORS Policy
+app.UseCors("AllowFrontend"); // Enable CORS Policy
 app.UseAuthentication(); // Ensure Authentication
 app.UseAuthorization();  // Ensure Authorization
 app.MapControllers();

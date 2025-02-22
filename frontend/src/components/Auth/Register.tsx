@@ -20,10 +20,10 @@ const Register: React.FC = () => {
                         <input 
                             type="text" 
                             placeholder="Username" 
-                            value={register.username} 
+                            value={register.userName} 
                             onChange={(e) => register.handleUsernameChange(e.target.value)}  
                             className="authInput" 
-                            required
+                            
                         />
                         {register.errorUsername && <p className="errorText">{register.errorUsername}</p>}
                         
@@ -34,7 +34,7 @@ const Register: React.FC = () => {
                             value={register.email} 
                             onChange={(e) => register.handleEmailChange(e.target.value)}  
                             className="authInput"
-                            required
+                            
                         />
                         {register.errorEmail && <p className="errorText">{register.errorEmail}</p>}
                         
@@ -68,6 +68,15 @@ const Register: React.FC = () => {
                     </div>
                     
                     <div className="formColumn">
+                        <label>Họ và tên: </label>
+                        <input
+                            type="text"
+                            placeholder="full name"
+                            value={register.fullName}
+                            onChange={(e) => register.handlefullNameChange(e.target.value)}
+                            className="authInput"
+                        />
+                        {register.errorFullName && <p className="errorText">{register.errorFullName}</p>}
                         <label>Số điện thoại: </label>
                         <input 
                             type="text" 
@@ -89,7 +98,7 @@ const Register: React.FC = () => {
                         <label>Ngày tháng năm sinh: </label>
                         <input 
                             type="date" 
-                            value={register.doB} 
+                            value={register.dateOfBirth} 
                             onChange={(e) => register.handleDoBChange(e.target.value)}  
                             className="authInput"/>
                         {register.errorDoB && <p className="errorText">{register.errorDoB}</p>}
@@ -97,7 +106,7 @@ const Register: React.FC = () => {
                 </div>
                 <br/>
                 {register.errorGeneral && <p className="errorText">{register.errorGeneral}</p>}
-                <button type="submit" className="authButton" disabled={register.isLoading}>Đăng Kí</button>
+                <button type="submit" className="authButton" >Đăng Kí</button>
 
                 <div className="divider">
                                 <span>hoặc</span>

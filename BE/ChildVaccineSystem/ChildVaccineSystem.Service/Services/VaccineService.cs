@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
 using ChildVaccineSystem.ServiceContract.Interfaces;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ChildVaccineSystem.Services
 {
-    public class VaccineService : IVaccineService
+	public class VaccineService : IVaccineService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -29,34 +30,35 @@ namespace ChildVaccineSystem.Services
 
         public async Task<VaccineDTO> GetVaccineByIdAsync(int id)
         {
-            var vaccine = await _unitOfWork.Vaccines.GetByIdAsync(id);
+            var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == id);
             return _mapper.Map<VaccineDTO>(vaccine);
         }
 
-        public async Task<VaccineDTO> CreateVaccineAsync(VaccineDTO vaccineDto)
+        public async Task<VaccineDTO> CreateVaccineAsync(CreateVaccineDTO vaccineDto)
         {
             var vaccine = _mapper.Map<Vaccine>(vaccineDto);
-            await _unitOfWork.Vaccines.CreateAsync(vaccine);
+            var createdSchedule = await _unitOfWork.Vaccines.AddAsync(vaccine);
             await _unitOfWork.CompleteAsync();
-            return _mapper.Map<VaccineDTO>(vaccine);
+            return _mapper.Map<VaccineDTO>(createdSchedule);
         }
 
-        public async Task<VaccineDTO> UpdateVaccineAsync(int id, VaccineDTO updatedVaccineDto)
+        public async Task<VaccineDTO> UpdateVaccineAsync(int id, UpdateVaccineDTO updatedVaccineDto)
         {
-            var vaccine = await _unitOfWork.Vaccines.GetByIdAsync(id);
-            if (vaccine == null) return null;
+            var existingSchedule = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == id);
+            if (existingSchedule == null) return null;
 
-            _mapper.Map(updatedVaccineDto, vaccine);
+            _mapper.Map(updatedVaccineDto, existingSchedule);
+			var updatedVaccine = await _unitOfWork.Vaccines.UpdateAsync(existingSchedule);
             await _unitOfWork.CompleteAsync();
-            return _mapper.Map<VaccineDTO>(vaccine);
+            return _mapper.Map<VaccineDTO>(updatedVaccine);
         }
 
         public async Task<bool> DeleteVaccineAsync(int id)
         {
-            var vaccine = await _unitOfWork.Vaccines.GetByIdAsync(id);
+            var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == id);
             if (vaccine == null) return false;
 
-            await _unitOfWork.Vaccines.DeleteAsync(id);
+            await _unitOfWork.Vaccines.DeleteAsync(vaccine);
             await _unitOfWork.CompleteAsync();
             return true;
         }
@@ -67,5 +69,11 @@ namespace ChildVaccineSystem.Services
             var filteredVaccines = vaccines.Where(v => v.IsNecessary == isNecessary).ToList();
             return _mapper.Map<List<VaccineDTO>>(filteredVaccines);
         }
+        public async Task<List<VaccineBasicDTO>> GetBasicVaccinesAsync()
+        {
+            var vaccines = await _unitOfWork.Vaccines.GetAllAsync();
+            return _mapper.Map<List<VaccineBasicDTO>>(vaccines);
+        }
+
     }
 }
