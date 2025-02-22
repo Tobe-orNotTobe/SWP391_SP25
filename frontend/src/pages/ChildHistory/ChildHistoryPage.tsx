@@ -8,7 +8,7 @@ const ChildHistoryPage: React.FC = () => {
         <>
             <CustomerNavbar/>
             <div>
- 
+
 
             </div>
             <FloatingButtons/>
