@@ -3,6 +3,7 @@ import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavba
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
 import Footer from "../../components/Footer/Footer.tsx";
 import {Link} from "react-router-dom";
+import "./Introduction.scss";
 
 const OurTeamPage: React.FC = () => {
     return (

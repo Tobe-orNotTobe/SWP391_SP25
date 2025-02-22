@@ -3,6 +3,7 @@ import Footer from "../../components/Footer/Footer.tsx";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
 import React from "react"
 import {Link} from "react-router-dom";
+import "./Introduction.scss";
 
 const IntroductionPage: React.FC = () => {
     return (
