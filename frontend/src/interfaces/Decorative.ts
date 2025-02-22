@@ -1,3 +1,5 @@
+
+
 export interface ImgCarousel{
     image: string;
 }
@@ -9,15 +11,21 @@ export interface BriefContent{
     paragraph2: string;
 }
 
-export interface BlogIntro {
-    id: string;
-    title: string;
-    briefContent: string;
-    image: string;
-}
-
 export interface LoadingRedirectProps {
     message: string;
     delay: number; 
     to: string; 
+}
+
+export interface VaccineService {
+    id: string;
+    name: string;
+    image: string; 
+}
+
+export interface NewsIntro {
+    id: string;
+    title: string;
+    briefContent : string;
+    image : string;
 }

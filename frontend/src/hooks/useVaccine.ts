@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 
-import { VaccineDetail, VaccineIntro, VaccineService } from "../types/Vaccine";
-import { apiGetVaccineDetail, apiGetVaccineIntro, apiGetVaccineServiceIntro } from "../apis/apiVaccine";
+import { GetVaccineComboDetail, VaccineDetail, VaccineIntro } from "../interfaces/Vaccine";
+import { apiGetComboVaccineDetail, apiGetVaccineDetail, apiGetVaccineIntro} from "../apis/apiVaccine";
 
 
 export const useVaccineIntro = () =>{
@@ -29,33 +29,6 @@ export const useVaccineIntro = () =>{
     return {vaccineIntro, loading, error};   
 }
 
-export const useVaccineServiceIntro  = () => {
-    const [vaccineServiceIntro, setVaccineServiceItnro] = useState<VaccineService[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
-
-    useEffect(() =>{
-        const fetchVaccinceServiceIntro = async () => {
-            setLoading(true);
-            try{
-                const data = await apiGetVaccineServiceIntro();
-                setVaccineServiceItnro(data);
-            }catch (err) {
-                console.log(err)
-                setError("Error Fetching Vaccine Package Intro Data")
-            }finally{
-                setLoading(false)
-            }
-
-        };
-
-        fetchVaccinceServiceIntro();
-
-    }, []);
-    
-    return {vaccineServiceIntro, loading, error};
-}   
-
 export const useVaccineDetail = () => {
     const [vaccineDetail, setVaccineDetail] = useState<VaccineDetail[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -71,7 +44,7 @@ export const useVaccineDetail = () => {
                 }
             }catch (err){
                 console.log(err);
-                setError("Error Fetching Vaccine Package Intro Data");
+                setError("Error Fetching Vaccine Detail Data");
             }finally {
                 setLoading(false);
             }
@@ -81,4 +54,30 @@ export const useVaccineDetail = () => {
     }, [])
 
     return {vaccineDetail, loading, error}
+}
+
+export const useComboVaccineDetail = () => {
+    const [comboVaccineDetail, setComboVaccineDetail] = useState<GetVaccineComboDetail[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] =useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchComboVaccineDetail = async () => {
+            try{
+                const data = await apiGetComboVaccineDetail();
+                if(data && data.result) {
+                    setComboVaccineDetail(data.result);
+                }
+            }catch(err){
+                console.log(err);
+                setError("Error Fetching Combo Vaccine Data");
+            }finally{
+                setLoading(false);
+            }
+        };
+        
+        fetchComboVaccineDetail();
+    })
+
+    return {comboVaccineDetail, loading, error}
 }

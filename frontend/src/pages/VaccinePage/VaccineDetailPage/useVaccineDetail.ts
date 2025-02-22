@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { apiGetVaccineDetailById } from "../../../apis/apiVaccine";
-import { VaccineDetail } from "../../../types/Vaccine";
+import { VaccineDetail } from "../../../interfaces/Vaccine";
 
 
 

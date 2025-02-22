@@ -1,8 +1,7 @@
 
 import { useState, useEffect } from "react";
-import { ImgCarousel, BriefContent, BlogIntro } from "../../types/Decorative";
-import { apiGetBlogIntro, apiGetBrieftContent, apiGetImgCarousel } from "../../apis/apiDecorative";
-
+import { ImgCarousel, BriefContent, VaccineService, NewsIntro } from "../../interfaces/Decorative";
+import {  apiGetBrieftContent, apiGetImgCarousel, apiGetNewsIntro, apiGetVaccineServiceIntro} from "../../apis/apiDecorative";
 
 
 export const useImgCarousel = () =>{
@@ -55,8 +54,36 @@ export const useBriefContent = () =>{
         return {briefContent, loading, error};  
 }
 
+
+export const useVaccineServiceIntro  = () => {
+    const [vaccineServiceIntro, setVaccineServiceItnro] = useState<VaccineService[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
+
+    useEffect(() =>{
+        const fetchVaccinceServiceIntro = async () => {
+            setLoading(true);
+            try{
+                const data = await apiGetVaccineServiceIntro();
+                setVaccineServiceItnro(data);
+            }catch (err) {
+                console.log(err)
+                setError("Error Fetching Vaccine Package Intro Data")
+            }finally{
+                setLoading(false)
+            }
+
+        };
+
+        fetchVaccinceServiceIntro();
+
+    }, []);
+    
+    return {vaccineServiceIntro, loading, error};
+}   
+
 export const useNewsIntro = () => {
-    const [newsIntro, setNewsIntro] = useState<BlogIntro[]>([]);
+    const [newsIntro, setNewsIntro] = useState<NewsIntro[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
@@ -64,7 +91,7 @@ export const useNewsIntro = () => {
         const fetchBlogIntro = async () =>{
             setLoading(true)
             try{
-                const data = await apiGetBlogIntro();
+                const data = await apiGetNewsIntro();
                 setNewsIntro(data);
             } catch (err) {
                 setError("Error fetching Blog Intro Data");
@@ -79,3 +106,4 @@ export const useNewsIntro = () => {
 
     return {newsIntro, loading, error};
 }
+

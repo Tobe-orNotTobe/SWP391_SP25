@@ -1,72 +1,27 @@
-import React, { useState } from "react";
-import { Button, Table, Modal, notification } from "antd";
+import React from "react";
+import { Button, Table, Modal } from "antd";
 import { TiPlusOutline } from "react-icons/ti";
-import { useNavigate } from "react-router-dom";
 import { TbListDetails } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit2 } from "react-icons/fi";
-import { VaccineDetail } from "../../../types/Vaccine.ts";
-import ManagerLayout from "../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
-import { useVaccineDetail } from "../../../hooks/useVaccine.ts";
-import { apiDeleteVaccine } from "../../../apis/apiVaccine.ts";
+import { VaccineDetail } from "../../../../interfaces/Vaccine";
+import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout";
+import { useVaccineDetail } from "../../../../hooks/useVaccine";
+import { useVaccineManagement } from "./useVaccineManagement.ts";
 import "./ManagerVaccinePage.scss";
 
 const ManagerVaccinePage: React.FC = () => {
-    const navigate = useNavigate();
-    
     const { vaccineDetail } = useVaccineDetail();
-    
-    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-    const [selectedVaccine, setSelectedVaccine] = useState<VaccineDetail | null>(null);
-    const [deletingId, setDeletingId] = useState<number | null>(null);
-
-    const handleCreate = () => {
-        navigate("/manager/vaccines/add");
-    };
-
-    const handleEdit = (record: VaccineDetail) => {
-        navigate(`/manager/vaccines/edit/${record.vaccineId}`);
-    };
-
-    const handleDelete = async (vaccineId: number) => {
-        try {
-            setDeletingId(vaccineId);
-            const response = await apiDeleteVaccine(vaccineId);
-            
-            if(response.isSuccess) {
-                notification.success({
-                    message: response.message,
-                    description: "Đã Xóa Thành Công"
-                });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                notification.error({
-                    message: response.message,
-                    description: "Có lỗi xảy ra"
-                });
-            }
-        } catch (error) {
-            console.error("Delete error:", error);
-            notification.error({
-                message: "Lỗi xóa dữ liệu",
-                description: "Không thể xóa vaccine. Vui lòng thử lại sau."
-            });
-        } finally {
-            setDeletingId(null);
-        }
-    };
-
-    const handleDetailClick = (record: VaccineDetail) => {
-        setSelectedVaccine(record);
-        setIsDetailModalOpen(true);
-    };
-
-    const handleDetailModalClose = () => {
-        setSelectedVaccine(null);
-        setIsDetailModalOpen(false);
-    };
+    const {
+        isDetailModalOpen,
+        selectedVaccine,
+        deletingId,
+        handleCreate,
+        handleEdit,
+        handleDelete,
+        handleDetailClick,
+        handleDetailModalClose
+    } = useVaccineManagement();
 
     const columns = [
         { title: "ID", dataIndex: "vaccineId", key: "id" },
@@ -118,7 +73,6 @@ const ManagerVaccinePage: React.FC = () => {
                     <Button
                         onClick={() => handleEdit(record)}
                         className="edit-button"
-    
                     >
                         <FiEdit2/>Chỉnh sửa
                     </Button>
@@ -126,7 +80,6 @@ const ManagerVaccinePage: React.FC = () => {
                         loading={deletingId === record.vaccineId}
                         onClick={() => handleDelete(record.vaccineId)}
                         className="delete-button"
-                        
                     >
                        <MdDeleteOutline/> Xóa
                     </Button>
@@ -157,7 +110,6 @@ const ManagerVaccinePage: React.FC = () => {
                     className="vaccine-table"
                 />
 
-                {/* Modal Chi Tiết Vaccine */}
                 <Modal
                     title="Chi Tiết Vaccine"
                     open={isDetailModalOpen}
@@ -184,31 +136,24 @@ const ManagerVaccinePage: React.FC = () => {
                                 <div className="detail-section">
                                     <p><strong>Mô tả: </strong>{selectedVaccine.description}</p>
                                 </div>
-
                                 <div className="detail-section">
                                     <p><strong>Tác dụng phụ: </strong>{selectedVaccine.sideEffect}</p>
                                 </div>
-
                                 <div className="detail-section">
                                     <p><strong>Bệnh phòng ngừa: </strong>{selectedVaccine.diseasePrevented}</p>
                                 </div>
-
                                 <div className="detail-section">
                                     <p><strong>Vị trí tiêm: </strong>{selectedVaccine.injectionSite}</p>
                                 </div>
-
                                 <div className="detail-section">
                                     <p><strong>Ghi chú: </strong>{selectedVaccine.notes}</p>
                                 </div>
-
                                 <div className="detail-section">
                                     <p><strong>Tương tác Vaccine: </strong>{selectedVaccine.vaccineInteractions}</p>
                                 </div>
-
                                 <div className="detail-section">
                                     <p><strong>Tác dụng không mong muốn: </strong>{selectedVaccine.undesirableEffects}</p>
                                 </div>
-
                                 <div className="detail-section">
                                     <p><strong>Cách bảo quản: </strong>{selectedVaccine.preserve}</p>
                                 </div>

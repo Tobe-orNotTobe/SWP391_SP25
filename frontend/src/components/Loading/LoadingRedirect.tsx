@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { LoadingRedirectProps } from "../../types/Decorative";
+import { LoadingRedirectProps } from "../../interfaces/Decorative";
 import "./LoadingRedirect.scss"
 
 const LoadingRedirect : React.FC<LoadingRedirectProps> = ({message, delay, to}) => {

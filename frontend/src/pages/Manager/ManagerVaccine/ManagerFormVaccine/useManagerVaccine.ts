@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { Form, notification } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-import { VaccineDetail } from "../../../types/Vaccine";
-import { apiAddVaccine, apiUpdateVaccine } from "../../../apis/apiVaccine";
-import { useVaccineDetail } from "../../../hooks/useVaccine";
-import { uploadImageToCloudinary } from "../../../utils/cloudinary";
-
-
+import { VaccineDetail } from "../../../../interfaces/Vaccine";
+import { apiAddVaccine, apiUpdateVaccine } from "../../../../apis/apiVaccine";
+import { useVaccineDetail } from "../../../../hooks/useVaccine";
+import { uploadImageToCloudinary } from "../../../../utils/cloudinary";
 
 
 export const useVaccineForm = () => {

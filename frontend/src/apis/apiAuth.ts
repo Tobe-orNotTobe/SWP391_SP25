@@ -1,5 +1,5 @@
 
-import { ConfirmEmailRequest, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest } from "../types/Auth";
+import { ConfirmEmailRequest, ForgotPasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest } from "../interfaces/Auth";
 import axiosInstance from "../utils/axiosInstance";
 
 export const apiRegister = async (data: RegisterRequest) => {

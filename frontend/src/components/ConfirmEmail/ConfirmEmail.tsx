@@ -3,7 +3,7 @@ import { useSearchParams} from "react-router-dom";
 import { apiConfirmEmail } from "../../apis/apiAuth.ts";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import "./ConfirmEmail.scss";
-import { ConfirmEmailRequest } from "../../types/Auth.ts";
+import { ConfirmEmailRequest } from "../../interfaces/Auth.ts";
 import LoadingRedirect from "../Loading/LoadingRedirect.tsx"; // Import component mới
 
 const ConfirmEmail: React.FC = () => {

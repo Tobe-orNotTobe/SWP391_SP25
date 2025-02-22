@@ -1,14 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "antd";
-import { useNewsIntro , useImgCarousel, useBriefContent} from "./useHomePage.ts";
-import { useVaccineIntro, useVaccineServiceIntro } from "../../hooks/useVaccine";
+import { useImgCarousel, useBriefContent} from "./useHomePage.ts";
+import { useNewsIntro } from "./useHomePage.ts";
+import { useVaccineIntro } from "../../hooks/useVaccine";
+import { useVaccineServiceIntro } from "./useHomePage.ts";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar";
 import { ServiceCard, VaccineCard, NewsCard} from "../../components/Card/Card";
 import {Row, Col} from "antd";
 import { Footer } from "antd/es/layout/layout";
 import "./HomePage.scss"
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
+
+
 const HomePage : React.FC  = () => {
 
     const { imgCarousel, loading, error } = useImgCarousel();

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { ResetPasswordRequest } from "../../../types/Auth";
+import { ResetPasswordRequest } from "../../../interfaces/Auth";
 import { notification } from "antd";  
 import { apiResetPassword } from "../../../apis/apiAuth";
 

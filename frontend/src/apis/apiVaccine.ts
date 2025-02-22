@@ -1,7 +1,7 @@
 
-import axios from "axios";
 import axiosInstance from "../utils/axiosInstance.ts";
-import {VaccineDetail} from "../types/Vaccine.ts";
+import {PostVaccineComboDetail, VaccineDetail} from "../interfaces/Vaccine.ts";
+
 
 export const apiGetVaccineIntro = async () => {
     const response = await axiosInstance.get("/api/Vaccine/basic");
@@ -12,14 +12,6 @@ export const apiGetVaccineIntro = async () => {
     }
 };
 
-export const apiGetVaccineServiceIntro = async () => {
-    const response = await axios.get("Vaccine/VaccineService.json");
-    if (response.data) {
-        return response.data;
-    } else {
-        return [];
-    }
-};
 
 export const apiGetVaccineDetailById = async (id: number) => {
     const response = await axiosInstance.get(`/api/Vaccine/${id}`);
@@ -65,3 +57,48 @@ export const apiUpdateVaccine = async (id: string, data: VaccineDetail) => {
         return {};
     }
 };
+
+export const apiGetComboVaccineDetail = async () => {
+    const response = await axiosInstance.get("/api/ComboVaccine");
+    if (response.data) {
+        return response.data
+    } else {
+        return {};
+    }
+}
+
+export const apiAddComboVaccine = async (data : PostVaccineComboDetail) => {
+    const response = await axiosInstance.post("/api/ComboVaccine", data);
+    if (response.data){
+        return response.data;
+    } else {
+        return {};
+    }
+}
+
+export const apiUpdateComboVaccine = async (id: number, data : PostVaccineComboDetail) => {
+    const response = await axiosInstance.put(`/api/ComboVaccine/${id}`, data);
+    if (response.data) {
+        return (response.data);
+    } else {
+        return {};
+    }
+}
+
+export const apiDeleteComboVaccine = async (id: number) => {
+    const response = await axiosInstance.delete(`/api/ComboVaccine/${id}`);
+    if(response.data){
+        return response.data;
+    }else{
+        return {};
+    }
+}
+
+export const apiGetComBoVaccineById = async (id: number) => {
+    const response = await axiosInstance.get(`/api/ComboVaccine/${id}`);
+    if(response.data){
+        return response.data;
+    }else{
+        return {};
+    }
+}

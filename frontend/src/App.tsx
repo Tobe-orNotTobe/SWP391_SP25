@@ -15,10 +15,11 @@ import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
 import ChildRegistrationPage from "./pages/ChildRegistration/ChildRegistrationPage.tsx";
 
+
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
-import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/ManagerVaccinePage.tsx";
-import ManagerComboVaccine from "./pages/Manager/ManagerComboVaccine/ManagerComboVaccine.tsx";
-import VaccineFormPage from "./pages/Manager/ManagerVaccine/VaccineFormPage.tsx";
+import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/ManagerVaccineList/ManagerVaccinePage.tsx";
+
+import VaccineFormPage from "./pages/Manager/ManagerVaccine/ManagerFormVaccine/VaccineFormPage.tsx";
 
 import NotFound from "./components/NotFound/NotFound.tsx";
 
@@ -28,20 +29,20 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/*Các trang này thì người dùng có thể xem thoải mái nhưng khi đăng nhập các role như staff, manager sẽ khong xem được kiểu vậy*/}
         <Route path="/" element={<HomePage />} />
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/introduction" element={<IntroductionPage />} />
         <Route path="/mission" element={<MissionPage />} />
         <Route path="/vision" element={<VisionPage />} />
         <Route path="/our-team" element={<OurTeamPage />} />
-
         <Route path="/vaccines-list" element={<VaccineListPage />} />
         <Route path="/vaccines-list/:id" element={<VaccineDetailPage/>}/>
 
 
 
 
-
+        {/*Lưu ý: Các trang này là phục vụ việc authencation thôi chứ cũng không có gì*/}
         <Route path="/login" element={<LogInPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -50,19 +51,19 @@ function App() {
       
         
 
-        
-
-       
-
         {/*Lưu ý: Trang này phải đăng nhập và có role là Customer mới sử dụng được*/}
         <Route path="/child-register" element={<ChildRegistrationPage/>}/>
 
+        
+        
         {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}
         <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
         <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
-        <Route path="/manager/vaccine-combos" element={<ManagerComboVaccine />} />
+        
         <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
         <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
+        
+       
 
 
 

@@ -18,8 +18,17 @@ export const apiGetBrieftContent = async () => {
     }
 };
 
-export const apiGetBlogIntro = async () => {
+export const apiGetNewsIntro = async () => {
     const response = await axios.get("Decorative/NewsIntro.json");
+    if (response.data) {
+        return response.data;
+    } else {
+        return [];
+    }
+};
+
+export const apiGetVaccineServiceIntro = async () => {
+    const response = await axios.get("Vaccine/VaccineService.json");
     if (response.data) {
         return response.data;
     } else {

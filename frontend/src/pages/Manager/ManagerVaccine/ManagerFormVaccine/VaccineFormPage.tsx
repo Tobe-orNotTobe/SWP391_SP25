@@ -3,9 +3,11 @@ import { Button, Form, Input, InputNumber, Switch, Upload } from "antd";
 
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
-import ManagerLayout from "../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
+import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
 
 import { useVaccineForm } from "./useManagerVaccine.ts";
+
+import "./ManagerFormVaccine.scss"
 
 const VaccineFormPage: React.FC = () => {
     const {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoginRequest } from "../../../types/Auth";
+import { LoginRequest } from "../../../interfaces/Auth";
 import { apiLogIn } from "../../../apis/apiAuth";
 import { notification } from "antd";  
 

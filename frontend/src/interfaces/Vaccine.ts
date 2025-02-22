@@ -5,12 +5,6 @@ export interface VaccineIntro{
     image: string;
 }
 
-export interface VaccineService {
-    id: string;
-    name: string;
-    image: string; 
-}
-
 
 export interface VaccineDetail {
     vaccineId: number;
@@ -36,4 +30,24 @@ export interface GetVaccineResponse {
     isSuccess: boolean;
     errorMessages: string[];
     result: VaccineDetail[];
+}
+
+
+export interface GetVaccineComboDetail {
+    comboId: number;
+    comboName: string;
+    description: string;
+    totalPrice: number;
+    isActive: boolean;
+    vaccines: VaccineDetail[];
+}
+
+export interface PostVaccineComboDetail {
+    comboId: number;
+    comboName: string;
+    description: string;
+    totalPrice: number;
+    isActive: boolean;
+    vaccines: number[];
+
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ForgotPasswordRequest } from "../../../types/Auth";
+import { ForgotPasswordRequest } from "../../../interfaces/Auth";
 import { apiForgotPassword } from "../../../apis/apiAuth";
 import { notification } from "antd";  
 

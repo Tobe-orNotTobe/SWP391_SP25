@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiRegister } from "../../../apis/apiAuth";
-import { RegisterRequest } from "../../../types/Auth";
+import { RegisterRequest } from "../../../interfaces/Auth";
 import { notification } from "antd";  
 import axios from "axios";
 
