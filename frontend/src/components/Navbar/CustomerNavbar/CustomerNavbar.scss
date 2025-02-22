@@ -8,7 +8,8 @@
     left: 0;
     position: sticky;
     z-index: 1000; /* Đảm bảo luôn trên cùng */
-    transition: background-color 0.3s; /* Tạo hiệu ứng khi thay đổi */
+    transition: background-color 0.3s;
+    /* Tạo hiệu ứng khi thay đổi */
 
     .mainNavbarContainer {
       display: flex;

@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react"
-import { BlogIntro, BriefContent, ImgCarousel} from "../types/Decorative"
 
-import { apiGetBlogIntro, apiGetBrieftContent, apiGetImgCarousel } from "../apis/apiDecorative";
+import { useState, useEffect } from "react";
+import { ImgCarousel, BriefContent, BlogIntro } from "../../types/Decorative";
+import { apiGetBlogIntro, apiGetBrieftContent, apiGetImgCarousel } from "../../apis/apiDecorative";
+
 
 
 export const useImgCarousel = () =>{
@@ -65,7 +66,6 @@ export const useNewsIntro = () => {
             try{
                 const data = await apiGetBlogIntro();
                 setNewsIntro(data);
-                console.log(data);
             } catch (err) {
                 setError("Error fetching Blog Intro Data");
                 console.error(err);

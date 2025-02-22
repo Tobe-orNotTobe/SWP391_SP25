@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
-import { VaccineCard } from "../../components/Card/Card";
+import { VaccineCard } from "../../../components/Card/Card.tsx";
 import { Row, Col, Pagination } from "antd";
-import { useVaccineIntro } from "../../hooks/useVaccine";
-import { Footer } from "antd/es/layout/layout";
+import { useVaccineIntro } from "../../../hooks/useVaccine.ts";
+import Footer from "../../../components/Footer/Footer.tsx";
 import "./VaccineListPage.scss"
-import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
-import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
+import FloatingButtons from "../../../components/FloatingButton/FloatingButtons.tsx";
+import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
 
 const VaccineListPage : React.FC = () => {
 
@@ -30,6 +30,7 @@ const VaccineListPage : React.FC = () => {
     return (
         <>
             <CustomerNavbar/>
+            
             <div className="vaccineListContainer">
                 <span>
                     <Link style={{textDecoration: "none", color: "#2A388F"}} to="/homepage">Trang chủ</Link><span
@@ -43,13 +44,15 @@ const VaccineListPage : React.FC = () => {
                     
                 <div className="vaccineList" style={{marginTop : "10px"}}>
     
-                    <Row gutter={[16, 16]}>
-                        {currentVaccines.map((vaccine) => (
-                            <Col key={vaccine.id} xs={24} sm={12} md={8}>
+                <Row gutter={[16, 16]}>
+                    {currentVaccines.map((vaccine) => (
+                        <Col key={vaccine.id} xs={24} sm={12} md={8}>
+                            <Link to={`/vaccines-list/${vaccine.id}`} style={{ textDecoration: "none" }}>
                                 <VaccineCard {...vaccine} />
-                            </Col>
-                         ))}
-                    </Row>
+                            </Link>
+                        </Col>
+                    ))}
+                </Row>
     
                     <Pagination
                         style={{ marginTop: "20px", textAlign: "center" }}

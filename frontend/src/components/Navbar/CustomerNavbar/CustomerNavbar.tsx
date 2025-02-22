@@ -48,10 +48,10 @@ const CustomerNavbar: React.FC = () => {
                     <ul className="cusNavbarLink">
                         <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
                         <li className="cusNavDropdown">
-                            <Link to="/about-us" className="cusNavItem">Giới thiệu</Link>
+                            <Link to="#" className="cusNavItem">Giới thiệu</Link>
                             <ul className="cusNavDropdown-menu">
                                 <li className="cusNavDropdownSub">
-                                    <Link to="/about-us" style={{
+                                    <Link to="/introduction" style={{
                                         display: "flex",
                                         justifyContent: "space-between",
                                         alignItems: "center"
@@ -67,7 +67,7 @@ const CustomerNavbar: React.FC = () => {
                             </ul>
                         </li>
 
-                        <li><Link to="/vaccine-list" className="cusNavItem">Vaccine </Link></li>
+                        <li><Link to="/vaccines-list" className="cusNavItem">Vaccine </Link></li>
                         <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
                         <li><Link to="#" className="cusNavItem">Tin Tức</Link></li>
                         <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>

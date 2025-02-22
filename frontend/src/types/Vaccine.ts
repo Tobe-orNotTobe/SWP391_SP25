@@ -1,5 +1,5 @@
 export interface VaccineIntro{
-    id: string;
+    id: number;
     name: string;
     manufacturer: string;
     image: string;

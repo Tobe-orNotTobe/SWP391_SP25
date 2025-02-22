@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "antd";
-import { useImgCarousel, useBriefContent,useNewsIntro } from "../../hooks/useDecorative";
+import { useNewsIntro , useImgCarousel, useBriefContent} from "./useHomePage.ts";
 import { useVaccineIntro, useVaccineServiceIntro } from "../../hooks/useVaccine";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar";
 import { ServiceCard, VaccineCard, NewsCard} from "../../components/Card/Card";
@@ -24,6 +24,7 @@ const HomePage : React.FC  = () => {
     if (error || briefContentError || vaccineIntroError || vaccineServiceError || blogIntroError) {
         return <p>Error: {error}</p>;
     }
+
 
     const chunkSize = 8;
     const vaccineChunks = [];
@@ -77,23 +78,30 @@ const HomePage : React.FC  = () => {
                 <div className="vaccineListContainer">
                     <div className="titleHeader">
                         <h2>Danh Mục Vaccine</h2>
-                        <span><Link to="#">Xem Tất Cả</Link></span>
+                        <span><Link to="/vaccines-list">Xem Tất Cả</Link></span>
                     </div>
                     <hr></hr>
                     <div className="vaccineListIntro">
-                        <Carousel autoplay dots={false}>
+                    <Carousel autoplay dots={false}>
                         {vaccineChunks.map((chunk, index) => (
                             <div key={index}>
-                            <Row gutter={[16, 16]}>
-                                {chunk.map((item) => (
-                                <Col key={item.id} xs={12} sm={12} md={6} lg={6}>
-                                    <VaccineCard id={item.id} name={item.name} image={item.image} manufacturer={item.manufacturer} />
-                                </Col>
-                                ))}
-                            </Row>
+                                <Row gutter={[16, 16]}>
+                                    {chunk.map((item) => (
+                                        <Col key={item.id} xs={12} sm={12} md={6} lg={6}>
+                                            <Link to={`/vaccines-list/${item.id}`} style={{ textDecoration: "none" }}>
+                                                <VaccineCard 
+                                                    id={item.id} 
+                                                    name={item.name} 
+                                                    image={item.image} 
+                                                    manufacturer={item.manufacturer} 
+                                                />
+                                            </Link>
+                                        </Col>
+                                    ))}
+                                </Row>
                             </div>
                         ))}
-                        </Carousel>
+                    </Carousel>;
                     </div>
                 </div>
                 <div className="serviceListContainer">

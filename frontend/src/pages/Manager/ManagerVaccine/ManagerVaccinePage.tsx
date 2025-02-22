@@ -13,6 +13,7 @@ import "./ManagerVaccinePage.scss";
 
 const ManagerVaccinePage: React.FC = () => {
     const navigate = useNavigate();
+    
     const { vaccineDetail } = useVaccineDetail();
     
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
