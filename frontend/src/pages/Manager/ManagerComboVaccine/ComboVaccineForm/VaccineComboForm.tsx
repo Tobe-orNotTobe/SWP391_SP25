@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Input, Button, InputNumber, Select, Switch } from "antd";
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout";
 import { useVaccineComboForm } from "./useVaccineCombo";
-import styles from "./VaccineComboForm.module.scss";
+import "./VaccineComboForm.scss"
 
 const { Option } = Select;
 
@@ -11,7 +11,7 @@ const VaccineComboForm: React.FC = () => {
 
     return (
         <ManagerLayout>
-            <div className={styles["vaccine-combo-form-container"]}>
+            <div className="vaccine-combo-form-container">
                 <h1>{isEditMode ? "Chỉnh Sửa Combo Vaccine" : "Thêm Combo Vaccine"}</h1>
                 <Form
                     form={form}
@@ -19,7 +19,7 @@ const VaccineComboForm: React.FC = () => {
                     onFinish={onFinish}
                 >
                     <Form.Item
-                        className={styles["form-item"]}
+                        className="form-item"
                         label="Tên Combo"
                         name="comboName"
                         rules={[{ required: true, message: "Vui lòng nhập tên combo vaccine!" }]}
@@ -28,7 +28,7 @@ const VaccineComboForm: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item
-                        className={styles["form-item"]}
+                        className="form-item"
                         label="Mô tả"
                         name="description"
                         rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
@@ -37,7 +37,7 @@ const VaccineComboForm: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item
-                        className={styles["form-item"]}
+                        className="form-item"
                         label="Tổng giá"
                         name="totalPrice"
                         rules={[{ required: true, message: "Vui lòng nhập tổng giá!" }]}
@@ -51,7 +51,7 @@ const VaccineComboForm: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item
-                        className={styles["form-item"]}
+                        className="form-item"
                         label="Danh sách vaccine"
                         name="vaccineIds"
                     >
@@ -65,7 +65,7 @@ const VaccineComboForm: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item
-                        className={styles["form-item"]}
+                        className="form-item"
                         label="Trạng thái"
                         name="isActive"
                         valuePropName="checked"
@@ -73,7 +73,7 @@ const VaccineComboForm: React.FC = () => {
                         <Switch checkedChildren="Hoạt động" unCheckedChildren="Ngừng hoạt động" />
                     </Form.Item>
 
-                    <Form.Item className={styles["buttons"]}>
+                    <Form.Item className="buttons">
                         <Button type="primary" htmlType="submit">
                             {isEditMode ? "Cập Nhật" : "Thêm Mới"}
                         </Button>
