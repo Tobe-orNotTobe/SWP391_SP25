@@ -4,9 +4,9 @@ import { TiPlusOutline } from "react-icons/ti";
 import { TbListDetails } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit2 } from "react-icons/fi";
-import { VaccineDetail } from "../../../../interfaces/Vaccine";
-import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout";
-import { useVaccineDetail } from "../../../../hooks/useVaccine";
+import { VaccineDetail } from "../../../../interfaces/Vaccine.ts";
+import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
+import { useVaccineDetail } from "../../../../hooks/useVaccine.ts";
 import { useVaccineManagement } from "./useVaccineManagement.ts";
 import "./ManagerVaccinePage.scss";
 

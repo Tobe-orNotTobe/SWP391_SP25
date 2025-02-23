@@ -43,11 +43,9 @@ export interface GetVaccineComboDetail {
 }
 
 export interface PostVaccineComboDetail {
-    comboId: number;
     comboName: string;
     description: string;
     totalPrice: number;
     isActive: boolean;
-    vaccines: number[];
-
+    vaccineIds: number[];
 }

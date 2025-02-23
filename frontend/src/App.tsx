@@ -6,7 +6,6 @@ import RegisterPage from "./pages/AuthPage/Register/RegisterPage.tsx";
 import ForgotPasswordPage from "./pages/AuthPage/ForgotPassword/ForgotPasswordPage.tsx";
 import ResetPasswordPage from "./pages/AuthPage/ResetPassword/ResetPasswordPage.tsx";
 import VaccineDetailPage from "./pages/VaccinePage/VaccineDetailPage/VaccineDetailPage.tsx";
-
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
 import VaccineListPage from "./pages/VaccinePage/VaccineListPage/VaccineListPage.tsx";
 import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
@@ -14,14 +13,15 @@ import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
 import ChildRegistrationPage from "./pages/ChildRegistration/ChildRegistrationPage.tsx";
-
-
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
-import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/ManagerVaccineList/ManagerVaccinePage.tsx";
+import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
 
-import VaccineFormPage from "./pages/Manager/ManagerVaccine/ManagerFormVaccine/VaccineFormPage.tsx";
+import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
 
 import NotFound from "./components/NotFound/NotFound.tsx";
+
+import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
+import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineForm/VaccineComboForm.tsx";
 
 function App() {
 
@@ -59,9 +59,11 @@ function App() {
         {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}
         <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
         <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
-        
+        <Route path="/manager/combo-vaccines" element={<VaccineComboList/>}/>
         <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
         <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
+        <Route path="/manager/combo-vaccines/add" element={<VaccineComboForm/>}/>
+        <Route path="/manager/combo-vaccines/edit/:id" element={<VaccineComboForm/>}/>
         
        
 

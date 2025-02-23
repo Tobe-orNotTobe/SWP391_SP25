@@ -105,7 +105,7 @@ const HomePage : React.FC  = () => {
                                 </Row>
                             </div>
                         ))}
-                    </Carousel>;
+                    </Carousel>
                     </div>
                 </div>
                 <div className="serviceListContainer">

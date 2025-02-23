@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 
 import { GetVaccineComboDetail, VaccineDetail, VaccineIntro } from "../interfaces/Vaccine";
-import { apiGetComboVaccineDetail, apiGetVaccineDetail, apiGetVaccineIntro} from "../apis/apiVaccine";
+import { apiGetComboVaccineDetail, apiGetVaccineDetail, apiGetVaccineIntro, apiGetComBoVaccineById} from "../apis/apiVaccine";
 
 
 export const useVaccineIntro = () =>{
@@ -58,26 +58,56 @@ export const useVaccineDetail = () => {
 
 export const useComboVaccineDetail = () => {
     const [comboVaccineDetail, setComboVaccineDetail] = useState<GetVaccineComboDetail[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] =useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true); 
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchComboVaccineDetail = async () => {
-            try{
+            try {
                 const data = await apiGetComboVaccineDetail();
-                if(data && data.result) {
+                if (data?.result) {
                     setComboVaccineDetail(data.result);
+                } else {
+                    setError("Dữ liệu không hợp lệ");
                 }
-            }catch(err){
-                console.log(err);
-                setError("Error Fetching Combo Vaccine Data");
-            }finally{
+            } catch (err) {
+                console.error("Lỗi khi lấy danh sách combo vaccine:", err);
+                setError("Lỗi tải dữ liệu Combo Vaccine");
+            } finally {
                 setLoading(false);
             }
         };
-        
-        fetchComboVaccineDetail();
-    })
 
-    return {comboVaccineDetail, loading, error}
+        fetchComboVaccineDetail();
+    }, []); 
+
+    return { comboVaccineDetail, loading, error };
 }
+
+export const useComboVaccineDetailById = (id: number | null) => {
+    const [comboVaccineDetail, setComboVaccineDetail] = useState<GetVaccineComboDetail | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
+
+    useEffect(() => {
+        if (!id) return;
+        const fetchComboVaccineDetail = async () => {
+            setLoading(true);
+            try {
+                const data = await apiGetComBoVaccineById(id);
+                if (data && data.result) {
+                    setComboVaccineDetail(data.result);
+                }
+            } catch (err) {
+                console.error(err);
+                setError("Lỗi khi tải thông tin combo vaccine");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchComboVaccineDetail();
+    }, [id]);
+
+    return { comboVaccineDetail, loading, error };
+};
