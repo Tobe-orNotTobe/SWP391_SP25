@@ -24,7 +24,7 @@ export const useImgCarousel = () =>{
             };
     
             fetchVaccineIntro();
-        }, []);// Chạy 1 lần khi component mount
+        }, []);
     
         return {imgCarousel, loading, error};  
 }
@@ -49,7 +49,7 @@ export const useBriefContent = () =>{
             };
     
             fetchVaccineIntro();
-        }, []);// Chạy 1 lần khi component mount
+        }, []);
     
         return {briefContent, loading, error};  
 }
