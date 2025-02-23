@@ -9,9 +9,8 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
 {
     public interface IBookingService
     {
-        Task<BookingDTO> CreateAsync(BookingDTO bookingDto);
-        Task<IEnumerable<BookingDTO>> GetUserBookingsAsync(string userId);
-        Task<BookingDTO> GetBookingWithDetailsAsync(int bookingId);
+        Task<BookingDTO> GetByIdAsync(int id);
+        Task<BookingDTO> CreateAsync(string userId, CreateBookingDTO bookingDto);
+        Task<List<BookingDTO>> GetUserBookingsAsync(string userId);
     }
-
 }

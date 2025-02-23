@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using ChildVaccineSystem.Data.DTO.InjectionSchedule;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
+using ChildVaccineSystem.Data.DTO.VaccineScheduleDetail;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
 using ChildVaccineSystem.ServiceContract.Interfaces;
@@ -38,82 +40,111 @@ namespace ChildVaccineSystem.Service.Services
 
 		public async Task<VaccinationScheduleDTO> CreateScheduleAsync(CreateVaccinationScheduleDTO scheduleDto)
 		{
+			// Validate age range
 			if (scheduleDto.AgeRangeEnd <= scheduleDto.AgeRangeStart)
 			{
 				throw new ArgumentException("Age range end must be greater than age range start");
 			}
 
-			var totalInjections = scheduleDto.VaccineScheduleDetails.Sum(v => v.InjectionSchedules.Count);
-
-
-			var existingVaccines = await _unitOfWork.Vaccines.GetAllAsync();
-			var requestedVaccineIds = scheduleDto.VaccineScheduleDetails.Select(v => v.VaccineId).ToList();
-			var invalidVaccineIds = requestedVaccineIds.Except(existingVaccines.Select(v => v.VaccineId)).ToList();
-
-
-			if (invalidVaccineIds.Any())
+			// Validate duplicate vaccines
+			var uniqueVaccineIds = scheduleDto.VaccineScheduleDetails.Select(vs => vs.VaccineId).Distinct().ToList();
+			if (uniqueVaccineIds.Count != scheduleDto.VaccineScheduleDetails.Count)
 			{
-				throw new ArgumentException($"Invalid vaccine IDs: {string.Join(", ", invalidVaccineIds)}");
-			}
-
-			foreach (var detail in scheduleDto.VaccineScheduleDetails)
-			{
-				var vaccine = existingVaccines.First(v => v.VaccineId == detail.VaccineId);
-				if (detail.InjectionSchedules.Count != vaccine.InjectionsCount)
-				{
-					throw new ArgumentException(
-						$"Number of injections for vaccine {vaccine.Name} ({detail.InjectionSchedules.Count}) " +
-						$"does not match required count ({vaccine.InjectionsCount})");
-				}
-			}
-
-			foreach (var detail in scheduleDto.VaccineScheduleDetails)
-			{
-				foreach (var injection in detail.InjectionSchedules)
-				{
-					if (injection.InjectionMonth < scheduleDto.AgeRangeStart ||
-						injection.InjectionMonth > scheduleDto.AgeRangeEnd)
-					{
-						var vaccine = existingVaccines.First(v => v.VaccineId == detail.VaccineId);
-						throw new ArgumentException(
-							$"Injection month {injection.InjectionMonth} for vaccine {vaccine.Name} " +
-							$"is outside schedule age range ({scheduleDto.AgeRangeStart}-{scheduleDto.AgeRangeEnd} months)");
-					}
-				}
+				throw new ArgumentException("Duplicate vaccines are not allowed in the schedule");
 			}
 
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
 			try
 			{
-				var schedule = _mapper.Map<VaccinationSchedule>(scheduleDto);
+				var schedule = new VaccinationSchedule
+				{
+					AgeRangeStart = scheduleDto.AgeRangeStart,
+					AgeRangeEnd = scheduleDto.AgeRangeEnd,
+					Notes = scheduleDto.Notes ?? string.Empty
+				};
+
 				var createdSchedule = await _unitOfWork.VaccinationSchedules.AddAsync(schedule);
 				await _unitOfWork.CompleteAsync();
 
-				foreach (var detailDto in scheduleDto.VaccineScheduleDetails)
+				var resultDTO = new VaccinationScheduleDTO
 				{
-					var detail = new VaccineScheduleDetail
+					ScheduleId = createdSchedule.ScheduleId,
+					AgeRangeStart = createdSchedule.AgeRangeStart,
+					AgeRangeEnd = createdSchedule.AgeRangeEnd,
+					Notes = createdSchedule.Notes,
+					VaccineScheduleDetails = new List<VaccineScheduleDetailDTO>()
+				};
+
+				foreach (var vaccineDetail in scheduleDto.VaccineScheduleDetails)
+				{
+					var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == vaccineDetail.VaccineId);
+					if (vaccine == null)
+					{
+						throw new KeyNotFoundException($"Vaccine with ID {vaccineDetail.VaccineId} not found");
+					}
+
+					var vaccineScheduleDetail = new VaccineScheduleDetail
 					{
 						ScheduleId = createdSchedule.ScheduleId,
-						VaccineId = detailDto.VaccineId
+						VaccineId = vaccineDetail.VaccineId
 					};
 
-					await _unitOfWork.VaccineScheduleDetails.AddAsync(detail);
+					var createdVaccineDetail = await _unitOfWork.VaccineScheduleDetails.AddAsync(vaccineScheduleDetail);
 					await _unitOfWork.CompleteAsync();
 
-
-					foreach (var injectionDto in detailDto.InjectionSchedules.OrderBy(i => i.DoseNumber))
+					var vaccineDetailDTO = new VaccineScheduleDetailDTO
 					{
-						var injection = _mapper.Map<InjectionSchedule>(injectionDto);
-						injection.VaccineScheduleDetailId = detail.VaccineScheduleDetailId;
+						VaccineId = createdVaccineDetail.VaccineId,
+						VaccineName = vaccine.Name,
+						InjectionSchedules = new List<InjectionScheduleDTO>()
+					};
 
-						await _unitOfWork.InjectionSchedules.AddAsync(injection);
+					var doseNumbers = vaccineDetail.InjectionSchedules.Select(x => x.DoseNumber).ToList();
+					if (doseNumbers.Distinct().Count() != doseNumbers.Count)
+					{
+						throw new ArgumentException($"Duplicate dose numbers found for vaccine {vaccineDetail.VaccineId}");
 					}
+
+					foreach (var injection in vaccineDetail.InjectionSchedules)
+					{
+						if (injection.InjectionMonth < scheduleDto.AgeRangeStart ||
+							injection.InjectionMonth > scheduleDto.AgeRangeEnd)
+						{
+							throw new ArgumentException(
+								$"Injection month {injection.InjectionMonth} must be between {scheduleDto.AgeRangeStart} " +
+								$"and {scheduleDto.AgeRangeEnd} months for vaccine {vaccineDetail.VaccineId}"
+							);
+						}
+
+						var injectionSchedule = new InjectionSchedule
+						{
+							VaccineScheduleDetailId = createdVaccineDetail.VaccineScheduleDetailId,
+							DoseNumber = injection.DoseNumber,
+							InjectionMonth = injection.InjectionMonth,
+							IsRequired = injection.IsRequired,
+							Notes = injection.Notes ?? string.Empty
+						};
+
+						var createdInjection = await _unitOfWork.InjectionSchedules.AddAsync(injectionSchedule);
+
+						var injectionDTO = new InjectionScheduleDTO
+						{
+							DoseNumber = createdInjection.DoseNumber,
+							InjectionMonth = createdInjection.InjectionMonth,
+							IsRequired = createdInjection.IsRequired,
+							Notes = createdInjection.Notes
+						};
+
+						vaccineDetailDTO.InjectionSchedules.Add(injectionDTO);
+					}
+
+					resultDTO.VaccineScheduleDetails.Add(vaccineDetailDTO);
 				}
 
 				await _unitOfWork.CompleteAsync();
 				await transaction.CommitAsync();
 
-				return await GetScheduleByIdAsync(createdSchedule.ScheduleId);
+				return resultDTO;
 			}
 			catch (Exception)
 			{

@@ -1,5 +1,5 @@
 ﻿using ChildVaccineSystem.Common.Helper;
-using ChildVaccineSystem.Data.DTO;
+using ChildVaccineSystem.Data.DTO.Email;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 using Microsoft.AspNetCore.Authorization;

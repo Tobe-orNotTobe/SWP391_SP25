@@ -19,7 +19,11 @@ namespace ChildVaccineSystem.Service
             services.AddTransient<IAuthService, AuthService>();
 			services.AddTransient<IVaccinationScheduleService, VaccinationScheduleService>();
             services.AddTransient<IBookingService, BookingService>();
-			return services;
+            services.AddTransient<IChildrenService, ChildrenService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IVaccineInventoryService, VaccineInventoryService>();
+
+            return services;
         }
     }
 }

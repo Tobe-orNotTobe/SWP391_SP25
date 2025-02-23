@@ -1,5 +1,6 @@
-﻿using ChildVaccineSystem.Data.DTO;
+﻿using ChildVaccineSystem.Data.DTO.Auth;
 using ChildVaccineSystem.Data.DTO.Category;
+using ChildVaccineSystem.Data.DTO.Email;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,7 @@ namespace ChildVaccineSystem.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("confirm-email")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest model)
         {
             try

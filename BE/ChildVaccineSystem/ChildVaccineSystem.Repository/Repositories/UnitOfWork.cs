@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.Data.Models;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -11,17 +12,17 @@ namespace ChildVaccineSystem.Repository.Repositories
         private readonly ChildVaccineSystemDBContext _context;
 
         public IVaccineRepository Vaccines { get; }
-
 		public IComboVaccineRepository ComboVaccines { get; }
 		public IComboDetailRepository ComboDetails { get; }
 		public IVaccinationScheduleRepository VaccinationSchedules { get; }
-
         public IBookingRepository Bookings { get; private set; }
         public IBookingDetailRepository BookingDetails { get; private set; }
 		public IInjectionScheduleRepository InjectionSchedules { get; }
 		public IVaccineScheduleDetailRepository VaccineScheduleDetails { get; }
-
-		public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository)
+        public IChildrenRepository Children { get; }
+        public IUserRepository Users { get; }
+        public IVaccineInventoryRepository VaccineInventories { get; }
+        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -32,8 +33,11 @@ namespace ChildVaccineSystem.Repository.Repositories
             BookingDetails = bookingDetailRepository; 
             InjectionSchedules = injectionScheduleRepository;
 			VaccineScheduleDetails = vaccineScheduleDetailRepository;
+            Children = childrenRepository;
+            Users = userRepository;
+            VaccineInventories = vaccineInventories;
 
-		}
+        }
 
 		public async Task<int> CompleteAsync()
         {

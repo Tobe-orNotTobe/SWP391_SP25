@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChildVaccineSystem.Data.DTO
+namespace ChildVaccineSystem.Data.DTO.Auth
 {
-    public class ConfirmEmailRequest
+    public class ForgetPasswordRequestDTO
     {
         public string Email { get; set; }
-        public string Token { get; set; }
     }
 }

@@ -2,7 +2,9 @@
 using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Data.Entities;
+using ChildVaccineSystem.Repository.Repositories;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
+using ChildVaccineSystem.Service.Services;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,14 @@ namespace ChildVaccineSystem.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public VaccineService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IVaccineRepository _vaccineRepository;
+        private readonly IEmailService _emailService;
+        public VaccineService(IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, IVaccineRepository vaccineRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _emailService = emailService;
+            _vaccineRepository = vaccineRepository;
         }
 
         public async Task<List<VaccineDTO>> GetAllVaccinesAsync()
@@ -74,6 +79,5 @@ namespace ChildVaccineSystem.Services
             var vaccines = await _unitOfWork.Vaccines.GetAllAsync();
             return _mapper.Map<List<VaccineBasicDTO>>(vaccines);
         }
-
     }
 }
