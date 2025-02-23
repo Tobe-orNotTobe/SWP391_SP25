@@ -29,7 +29,7 @@ namespace ChildVaccineSystem.Data.Models
         public DbSet<ComboVaccine> ComboVaccines { get; set; }
 		public DbSet<InjectionSchedule> InjectionSchedules { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 

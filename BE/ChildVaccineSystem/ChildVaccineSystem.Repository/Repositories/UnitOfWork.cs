@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.Data.Models;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -20,7 +21,8 @@ namespace ChildVaccineSystem.Repository.Repositories
 		public IVaccineScheduleDetailRepository VaccineScheduleDetails { get; }
         public IChildrenRepository Children { get; }
         public IUserRepository Users { get; }
-        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository)
+        public IVaccineInventoryRepository VaccineInventories { get; }
+        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -33,6 +35,7 @@ namespace ChildVaccineSystem.Repository.Repositories
 			VaccineScheduleDetails = vaccineScheduleDetailRepository;
             Children = childrenRepository;
             Users = userRepository;
+            VaccineInventories = vaccineInventories;
 
         }
 

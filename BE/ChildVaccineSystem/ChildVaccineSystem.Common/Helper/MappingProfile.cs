@@ -107,6 +107,18 @@ namespace ChildVaccineSystem.Common.Helper
 				.ForMember(dest => dest.VaccineScheduleDetailId,
 					  opt => opt.Ignore());
 			CreateMap<UpdateInjectionScheduleDTO, InjectionSchedule>();
-		}
-	}
+
+            CreateMap<VaccineInventory, VaccineInventoryDTO>()
+             .ForMember(dest => dest.VaccineId, opt => opt.MapFrom(src => src.Vaccine.VaccineId))
+             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Vaccine.Name))
+             .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Vaccine.Manufacturer))
+             .ForMember(dest => dest.BatchNumber, opt => opt.MapFrom(src => src.BatchNumber))
+             .ForMember(dest => dest.ManufacturingDate, opt => opt.MapFrom(src => src.ManufacturingDate))
+             .ForMember(dest => dest.ExpiryDate, opt => opt.MapFrom(src => src.ExpiryDate))
+             .ForMember(dest => dest.Supplier, opt => opt.MapFrom(src => src.Supplier))
+             .ForMember(dest => dest.TotalQuantity, opt => opt.MapFrom(src => src.QuantityInStock));
+        }
+    }
 }
+
+
