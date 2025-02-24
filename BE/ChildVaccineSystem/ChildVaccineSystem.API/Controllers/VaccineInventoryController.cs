@@ -14,7 +14,7 @@ namespace ChildVaccineSystem.API.Controllers
     [ApiController]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Staff")]
     public class VaccineInventoryController : ControllerBase
     {
         private readonly IVaccineInventoryService _vaccineInventoryService;
@@ -146,7 +146,7 @@ namespace ChildVaccineSystem.API.Controllers
         }
 
         /// <summary>
-        /// Gửi cảnh báo vaccine hết hạn hoặc sắp hết (Chỉ Manager có quyền)
+        /// Gửi cảnh báo vaccine hết hạn hoặc sắp hết 
         /// </summary>
         [HttpPost("alerts/expiry")]
         public async Task<IActionResult> SendExpiryAlerts([FromBody] int daysThreshold)
