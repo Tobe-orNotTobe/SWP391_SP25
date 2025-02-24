@@ -22,7 +22,8 @@ namespace ChildVaccineSystem.Repository.Repositories
         public IChildrenRepository Children { get; }
         public IUserRepository Users { get; }
         public IVaccineInventoryRepository VaccineInventories { get; }
-        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories)
+        public IPricingPoliciesRepository PricingPolicies { get; }
+        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -36,6 +37,7 @@ namespace ChildVaccineSystem.Repository.Repositories
             Children = childrenRepository;
             Users = userRepository;
             VaccineInventories = vaccineInventories;
+            PricingPolicies = pricingPolicies;
 
         }
 

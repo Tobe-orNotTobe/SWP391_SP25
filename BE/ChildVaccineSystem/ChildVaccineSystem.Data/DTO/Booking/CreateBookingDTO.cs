@@ -19,11 +19,8 @@ namespace ChildVaccineSystem.Data.DTO.Booking
         public string? Notes { get; set; }
 
         [Required]
-        public int PricingPolicyId { get; set; }
-
-        [Required]
         [MinLength(1, ErrorMessage = "At least one booking detail is required")]
         public List<CreateBookingDetailDTO> BookingDetails { get; set; } = new();
-
     }
+
 }
