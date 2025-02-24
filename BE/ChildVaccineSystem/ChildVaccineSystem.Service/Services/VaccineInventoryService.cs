@@ -70,13 +70,15 @@ namespace ChildVaccineSystem.Service.Services
                 VaccineId = vi.VaccineId,
                 Name = vi.Vaccine.Name ?? "Unknown",
                 Manufacturer = vi.Vaccine.Manufacturer ?? "Unknown",
-                TotalQuantity = vi.QuantityInStock,
                 BatchNumber = vi.BatchNumber,
                 ManufacturingDate = vi.ManufacturingDate,
                 ExpiryDate = vi.ExpiryDate,
-                Supplier = vi.Supplier
-            }).Where(v => v.TotalQuantity > 0)
-              .ToList();
+                Supplier = vi.Supplier,
+                InitialQuantity = vi.InitialQuantity,
+                QuantityInStock = vi.QuantityInStock,
+                TotalQuantity = vi.InitialQuantity - vi.QuantityInStock,
+
+            }).ToList();
 
             return stockReport;
         }
@@ -151,6 +153,7 @@ namespace ChildVaccineSystem.Service.Services
                 ManufacturingDate = vi.ManufacturingDate,
                 ExpiryDate = vi.ExpiryDate,
                 InitialQuantity = vi.InitialQuantity,
+                QuantityInStock = vi.QuantityInStock,
                 TotalQuantity = vi.InitialQuantity - vi.QuantityInStock, //Số lượng Vaccine đã xuất kho
                 Supplier = vi.Supplier
             }).ToList();
@@ -165,7 +168,7 @@ namespace ChildVaccineSystem.Service.Services
             return _mapper.Map<IEnumerable<VaccineInventoryDTO>>(returnedVaccines);
         }
 
-        // ✅ Kiểm tra vaccine sắp hết hạn
+        // Kiểm tra vaccine sắp hết hạn
         public async Task<IEnumerable<VaccineInventoryDTO>> GetExpiringVaccinesAsync(int daysThreshold)
         {
             var vaccines = await _unitOfWork.VaccineInventories.GetExpiringVaccinesAsync(daysThreshold);
@@ -187,7 +190,7 @@ namespace ChildVaccineSystem.Service.Services
 
             var adminEmail = "hauphanduc3014@gmail.com";
             var expiringVaccineList = vaccines
-                .Select(v => $"{v.Vaccine.Name} - Hạn dùng: {v.ExpiryDate.ToShortDateString()}")
+                .Select(v => $"{v.Vaccine.Name} - Expiration date: {v.ExpiryDate.ToShortDateString()}")
                 .ToList();
 
             await _emailService.SendExpiryAlertsAsync(adminEmail, expiringVaccineList);
