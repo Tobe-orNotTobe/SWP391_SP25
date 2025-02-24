@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.DTO.Children;
+using ChildVaccineSystem.Data.Enum;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -139,6 +140,58 @@ namespace ChildVaccineSystem.API.Controllers
             _response.IsSuccess = true;
             _response.StatusCode = HttpStatusCode.OK;
             _response.Result = deleted;
+            return Ok(_response);
+        }
+
+        [HttpGet("relation-to-user-options")]
+        public IActionResult GetRelationToUserOptions()
+        {
+            var enumValues = Enum.GetValues(typeof(RelationToUser))
+                                 .Cast<RelationToUser>()
+                                 .Select(e => new
+                                 {
+                                     Value = (int)e,
+                                     Name = e.ToString()
+                                 })
+                                 .ToList();
+
+            if (enumValues == null || enumValues.Count == 0)
+            {
+                _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.NotFound;
+                _response.ErrorMessages.Add("No relation-to-user options found.");
+                return NotFound(_response);
+            }
+
+            _response.IsSuccess = true;
+            _response.StatusCode = HttpStatusCode.OK;
+            _response.Result = enumValues;
+            return Ok(_response);
+        }
+
+        [HttpGet("gender-options")]
+        public IActionResult GetGenderOptions()
+        {
+            var enumValues = Enum.GetValues(typeof(Gender))
+                                 .Cast<Gender>()
+                                 .Select(e => new
+                                 {
+                                     Value = (int)e,
+                                     Name = e.ToString()
+                                 })
+                                 .ToList();
+
+            if (enumValues == null || enumValues.Count == 0)
+            {
+                _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.NotFound;
+                _response.ErrorMessages.Add("No gender options found.");
+                return NotFound(_response);
+            }
+
+            _response.IsSuccess = true;
+            _response.StatusCode = HttpStatusCode.OK;
+            _response.Result = enumValues;
             return Ok(_response);
         }
     }
