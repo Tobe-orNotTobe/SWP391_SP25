@@ -20,6 +20,7 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         IUserRepository Users { get; }
         IVaccineInventoryRepository VaccineInventories { get; }
         IPricingPoliciesRepository PricingPolicies { get; }
+        ITransactionRepository Transactions { get; }
         Task<int> CompleteAsync();
 		Task<IDbContextTransaction> BeginTransactionAsync();
 

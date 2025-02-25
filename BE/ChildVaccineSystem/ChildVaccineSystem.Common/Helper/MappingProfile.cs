@@ -9,6 +9,7 @@ using ChildVaccineSystem.Data.DTO.Booking.BookingDetail;
 using ChildVaccineSystem.Data.DTO.Children;
 using ChildVaccineSystem.Data.DTO.ComboVaccine;
 using ChildVaccineSystem.Data.DTO.InjectionSchedule;
+using ChildVaccineSystem.Data.DTO.Transaction;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
 using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Data.DTO.VaccineScheduleDetail;
@@ -121,7 +122,10 @@ namespace ChildVaccineSystem.Common.Helper
     .ForMember(dest => dest.TotalQuantity, opt => opt.MapFrom(src => src.InitialQuantity - src.QuantityInStock)); // Số vaccine đã xuất
 
 
-        }
+            // Transaction
+			CreateMap<Transaction, TransactionDTO>().ReverseMap();
+			CreateMap<CreateTransactionDTO, Transaction>();
+		}
     }
 }
 
