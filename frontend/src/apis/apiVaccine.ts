@@ -1,6 +1,6 @@
 
 import axiosInstance from "../utils/axiosInstance.ts";
-import {PostVaccineComboDetail, VaccineDetail} from "../interfaces/Vaccine.ts";
+import {PostVaccineComboDetail, VaccineDetail, VaccinationSchedule} from "../interfaces/Vaccine.ts";
 
 
 export const apiGetVaccineIntro = async () => {
@@ -104,8 +104,42 @@ export const apiGetComBoVaccineById = async (id: number) => {
 }
 
 
-export const apiGetVaccineSchedule = async () => {
+export const apiGetVaccinationSchedule = async () => {
     const response = await axiosInstance.get("/api/VaccinationSchedule");
+    if(response.data){
+        return response.data;
+    }else{
+        return {};
+    }
+}
+
+export const apiAddVaccinationSchedule = async ( data : VaccinationSchedule ) => {
+    const response = await axiosInstance.post("/api/VaccinationSchedule", data);
+    if(response.data){
+        return response.data;
+    }else{
+        return {};
+    }
+}
+
+export const apiUpdateVaccinationSchedule = async (scheduleId : number, data: VaccinationSchedule) => {
+    const response = await axiosInstance.post(`/api/VaccinationSchedule/${scheduleId}`, data);
+    if(response.data){
+        return response.data;
+    }else{
+        return {};
+    }
+}
+export const apiDeleteVaccinationSchedule = async ( scheduleId : number) => {
+    const response = await axiosInstance.delete(`/api/VaccinationSchedule/${scheduleId}`);
+    if(response.data){
+        return response.data;
+    }else{
+        return {};
+    }
+}
+export const apiGetVaccinationScheduleById = async ( scheduleId : number) => {
+    const response = await axiosInstance.get(`api/VaccinationSchedule/${scheduleId}`);
     if(response.data){
         return response.data;
     }else{

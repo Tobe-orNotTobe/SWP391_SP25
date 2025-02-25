@@ -1,28 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { notification } from "antd";
-import { VaccineDetail } from "../../../../interfaces/Vaccine";
-import { apiDeleteVaccine } from "../../../../apis/apiVaccine";
+import { VaccinationSchedule } from "../../../../interfaces/Vaccine";
+import { apiDeleteVaccinationSchedule } from "../../../../apis/apiVaccine";
 
-export const useVaccineManagement = () => {
+export const useVaccinationSchedule = () => {
     const navigate = useNavigate();
-    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-    const [selectedVaccine, setSelectedVaccine] = useState<VaccineDetail | null>(null);
-
     const [deletingId, setDeletingId] = useState<number | null>(null);
+    const [selectedSchedule, setSelectedSchedule] = useState<VaccinationSchedule | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    const handleCreate = () => {
-        navigate("/manager/vaccines/add");
+    
+    const handleEdit = (id: number) => {
+        navigate(`/manager/combo-vaccines/edit/${id}`);
     };
 
-    const handleEdit = (record: VaccineDetail) => {
-        navigate(`/manager/vaccines/edit/${record.vaccineId}`);
-    };
-
-    const handleDelete = async (vaccineId: number) => {
+  
+    const handleDelete = async (scheduleId: number) => {
         try {
-            setDeletingId(vaccineId);
-            const response = await apiDeleteVaccine(vaccineId);
+            setDeletingId(scheduleId);
+            const response = await apiDeleteVaccinationSchedule(scheduleId);
             
             if(response.isSuccess) {
                 notification.success({
@@ -49,25 +46,30 @@ export const useVaccineManagement = () => {
         }
     };
 
-    const handleDetailClick = (record: VaccineDetail) => {
-        setSelectedVaccine(record);
-        setIsDetailModalOpen(true);
+    
+    const handleCreate = () => {
+        navigate("/manager/combo-vaccines/add");
     };
 
-    const handleDetailModalClose = () => {
-        setSelectedVaccine(null);
-        setIsDetailModalOpen(false);
+    
+    const handleShowDetail = (schedule: VaccinationSchedule) => {
+        setSelectedSchedule(schedule);
+        setIsModalOpen(true);
+    };
+
+    
+    const handleModalClose = () => {
+        setIsModalOpen(false);
     };
 
     return {
-        isDetailModalOpen,
-        selectedVaccine,
-    
         deletingId,
-        handleCreate,
+        selectedSchedule,
+        isModalOpen,
         handleEdit,
         handleDelete,
-        handleDetailClick,
-        handleDetailModalClose
+        handleCreate,
+        handleShowDetail,
+        handleModalClose,
     };
 };

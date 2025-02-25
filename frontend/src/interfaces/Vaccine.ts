@@ -49,3 +49,28 @@ export interface PostVaccineComboDetail {
     isActive: boolean;
     vaccineIds: number[];
 }
+
+
+export interface InjectionSchedule {
+    doseNumber: number;
+    injectionMonth: number;
+    isRequired: boolean;
+    notes: string;
+  }
+  
+export interface VaccineScheduleDetail {
+    vaccineId: number;
+    injectionSchedules: InjectionSchedule[];
+  }
+  
+export interface VaccinationSchedule {
+    scheduleId: number;
+    ageRangeStart: number;
+    ageRangeEnd: number;
+    notes: string;
+    vaccineScheduleDetails: VaccineScheduleDetail[];
+}
+  
+  
+  
+  
