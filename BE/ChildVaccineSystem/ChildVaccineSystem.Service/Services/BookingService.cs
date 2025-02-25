@@ -120,7 +120,7 @@ namespace ChildVaccineSystem.Service.Services
 
             // Check for conflicting bookings
             if (await _unitOfWork.Bookings.HasConflictingBookingAsync(userId, bookingDto.BookingDate))
-                throw new InvalidOperationException("User already has a booking for this date");
+                throw new ArgumentException("User already has a booking for this date");
 
             // Validate child exists and belongs to the current user
             var child = await _unitOfWork.Children.GetAsync(c => c.ChildId == bookingDto.ChildId);

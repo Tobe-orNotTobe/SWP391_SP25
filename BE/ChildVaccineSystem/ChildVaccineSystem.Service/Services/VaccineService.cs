@@ -63,9 +63,19 @@ namespace ChildVaccineSystem.Services
             var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == id);
             if (vaccine == null) return false;
 
-            await _unitOfWork.Vaccines.DeleteAsync(vaccine);
-            await _unitOfWork.CompleteAsync();
-            return true;
+            vaccine.Status = false;
+
+			await _unitOfWork.Vaccines.UpdateAsync(vaccine);
+
+			var comboDetails = await _unitOfWork.ComboDetails.GetAllAsync(cd => cd.VaccineId == id);
+			foreach (var comboDetail in comboDetails)
+			{
+				await _unitOfWork.ComboDetails.DeleteAsync(comboDetail);
+			}
+
+			await _unitOfWork.CompleteAsync();
+
+			return true;
         }
 
         public async Task<List<VaccineDTO>> GetVaccinesByTypeAsync(bool isNecessary)
