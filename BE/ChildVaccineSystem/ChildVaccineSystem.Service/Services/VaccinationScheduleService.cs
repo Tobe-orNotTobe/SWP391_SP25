@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using ChildVaccineSystem.Data.DTO.ComboVaccine;
 using ChildVaccineSystem.Data.DTO.InjectionSchedule;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
+using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Data.DTO.VaccineScheduleDetail;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
@@ -303,6 +305,54 @@ namespace ChildVaccineSystem.Service.Services
 				await transaction.RollbackAsync();
 				return false;
 			}
+		}
+		public async Task<ScheduleByAgeResponseDTO> GetScheduleByChildrenAgeAsync(int childrenId)
+		{
+			var children = await _unitOfWork.Children.GetAsync(c => c.ChildId == childrenId);
+			if (children == null)
+				throw new KeyNotFoundException($"Not found children with id: {childrenId}");
+
+			var today = DateTime.Today;
+			var ageInMonths = ((today.Year - children.DateOfBirth.Year) * 12) + today.Month - children.DateOfBirth.Month;
+			if (today.Day < children.DateOfBirth.Day)
+				ageInMonths--;
+
+			var schedules = await _unitOfWork.VaccinationSchedules.GetAllAsync(
+				s => s.AgeRangeStart <= ageInMonths && s.AgeRangeEnd >= ageInMonths,
+				includeProperties: "VaccineScheduleDetails.Vaccine"
+			);
+
+			var schedule = schedules.FirstOrDefault();
+
+			var response = new ScheduleByAgeResponseDTO();
+
+			var vaccineIds = schedule.VaccineScheduleDetails.Select(vsd => vsd.VaccineId).ToList();
+			var vaccines = await _unitOfWork.Vaccines.GetAllAsync(
+				v => vaccineIds.Contains(v.VaccineId) && v.Status == true
+			);
+
+			response.Vaccines = _mapper.Map<List<VaccineDTO>>(vaccines);
+
+			var allCombos = await _unitOfWork.ComboVaccines.GetAllAsync(
+				c => c.IsActive,
+				includeProperties: "ComboDetails.Vaccine"
+			);
+
+			var eligibleVaccineIds = vaccines.Select(v => v.VaccineId).ToList();
+			var eligibleCombos = new List<ComboVaccine>();
+
+			foreach (var combo in allCombos)
+			{
+				var vaccineIdsInCombo = combo.ComboDetails.Select(cd => cd.VaccineId).ToList();
+				if (vaccineIdsInCombo.Intersect(eligibleVaccineIds).Any())
+				{
+					eligibleCombos.Add(combo);
+				}
+			}
+
+			response.ComboVaccines = _mapper.Map<List<ComboVaccineDTO>>(eligibleCombos);
+
+			return response;
 		}
 	}
 }
