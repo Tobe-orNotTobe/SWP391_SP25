@@ -77,7 +77,8 @@ namespace ChildVaccineSystem.Data.Migrations
                 {
                     PricingPolicyId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    WaitTimeRange = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WaitTimeRangeStart = table.Column<int>(type: "int", nullable: false),
+                    WaitTimeRangeEnd = table.Column<int>(type: "int", nullable: false),
                     DiscountPercent = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
@@ -378,7 +379,7 @@ namespace ChildVaccineSystem.Data.Migrations
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    PricingPolicyId = table.Column<int>(type: "int", nullable: false),
+                    PricingPolicyId = table.Column<int>(type: "int", nullable: true),
                     UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
