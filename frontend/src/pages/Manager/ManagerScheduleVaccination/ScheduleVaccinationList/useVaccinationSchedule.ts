@@ -12,7 +12,7 @@ export const useVaccinationSchedule = () => {
 
     
     const handleEdit = (id: number) => {
-        navigate(`/manager/combo-vaccines/edit/${id}`);
+        navigate(`/manager/schedule-vaccines/edit/${id}`);
     };
 
   
@@ -48,7 +48,7 @@ export const useVaccinationSchedule = () => {
 
     
     const handleCreate = () => {
-        navigate("/manager/combo-vaccines/add");
+        navigate("/manager/schedule-vaccines/add");
     };
 
     

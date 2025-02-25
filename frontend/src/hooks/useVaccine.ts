@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect , useRef} from "react"
 
 import { GetVaccineComboDetail, VaccinationSchedule, VaccineDetail, VaccineIntro } from "../interfaces/Vaccine";
-import { apiGetComboVaccineDetail, apiGetVaccineDetail, apiGetVaccineIntro, apiGetComBoVaccineById, apiGetVaccinationSchedule, apiGetVaccineDetailById} from "../apis/apiVaccine";
+import { apiGetComboVaccineDetail, apiGetVaccineDetail, apiGetVaccineIntro, apiGetComBoVaccineById, apiGetVaccinationSchedule, apiGetVaccineDetailById, apiGetVaccinationScheduleById} from "../apis/apiVaccine";
 
 
 export const useVaccineIntro = () =>{
@@ -33,28 +33,32 @@ export const useVaccineDetail = () => {
     const [vaccineDetail, setVaccineDetail] = useState<VaccineDetail[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const hasFetched = useRef(false); // Biến kiểm tra đã gọi API hay chưa
 
-    useEffect ( () => {
+    useEffect(() => {
+        if (hasFetched.current) return; // Nếu đã gọi API trước đó thì không gọi lại
+
         const fetchVaccineDetail = async () => {
             setLoading(true);
-            try{
+            try {
                 const data = await apiGetVaccineDetail();
                 if (data && data.result) {
                     setVaccineDetail(data.result);
                 }
-            }catch (err){
-                console.log(err);
+            } catch (err) {
+                console.error(err);
                 setError("Error Fetching Vaccine Detail Data");
-            }finally {
+            } finally {
                 setLoading(false);
             }
         };
 
         fetchVaccineDetail();
-    }, [])
+        hasFetched.current = true; // Đánh dấu là đã gọi API
+    }, []);
 
-    return {vaccineDetail, loading, error}
-}
+    return { vaccineDetail, loading, error };
+};
 
 export const useComboVaccineDetail = () => {
     const [comboVaccineDetail, setComboVaccineDetail] = useState<GetVaccineComboDetail[]>([]);
@@ -168,3 +172,33 @@ export const useVaccineDetailById = (id: number | null) => {
 
     return { vaccineDetail, loading, error };
 };
+
+export const useVaccinatonScheduleDetailById = (id: number | null) => {
+    const [vaccinationScheduleDetail, setVaccinationScheduleDetail] =  useState<VaccinationSchedule | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!id) return;
+
+        const fetchVaccinationScheduleDetail = async () => {
+            setLoading(true); 
+            setError(null);
+            try{
+                const data = await apiGetVaccinationScheduleById(id);
+                if(data.isSuccess && data.result){
+                    setVaccinationScheduleDetail(data.result);
+                }
+            } catch (err) {
+                console.error(err);
+                setError("Lỗi khi tải thông tin lịch tiêm chủng vaccine");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchVaccinationScheduleDetail();
+    }, [id])
+
+    return {vaccinationScheduleDetail, loading, error}
+}

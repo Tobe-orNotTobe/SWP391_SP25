@@ -64,6 +64,9 @@ export interface VaccineScheduleDetail {
   }
   
 export interface VaccinationSchedule {
+    statusCode: string;
+    isSuccess: true,
+    errorMessages: [];
     scheduleId: number;
     ageRangeStart: number;
     ageRangeEnd: number;

@@ -35,7 +35,7 @@ const ScheduleVaccinationList: React.FC = () => {
         },
         {
             title: "Độ tuổi (Từ - Đến)",
-            render: (record: VaccinationSchedule) => `${record.ageRangeStart} - ${record.ageRangeEnd} tuổi`,
+            render: (record: VaccinationSchedule) => `${record.ageRangeStart} - ${record.ageRangeEnd} tháng`,
             key: "ageRange",
         },
         {
@@ -72,7 +72,7 @@ const ScheduleVaccinationList: React.FC = () => {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
                 <h2>Quản lý Lịch Tiêm Chủng</h2>
                 <Button type="primary" onClick={handleCreate}>
-                    <TiPlusOutline /> Thêm Combo Vaccine
+                    <TiPlusOutline /> Thêm lịch tiêm cho Vaccine
                 </Button>
             </div>
 

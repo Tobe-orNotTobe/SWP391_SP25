@@ -23,6 +23,8 @@ import NotFound from "./components/NotFound/NotFound.tsx";
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
 import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineForm/VaccineComboForm.tsx";
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
+import ScheduleVaccinationForm
+  from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
 
 function App() {
 
@@ -65,6 +67,8 @@ function App() {
         <Route path="/manager/combo-vaccines/add" element={<VaccineComboForm/>}/>
         <Route path="/manager/combo-vaccines/edit/:id" element={<VaccineComboForm/>}/>
         <Route path="/manager/schedule-vaccines" element={< ScheduleVaccinationList/>}/>
+        <Route path="/manager/schedule-vaccines/add" element={<ScheduleVaccinationForm/>}/>
+        <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm/>}/>
         
        
 

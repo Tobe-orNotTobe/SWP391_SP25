@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Form } from "antd";
+import { Form, notification } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useVaccineDetail, useComboVaccineDetailById } from "../../../../hooks/useVaccine";
 import { apiAddComboVaccine, apiUpdateComboVaccine } from "../../../../apis/apiVaccine";
@@ -38,7 +38,17 @@ export const useVaccineComboForm = () => {
 
         try {
             if (isEditMode) {
-                await apiUpdateComboVaccine(Number(id), payload);
+               const response =  await apiUpdateComboVaccine(Number(id), payload);
+                if (response.isSuccess) {
+                    notification.success ({
+                        message: "Xóa Thành Côngg"
+                    })
+                }else {
+                    notification.error ({
+                        message: "Xóa không thành công",
+                        description: response.error,
+                    })
+                }
             } else {
                 await apiAddComboVaccine(payload);
             }
