@@ -102,3 +102,13 @@ export const apiGetComBoVaccineById = async (id: number) => {
         return {};
     }
 }
+
+
+export const apiGetVaccineSchedule = async () => {
+    const response = await axiosInstance.get("/api/VaccinationSchedule");
+    if(response.data){
+        return response.data;
+    }else{
+        return {};
+    }
+}

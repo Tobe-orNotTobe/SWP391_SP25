@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Layout, Menu, Button } from "antd";
 import { AppstoreOutlined, MedicineBoxOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./ManagerLayout.scss";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully.ts";
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { GoPackage } from "react-icons/go";
+import { MdOutlineCalendarToday } from "react-icons/md";
 
 const { Header, Sider, Content } = Layout;
 
-// Explicitly define the children prop type
+
 interface ManagerLayoutProps {
-  children: React.ReactNode; // This allows any valid React node
+  children: React.ReactNode; 
 }
 
 const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
@@ -19,11 +20,14 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
 
   const { username, role } = IsLoginSuccessFully();
 
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     window.localStorage.clear();
+    navigate("/homepage");
   };
 
-  // Định nghĩa các items cho Menu
+ 
   const menuItems = [
     {
       key: 'mamaner-dashboard',
@@ -38,7 +42,12 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
     {
       key: 'vaccine',
       icon: <MedicineBoxOutlined />,
-      label: <Link to="/manager/vaccines">Quản lý Vaccine</Link>
+      label: <Link to="/manager/vaccines">Quản lý Loại Vaccine</Link>
+    },
+    {
+      key: 'vaccine-schedule',
+      icon: <MdOutlineCalendarToday/>,
+      label: <Link to="/manager/schedule-vaccines">Quản lý Lịch Tiêm Cho Vaccine</Link>
     }
   ];
 
@@ -71,7 +80,7 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
                 mode="inline"
                 selectedKeys={[selectedMenu]}
                 onClick={({ key }) => setSelectedMenu(key)}
-                items={menuItems} // Sử dụng items prop thay vì Menu.Item
+                items={menuItems} 
             />
           </Sider>
 

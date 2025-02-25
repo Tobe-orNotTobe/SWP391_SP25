@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams} from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { apiConfirmEmail } from "../../apis/apiAuth.ts";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import "./ConfirmEmail.scss";
 import { ConfirmEmailRequest } from "../../interfaces/Auth.ts";
-import LoadingRedirect from "../Loading/LoadingRedirect.tsx"; // Import component mới
+import LoadingRedirect from "../Loading/LoadingRedirect.tsx";
 
 const ConfirmEmail: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -12,8 +12,12 @@ const ConfirmEmail: React.FC = () => {
     const token = searchParams.get("token");
     const [status, setStatus] = useState<string>("Đang xác nhận...");
     const [statusType, setStatusType] = useState<"loading" | "success" | "error">("loading");
+    const hasRun = useRef(false); // Ngăn `useEffect` chạy lại
 
     useEffect(() => {
+        if (hasRun.current) return; // Ngăn không chạy lần 2
+        hasRun.current = true;
+
         const confirmEmail = async () => {
             if (!email || !token) {
                 setStatus("Thiếu email hoặc token.");
@@ -27,9 +31,9 @@ const ConfirmEmail: React.FC = () => {
                 const response = await apiConfirmEmail(data);
 
                 if (response.message) {
-                    setStatus(response.message);
+                    setStatus("Email đã xác nhận thành công! Đang chuyển hướng tới login...");
                     setStatusType("success");
-                } else if (response.errors) {
+                }else if (response.error){
                     setStatus("Xác nhận thất bại! Vui lòng thử lại.");
                     setStatusType("error");
                 }
@@ -41,14 +45,14 @@ const ConfirmEmail: React.FC = () => {
         };
 
         confirmEmail();
-    }, [email, token]);
+    }, []);
 
     if (statusType === "success") {
-        return <LoadingRedirect message="Email đã xác thực thành công! Đang chuyển hướng đến trang login..." delay={5000} to="/login" />;
+        return <LoadingRedirect message={status} delay={5000} to="/login" />;
     }
 
     return (
-        <div className="confirm-password">
+        <div className="confirm-email">
             {statusType === "loading" && (
                 <div className="status status--loading">
                     <FaSpinner className="status__icon status__icon--spin" />

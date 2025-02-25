@@ -3,6 +3,7 @@ import { Form, Input, Button, InputNumber, Select, Switch } from "antd";
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout";
 import { useVaccineComboForm } from "./useVaccineCombo";
 import "./VaccineComboForm.scss"
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -12,7 +13,16 @@ const VaccineComboForm: React.FC = () => {
     return (
         <ManagerLayout>
             <div className="vaccine-combo-form-container">
-                <h1>{isEditMode ? "Chỉnh Sửa Combo Vaccine" : "Thêm Combo Vaccine"}</h1>
+            <Button 
+                icon={<ArrowLeftOutlined />} 
+                onClick={() => navigate("/manager/vaccines")}
+                className="back-button"
+                style={{marginBottom: "20px"}}
+            >
+                Quay lại danh sách
+            </Button>
+            
+            <h1>{isEditMode ? "Chỉnh Sửa Combo Vaccine" : "Thêm Combo Vaccine"}</h1>
                 <Form
                     form={form}
                     layout="vertical"
@@ -70,7 +80,7 @@ const VaccineComboForm: React.FC = () => {
                         name="isActive"
                         valuePropName="checked"
                     >
-                        <Switch checkedChildren="Hoạt động" unCheckedChildren="Ngừng hoạt động" />
+                        <Switch checkedChildren="Có" unCheckedChildren="Không" />
                     </Form.Item>
 
                     <Form.Item className="buttons">

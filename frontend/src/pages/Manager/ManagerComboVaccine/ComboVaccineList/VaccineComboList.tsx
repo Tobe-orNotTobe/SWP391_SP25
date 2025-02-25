@@ -81,7 +81,7 @@ const VaccineComboList: React.FC = () => {
                         onClick={handleCreate}
                         className="add-button"
                     >
-                        Thêm Vaccine
+                        Thêm Combo Vaccine
                     </Button>
                 </div>
                 <Table
