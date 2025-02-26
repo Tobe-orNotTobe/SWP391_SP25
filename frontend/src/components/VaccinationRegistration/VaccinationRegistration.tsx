@@ -17,6 +17,7 @@ const VaccinationRegistrationPage = () => {
     handleSearch,
     handleSelectChild,
     handleAddNewChild,
+    submitBooking,
   } = useVaccinationForm();
 
   const {
@@ -25,14 +26,21 @@ const VaccinationRegistrationPage = () => {
     expandedCategory,
     vaccinePackages,
     singleVaccines,
+    bookingDetails,
+    bookingDate,
     handleVaccineTypeChange,
-    handleCheckboxChange,
+    handleSelectVaccine,
     toggleCategory,
+    handleSelectBookingDate,
   } = useVaccineSelection();
 
   return (
     <div className="vaccination-container">
       <form
+        onSubmit={(event) => {
+          event.preventDefault(); // Ngăn chặn hành động mặc định của form
+          submitBooking(bookingDate, bookingDetails);
+        }}
         className={`vaccination-form ${
           isFormSplit ? "vaccination-form-splited" : ""
         }`}
@@ -130,26 +138,16 @@ const VaccinationRegistrationPage = () => {
           </div>
           <div className="splited-part">
             {/* Form thông tin trẻ */}
-            {(showNewChildForm || selectedChild) && (
+            {/* {(selectedChild) && (
               <div className="form-section">
-                <h2>Thông tin {selectedChild ? "trẻ đã chọn" : "trẻ mới"}</h2>
+                <h2>Thông tin trẻ đã chọn</h2>
                 <div className="form-group">
-                  <label>Họ tên trẻ *</label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                  />
+                  <label>Họ tên trẻ :</label>
+                  <p>{formData.fullName}</p>
                 </div>
                 <div className="form-group">
-                  <label>Ngày sinh *</label>
-                  <input
-                    type="date"
-                    name="birthDate"
-                    value={formData.birthDate}
-                    onChange={handleChange}
-                  />
+                  <label>Ngày sinh :</label>
+                  <p>{formData.birthDate}</p>
                 </div>
                 <div className="form-group">
                   <label className="required">* Giới tính</label>
@@ -171,15 +169,27 @@ const VaccinationRegistrationPage = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Lựa chọn vắc xin */}
             {(showNewChildForm || selectedChild) && (
               <div className="form-section">
                 <div className="form-section">
-                  <h2>Thông tin dịch vụ</h2>
+                  <h3>Thông tin dịch vụ</h3>
 
                   {/* Chọn loại vắc xin */}
+                  <div className="form-group">
+                    <label>Ngày muốn đặt lịch tiêm *</label>
+                    <input
+                      required
+                      type="date"
+                      name="bookingDate"
+                      value={formData.bookingDate} // Đảm bảo sử dụng đúng state (Không phải birthDate)
+                      onChange={(e) =>
+                        handleSelectBookingDate(new Date(e.target.value))
+                      }
+                    />
+                  </div>
                   <div className="form-group">
                     <label>* Loại vắc xin muốn đăng ký</label>
                     <div className="vaccine-selection">
@@ -204,37 +214,54 @@ const VaccinationRegistrationPage = () => {
                   <div className="vaccine-list">
                     <label>* Chọn vắc xin</label>
                     {vaccineType === "Gói" ? (
-                      vaccinePackages.map((group, index) => (
-                        <div key={index} className="vaccine-category">
+                      vaccinePackages.map((vaccinePackage) => (
+                        <div
+                          key={vaccinePackage.comboId}
+                          className="vaccine-category"
+                        >
                           <div
                             className="category-header"
-                            onClick={() => toggleCategory(group.category)}
+                            onClick={() => {
+                              toggleCategory(vaccinePackage.comboName);
+                              if (
+                                expandedCategory !== vaccinePackage.comboName
+                              ) {
+                                handleSelectVaccine(vaccinePackage.comboId);
+                              }
+                            }}
                           >
-                            <h3>{group.category}</h3>
+                            <h3>{vaccinePackage.comboName}</h3>
                             <span>
-                              {expandedCategory === group.category ? "▲" : "▼"}
+                              {expandedCategory === vaccinePackage.comboName
+                                ? "▲"
+                                : "▼"}
                             </span>
                           </div>
-                          {expandedCategory === group.category && (
+                          {expandedCategory === vaccinePackage.comboName && (
                             <div className="vaccine-grid">
-                              {group.vaccines.map((vaccine) => (
+                              {vaccinePackage.vaccines.map((vaccine) => (
                                 <label
-                                  key={vaccine.id}
+                                  key={vaccine.vaccineId}
                                   className="vaccine-card"
                                 >
                                   <input
+                                    disabled
                                     type="checkbox"
-                                    value={vaccine.id}
-                                    checked={selectedVaccines.includes(
-                                      vaccine.id
-                                    )}
-                                    onChange={() =>
-                                      handleCheckboxChange(vaccine.id)
-                                    }
+                                    value={vaccine.vaccineId}
+                                    checked={true}
+                                    // onChange={() =>
+                                    //   handleSelectVaccine(
+                                    //     String(vaccinePackage.comboId)
+                                    //   )
+                                    // }
                                   />
                                   <div className="vaccine-info">
                                     <h4>{vaccine.name}</h4>
-                                    <p className="price">{vaccine.price}</p>
+                                    <p className="price">
+                                      Giá:{" "}
+                                      {vaccine.price?.toLocaleString("vi-VN")}{" "}
+                                      vnđ
+                                    </p>
                                   </div>
                                 </label>
                               ))}
@@ -245,16 +272,26 @@ const VaccinationRegistrationPage = () => {
                     ) : (
                       <div className="vaccine-grid">
                         {singleVaccines.map((vaccine) => (
-                          <label key={vaccine.id} className="vaccine-card">
+                          <label
+                            key={vaccine.vaccineId}
+                            className="vaccine-card"
+                          >
                             <input
                               type="checkbox"
-                              value={vaccine.id}
-                              checked={selectedVaccines.includes(vaccine.id)}
-                              onChange={() => handleCheckboxChange(vaccine.id)}
+                              value={vaccine.vaccineId}
+                              checked={selectedVaccines.includes(
+                                vaccine.vaccineId
+                              )}
+                              onChange={() =>
+                                handleSelectVaccine(vaccine.vaccineId)
+                              }
                             />
                             <div className="vaccine-info">
                               <h4>{vaccine.name}</h4>
-                              <p className="price">{vaccine.price}</p>
+                              <p className="price">
+                                Giá: {vaccine.price?.toLocaleString("vi-VN")}{" "}
+                                vnđ
+                              </p>
                             </div>
                           </label>
                         ))}
