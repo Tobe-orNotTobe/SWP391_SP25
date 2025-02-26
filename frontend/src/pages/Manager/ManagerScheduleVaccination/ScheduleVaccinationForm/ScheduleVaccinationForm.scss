@@ -1,0 +1,59 @@
+.vaccination-schedule-form-container {
+    padding: 20px;
+    
+    .form-header {
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .form-section {
+      margin-bottom: 24px;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .vaccine-detail-card {
+      margin-bottom: 24px;
+      
+      .ant-card-head {
+        background-color: #f6f6f6;
+      }
+    }
+    
+    .injection-schedule-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 2fr auto;
+      gap: 16px;
+      margin-bottom: 16px;
+      align-items: flex-end;
+      
+      @media (max-width: 992px) {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      @media (max-width: 576px) {
+        grid-template-columns: 1fr;
+      }
+      
+      .remove-injection-btn {
+        margin-bottom: 24px;
+      }
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+  }

@@ -1,34 +1,37 @@
-import axios from "axios"
+import axios from "axios";
 
-export const apiGetImgCarousel = async() =>{
-    try{
-        const response = await axios.get("Decorative/ImageCarousel.json");
+export const apiGetImgCarousel = async () => {
+    const response = await axios.get("Decorative/ImageCarousel.json");
+    if (response.data) {
         return response.data;
-    }catch (err){
-        console.error("Error fetching data", err);
+    } else {
         return [];
     }
+};
 
-}
-
-export const apiGetBrieftContent = async() => {
-    try{
-        const response = await axios.get("Decorative/BrieftContent.json");
+export const apiGetBrieftContent = async () => {
+    const response = await axios.get("Decorative/BrieftContent.json");
+    if (response.data) {
         return response.data;
-    }catch (err){
-        console.error("Error fetching data", err);
+    } else {
         return [];
     }
-}
+};
 
-
-export const apiGetBlogIntro = async() => {
-    try {
-        const response = await axios.get("Decorative/NewsIntro.json");
+export const apiGetNewsIntro = async () => {
+    const response = await axios.get("Decorative/NewsIntro.json");
+    if (response.data) {
         return response.data;
-    } catch (err) {
-        console.error("Error Fetching Data", err);
+    } else {
         return [];
     }
+};
 
-}
+export const apiGetVaccineServiceIntro = async () => {
+    const response = await axios.get("Vaccine/VaccineService.json");
+    if (response.data) {
+        return response.data;
+    } else {
+        return [];
+    }
+};

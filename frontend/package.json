@@ -10,12 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tinymce/tinymce-react": "^5.1.1",
     "@uppy/core": "^4.4.2",
     "@uppy/dashboard": "^4.3.1",
     "@uppy/drag-drop": "^4.1.1",
     "@uppy/react": "^4.2.1",
     "@uppy/xhr-upload": "^4.3.2",
-    "@tinymce/tinymce-react": "^5.1.1",
     "antd": "^5.23.1",
     "axios": "^1.7.9",
     "jwt-decode": "^4.0.0",

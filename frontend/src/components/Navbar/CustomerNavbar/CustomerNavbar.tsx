@@ -13,6 +13,7 @@ import {IoIosNotifications} from "react-icons/io";
 import {Button} from "antd";
 import {TbMoodKid} from "react-icons/tb";
 import {BsCalendar2MinusFill} from "react-icons/bs";
+import { ImProfile } from "react-icons/im";
 
 const CustomerNavbar: React.FC = () => {
     const {username, role} = IsLoginSuccessFully();
@@ -47,10 +48,10 @@ const CustomerNavbar: React.FC = () => {
                     <ul className="cusNavbarLink">
                         <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
                         <li className="cusNavDropdown">
-                            <Link to="/about-us" className="cusNavItem">Giới thiệu</Link>
+                            <Link to="#" className="cusNavItem">Giới thiệu</Link>
                             <ul className="cusNavDropdown-menu">
                                 <li className="cusNavDropdownSub">
-                                    <Link to="/about-us" style={{
+                                    <Link to="/introduction" style={{
                                         display: "flex",
                                         alignItems: "center",
                                         width: "120%"
@@ -66,7 +67,7 @@ const CustomerNavbar: React.FC = () => {
                             </ul>
                         </li>
 
-                        <li><Link to="#" className="cusNavItem">Vaccine </Link></li>
+                        <li><Link to="/vaccines-list" className="cusNavItem">Vaccine </Link></li>
                         <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
                         <li><Link to="#" className="cusNavItem">Tin Tức</Link></li>
                         <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>
@@ -84,6 +85,11 @@ const CustomerNavbar: React.FC = () => {
                                         </div>
                                     </Link>
                                     <ul className="user-dropdown-menu">
+                                        <li>
+                                            <Link to="/your-profile" className="user-dropdown-item">
+                                                <ImProfile size={23}/> Thông tin tài khoản
+                                            </Link>
+                                        </li>
                                         <li>
                                             <Link to="/notifications" className="user-dropdown-item">
                                                 <IoIosNotifications size={23}/> Thông Báo
