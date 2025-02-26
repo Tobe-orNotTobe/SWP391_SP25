@@ -1,4 +1,4 @@
-﻿using ChildVaccineSystem.Data.DTO;
+﻿using ChildVaccineSystem.Data.DTO.Email;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
 using ChildVaccineSystem.ServiceContract.Interfaces;
@@ -66,6 +66,39 @@ namespace ChildVaccineSystem.Service.Services
             };
 
             _emailRepository.SendEmailForgotPassword(request, resetLink);
+        }
+        public async Task SendExpiryAlertsAsync(string adminEmail, List<string> expiringVaccines)
+        {
+            if (string.IsNullOrEmpty(adminEmail) || !adminEmail.Contains("@"))
+            {
+                throw new Exception("Invalid admin email address: " + adminEmail);
+            }
+
+            if (expiringVaccines == null || !expiringVaccines.Any())
+            {
+                return; 
+            }
+
+            string subject = "Expired Vaccine Warning!";
+            StringBuilder bodyBuilder = new StringBuilder();
+            bodyBuilder.Append("<h3>Warning: The following vaccines are nearing expiration.</h3><ul>");
+
+            foreach (var vaccineInfo in expiringVaccines)
+            {
+                bodyBuilder.Append($"<li>{vaccineInfo}</li>");
+            }
+
+            bodyBuilder.Append("</ul>");
+            bodyBuilder.Append("<p>Please check and handle promptly.</p>");
+
+            EmailRequestDTO request = new EmailRequestDTO
+            {
+                Subject = subject,
+                toEmail = adminEmail,
+                Body = bodyBuilder.ToString()
+            };
+
+            await Task.Run(() => _emailRepository.SendEmail(request));
         }
     }
 }

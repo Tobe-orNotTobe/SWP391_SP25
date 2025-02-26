@@ -11,7 +11,11 @@ namespace ChildVaccineSystem.Data.Entities
     {
         [Key]
         public int PricingPolicyId { get; set; }
-        public string WaitTimeRange { get; set; }
+
+        public int WaitTimeRangeStart { get; set; }
+        public int WaitTimeRangeEnd { get; set; }
+
         public decimal DiscountPercent { get; set; }
     }
+
 }

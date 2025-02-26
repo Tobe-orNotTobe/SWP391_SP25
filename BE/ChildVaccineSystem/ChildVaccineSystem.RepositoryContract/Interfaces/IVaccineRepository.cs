@@ -4,15 +4,10 @@ using ChildVaccineSystem.Data.Entities;
 
 namespace ChildVaccineSystem.RepositoryContract.Interfaces
 {
-    public interface IVaccineRepository
+    public interface IVaccineRepository : IRepository<Vaccine>
     {
-        Task<IEnumerable<Vaccine>> GetAllAsync();
-        Task<Vaccine?> GetByIdAsync(int id);
-        Task<Vaccine> CreateAsync(Vaccine vaccine);
-        Task<Vaccine?> UpdateAsync(int id, Vaccine vaccine);
-        Task<bool> DeleteAsync(int id);
         Task<IEnumerable<Vaccine>> GetVaccinesByTypeAsync(bool isNecessary);
-        Task<IEnumerable<int>> GetAllIdsAsync();
+        Task<Vaccine?> GetByIdAsync(int id);
 
     }
 }

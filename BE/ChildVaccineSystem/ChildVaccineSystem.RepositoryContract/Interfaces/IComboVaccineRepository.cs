@@ -4,14 +4,11 @@ using ChildVaccineSystem.Data.Entities;
 
 namespace ChildVaccineSystem.RepositoryContract.Interfaces
 {
-    public interface IComboVaccineRepository
+    public interface IComboVaccineRepository : IRepository<ComboVaccine>
     {
-        Task<IEnumerable<ComboVaccine>> GetAllAsync();
-        Task<ComboVaccine> GetByIdAsync(int id);
-        Task<ComboVaccine> CreateAsync(ComboVaccine combo);
-        Task<ComboVaccine> UpdateAsync(ComboVaccine combo);
-        Task<bool> DeleteAsync(int id);
-
         Task<bool> ValidateScheduleIdAsync(int scheduleId);
-    }
+        Task<IEnumerable<ComboVaccine>> GetAll();
+
+        Task<ComboVaccine> GetById(int id);
+	}
 }
