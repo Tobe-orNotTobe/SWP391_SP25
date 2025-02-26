@@ -1,77 +1,84 @@
-
-import { Form } from 'antd';
-import { useNavigate, useParams } from "react-router-dom";
-import { useVaccinatonScheduleDetailById } from "../../../../hooks/useVaccine";
-import { useEffect, useState } from "react";
-import { apiAddVaccinationSchedule, apiUpdateVaccinationSchedule } from "../../../../apis/apiVaccine";
-import { VaccinationSchedule } from "../../../../interfaces/Vaccine";
-
-
-export const useVaccinationScheduleForm = () =>{
-
-    const [form] = Form.useForm();
-    const navigate = useNavigate();
-    const {id} = useParams();
-    
-    const [submitting, setSubmitting] = useState(false);
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Form, notification } from 'antd';
+import { apiAddVaccinationSchedule, apiUpdateVaccinationSchedule } from '../../../../apis/apiVaccine';
+import { useVaccineDetail } from '../../../../hooks/useVaccine';
+import {useVaccinationScheduleDetailById} from "../../../../hooks/useVaccine";
+import { VaccinationSchedule, VaccineScheduleDetail } from '../../../../interfaces/Vaccine';
 
 
-    const isEditMode = Boolean(id);
+export const useScheduleVaccinationForm = () => {
+  const [form] = Form.useForm();
+  const { scheduleId } = useParams<{ scheduleId: string }>();
+  const navigate = useNavigate();
+  const isEditMode = !!scheduleId;
+  const [loading, setLoading] = useState<boolean>(false);
 
+  const [formData, setFormData] = useState<VaccinationSchedule | null>(null);
 
-    const {vaccinationScheduleDetail} = useVaccinatonScheduleDetailById(Number(id))
+  const { vaccinationScheduleDetail, loading: detailLoading, error } = useVaccinationScheduleDetailById(Number(scheduleId));
+  const { vaccineDetail, loading: vaccineLoading } = useVaccineDetail();
 
+  useEffect(() => {
+    if (isEditMode && vaccinationScheduleDetail) {
+      setFormData(vaccinationScheduleDetail);
+      form.setFieldsValue(vaccinationScheduleDetail);
+    }
+  }, [vaccinationScheduleDetail, isEditMode, form]);
 
-    useEffect(() => {
-        if (isEditMode && vaccinationScheduleDetail) {
-          // Format the data to match the form structure
-          form.setFieldsValue({
-            ageRangeStart: vaccinationScheduleDetail.ageRangeStart,
-            ageRangeEnd: vaccinationScheduleDetail.ageRangeEnd,
-            notes: vaccinationScheduleDetail.notes,
-            vaccineScheduleDetails: vaccinationScheduleDetail.vaccineScheduleDetails.map(detail => ({
-              vaccineId: detail.vaccineId,
-              injectionSchedules: detail.injectionSchedules
-            }))
-          });
-        }
-      }, [vaccinationScheduleDetail, form, isEditMode]);
+  useEffect(() => {
+    if (error) {
+      notification.error({
+        message: 'Lỗi',
+        description: error
+      });
+    }
+  }, [error]);
 
-      const onFinish = async (values: VaccinationSchedule) => {
-        try {
-          setSubmitting(true);
-          
-        
-          const formattedData: VaccinationSchedule = {
-            ...values,
-            scheduleId: isEditMode ? Number(id) : 0, 
-          };
-          
-          if (isEditMode) {
-            await apiUpdateVaccinationSchedule(Number(id), formattedData);
-          } else {
-            await apiAddVaccinationSchedule(formattedData);
-          }
-          
-         
-          navigate('/manager/schedule-vaccines');
-        } catch (error) {
-          console.error('Failed to save vaccination schedule:', error);
-        } finally {
-          setSubmitting(false);
-        }
-      };
-      
-      
-      const onCancel = () => {
-        navigate('/manager/vaccines/schedules');
-      };
-    
-      return {
-        form,
-        isEditMode,
-        submitting,
-        onFinish,
-        onCancel
-      };
-}
+  const handleSelectVaccine = (value: number, fieldName: number) => {
+    const currentDetails = form.getFieldValue('vaccineScheduleDetails') || [];
+    const selectedVaccines = currentDetails.map((detail: VaccineScheduleDetail) => detail.vaccineId);
+
+    if (selectedVaccines.includes(value) && currentDetails[fieldName].vaccineId !== value) {
+      return;
+    }
+
+    const updatedDetails = [...currentDetails];
+    updatedDetails[fieldName].vaccineId = value;
+    form.setFieldsValue({ vaccineScheduleDetails: updatedDetails });
+  };
+
+  const handleSubmit = async (values: VaccinationSchedule) => {
+    setLoading(true);
+    const response = isEditMode
+        ? await apiUpdateVaccinationSchedule(Number(scheduleId), values)
+        : await apiAddVaccinationSchedule(values);
+
+    console.log('Response:', response);
+
+    if (response.isSuccess) {
+      notification.success({
+        message: 'Thành công',
+        description: response.message,
+      });
+      navigate('/manager/schedule-vaccines');
+    } else {
+      notification.error({
+        message: 'Thất bại',
+      });
+    }
+    setLoading(false);
+  };
+
+  return {
+    navigate,
+    formData,
+    form,
+    isEditMode,
+    loading: loading || detailLoading,
+    vaccineDetail,
+    vaccineLoading,
+    handleSelectVaccine,
+    handleSubmit,
+  };
+};

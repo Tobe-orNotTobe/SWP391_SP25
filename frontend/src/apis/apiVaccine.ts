@@ -124,6 +124,8 @@ export const apiAddVaccinationSchedule = async ( data : VaccinationSchedule ) =>
 
 export const apiUpdateVaccinationSchedule = async (scheduleId : number, data: VaccinationSchedule) => {
     const response = await axiosInstance.put(`/api/VaccinationSchedule/${scheduleId}`, data);
+    console.log("scheduleId:", scheduleId);
+    console.log("scheduleId:", data);
     if(response.data){
         return response.data;
     }else{

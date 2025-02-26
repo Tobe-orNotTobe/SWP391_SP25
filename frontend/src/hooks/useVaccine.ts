@@ -173,7 +173,7 @@ export const useVaccineDetailById = (id: number | null) => {
     return { vaccineDetail, loading, error };
 };
 
-export const useVaccinatonScheduleDetailById = (id: number | null) => {
+export const useVaccinationScheduleDetailById = (id: number | null) => {
     const [vaccinationScheduleDetail, setVaccinationScheduleDetail] =  useState<VaccinationSchedule | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);

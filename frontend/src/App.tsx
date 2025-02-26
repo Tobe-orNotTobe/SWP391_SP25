@@ -1,10 +1,7 @@
 import "./App.scss";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage.tsx";
-import LogInPage from "./pages/AuthPage/Login/LoginPage.tsx";
-import RegisterPage from "./pages/AuthPage/Register/RegisterPage.tsx";
-import ForgotPasswordPage from "./pages/AuthPage/ForgotPassword/ForgotPasswordPage.tsx";
-import ResetPasswordPage from "./pages/AuthPage/ResetPassword/ResetPasswordPage.tsx";
+
 import VaccineDetailPage from "./pages/VaccinePage/VaccineDetailPage/VaccineDetailPage.tsx";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
 import VaccineListPage from "./pages/VaccinePage/VaccineListPage/VaccineListPage.tsx";
@@ -16,6 +13,12 @@ import ChildRegistrationPage from "./pages/ChildRegistration/ChildRegistrationPa
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
 import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
 
+import Login from "./pages/AuthPage/Login/Login.tsx";
+import Register from "./pages/AuthPage/Register/Register.tsx";
+import ForgotPassword from "./pages/AuthPage/ForgotPassword/ForgotPassword.tsx";
+import ResetPassword from "./pages/AuthPage/ResetPassword/ResetPassword.tsx";
+
+
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
 
 import NotFound from "./components/NotFound/NotFound.tsx";
@@ -23,8 +26,8 @@ import NotFound from "./components/NotFound/NotFound.tsx";
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
 import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineForm/VaccineComboForm.tsx";
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
-import ScheduleVaccinationForm
-  from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
+import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
+
 
 function App() {
 
@@ -45,10 +48,10 @@ function App() {
 
 
         {/*Lưu ý: Các trang này là phục vụ việc authencation thôi chứ cũng không có gì*/}
-        <Route path="/login" element={<LogInPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/confirm-email" element={<ConfirmEmail />} />
       
         

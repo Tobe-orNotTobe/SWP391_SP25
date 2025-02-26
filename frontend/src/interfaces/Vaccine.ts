@@ -1,5 +1,5 @@
 export interface VaccineIntro{
-    id: number;
+    id: string;
     name: string;
     manufacturer: string;
     image: string;
@@ -60,20 +60,19 @@ export interface InjectionSchedule {
   
 export interface VaccineScheduleDetail {
     vaccineId: number;
+    vaccineName : string;
     injectionSchedules: InjectionSchedule[];
   }
   
 export interface VaccinationSchedule {
-    statusCode: string;
-    isSuccess: true,
-    errorMessages: [];
     scheduleId: number;
     ageRangeStart: number;
     ageRangeEnd: number;
     notes: string;
     vaccineScheduleDetails: VaccineScheduleDetail[];
 }
-  
+
+
   
   
   
