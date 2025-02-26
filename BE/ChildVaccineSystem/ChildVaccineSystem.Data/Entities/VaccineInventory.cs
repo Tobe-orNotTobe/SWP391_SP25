@@ -17,12 +17,16 @@ namespace ChildVaccineSystem.Data.Entities
         public int VaccineId { get; set; }
         public Vaccine Vaccine { get; set; }
 
-        public string BatchNumber { get; set; }
+		[Required]
+		public string BatchNumber { get; set; }
         public DateTime ManufacturingDate { get; set; }
         public int InitialQuantity { get; set; }
         public int QuantityInStock { get; set; }
         public string Supplier { get; set; }
         public DateTime ExpiryDate { get; set; }
-    }
+
+		public virtual ICollection<VaccinationRecord> VaccinationRecords { get; set; }
+
+	}
 
 }

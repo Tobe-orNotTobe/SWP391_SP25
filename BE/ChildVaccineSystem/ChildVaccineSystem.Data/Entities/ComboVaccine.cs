@@ -17,16 +17,11 @@ namespace ChildVaccineSystem.Data.Entities
         public string Description { get; set; }
         public decimal TotalPrice { get; set; }
         public bool IsActive { get; set; }
-        public int ValidityMonths { get; set; }
-        public DateTime EffectiveDate { get; set; }
-        public DateTime ExpiryDate { get; set; }
+
         public DateTime CreatedAtUpdatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
     
-		[ForeignKey("Schedule")]
-		public int ScheduleId { get; set; }
-		public VaccinationSchedule Schedule { get; set; }
 	}
 
 }

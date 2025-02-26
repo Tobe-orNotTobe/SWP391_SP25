@@ -1,27 +1,33 @@
 import React from "react";
 import './CustomerNavbar.scss';
 import logo from "../../../assets/navbar/Logo_Navbar.png";
+import {MdNavigateNext} from "react-icons/md";
 
-import { GiPositionMarker } from "react-icons/gi";
-import { Button } from "antd";
-import { MdLogin} from "react-icons/md";
-import { Link } from "react-router-dom";
-import { FaCalendarAlt, FaUserCircle } from "react-icons/fa";
-import { IsLoginSuccessFully } from "../../../validations/isLogginSuccessfully";
+import {GiPositionMarker} from "react-icons/gi";
+
+import {MdLogin, MdLogout} from "react-icons/md";
+import {Link} from "react-router-dom";
+import {FaCalendarAlt, FaUserCircle} from "react-icons/fa";
+import {IsLoginSuccessFully} from "../../../validations/IsLogginSuccessfully";
+import {IoIosNotifications} from "react-icons/io";
+import {Button} from "antd";
+import {TbMoodKid} from "react-icons/tb";
+import {BsCalendar2MinusFill} from "react-icons/bs";
+import { ImProfile } from "react-icons/im";
 
 const CustomerNavbar: React.FC = () => {
-    const { username } = IsLoginSuccessFully();
+    const {username, role} = IsLoginSuccessFully();
 
-    // const handleLogout = () => {
-    //     localStorage.removeItem("token");
-    //     window.location.reload(); 
-    // };
+    const handleLogout = () => {
+        localStorage.clear();
+        window.location.reload();
+    };
 
     return (
-        <header className="customerHeader">
+        <>
             <div className="cusTopNavbar">
                 <div className="cusTopLogo">
-                    <Link to="/homepage"><img src={logo} alt="Logo" /></Link>
+                    <Link to="/homepage"><img src={logo} alt="Logo"/></Link>
                 </div>
                 <div className="bookingService">
                     <span><Link to="/booking"><FaCalendarAlt size={22}/>Đăng Kí Tiêm Tại Đây</Link></span>
@@ -35,51 +41,97 @@ const CustomerNavbar: React.FC = () => {
                     <span className="timeSchedule">Mở cửa 7h30-17h/ T2-CN xuyên trưa</span>
                 </div>
             </div>
-            <nav className="mainNavbarContainer">
-                <ul className="cusNavbarLink">
-                    <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
-                    <li className="dropdown">
-                        <Link to="/introduction" className="cusNavItem">Giới thiệu</Link>
-                        <ul className="dropdown-menu">
-                            <li><Link to="/about-us">Về Chúng Tôi</Link></li>
-                            <li><Link to="/team">Đội Ngũ</Link></li>
-                        </ul>
-                    </li>
 
-                    <li><Link to="#" className="cusNavItem">Vaccine </Link></li>
-                    <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
-                    <li><Link to="#" className="cusNavItem">Tin Tức</Link></li>
-                    <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>
-                    <li><Link to="#" className="cusNavItem">Điều Khoản và Dịch Vụ</Link></li>
-                    <li><Link to="#" className="cusNavItem">Blog</Link></li>                
-                </ul>
+            <header className="customerHeader">
 
-                <div className="authButtonLink">
-                    {username ? (
-                        
-                        <div className="loggedInUser">
-                            <span className="welcomeText"><FaUserCircle size={24}/>Xin chào, {username}</span>
+                <nav className="mainNavbarContainer">
+                    <ul className="cusNavbarLink">
+                        <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
+                        <li className="cusNavDropdown">
+                            <Link to="#" className="cusNavItem">Giới thiệu</Link>
+                            <ul className="cusNavDropdown-menu">
+                                <li className="cusNavDropdownSub">
+                                    <Link to="/introduction" style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center"
+                                    }}>
+                                        Về Chúng Tôi<MdNavigateNext/>
+                                    </Link>
+                                    <ul className="cusNavDropdown-submenu">
+                                        <li><Link to="/vision" className={"cusNavDropdown-link"}>Tầm nhìn</Link></li>
+                                        <li><Link to="/mission" className={"cusNavDropdown-link"}>Sứ Mệnh</Link></li>
+                                    </ul>
+                                </li>
+                                <li><Link to="/team">Đội Ngũ</Link></li>
+                            </ul>
+                        </li>
 
-                        </div>
-                    ) : (
-                       
-                        <>
-                            <Link to="/login">
+                        <li><Link to="/vaccines-list" className="cusNavItem">Vaccine </Link></li>
+                        <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
+                        <li><Link to="#" className="cusNavItem">Tin Tức</Link></li>
+                        <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>
+                        <li><Link to="#" className="cusNavItem">Điều Khoản và Dịch Vụ</Link></li>
+                        <li><Link to="#" className="cusNavItem">Blog</Link></li>
+                    </ul>
+                    <div className="authButtonLink">
+                        {username ? (
+                            <div className="loggedInUser">
+                                <li className="user-dropdown">
+                                    <Link to="#" className="user-dropdown-toggle">
+                                        <div className="cusNavItem" style={{display: "flex", alignItems: "center"}}>
+                                            <FaUserCircle size={24} style={{marginRight: "8px"}}/>
+                                            <span>Xin chào, {role} {username}</span>
+                                        </div>
+                                    </Link>
+                                    <ul className="user-dropdown-menu">
+                                        <li>
+                                            <Link to="/your-profile" className="user-dropdown-item">
+                                                <ImProfile size={23}/> Thông tin tài khoản
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/notifications" className="user-dropdown-item">
+                                                <IoIosNotifications size={23}/> Thông Báo
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/kids" className="user-dropdown-item">
+                                                <TbMoodKid size={23}/> Trẻ của bạn
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/history" className="user-dropdown-item">
+                                                <BsCalendar2MinusFill  size={20}/> Lịch sử tiêm
+                                            </Link>
+                                        </li>
+
+                                        <li>
+                                            <span onClick={handleLogout} className="user-dropdown-item">
+                                              <MdLogout size={23}/> Đăng Xuất
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </div>
+                        ) : (
+                            <>
+                                <Link to="/login">
+                                    <Button className="authButton">
+                                    <MdLogin size={23}/> Đăng Nhập
+                                    </Button>
+                                </Link>
+                                <Link to="/register">
                                 <Button className="authButton">
-                                    <MdLogin size={23} /> Đăng Nhập
-                                </Button>
-                            </Link>
-                    
-                            <Link to="/register">
-                                <Button className="authButton">
-                                    <MdLogin size={23} /> Đăng Kí
-                                </Button>
-                            </Link>
-                        </>
-                    )}
-                </div>
-            </nav>
-        </header>
+                                        <MdLogin size={23}/> Đăng Kí
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                </nav>
+            </header>
+        </>
     );
 };
 

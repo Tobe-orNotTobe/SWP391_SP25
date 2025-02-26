@@ -20,11 +20,13 @@ namespace ChildVaccineSystem.Data.Entities
         [Required]
         public DateTime VaccinationDate { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        public string BatchNumber { get; set; }
 
-        public int Sequence { get; set; }
+		[ForeignKey("VaccineInventory")]
+		public int VaccineInventoryId { get; set; }
+		public VaccineInventory VaccineInventory { get; set; }
+
+
+		public int Sequence { get; set; }
 
         public DateTime? NextDoseDate { get; set; }
 

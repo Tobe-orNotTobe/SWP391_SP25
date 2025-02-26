@@ -391,3 +391,4 @@ MigrationBackup/
 frontend/node_modules
 frontend/.idea
 frontend/.vscode
+/BE/ChildVaccineSystem/ChildVaccineSystem.API/appsettings.Development.json
