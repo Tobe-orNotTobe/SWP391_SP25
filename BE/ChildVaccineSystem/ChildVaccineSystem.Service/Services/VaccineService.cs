@@ -63,16 +63,18 @@ namespace ChildVaccineSystem.Services
             var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == id);
             if (vaccine == null) return false;
 
-            vaccine.Status = false;
-
-			await _unitOfWork.Vaccines.UpdateAsync(vaccine);
-
 			var comboDetails = await _unitOfWork.ComboDetails.GetAllAsync(cd => cd.VaccineId == id);
-			foreach (var comboDetail in comboDetails)
+			if (comboDetails.Any())
 			{
-				await _unitOfWork.ComboDetails.DeleteAsync(comboDetail);
+				
+				foreach (var comboDetail in comboDetails)
+				{
+					await _unitOfWork.ComboDetails.DeleteAsync(comboDetail);
+				}
 			}
-
+		
+			vaccine.Status = false;
+			await _unitOfWork.Vaccines.UpdateAsync(vaccine);
 			await _unitOfWork.CompleteAsync();
 
 			return true;

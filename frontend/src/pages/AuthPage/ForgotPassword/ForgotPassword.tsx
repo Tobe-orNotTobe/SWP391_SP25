@@ -27,10 +27,12 @@ const ForgotPassword : React.FC = () => {
                         {loading ? "Đang gửi..." : "Gửi yêu cầu"}
                     </button>
                 </form>
-            </div>
 
+            </div>
         </>
     );
 }
 
+
 export default ForgotPassword
+

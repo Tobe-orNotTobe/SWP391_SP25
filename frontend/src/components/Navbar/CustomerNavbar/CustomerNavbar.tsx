@@ -53,8 +53,8 @@ const CustomerNavbar: React.FC = () => {
                                 <li className="cusNavDropdownSub">
                                     <Link to="/introduction" style={{
                                         display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center"
+                                        alignItems: "center",
+                                        width: "120%"
                                     }}>
                                         Về Chúng Tôi<MdNavigateNext/>
                                     </Link>

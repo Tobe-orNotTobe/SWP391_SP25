@@ -1,7 +1,6 @@
 import "./App.scss";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage.tsx";
-
 import VaccineDetailPage from "./pages/VaccinePage/VaccineDetailPage/VaccineDetailPage.tsx";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
 import VaccineListPage from "./pages/VaccinePage/VaccineListPage/VaccineListPage.tsx";

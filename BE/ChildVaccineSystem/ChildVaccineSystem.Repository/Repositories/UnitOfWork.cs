@@ -23,7 +23,8 @@ namespace ChildVaccineSystem.Repository.Repositories
         public IUserRepository Users { get; }
         public IVaccineInventoryRepository VaccineInventories { get; }
         public IPricingPoliciesRepository PricingPolicies { get; }
-        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies)
+        public ITransactionRepository Transactions { get; }
+        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -38,6 +39,7 @@ namespace ChildVaccineSystem.Repository.Repositories
             Users = userRepository;
             VaccineInventories = vaccineInventories;
             PricingPolicies = pricingPolicies;
+            Transactions = transactionRepository;
 
         }
 
