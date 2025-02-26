@@ -56,13 +56,20 @@ namespace ChildVaccineSystem.Service.Services
             if (pricingPolicy != null)
             {
                 booking.PricingPolicyId = pricingPolicy.PricingPolicyId;
+
+                // If there's a valid pricing policy, apply discount
+                if (pricingPolicy.DiscountPercent > 0)
+                {
+                    decimal discountAmount = totalPrice * (pricingPolicy.DiscountPercent / 100);
+                    totalPrice -= discountAmount;  // Apply the discount
+                }
             }
             else
             {
-                // If no valid pricing policy, don't apply discount
-                booking.PricingPolicyId = null; // Ensure PricingPolicyId is null
+                booking.PricingPolicyId = null; // Ensure PricingPolicyId is null if no valid pricing policy
             }
 
+            // Calculate total price for booking details
             foreach (var detailDto in bookingDto.BookingDetails)
             {
                 var bookingDetail = _mapper.Map<BookingDetail>(detailDto);
@@ -82,6 +89,14 @@ namespace ChildVaccineSystem.Service.Services
                 totalPrice += bookingDetail.Price;
             }
 
+            // Apply the discount again, after calculating the total price for booking details
+            if (pricingPolicy != null && pricingPolicy.DiscountPercent > 0)
+            {
+                decimal discountAmount = totalPrice * (pricingPolicy.DiscountPercent / 100);
+                totalPrice -= discountAmount;  // Apply the discount to total price
+            }
+
+            // Assign the final total price
             booking.TotalPrice = totalPrice;
 
             await _unitOfWork.Bookings.AddAsync(booking);
