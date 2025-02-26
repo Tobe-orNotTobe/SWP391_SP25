@@ -34,7 +34,7 @@ namespace ChildVaccineSystem.Data.Entities
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
         [ForeignKey("PricingPolicy")]
-        public int PricingPolicyId { get; set; }
+        public int? PricingPolicyId { get; set; }
         public PricingPolicy PricingPolicy { get; set; }
 
         public ICollection<BookingDetail> BookingDetails { get; set; }

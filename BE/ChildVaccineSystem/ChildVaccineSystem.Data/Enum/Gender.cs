@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChildVaccineSystem.Data.DTO
+namespace ChildVaccineSystem.Data.Enum
 {
-    public class LogoutRequestDTO
+    public enum Gender
     {
-        public string RefreshToken { get; set; }
+        Male = 0,
+        Female = 1
     }
+
 }

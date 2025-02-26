@@ -21,5 +21,10 @@ namespace ChildVaccineSystem.Repository.Repositories
                 .Where(v => v.IsNecessary == isNecessary)
                 .ToListAsync();
         }
+        public async Task<Vaccine?> GetByIdAsync(int id)
+        {
+            return await _context.Vaccines
+                .FirstOrDefaultAsync(v => v.VaccineId == id);
+        }
     }
 }

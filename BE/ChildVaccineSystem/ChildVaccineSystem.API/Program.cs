@@ -107,6 +107,13 @@ builder.Services.AddScoped<SignInManager<User>>();
 // Add Repositories and Services to DI Container
 builder.Services.AddRepositories();
 builder.Services.AddServices();
+//child
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 
 var app = builder.Build();
 

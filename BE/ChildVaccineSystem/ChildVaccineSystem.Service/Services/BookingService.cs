@@ -22,6 +22,7 @@ namespace ChildVaccineSystem.Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
         public async Task<BookingDTO> GetByIdAsync(int id)
         {
             var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == id, includeProperties: "BookingDetails.Vaccine,BookingDetails.ComboVaccine,Children,User");
@@ -41,6 +42,26 @@ namespace ChildVaccineSystem.Service.Services
             booking.BookingDetails = new List<BookingDetail>();
 
             decimal totalPrice = 0;
+
+            // Validate that the child belongs to the current user
+            var child = await _unitOfWork.Children.GetAsync(c => c.ChildId == bookingDto.ChildId);
+            if (child == null || child.UserId != userId)
+            {
+                throw new ArgumentException("This child does not belong to the current user.");
+            }
+
+            // Get the appropriate PricingPolicy based on booking date and current date
+            var pricingPolicy = await GetPricingPolicyForBookingAsync(bookingDto.BookingDate);
+
+            if (pricingPolicy != null)
+            {
+                booking.PricingPolicyId = pricingPolicy.PricingPolicyId;
+            }
+            else
+            {
+                // If no valid pricing policy, don't apply discount
+                booking.PricingPolicyId = null; // Ensure PricingPolicyId is null
+            }
 
             foreach (var detailDto in bookingDto.BookingDetails)
             {
@@ -69,6 +90,22 @@ namespace ChildVaccineSystem.Service.Services
             return await GetByIdAsync(booking.BookingId);
         }
 
+        private async Task<PricingPolicy> GetPricingPolicyForBookingAsync(DateTime bookingDate)
+        {
+            // Calculate the difference in days between the current date and the booking date
+            var daysDifference = (bookingDate - DateTime.Now).Days;
+
+            // Fetch all pricing policies and find the one that matches the time range
+            var pricingPolicies = await _unitOfWork.PricingPolicies.GetAllAsync();
+
+            var validPricingPolicy = pricingPolicies.FirstOrDefault(pp =>
+                pp.WaitTimeRangeStart <= daysDifference && pp.WaitTimeRangeEnd >= daysDifference);
+
+            // Return the valid pricing policy, or null if not found
+            return validPricingPolicy;
+        }
+
+
         public async Task<List<BookingDTO>> GetUserBookingsAsync(string userId)
         {
             var bookings = await _unitOfWork.Bookings.GetAllAsync(b => b.UserId == userId, includeProperties: "BookingDetails.Vaccine,BookingDetails.ComboVaccine,Children,User");
@@ -83,9 +120,9 @@ namespace ChildVaccineSystem.Service.Services
 
             // Check for conflicting bookings
             if (await _unitOfWork.Bookings.HasConflictingBookingAsync(userId, bookingDto.BookingDate))
-                throw new InvalidOperationException("User already has a booking for this date");
+                throw new ArgumentException("User already has a booking for this date");
 
-            // Validate child exists
+            // Validate child exists and belongs to the current user
             var child = await _unitOfWork.Children.GetAsync(c => c.ChildId == bookingDto.ChildId);
             if (child == null)
                 throw new ArgumentException("Child not found");

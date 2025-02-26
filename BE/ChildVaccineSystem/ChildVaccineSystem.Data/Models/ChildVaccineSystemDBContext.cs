@@ -19,7 +19,8 @@ namespace ChildVaccineSystem.Data.Models
 		public DbSet<Feedback> Feedbacks { get; set; }
 		public DbSet<Vaccine> Vaccines { get; set; }
         public DbSet<VaccinationSchedule> VaccinationSchedules { get; set; }
-        public DbSet<VaccinationRecord> VaccinationRecords { get; set; }
+		public DbSet<VaccineScheduleDetail> VaccineScheduleDetails { get; set; }
+		public DbSet<VaccinationRecord> VaccinationRecords { get; set; }
 		public DbSet<VaccineInventory> VaccineInventories { get; set; }
 		public DbSet<PricingPolicy> PricingPolicies { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
@@ -29,7 +30,7 @@ namespace ChildVaccineSystem.Data.Models
         public DbSet<ComboVaccine> ComboVaccines { get; set; }
 		public DbSet<InjectionSchedule> InjectionSchedules { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
