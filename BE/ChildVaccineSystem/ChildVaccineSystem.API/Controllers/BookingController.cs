@@ -119,5 +119,40 @@ namespace ChildVaccineSystem.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
+
+        [HttpDelete("{bookingId}/cancel")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CancelBooking(int bookingId, [FromQuery] string userId)
+        {
+            try
+            {
+                var cancelledBooking = await _bookingService.CancelBookingAsync(bookingId, userId);
+
+                _response.IsSuccess = true;
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = cancelledBooking;
+                _response.ErrorMessages = new List<string>();
+
+                return Ok(_response);
+            }
+            catch (ArgumentException ex)
+            {
+                _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.ErrorMessages = new List<string> { ex.Message };
+
+                return BadRequest(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.ErrorMessages = new List<string> { $"Error cancelling booking: {ex.Message}" };
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
     }
 }

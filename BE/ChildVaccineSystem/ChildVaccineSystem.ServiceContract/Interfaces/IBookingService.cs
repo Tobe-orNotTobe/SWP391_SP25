@@ -12,5 +12,6 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<BookingDTO> GetByIdAsync(int id);
         Task<BookingDTO> CreateAsync(string userId, CreateBookingDTO bookingDto);
         Task<List<BookingDTO>> GetUserBookingsAsync(string userId);
+        Task<BookingDTO> CancelBookingAsync(int bookingId, string userId);
     }
 }

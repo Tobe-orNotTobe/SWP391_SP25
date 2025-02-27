@@ -173,5 +173,29 @@ namespace ChildVaccineSystem.Service.Services
                 }
             }
         }
+        public async Task<BookingDTO> CancelBookingAsync(int bookingId, string userId)
+        {
+            var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
+            if (booking == null)
+            {
+                throw new ArgumentException($"Booking with ID {bookingId} not found");
+            }
+
+            if (booking.Status != BookingStatus.Pending) 
+            {
+                throw new ArgumentException("Only bookings with status 'Pending' can be canceled.");
+            }
+
+            if (booking.UserId != userId)
+            {
+                throw new ArgumentException("You are not authorized to cancel this booking.");
+            }
+
+            booking.Status = BookingStatus.Cancelled; 
+            await _unitOfWork.CompleteAsync();  
+
+            return _mapper.Map<BookingDTO>(booking);
+        }
+
     }
 }
