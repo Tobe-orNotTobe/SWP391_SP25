@@ -1,0 +1,101 @@
+// De dinh dang css cho phang thong tin duoc in ra tu bang thoi chu hong gi dau
+
+
+.manager-vaccine-page-container{
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Đẩy tiêu đề sang trái, nút sang phải */
+      padding-right: 20px;
+      padding-bottom: 15px; /* Căn nút gần rìa phải */
+  }
+
+  .add-button {
+      margin-left: auto; /* Đảm bảo nút luôn nằm bên phải */
+  }
+
+
+}
+
+.vaccine-action-buttons{
+  
+
+  .detail-button{
+    color: white;
+    background-color: #007bff;
+    margin-left: 10px;
+  }
+
+  .edit-button{
+    color: white;
+    background-color: #28a745;
+    margin-left: 10px;
+  }
+
+  .delete-button{
+    color: white;
+    background-color: #dc3545;
+    margin-left: 10px;
+  }
+
+}
+
+
+
+.vaccine-detail-manager-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  .vaccine-detail-mananger-left {
+    flex: 1;
+    padding-right: 16px;
+
+    img{
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+
+  .vaccine-detail-mananger-right {
+    flex: 1;
+    min-width: 200px;
+    padding-left: 20px;
+  }
+  
+}
+
+
+
+//Dinh dang cho cac thong tin popups khi nhan vao nut chi tiet ne
+
+.vaccine-detail-mananger-popups {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 15px;
+
+  h3{
+    font-size: 20px;
+  }
+
+  .vaccine-detail-mananger-popups-left {
+    flex: 1;
+    max-width: 40%;
+
+    img {
+      width: 50%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+  }
+  .vaccine-detail-mananger-popups-right {
+    flex: 1;
+    padding-left: 10px;
+  }
+}
+
+
+

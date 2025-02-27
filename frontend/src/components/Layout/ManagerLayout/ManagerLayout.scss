@@ -1,0 +1,58 @@
+.manager-layout {
+    min-height: 100vh;
+    
+  }
+  
+  .manager-header {
+    background-color: #2A388F !important;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    justify-content: space-between;
+    height: 64px;
+  }
+  
+  .logo-container {
+    height: 100%;
+  }
+  
+  .logo {
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .user-icon {
+    font-size: 30px;
+  }
+  
+  .user-info {
+    font-size: 18px;
+  }
+  
+  .logout-button {
+    background-color: #FFB400;
+    color: white;
+    border: none;
+  
+    &:hover {
+      background-color: #FFB400;
+    }
+  }
+  
+  .content-layout {
+    padding: 20px;
+  }
+  
+  .content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
