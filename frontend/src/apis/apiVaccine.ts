@@ -148,3 +148,5 @@ export const apiGetVaccinationScheduleById = async ( scheduleId : number) => {
         return {};
     }
 }
+
+
