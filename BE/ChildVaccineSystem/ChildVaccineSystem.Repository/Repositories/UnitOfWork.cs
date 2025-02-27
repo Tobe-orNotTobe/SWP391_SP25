@@ -23,7 +23,12 @@ namespace ChildVaccineSystem.Repository.Repositories
         public IUserRepository Users { get; }
         public IVaccineInventoryRepository VaccineInventories { get; }
         public IPricingPoliciesRepository PricingPolicies { get; }
+<<<<<<< HEAD
         public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies)
+=======
+        public ITransactionRepository Transactions { get; }
+        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository)
+>>>>>>> 6a23a229a73d7a4ab6cce73b3829c73b697887e9
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -38,6 +43,10 @@ namespace ChildVaccineSystem.Repository.Repositories
             Users = userRepository;
             VaccineInventories = vaccineInventories;
             PricingPolicies = pricingPolicies;
+<<<<<<< HEAD
+=======
+            Transactions = transactionRepository;
+>>>>>>> 6a23a229a73d7a4ab6cce73b3829c73b697887e9
 
         }
 

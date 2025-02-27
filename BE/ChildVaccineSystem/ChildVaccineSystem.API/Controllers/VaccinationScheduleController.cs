@@ -193,5 +193,52 @@ namespace ChildVaccineSystem.API.Controllers
 			_response.StatusCode = HttpStatusCode.OK;
 			return Ok(_response);
 		}
+<<<<<<< HEAD
+=======
+
+
+		/// <summary>
+		/// Lấy lịch tiêm chủng và danh sách vaccine/combo vaccine phù hợp với độ tuổi của trẻ
+		/// </summary>
+		/// <param name="childrenId">ID của trẻ</param>
+		/// <returns>Lịch tiêm và danh sách vaccine/combo vaccine phù hợp</returns>
+		[HttpGet("by-children/{childrenId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		public async Task<ActionResult<APIResponse>> GetScheduleByChildrenAge(int childrenId)
+		{
+			try
+			{
+				var result = await _scheduleService.GetScheduleByChildrenAgeAsync(childrenId);
+
+				_response.Result = result;
+				_response.StatusCode = HttpStatusCode.OK;
+				_response.IsSuccess = true;
+				return Ok(_response);
+			}
+			catch (KeyNotFoundException ex)
+			{
+				_response.StatusCode = HttpStatusCode.NotFound;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add(ex.Message);
+				return NotFound(_response);
+			}
+			catch (InvalidOperationException ex)
+			{
+				_response.StatusCode = HttpStatusCode.NotFound;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add(ex.Message);
+				return NotFound(_response);
+			}
+			catch (Exception ex)
+			{
+				_response.StatusCode = HttpStatusCode.InternalServerError;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add($"Lỗi khi truy vấn lịch tiêm chủng: {ex.Message}");
+				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+			}
+		}
+>>>>>>> 6a23a229a73d7a4ab6cce73b3829c73b697887e9
 	}
 }

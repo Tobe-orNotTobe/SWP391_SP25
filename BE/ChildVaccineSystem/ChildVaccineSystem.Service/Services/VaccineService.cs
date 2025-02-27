@@ -63,6 +63,7 @@ namespace ChildVaccineSystem.Services
             var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == id);
             if (vaccine == null) return false;
 
+<<<<<<< HEAD
             vaccine.Status = false;
 
 			await _unitOfWork.Vaccines.UpdateAsync(vaccine);
@@ -73,6 +74,20 @@ namespace ChildVaccineSystem.Services
 				await _unitOfWork.ComboDetails.DeleteAsync(comboDetail);
 			}
 
+=======
+			var comboDetails = await _unitOfWork.ComboDetails.GetAllAsync(cd => cd.VaccineId == id);
+			if (comboDetails.Any())
+			{
+				
+				foreach (var comboDetail in comboDetails)
+				{
+					await _unitOfWork.ComboDetails.DeleteAsync(comboDetail);
+				}
+			}
+		
+			vaccine.Status = false;
+			await _unitOfWork.Vaccines.UpdateAsync(vaccine);
+>>>>>>> 6a23a229a73d7a4ab6cce73b3829c73b697887e9
 			await _unitOfWork.CompleteAsync();
 
 			return true;

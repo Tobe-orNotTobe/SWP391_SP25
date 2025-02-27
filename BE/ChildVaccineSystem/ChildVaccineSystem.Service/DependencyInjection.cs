@@ -22,8 +22,15 @@ namespace ChildVaccineSystem.Service
             services.AddTransient<IChildrenService, ChildrenService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IVaccineInventoryService, VaccineInventoryService>();
+<<<<<<< HEAD
 
             return services;
+=======
+            services.AddTransient<IVnPaymentService, VnPaymentService>();
+			services.AddTransient<ITransactionService, TransactionService>();
+
+			return services;
+>>>>>>> 6a23a229a73d7a4ab6cce73b3829c73b697887e9
         }
     }
 }
