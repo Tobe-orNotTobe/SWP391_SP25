@@ -8,7 +8,7 @@ import { useVaccineServiceIntro } from "./useHomePage.ts";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar";
 import { ServiceCard, VaccineCard, NewsCard} from "../../components/Card/Card";
 import {Row, Col} from "antd";
-import { Footer } from "antd/es/layout/layout";
+import Footer from "../../components/Footer/Footer.tsx"
 import "./HomePage.scss"
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
 
