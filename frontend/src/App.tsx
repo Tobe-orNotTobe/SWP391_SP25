@@ -8,29 +8,23 @@ import ResetPasswordPage from "./pages/AuthPage/ResetPassword/ResetPasswordPage.
 import VaccineDetailPage from "./pages/VaccinePage/VaccineDetailPage/VaccineDetailPage.tsx";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
 import VaccineListPage from "./pages/VaccinePage/VaccineListPage/VaccineListPage.tsx";
-import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
+
 import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
 import ChildRegistrationPage from "./pages/ChildRegistration/ChildRegistrationPage.tsx";
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
 import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
-
-import "./App.scss"
-import { Route, BrowserRouter, Routes } from "react-router-dom"
-import HomePage from "./pages/HomePage"
-import LogInPage from "./pages/LogInPage"
-import RegisterPage from "./pages/RegisterPage"
-import {ForgotPasswordPage, VerifiyOTPPage, ResetPasswordPage} from "./pages/ResetPasswordPage"
-import {IntroductionPage, AboutUsPage, OurTeamPage} from "./pages/IntroductionPage"
-
 import NotFound from "./components/NotFound/NotFound.tsx";
-
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
 import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineForm/VaccineComboForm.tsx";
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
 import ScheduleVaccinationForm
   from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
+import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
+import ServicePage from "./pages/Staff/ServicePage.tsx";
+import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
+import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
 
 function App() {
 

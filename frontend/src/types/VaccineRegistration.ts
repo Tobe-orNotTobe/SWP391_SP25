@@ -1,9 +1,15 @@
 // Kiểu dữ liệu cho thông tin trẻ
 export interface Child {
-  id: number;
-  name: string;
-  birthDate: string;
-  gender: string;
+  childId: string; 
+  fullName: string; 
+  dateOfBirth: string; 
+  gender: "Male" | "Female"; 
+  medicalHistory: string; 
+  relationToUser: string; 
+  height: number;
+  weight: number; 
+  imageUrl: string | null;
+  userId: string;
 }
 
 // Kiểu dữ liệu cho thông tin phụ huynh
@@ -61,7 +67,14 @@ export interface VaccinePackage {
   vaccines: [Vaccine];
 }
 
-export interface BookingDetailItem {
+export interface Booking {
+  childId: string;
+  bookingDate: string;
+  notes: string;
+  bookingDetails: BookingDetail[];
+};
+
+export interface BookingDetail {
   vaccineId: number | null;
   comboVaccineId: number | null;
 }
