@@ -33,3 +33,8 @@ export const apiChildDelete = async (childId: number) => {
     const response = await axiosInstance.delete(`/api/Children/${encodeURIComponent(childId)}`);
     return response.data ? response.data : { message: "An unexpected error occurred" };
 }
+
+export const apiGetChildById = async (childId: number) => {
+    const response = await axiosInstance.get(`/api/Children/${encodeURIComponent(childId)}`);
+    return response.data ? response.data : { message: "An unexpected error occurred" };
+}

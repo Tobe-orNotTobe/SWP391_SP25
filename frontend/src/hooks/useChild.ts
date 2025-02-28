@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { ChildDetailRequest, ChildDetailResponse } from "../interfaces/Child.ts";
-import { apiChildRegister, apiChildUpdate, apiGetMyChilds } from "../apis/apiChild.ts";
+import {apiChildRegister, apiChildUpdate, apiGetChildById, apiGetMyChilds} from "../apis/apiChild.ts";
 import { notification } from "antd";
 import { uploadImageToCloudinary } from "../utils/cloudinary.ts";
 
@@ -29,6 +29,31 @@ export const useMyChilds = () => {
     // Trả về `refetch` để gọi lại khi cần
     return { myChilds, loading, error, refetch: fetchMyChilds };
 };
+
+export const useChildDetail = (childId: number) => {
+    const [childDetail, setChildDetail] = useState<ChildDetailResponse>();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    const fetchChildDetail = async (childId: number) => {
+        setLoading(true);
+        try {
+            const { isSuccess, result } = await apiGetChildById(childId);
+            if (isSuccess) setChildDetail(result);
+        } catch (err) {
+            setError("Error Fetching Children Detail Data");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchChildDetail(childId);
+    }, []);
+
+    return {childDetail, loading, error};
+}
 
 export const useChildForm = (refetch: () => void) => {
     const [form, setForm] = useState({

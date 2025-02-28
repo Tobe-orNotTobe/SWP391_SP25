@@ -16,6 +16,7 @@ import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistra
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
 import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
 import MyChildsPage from "./pages/ChildPage/MyChilds/MyChildsPage.tsx";
+import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx"
 
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
 
@@ -57,7 +58,7 @@ function App() {
         {/*Lưu ý: Trang này phải đăng nhập và có role là Customer mới sử dụng được*/}
         <Route path="/child-register" element={<ChildRegistrationPage/>}/>
         <Route path={"/my-childs"} element={<MyChildsPage/>}/>
-
+        <Route path={"/child-detail"} element={<ChildDetailPage/>}/>
         
         
         {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}

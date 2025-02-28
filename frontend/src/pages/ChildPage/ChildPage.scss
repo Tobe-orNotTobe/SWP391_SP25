@@ -1,3 +1,5 @@
+// My Child.
+
 .childPageContainer {
   width: 1200px;
   padding: 40px;
@@ -26,7 +28,6 @@
     padding: 12px 24px;
     font-size: 16px;
     font-weight: bold;
-    display: flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
@@ -44,6 +45,31 @@
     }
   }
 
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .pagination button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .pagination button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .pagination button.active {
+    background: #0056b3;
+    font-weight: bold;
+  }
 
   .childGrid {
     display: grid;
@@ -57,6 +83,11 @@
       text-align: center;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
+      transition: transform 0.3s ease-in-out;
+
+      &:hover {
+        transform: scale(1.05);
+      }
 
       .childImage {
         width: 180px;
@@ -105,16 +136,8 @@
           }
         }
       }
-
-
-
     }
-
-
-
   }
-
-
 }
 
 .editPopupOverlay {
@@ -198,7 +221,6 @@
   }
 }
 
-// Nút đóng (X)
 .closeButton {
   position: absolute;
   top: 10px;
@@ -213,7 +235,6 @@
   }
 }
 
-// Các input trong form
 .editPopup input {
   width: 100%;
   padding: 8px;
@@ -222,7 +243,6 @@
   border-radius: 5px;
 }
 
-// Nút lưu
 .saveButton {
   width: 100%;
   padding: 10px;
@@ -237,7 +257,6 @@
   }
 }
 
-// Hiệu ứng xuất hiện
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -258,4 +277,63 @@
   border-radius: 10px;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
   margin: 50px auto;
+}
+
+// Child Detail.
+
+.childDetailContainer {
+  width: 1400px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+  margin: 50px auto;
+
+  .title {
+    display: flex;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  .childImage {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  .childP {
+    font-size: 24px;
+    padding-bottom: 5px;
+  }
+
+  .backButton {
+    width: 10%;
+    display: flex;
+    justify-content: start;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      background-color: #004085;
+      transform: scale(0.95);
+    }
+  }
 }

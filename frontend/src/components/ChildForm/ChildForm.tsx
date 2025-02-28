@@ -4,6 +4,8 @@ import Select from "react-select";
 import "./ChildForm.scss";
 import { ChildDetailResponse } from "../../interfaces/Child.ts";
 import { useChildForm } from "../../hooks/useChild.ts";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { useNavigate} from "react-router-dom";
 
 const genderOptions = [
     { value: "Male", label: "Nam" },
@@ -46,6 +48,8 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
         handleUpdate
     } = useChildForm(refetch ?? (() => {}));
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (isUpdate && defaultValues) {
             updateForm("childId", defaultValues.childId);
@@ -62,6 +66,12 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
 
     return (
         <>
+            {!isUpdate && (
+                <span className={"backButton"} onClick={() => {navigate("/my-childs")}}>
+                    <IoMdArrowRoundBack/>
+                    Back
+                </span>
+            )}
             <h2 className="childTitle">{isUpdate ? "Cập Nhật Thông Tin Trẻ" : "Đăng Ký Trẻ"}</h2>
             <form className="childRegistrationForm" onSubmit={isUpdate ? handleUpdate : handleRegister}>
                 <div className="childRegistrationFormColumn">
