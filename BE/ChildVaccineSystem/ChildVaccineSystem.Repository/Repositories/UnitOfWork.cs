@@ -25,8 +25,9 @@ namespace ChildVaccineSystem.Repository.Repositories
         public IPricingPoliciesRepository PricingPolicies { get; }
         public ITransactionRepository Transactions { get; }
         public IDoctorWorkScheduleRepository DoctorWorkSchedules { get; }
+        public IVaccineTransactionHistoryRepository VaccineTransactionHistories { get; }
 
-        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository, IDoctorWorkScheduleRepository doctorWorkScheduleRepositories)
+        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository, IDoctorWorkScheduleRepository doctorWorkScheduleRepositories, IVaccineTransactionHistoryRepository vaccineTransactionHistoryRepository)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -43,6 +44,7 @@ namespace ChildVaccineSystem.Repository.Repositories
             PricingPolicies = pricingPolicies;
             Transactions = transactionRepository;
             DoctorWorkSchedules = doctorWorkScheduleRepositories;
+            VaccineTransactionHistories = vaccineTransactionHistoryRepository;
 
         }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChildVaccineSystem.Data.DTO.Vaccine
+namespace ChildVaccineSystem.Data.DTO.VaccineInventory
 {
     public class VaccineInventoryDTO
     {

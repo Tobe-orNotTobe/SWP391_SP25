@@ -1,5 +1,4 @@
 ﻿using ChildVaccineSystem.ServiceContract.Interfaces;
-using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Common.Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using ChildVaccineSystem.Data.DTO.VaccineInventory;
 
 namespace ChildVaccineSystem.API.Controllers
 {
@@ -39,6 +39,35 @@ namespace ChildVaccineSystem.API.Controllers
         }
 
         /// <summary>
+        /// Lấy thông tin tồn kho vaccine theo ID
+        /// </summary>
+        [HttpGet("stock/{vaccineId}")]
+        public async Task<IActionResult> GetVaccineInventory(int vaccineId)
+        {
+            try
+            {
+                var vaccineInventories = await _vaccineInventoryService.GetVaccineInventoryByIdAsync(vaccineId);
+                _response.Result = vaccineInventories;
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+            }
+            catch (KeyNotFoundException)
+            {
+                _response.StatusCode = HttpStatusCode.NotFound;
+                _response.IsSuccess = false;
+                return NotFound(_response);
+            }
+            catch (Exception)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
+
+        /// <summary>
         /// Tìm kiếm vaccine trong kho theo từ khóa
         /// </summary>
         [HttpGet("search")]
@@ -53,12 +82,12 @@ namespace ChildVaccineSystem.API.Controllers
         /// <summary>
         /// Xuất vaccine khỏi kho
         /// </summary>
-        [HttpPost("issue/{id}")]
-        public async Task<IActionResult> IssueVaccine(int id, [FromBody] int quantity)
+        [HttpPost("export/{id}")]
+        public async Task<IActionResult> ExportVaccine(int id, [FromBody] int quantity)
         {
             try
             {
-                await _vaccineInventoryService.IssueVaccineAsync(id, quantity);
+                await _vaccineInventoryService.ExportVaccineAsync(id, quantity);
                 _response.Result = "Vaccine issued successfully";
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
@@ -99,10 +128,10 @@ namespace ChildVaccineSystem.API.Controllers
         /// <summary>
         /// Lấy danh sách vaccine đã xuất kho
         /// </summary>
-        [HttpGet("issued")]
+        [HttpGet("export")]
         public async Task<IActionResult> GetIssuedVaccines()
         {
-            _response.Result = await _vaccineInventoryService.GetIssuedVaccinesAsync();
+            _response.Result = await _vaccineInventoryService.GetExportVaccinesAsync();
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
             return Ok(_response);
@@ -124,49 +153,49 @@ namespace ChildVaccineSystem.API.Controllers
         /// <summary>
         /// Kiểm tra vaccine sắp hết hạn
         /// </summary>
-        [HttpGet("expiry-check/{daysThreshold}")]
-        public async Task<IActionResult> CheckExpiry(int daysThreshold)
-        {
-            _response.Result = await _vaccineInventoryService.GetExpiringVaccinesAsync(daysThreshold);
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            return Ok(_response);
-        }
+        //[HttpGet("expiry-check/{daysThreshold}")]
+        //public async Task<IActionResult> CheckExpiry(int daysThreshold)
+        //{
+        //    _response.Result = await _vaccineInventoryService.GetExpiringVaccinesAsync(daysThreshold);
+        //    _response.StatusCode = HttpStatusCode.OK;
+        //    _response.IsSuccess = true;
+        //    return Ok(_response);
+        //}
 
         /// <summary>
         /// Kiểm tra vaccine có số lượng thấp
         /// </summary>
-        [HttpGet("low-stock/{threshold}")]
-        public async Task<IActionResult> CheckLowStock(int threshold)
-        {
-            _response.Result = await _vaccineInventoryService.GetLowStockVaccinesAsync(threshold);
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            return Ok(_response);
-        }
+        //[HttpGet("low-stock/{threshold}")]
+        //public async Task<IActionResult> CheckLowStock(int threshold)
+        //{
+        //    _response.Result = await _vaccineInventoryService.GetLowStockVaccinesAsync(threshold);
+        //    _response.StatusCode = HttpStatusCode.OK;
+        //    _response.IsSuccess = true;
+        //    return Ok(_response);
+        //}
 
         /// <summary>
         /// Gửi cảnh báo vaccine hết hạn hoặc sắp hết 
         /// </summary>
-        [HttpPost("alerts/expiry")]
-        public async Task<IActionResult> SendExpiryAlerts([FromBody] int daysThreshold)
-        {
-            try
-            {
-                await _vaccineInventoryService.SendExpiryAlertsAsync(daysThreshold);
-                _response.Result = "Expiry alerts sent successfully";
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.IsSuccess = true;
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add(ex.Message);
-                return BadRequest(_response);
-            }
-        }
+        //[HttpPost("alerts/expiry")]
+        //public async Task<IActionResult> SendExpiryAlerts([FromBody] int daysThreshold)
+        //{
+        //    try
+        //    {
+        //        await _vaccineInventoryService.SendExpiryAlertsAsync(daysThreshold);
+        //        _response.Result = "Expiry alerts sent successfully";
+        //        _response.StatusCode = HttpStatusCode.OK;
+        //        _response.IsSuccess = true;
+        //        return Ok(_response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _response.StatusCode = HttpStatusCode.BadRequest;
+        //        _response.IsSuccess = false;
+        //        _response.ErrorMessages.Add(ex.Message);
+        //        return BadRequest(_response);
+        //    }
+        //}
 
         /// <summary>
         /// Thêm VaccineInventory 
@@ -191,5 +220,50 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Edit VaccineInventory 
+        /// </summary>
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateVaccineInventory(int id, [FromBody] UpdateVaccineInventoryDTO dto)
+        {
+            try
+            {
+                var result = await _vaccineInventoryService.UpdateVaccineInventoryAsync(id, dto);
+                _response.Result = result;
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
+            }
+        }
+
+        /// <summary>
+        /// Soft Delete VaccineInventory
+        /// </summary>
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> SoftDeleteVaccineInventory(int id)
+        {
+            try
+            {
+                var result = await _vaccineInventoryService.SoftDeleteVaccineInventoryAsync(id);
+                _response.IsSuccess = true;
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = result; 
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
+            }
+        }
     }
 }
