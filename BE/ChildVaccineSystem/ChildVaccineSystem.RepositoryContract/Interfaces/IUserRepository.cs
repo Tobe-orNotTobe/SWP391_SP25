@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +23,7 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         Task<bool> ActivateUserAsync(string userId);
         Task<bool> DeactivateUserAsync(string userId);
         Task<IEnumerable<User>> SearchUsersAsync(string keyword);
+        Task<User> GetAsync(Expression<Func<User, bool>> filter);
         Task SaveChangesAsync();
     }
 }

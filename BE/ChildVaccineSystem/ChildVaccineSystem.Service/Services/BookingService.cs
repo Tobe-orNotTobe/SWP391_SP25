@@ -196,6 +196,44 @@ namespace ChildVaccineSystem.Service.Services
 
             return _mapper.Map<BookingDTO>(booking);
         }
+        public async Task<bool> AssignDoctorToBooking(int bookingId, string userId)
+        {
+            var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
+            if (booking == null)
+            {
+                throw new ArgumentException("Booking not found.");
+            }
+
+            var doctor = await _unitOfWork.Users.GetAsync(u => u.Id == userId);
+            if (doctor == null)
+            {
+                throw new ArgumentException("Doctor not found.");
+            }
+
+            var doctorSchedule = new DoctorWorkSchedule
+            {
+                BookingId = bookingId,
+                UserId = userId
+            };
+
+            await _unitOfWork.DoctorWorkSchedules.AddAsync(doctorSchedule);
+            await _unitOfWork.CompleteAsync();
+
+            return true;
+        }
+
+        public async Task<List<BookingDTO>> GetDoctorBookingsAsync(string userId)
+        {
+            var doctorSchedules = await _unitOfWork.DoctorWorkSchedules
+                .GetAllAsync(dws => dws.UserId == userId, includeProperties: "Booking");
+
+            var bookingIds = doctorSchedules.Select(dws => dws.BookingId).ToList();
+
+            var bookings = await _unitOfWork.Bookings
+                .GetAllAsync(b => bookingIds.Contains(b.BookingId), includeProperties: "User,Children");
+
+            return _mapper.Map<List<BookingDTO>>(bookings);
+        }
 
     }
 }

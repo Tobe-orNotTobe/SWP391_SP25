@@ -3,6 +3,7 @@ using ChildVaccineSystem.ServiceContract.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using ChildVaccineSystem.Common.Helper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChildVaccineSystem.API.Controllers
 {
@@ -151,6 +152,65 @@ namespace ChildVaccineSystem.API.Controllers
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.ErrorMessages = new List<string> { $"Error cancelling booking: {ex.Message}" };
 
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
+        [HttpPost("assign-doctor")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AssignDoctorToBooking(int bookingId, string userId)
+        {
+            try
+            {
+                var result = await _bookingService.AssignDoctorToBooking(bookingId, userId);
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = new { Success = result, Message = "Doctor assigned to booking successfully." };
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
+            }
+        }
+
+        [HttpGet("doctor/{userId}/bookings")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDoctorBookings(string userId)
+        {
+            try
+            {
+                var bookings = await _bookingService.GetDoctorBookingsAsync(userId);
+
+                if (bookings.Any())
+                {
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.IsSuccess = true;
+                    _response.Result = bookings;
+                    return Ok(_response);
+                }
+                else
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages.Add("No bookings found for this doctor.");
+                    return NotFound(_response);
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Error retrieving doctor bookings: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }

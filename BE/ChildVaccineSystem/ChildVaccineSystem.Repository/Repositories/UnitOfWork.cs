@@ -24,7 +24,9 @@ namespace ChildVaccineSystem.Repository.Repositories
         public IVaccineInventoryRepository VaccineInventories { get; }
         public IPricingPoliciesRepository PricingPolicies { get; }
         public ITransactionRepository Transactions { get; }
-        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository)
+        public IDoctorWorkScheduleRepository DoctorWorkSchedules { get; }
+
+        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository, IDoctorWorkScheduleRepository doctorWorkScheduleRepositories)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -40,10 +42,11 @@ namespace ChildVaccineSystem.Repository.Repositories
             VaccineInventories = vaccineInventories;
             PricingPolicies = pricingPolicies;
             Transactions = transactionRepository;
+            DoctorWorkSchedules = doctorWorkScheduleRepositories;
 
         }
 
-		public async Task<int> CompleteAsync()
+        public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
         }
