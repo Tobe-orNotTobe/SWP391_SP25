@@ -248,8 +248,7 @@ namespace ChildVaccineSystem.Data.Migrations
                     Height = table.Column<double>(type: "float", nullable: false),
                     Weight = table.Column<double>(type: "float", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -260,11 +259,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Children_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -326,8 +320,10 @@ namespace ChildVaccineSystem.Data.Migrations
                     ManufacturingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     InitialQuantity = table.Column<int>(type: "int", nullable: false),
                     QuantityInStock = table.Column<int>(type: "int", nullable: false),
+                    ReturnedQuantity = table.Column<int>(type: "int", nullable: false),
                     Supplier = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -379,8 +375,7 @@ namespace ChildVaccineSystem.Data.Migrations
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    PricingPolicyId = table.Column<int>(type: "int", nullable: true),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    PricingPolicyId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -391,11 +386,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bookings_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bookings_Children_ChildId",
                         column: x => x.ChildId,
@@ -408,6 +398,29 @@ namespace ChildVaccineSystem.Data.Migrations
                         principalTable: "PricingPolicies",
                         principalColumn: "PricingPolicyId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VaccineTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VaccineInventoryId = table.Column<int>(type: "int", nullable: false),
+                    TransactionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VaccineTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VaccineTransactions_VaccineInventories_VaccineInventoryId",
+                        column: x => x.VaccineInventoryId,
+                        principalTable: "VaccineInventories",
+                        principalColumn: "VaccineInventoryId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -474,7 +487,8 @@ namespace ChildVaccineSystem.Data.Migrations
                     DoctorWorkScheduleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    BookingId = table.Column<int>(type: "int", nullable: false)
+                    BookingId = table.Column<int>(type: "int", nullable: false),
+                    AssignedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -531,8 +545,10 @@ namespace ChildVaccineSystem.Data.Migrations
                     BookingId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -685,19 +701,9 @@ namespace ChildVaccineSystem.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_UserId1",
-                table: "Bookings",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Children_UserId",
                 table: "Children",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Children_UserId1",
-                table: "Children",
-                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ComboDetails_ComboId",
@@ -794,6 +800,11 @@ namespace ChildVaccineSystem.Data.Migrations
                 name: "IX_VaccineScheduleDetails_VaccineId",
                 table: "VaccineScheduleDetails",
                 column: "VaccineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VaccineTransactions_VaccineInventoryId",
+                table: "VaccineTransactions",
+                column: "VaccineInventoryId");
         }
 
         /// <inheritdoc />
@@ -834,6 +845,9 @@ namespace ChildVaccineSystem.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Transactions");
+
+            migrationBuilder.DropTable(
+                name: "VaccineTransactions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
