@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { ResetPasswordRequest } from "../../../interfaces/Auth";
 import { notification } from "antd";  
 import { apiResetPassword } from "../../../apis/apiAuth";
+import {AxiosError} from "axios";
 
 export const useResetPassword = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -64,11 +65,24 @@ export const useResetPassword = () => {
                 notification.success({ message: response.message, description: "Bạn sẽ được chuyển đến trang Login trong ít giây." });
                 setTimeout(() => navigate("/login"), 2000);
             } else {
-                notification.error({ message: response.error || "Lỗi Server" });
+                notification.error({
+                    message: response?.error ?? "Có lỗi xảy ra, vui lòng thử lại!",
+                });
             }
-        } catch (error) {
-            console.error(error);
-            notification.error({ message: "Đổi Mật Khẩu Thất Bại", description: "Lỗi Server" });
+        } catch (error : unknown) {
+            if (error instanceof AxiosError) {
+                console.error("Lỗi API:", error.response?.data || error.message);
+                notification.error({
+                    message: "Đăng Nhập Thất Bại",
+                    description: error.response?.data?.error || "Lỗi không xác định từ server",
+                });
+            } else {
+                console.error("Lỗi không xác định:", error);
+                notification.error({
+                    message: "Lỗi không xác định",
+                    description: "Vui lòng thử lại sau.",
+                });
+            }
         } finally {
             setIsLoading(false);
         }

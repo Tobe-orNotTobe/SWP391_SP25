@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { LoginRequest } from "../../../interfaces/Auth";
 import { apiLogIn } from "../../../apis/apiAuth";
-import { notification } from "antd";  
+import {AxiosError} from "axios";
+import { notification } from "antd";
 
 export const useLogin = () => {
     const [username, setUsername] = useState<string>("");
@@ -33,17 +34,15 @@ export const useLogin = () => {
 
 
         setIsLoading(true);
-        const response = await apiLogIn(data);
+
         try {
-
-
+            const response = await apiLogIn(data);
             if (response.token) {
-
                 localStorage.setItem("token", response.token);
                 console.log("Login Successful", response);
 
                 notification.success({
-                    message: "Đăng Nhập Thành Công",  
+                    message: "Đăng nhập thành công",
                 });
 
                 setIsLoading(false);
@@ -53,19 +52,21 @@ export const useLogin = () => {
                     setIsRedirecting(false);
                     navigate("/homepage");
                 }, 5000); 
-            }else{
+            }
+        } catch (error : unknown) {
+            if (error instanceof AxiosError) {
+                console.error("Lỗi API:", error.response?.data || error.message);
                 notification.error({
-                    message: "Đăng nhập thất bại",
-                    description: response.error,
+                    message: "Đăng Nhập Thất Bại",
+                    description: error.response?.data?.error || "Lỗi không xác định từ server",
+                });
+            } else {
+                console.error("Lỗi không xác định:", error);
+                notification.error({
+                    message: "Lỗi không xác định",
+                    description: "Vui lòng thử lại sau.",
                 });
             }
-        } catch (error) {
-            console.log(error);
-            notification.error({
-                message: "Đăng nhập thất bại",
-                description: response.error,
-            });
-            setError("Đăng nhập thất bại, Tài Khoản Hoặc mật Khẩu bị sai");
         } finally {
             setIsLoading(false);
         }

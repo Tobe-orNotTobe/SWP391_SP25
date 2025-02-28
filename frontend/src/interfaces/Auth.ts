@@ -3,6 +3,10 @@ export interface LoginRequest {
     password: string;
 }
 
+export interface ErrorResponse {
+    error: string;
+}
+
 export interface RegisterRequest {
     fullName: string;
     userName: string;
@@ -10,8 +14,7 @@ export interface RegisterRequest {
     phoneNumber: string;
     address: string;   
     dateOfBirth: string;
-    password: string;   
-    role : string;
+    password: string;
 }
 
 export interface TokenResponse {

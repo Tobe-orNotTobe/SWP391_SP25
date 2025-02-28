@@ -43,7 +43,7 @@ namespace ChildVaccineSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PricingPolicyId")
+                    b.Property<int?>("PricingPolicyId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -336,9 +336,11 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<decimal>("DiscountPercent")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("WaitTimeRange")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("WaitTimeRangeEnd")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WaitTimeRangeStart")
+                        .HasColumnType("int");
 
                     b.HasKey("PricingPolicyId");
 
@@ -825,8 +827,7 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.HasOne("ChildVaccineSystem.Data.Entities.PricingPolicy", "PricingPolicy")
                         .WithMany()
                         .HasForeignKey("PricingPolicyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
                         .WithMany()

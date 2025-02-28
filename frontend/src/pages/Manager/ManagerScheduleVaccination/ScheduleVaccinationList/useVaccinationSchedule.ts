@@ -15,7 +15,10 @@ export const useVaccinationSchedule = () => {
         navigate(`/manager/schedule-vaccines/edit/${id}`);
     };
 
-  
+    const handleCreate = () => {
+        navigate("/manager/schedule-vaccines/add");
+    };
+
     const handleDelete = async (scheduleId: number) => {
         try {
             setDeletingId(scheduleId);
@@ -44,11 +47,6 @@ export const useVaccinationSchedule = () => {
         } finally {
             setDeletingId(null);
         }
-    };
-
-    
-    const handleCreate = () => {
-        navigate("/manager/schedule-vaccines/add");
     };
 
     
