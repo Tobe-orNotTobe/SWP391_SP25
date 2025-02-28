@@ -139,39 +139,58 @@ const ManagerVaccinePage: React.FC = () => {
                                     <div className="vaccine-detail-mananger-popups-left">
                                         <h3>{selectedVaccine.name}</h3>
                                         <div className="vaccine-image">
-                                            <img src={selectedVaccine.image} alt="Vaccine" style={{width :"60%"}}/>
+                                            <img src={selectedVaccine.image} alt="Vaccine" style={{width: "60%"}}/>
                                         </div>
                                         <p><strong>Nhà sản xuất:</strong> {selectedVaccine.manufacturer}</p>
                                         <p><strong>Giá:</strong> {selectedVaccine.price.toLocaleString()} VNĐ</p>
-                                        <p><strong>Trạng thái:</strong> {selectedVaccine.status ? "Có sẵn" : "Hết hàng"}</p>
-                                        <p><strong>Cần thiết:</strong> {selectedVaccine.isNecessary ? "Có" : "Không"}</p>
+                                        <p><strong>Trạng thái:</strong> {selectedVaccine.status ? "Có sẵn" : "Hết hàng"}
+                                        </p>
+                                        <p><strong>Cần thiết:</strong> {selectedVaccine.isNecessary ? "Có" : "Không"}
+                                        </p>
                                         <p><strong>Số mũi tiêm:</strong> {selectedVaccine.injectionsCount}</p>
                                     </div>
 
                                     <div className="vaccine-detail-mananger-popups-right">
                                         <div className="detail-section">
-                                            <p><strong>Mô tả: </strong>{selectedVaccine.description}</p>
+                                            <strong>1. Mô tả:</strong>
+                                            <div dangerouslySetInnerHTML={{__html: selectedVaccine.description}}/>
                                         </div>
+
                                         <div className="detail-section">
-                                            <p><strong>Tác dụng phụ: </strong>{selectedVaccine.sideEffect}</p>
+                                            <strong>2. Tác dụng phụ:</strong>
+                                            <div dangerouslySetInnerHTML={{__html: selectedVaccine.sideEffect}}/>
                                         </div>
+
                                         <div className="detail-section">
-                                            <p><strong>Bệnh phòng ngừa: </strong>{selectedVaccine.diseasePrevented}</p>
+                                            <strong>3. Bệnh phòng ngừa:</strong>
+                                            <div dangerouslySetInnerHTML={{__html: selectedVaccine.diseasePrevented}}/>
                                         </div>
+
                                         <div className="detail-section">
-                                            <p><strong>Vị trí tiêm: </strong>{selectedVaccine.injectionSite}</p>
+                                            <strong>4. Vị trí tiêm:</strong>
+                                            <div style={{marginLeft: "16px"}}>{selectedVaccine.injectionSite}</div>
                                         </div>
+
                                         <div className="detail-section">
-                                            <p><strong>Ghi chú: </strong>{selectedVaccine.notes}</p>
+                                            <strong>5. Ghi chú:</strong>
+                                            <div dangerouslySetInnerHTML={{__html: selectedVaccine.notes}}/>
                                         </div>
+
                                         <div className="detail-section">
-                                            <p><strong>Tương tác Vaccine: </strong>{selectedVaccine.vaccineInteractions}</p>
+                                            <strong>6. Tương tác Vaccine:</strong>
+                                            <div
+                                                dangerouslySetInnerHTML={{__html: selectedVaccine.vaccineInteractions}}/>
                                         </div>
+
                                         <div className="detail-section">
-                                            <p><strong>Tác dụng không mong muốn: </strong>{selectedVaccine.undesirableEffects}</p>
+                                            <strong>7. Tác dụng không mong muốn:</strong>
+                                            <div
+                                                dangerouslySetInnerHTML={{__html: selectedVaccine.undesirableEffects}}/>
                                         </div>
+
                                         <div className="detail-section">
-                                            <p><strong>Cách bảo quản: </strong>{selectedVaccine.preserve}</p>
+                                            <strong>8. Cách bảo quản:</strong>
+                                            <div style={{marginLeft: "16px"}}>{selectedVaccine.preserve}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -179,17 +198,17 @@ const ManagerVaccinePage: React.FC = () => {
                             <TabPane tab="Lịch Tiêm Chủng" key="2">
                                 <div className="vaccination-schedule-section">
                                     <h3>Lịch Tiêm Chủng cho {selectedVaccine.name}</h3>
-                                    
+
                                     {getRelevantSchedules().length > 0 ? (
                                         <div className="schedule-cards">
                                             {getRelevantSchedules().map(schedule => {
                                                 const vaccineDetails = getVaccineDetailsFromSchedule(schedule);
-                                                
+
                                                 return (
-                                                    <Card style={{marginBottom : "10px"}}
-                                                        key={schedule.scheduleId} 
-                                                        title={`Nhóm tuổi: ${schedule.ageRangeStart} - ${schedule.ageRangeEnd} tháng`}
-                                                        className="schedule-card"
+                                                    <Card style={{marginBottom: "10px"}}
+                                                          key={schedule.scheduleId}
+                                                          title={`Nhóm tuổi: ${schedule.ageRangeStart} - ${schedule.ageRangeEnd} tháng`}
+                                                          className="schedule-card"
                                                     >
                                                         {schedule.notes && (
                                                             <p className="schedule-notes"><strong>Ghi chú chung:</strong> {schedule.notes}</p>

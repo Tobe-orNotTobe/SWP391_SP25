@@ -138,8 +138,9 @@ export const apiAddVaccinationSchedule = async (data: VaccinationSchedule) => {
 
 export const apiUpdateVaccinationSchedule = async (scheduleId: number, data: VaccinationSchedule) => {
     try {
-        console.log("Updating Schedule:", scheduleId, data);
+        console.log("📤 Sending data:", data);
         const response = await axiosInstance.put(`/api/VaccinationSchedule/${scheduleId}`, data);
+        console.log(response.data);
         return response.data || {};
     } catch (error) {
         console.error("API Update Vaccination Schedule Error:", error);

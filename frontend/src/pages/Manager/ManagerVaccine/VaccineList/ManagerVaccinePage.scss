@@ -94,6 +94,18 @@
   .vaccine-detail-mananger-popups-right {
     flex: 1;
     padding-left: 10px;
+
+    .detail-section{
+
+        strong{
+          font-size: 17px;
+        }
+
+      div{
+        margin-left: 16px;
+      }
+
+    }
   }
 }
 

@@ -2,81 +2,223 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 35px 0 0 0;
+    padding: 35px 20px;
+    font-size: 16px;
 }
 
 .vaccineDetailTitle {
+    display: flex;
+    align-items: center;
     margin-top: 10px;
-    h1 {
+    font-size: 15px;
+
+    a {
         color: #2A388F;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .separator {
+        margin: 0 8px;
+        color: #666;
+    }
+
+    .last {
+        color: #666;
+    }
+}
+
+.vaccine-Title {
+    padding-top: 20px;
+    margin-bottom: 20px;
+
+    .gt-vaccine-title {
+        font-size: 24px;
+        color: #2A388F;
+        font-weight: 600;
+        margin-bottom: 15px;
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: #2A388F;
+        }
     }
 }
 
 .vaccineDetailContent {
     display: flex;
     align-items: flex-start;
-    gap: 20px;
+    gap: 25px;
     margin-top: 20px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 }
 
 .vaccineDetailLeft {
     width: 35%;
     position: sticky;
     top: 20px;
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: left;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        position: static;
+    }
+
+    .vaccine-left-card {
+        height: fit-content;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    }
 
     .vaccineImage {
         width: 100%;
         height: auto;
         border-radius: 8px;
-        align-self: center;
+        margin-bottom: 15px;
     }
 
     h1 {
-        font-size: 24px;
-        margin-top: 10px;
-        color: #2A388F;
-    }
-
-    .vaccineStatus {
-        font-size: 16px;
-        font-weight: bold;
-        color: green;
-        margin-top: 8px;
-    }
-
-    .vaccinePrice {
         font-size: 20px;
-        font-weight: bold;
-        color: #FFB400;
-        margin-top: 8px;
+        margin: 15px 0;
+        color: #2A388F;
+        font-weight: 600;
+    }
+
+    p {
+        margin-bottom: 10px;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+
+        strong {
+            min-width: 100px;
+            font-weight: 600;
+            color: #444;
+        }
+    }
+
+    .status-available {
+        display: inline-block;
+        background-color: #e6f7ee;
+        color: #10b981;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .status-unavailable {
+        display: inline-block;
+        background-color: #fee2e2;
+        color: #ef4444;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
     }
 }
 
 .vaccineDetailRight {
     width: 65%;
 
-    .vaccineDetailCard {
-        padding: 20px;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 
-        h2 {
-            color: #2A388F;
-            margin-bottom: 15px;
+    .vaccineDetailCard {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+        .ant-card-head {
+            background-color: #f8f9ff;
+            border-bottom: 1px solid #edf2f7;
+
+            .ant-card-head-title {
+                font-size: 18px;
+                color: #2A388F;
+                padding: 15px 0;
+            }
         }
 
-        p {
-            margin-bottom: 10px;
+        .numbered-detail-section {
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 32px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            .section-number {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 24px;
+                height: 24px;
+                background-color: #2A388F;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 600;
+            }
         }
 
         strong {
-            color: #333;
+            display: block;
+            color: #444;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .detail-content {
+            color: #555;
+            line-height: 1.6;
+            font-size: 14px;
+            background-color: #f9fafb;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border-left: 3px solid #e2e8f0;
+
+            ul {
+                margin-top: 8px;
+                margin-bottom: 8px;
+                padding-left: 20px;
+
+                li {
+                    margin-bottom: 5px;
+                }
+            }
+
+            p {
+                margin-bottom: 8px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
         }
     }
+}
+
+// Loading and error states
+.loading-container, .error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
 }

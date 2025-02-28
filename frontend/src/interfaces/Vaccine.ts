@@ -7,7 +7,7 @@ export interface VaccineIntro{
 
 
 export interface VaccineDetail {
-    vaccineId: string;
+    vaccineId: number;
     name: string;
     description: string;
     manufacturer: string;
@@ -34,7 +34,7 @@ export interface GetVaccineResponse {
 
 
 export interface GetVaccineComboDetail {
-    comboId: string;
+    comboId: number;
     comboName: string;
     description: string;
     totalPrice: number;
