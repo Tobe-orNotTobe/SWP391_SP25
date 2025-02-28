@@ -1,4 +1,4 @@
-﻿using ChildVaccineSystem.Data.DTO.Vaccine;
+﻿using ChildVaccineSystem.Data.DTO.VaccineInventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +12,16 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<VaccineInventoryDTO> AddVaccineInventoryAsync(CreateVaccineInventoryDTO dto);
         Task<IEnumerable<VaccineInventoryDTO>> GetVaccineStockReportAsync();
         Task<IEnumerable<VaccineInventoryDTO>> SearchVaccineStockAsync(string keyword);
-        Task IssueVaccineAsync(int id, int quantity);
+        Task ExportVaccineAsync(int id, int quantity);
         Task ReturnVaccineAsync(int id, int quantity);
-        Task<IEnumerable<VaccineInventoryDTO>> GetIssuedVaccinesAsync();
-        Task<IEnumerable<VaccineInventoryDTO>> GetReturnedVaccinesAsync();
+        Task<IEnumerable<VaccineInventoryDTO>> GetExportVaccinesAsync();
+        Task<IEnumerable<ReturnedVaccineDTO>> GetReturnedVaccinesAsync();
         Task<IEnumerable<VaccineInventoryDTO>> GetExpiringVaccinesAsync(int daysThreshold);
         Task<IEnumerable<VaccineInventoryDTO>> GetLowStockVaccinesAsync(int threshold);
         Task SendExpiryAlertsAsync(int daysThreshold);
+        Task<IEnumerable<VaccineInventoryDTO>> GetVaccineInventoryByIdAsync(int vaccineId);
+        Task<VaccineInventoryDTO> UpdateVaccineInventoryAsync(int id, UpdateVaccineInventoryDTO dto);
+        Task<string> SoftDeleteVaccineInventoryAsync(int id);
+
     }
 }

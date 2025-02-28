@@ -4,35 +4,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChildVaccineSystem.Data.Models
 {
-    public class ChildVaccineSystemDBContext : IdentityDbContext<User>
-    {
-        public ChildVaccineSystemDBContext(DbContextOptions<ChildVaccineSystemDBContext> options) : base(options)
-        {
-        }
-        //public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
+	public class ChildVaccineSystemDBContext : IdentityDbContext<User>
+	{
+		public ChildVaccineSystemDBContext(DbContextOptions<ChildVaccineSystemDBContext> options) : base(options)
+		{
+		}
+		//public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
-        public DbSet<BookingDetail> BookingDetails { get; set; }
-        public DbSet<Children> Children { get; set; }
+		public DbSet<User> Users { get; set; }
+		public DbSet<Booking> Bookings { get; set; }
+		public DbSet<BookingDetail> BookingDetails { get; set; }
+		public DbSet<Children> Children { get; set; }
 		public DbSet<ComboDetail> ComboDetails { get; set; }
 		public DbSet<Feedback> Feedbacks { get; set; }
 		public DbSet<Vaccine> Vaccines { get; set; }
-        public DbSet<VaccinationSchedule> VaccinationSchedules { get; set; }
+		public DbSet<VaccinationSchedule> VaccinationSchedules { get; set; }
 		public DbSet<VaccineScheduleDetail> VaccineScheduleDetails { get; set; }
 		public DbSet<VaccinationRecord> VaccinationRecords { get; set; }
 		public DbSet<VaccineInventory> VaccineInventories { get; set; }
 		public DbSet<PricingPolicy> PricingPolicies { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Reaction> Reactions { get; set; }
-        public DbSet<DoctorWorkSchedule> DoctorWorkSchedules { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<ComboVaccine> ComboVaccines { get; set; }
+		public DbSet<Transaction> Transactions { get; set; }
+		public DbSet<Reaction> Reactions { get; set; }
+		public DbSet<DoctorWorkSchedule> DoctorWorkSchedules { get; set; }
+		public DbSet<Notification> Notifications { get; set; }
+		public DbSet<ComboVaccine> ComboVaccines { get; set; }
 		public DbSet<InjectionSchedule> InjectionSchedules { get; set; }
+        public DbSet<VaccineTransactionHistory> VaccineTransactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+		{
+			base.OnModelCreating(modelBuilder);
 
 			// User Relationships
 			modelBuilder.Entity<User>()
@@ -74,7 +75,7 @@ namespace ChildVaccineSystem.Data.Models
 			//Booking
 			modelBuilder.Entity<Booking>()
 				.HasOne(b => b.User)
-				.WithMany()
+				.WithMany(u => u.Bookings)
 				.HasForeignKey(b => b.UserId)
 				.HasPrincipalKey(u => u.Id)
 				.OnDelete(DeleteBehavior.Restrict);
@@ -209,7 +210,7 @@ namespace ChildVaccineSystem.Data.Models
 			//Children
 			modelBuilder.Entity<Children>()
 				.HasOne(c => c.User)
-				.WithMany()
+				.WithMany(u => u.Children)
 				.HasForeignKey(c => c.UserId)
 				.HasPrincipalKey(u => u.Id)
 				.OnDelete(DeleteBehavior.Restrict);
@@ -314,6 +315,13 @@ namespace ChildVaccineSystem.Data.Models
 				.WithMany()
 				.HasForeignKey(t => t.BookingId)
 				.OnDelete(DeleteBehavior.Restrict);
-		}
+
+            //VaccineTransactionHistory
+            modelBuilder.Entity<VaccineTransactionHistory>()
+            .HasOne(vth => vth.VaccineInventory)
+            .WithMany(vi => vi.TransactionHistories)
+            .HasForeignKey(vth => vth.VaccineInventoryId)
+            .OnDelete(DeleteBehavior.Cascade);
+        }
 	}
 }

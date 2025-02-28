@@ -1,12 +1,17 @@
-import React from "react";
+import FloatingButtons from "../../components/FloatingButton/FloatingButtons";
+import Footer from "../../components/Footer/Footer";
+import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar";
+import VaccinationRegistration from "../../components/Booking/BookingForm";
 
-
-const BookingPage : React.FC  = () => {
+const VaccinationRegistrationPage : React.FC = () =>{
     return(
-        <>
-        
+        <>    
+            <CustomerNavbar/>       
+            <VaccinationRegistration/>
+            <FloatingButtons/>
+            <Footer/>
         </>
     );
 }
 
-export default BookingPage
+export default VaccinationRegistrationPage
