@@ -27,6 +27,7 @@ import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineFo
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
 import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
 import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
+import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
 
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
         <Route path="/our-team" element={<OurTeamPage />} />
         <Route path="/vaccines-list" element={<VaccineListPage />} />
         <Route path="/vaccines-list/:id" element={<VaccineDetailPage/>}/>
+        <Route path="/handbook/before" element={<BeforeHandbook/>}/>
 
 
 

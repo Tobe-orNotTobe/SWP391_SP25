@@ -72,6 +72,19 @@ export interface VaccinationSchedule {
     vaccineScheduleDetails: VaccineScheduleDetail[];
 }
 
+export interface VaccineInventoryStock {
+    vaccineId: number;
+    name: string;
+    manufacturer: string;
+    batchNumber: string;
+    manfacturingDate : Date;
+    expiryDate : Date;
+    supplier: string;
+    initialQuantity : number;
+    quantityInStock : number;
+    totalQuantity: number,
+    status: boolean;
+}
 
   
   

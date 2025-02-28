@@ -69,8 +69,16 @@ const CustomerNavbar: React.FC = () => {
 
                         <li><Link to="/vaccines-list" className="cusNavItem">Vaccine </Link></li>
                         <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
+
                         <li><Link to="#" className="cusNavItem">Tin Tức</Link></li>
-                        <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>
+                        <li className="cusNavDropdown">
+                            <Link to="#" className="cusNavItem">Cẩm Nang</Link>
+                            <ul className="cusNavDropdown-menu">
+                                <li><Link to="/handbook/before" className="cusNavDropdown-link">Trước khi tiêm</Link></li>
+                                <li><Link to="/handbook/after" className="cusNavDropdown-link">Sau khi tiêm</Link></li>
+                                <li><Link to="/handbook/process" className="cusNavDropdown-link">Quy trình tiêm chủng</Link></li>
+                            </ul>
+                        </li>
                         <li><Link to="#" className="cusNavItem">Điều Khoản và Dịch Vụ</Link></li>
                         <li><Link to="#" className="cusNavItem">Blog</Link></li>
                     </ul>
@@ -118,12 +126,12 @@ const CustomerNavbar: React.FC = () => {
                             <>
                                 <Link to="/login">
                                     <Button className="authButton">
-                                    <MdLogin size={23}/> Đăng Nhập
+                                    <MdLogin size={21}/> Đăng Nhập
                                     </Button>
                                 </Link>
                                 <Link to="/register">
                                 <Button className="authButton">
-                                        <MdLogin size={23}/> Đăng Kí
+                                        <MdLogin size={21}/> Đăng Kí
                                     </Button>
                                 </Link>
                             </>

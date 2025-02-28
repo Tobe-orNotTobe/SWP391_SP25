@@ -15,7 +15,6 @@ const Login : React.FC = () => {
         password,
         setPassword,
         handleLoginSubmit,
-        isLoading,
         error,
         showPassword,
         togglePasswordVisibility,
@@ -61,8 +60,8 @@ const Login : React.FC = () => {
                         </div>
 
                         {error && <p className="errorText">{error}</p>}
-                        <button type="submit" className="authButton" disabled={isLoading}>
-                            {isLoading ? "Đang Đăng Nhập..." : "Đăng Nhập"}
+                        <button type="submit" className="authButton" >
+                           Đăng Nhập
                         </button>
                     </form>
 

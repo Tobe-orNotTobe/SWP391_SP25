@@ -7,6 +7,7 @@ import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully.t
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { GoPackage } from "react-icons/go";
 import { MdOutlineCalendarToday } from "react-icons/md";
+import { MdOutlineInventory2 } from "react-icons/md";
 
 const { Header, Sider, Content } = Layout;
 
@@ -48,6 +49,11 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
       key: 'vaccine-schedule',
       icon: <MdOutlineCalendarToday/>,
       label: <Link to="/manager/schedule-vaccines">Quản lý Lịch Tiêm Cho Vaccine</Link>
+    },
+    {
+      key: 'inventory-vaccines',
+      icon: <MdOutlineInventory2 />,
+      label: <Link to="/manager/inventory-vaccines">Quản lý Vacine trong kho</Link>,
     }
   ];
 

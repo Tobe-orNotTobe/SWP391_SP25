@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { apiRegister } from "../../../apis/apiAuth";
 import { RegisterRequest } from "../../../interfaces/Auth";
-import { notification } from "antd";  
-import axios from "axios";
+import { notification } from "antd";
+import {AxiosError} from "axios";
+
 
 export const useRegister = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
@@ -115,11 +116,11 @@ export const useRegister = () => {
         }
     };
 
-    
+
     const handleRegisterSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorGeneral(null);
-    
+
         handleUsernameChange(userName);
         handleEmailChange(email);
         handlePasswordChange(password);
@@ -128,58 +129,56 @@ export const useRegister = () => {
         handleAddressChange(address);
         handleDoBChange(dateOfBirth);
         handlefullNameChange(fullName);
-    
-        const data: RegisterRequest = { email, password, userName, fullName, phoneNumber, address, dateOfBirth, role: "User" };
-    
+
+        const data: RegisterRequest = { email, password, userName, fullName, phoneNumber, address, dateOfBirth };
+
         if (errorUsername || errorEmail || errorPassword || errorConfirmPassword || errorPhoneNumber || errorAddress || errorDoB) {
             notification.error({
                 message: "Đăng Kí Thất Bại",
                 description: "Vui lòng kiểm tra lại thông tin nhập vào.",
             });
+
+            console.log("hahahahaha")
             return;
         }
-    
+
         setIsLoading(true);
-    
+
         try {
             const response = await apiRegister(data);
-    
-            if (response.message) {
-                  
+            if (response?.message) {
                 notification.success({
                     message: "Đăng Kí Thành Công",
-                    description: response.message || "Vui lòng kiểm tra email của bạn để xác nhận.",
+                    description: response.message,
                 });
-                
+
                 setIsRedirecting(true);
-                setTimeout(() => {
-                    setIsRedirecting(false);
-                    navigate("/login");
-                }, 5000); 
             } else {
-                
-                throw new Error(response.error || "Đăng ký thất bại");
+                notification.error({
+                    message: response?.error ?? "Có lỗi xảy ra, vui lòng thử lại!",
+                });
             }
         } catch (error: unknown) {
-            setIsLoading(false);
 
-            let errorMessage = "Đã có lỗi xảy ra, vui lòng thử lại.";
-    
-            if (axios.isAxiosError(error) && error.response?.data?.error) {
-                errorMessage = error.response.data.error;
-            } else if (error instanceof Error) {
-                errorMessage = error.message;
+            if (error instanceof AxiosError) {
+                console.error("Lỗi API:", error.response?.data || error.message);
+                notification.error({
+                    message: "Đăng Kí Thất Bại",
+                    description: error.response?.data?.error || "Lỗi không xác định từ server",
+                });
+            } else {
+                console.error("Lỗi không xác định:", error);
+                notification.error({
+                    message: "Lỗi không xác định",
+                    description: "Vui lòng thử lại sau.",
+                });
             }
-    
-            notification.error({
-                message: "Đăng Kí Thất Bại",
-                description: errorMessage,
-            });
-    
-            console.error("Lỗi đăng ký:", error);
+        } finally {
+            setIsLoading(false);
         }
-    };     
-    
+    };
+
+
     return {
         showPassword,
         togglePasswordVisibility,
