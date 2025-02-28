@@ -10,7 +10,7 @@ export interface ChildDetailResponse {
     fullName: string;
     dateOfBirth: Date;
     gender: string;
-    medicalHistory: boolean;
+    medicalHistory: string;
     relationToUser: string;
     height: number;
     weight: number;

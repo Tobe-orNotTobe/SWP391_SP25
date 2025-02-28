@@ -12,10 +12,10 @@ import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
 import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
-import ChildRegistrationPage from "./pages/ChildRegistration/ChildRegistrationPage.tsx";
+import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistrationPage.tsx";
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
 import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
-import MyChildsPage from "./pages/ChildPage/MyChildsPage.tsx";
+import MyChildsPage from "./pages/ChildPage/MyChilds/MyChildsPage.tsx";
 
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
 
