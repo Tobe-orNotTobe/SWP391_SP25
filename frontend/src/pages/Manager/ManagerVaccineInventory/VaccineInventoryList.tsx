@@ -3,7 +3,7 @@ import {Table, Button, Modal, Form, Input, DatePicker, InputNumber, notification
 import ManagerLayout from "../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
 import { useVaccineInventoryStockDetail } from "../../../hooks/useVaccine.ts";
 import "./VaccineInventoryList.scss";
-import { VaccineInventoryStock } from "../../../interfaces/Vaccine.ts";
+import {VaccineInventoryResponse, VaccineInventoryStock} from "../../../interfaces/Vaccine.ts";
 import {apiAddVaccineInventory, apiSearchVaccineInventory} from "../../../apis/apiVaccine.ts";
 import {AxiosError} from "axios";
 import {TbListDetails} from "react-icons/tb";
@@ -13,12 +13,7 @@ import { SearchOutlined } from "@ant-design/icons";
 type GroupedVaccine = VaccineInventoryStock & { batches: VaccineInventoryStock[] };
 
 // Type for API response
-interface ApiResponse {
-    statusCode: string;
-    isSuccess: boolean;
-    errorMessages: string[];
-    result: VaccineInventoryStock[];
-}
+
 
 const VaccineInventoryList: React.FC = () => {
     const { vaccineInventoryStockDetail } = useVaccineInventoryStockDetail();
@@ -45,7 +40,7 @@ const VaccineInventoryList: React.FC = () => {
             const response = await apiSearchVaccineInventory(searchKeyword);
 
             // Extract result array from the API response
-            const resultData = (response as ApiResponse).result || [];
+            const resultData = (response as VaccineInventoryResponse).result || [];
 
             // Group the search results by vaccineId
             const groupedResults: Record<number, GroupedVaccine> = {};

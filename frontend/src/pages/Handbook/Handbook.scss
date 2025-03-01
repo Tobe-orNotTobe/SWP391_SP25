@@ -1,6 +1,53 @@
-.Handbook-container{
+.Handbook-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 35px 0 0 0;
+
+  h1, h3, h4 {
+    color: #2A388F;
+  }
+
+  p, ul li {
+    color: #6D6E70;
+  }
+
+  ul {
+    padding-left: 20px;
+    font-size: 17px;
+  }
+
+  .image-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .image-container img {
+    max-width: 80%;
+    height: auto;
+
+  }
+  .info-box {
+    background-color: #e6f0fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+
+  .info-box h4 {
+    color: #2A388F;
+  }
+
+  .info-box ul {
+    padding-left: 20px;
+    font-size: 17px;
+  }
+
+  h3, h4 {
+    margin-top: 20px;
+  }
 }
+
+
+

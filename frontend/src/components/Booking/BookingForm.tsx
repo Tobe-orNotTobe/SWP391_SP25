@@ -2,7 +2,6 @@ import React from "react";
 import "./BookingForm.scss";
 import useVaccinationForm from "../../hooks/useVaccinationForm";
 import useVaccineSelection from "../../hooks/useVaccineSelection";
-import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
 
 const VaccinationRegistrationPage = () => {
 
@@ -216,7 +215,7 @@ const VaccinationRegistrationPage = () => {
                               if (
                                 expandedCategory !== vaccinePackage.comboName
                               ) {
-                                handleSelectVaccine(vaccinePackage.comboId);
+                                handleSelectVaccine(vaccinePackage.comboId.toString());
                               }
                             }}
                           >
@@ -265,10 +264,10 @@ const VaccinationRegistrationPage = () => {
                               type="checkbox"
                               value={vaccine.vaccineId}
                               checked={selectedVaccines.includes(
-                                vaccine.vaccineId
+                                vaccine.vaccineId.toString()
                               )}
                               onChange={() =>
-                                handleSelectVaccine(vaccine.vaccineId)
+                                handleSelectVaccine(vaccine.vaccineId.toString())
                               }
                             />
                             <div className="vaccine-info">

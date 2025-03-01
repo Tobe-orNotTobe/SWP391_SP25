@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useVaccineDetail, useComboVaccineDetailById } from "../../../../hooks/useVaccine";
 import { apiAddComboVaccine, apiUpdateComboVaccine } from "../../../../apis/apiVaccine";
 import { PostVaccineComboDetail } from "../../../../interfaces/Vaccine";
+import {AxiosError} from "axios";
 
 export const useVaccineComboForm = () => {
     const [form] = Form.useForm();
@@ -37,26 +38,44 @@ export const useVaccineComboForm = () => {
         };
 
         try {
+            let response;
             if (isEditMode) {
-               const response =  await apiUpdateComboVaccine(Number(id), payload);
-                if (response.isSuccess) {
-                    notification.success ({
-                        message: "Xóa Thành Côngg"
-                    })
-                }else {
-                    notification.error ({
-                        message: "Xóa không thành công",
-                        description: response.error,
-                    })
-                }
+                response = await apiUpdateComboVaccine(Number(id), payload);
             } else {
-                await apiAddComboVaccine(payload);
+                response = await apiAddComboVaccine(payload);
             }
-            navigate("/manager/combo-vaccines");
-        } catch (error) {
-            console.error("Lỗi khi lưu combo vaccine:", error);
+
+            console.log(response)
+            if (response.isSuccess) {
+                notification.success({
+                    message: isEditMode ? "Cập nhật thành công" : "Thêm mới thành công",
+                });
+                navigate("/manager/combo-vaccines");
+            }
+        } catch (error : unknown) {
+            if (error instanceof AxiosError) {
+
+                const errorMessages = error.response?.data?.errorMessages;
+                console.log(errorMessages)
+                const errorMessageText = Array.isArray(errorMessages) && errorMessages.length
+                    ? errorMessages.join(", ")
+                    : "Không thể kết nối với máy chủ. Vui lòng thử lại sau.";
+
+
+                notification.error({
+                    message: "Đăng Nhập Thất Bại",
+                    description: errorMessageText || "Lỗi không xác định từ server",
+                });
+            } else {
+                console.error("Lỗi không xác định:", error);
+                notification.error({
+                    message: "Lỗi không xác định",
+                    description: "Vui lòng thử lại sau.",
+                });
+            }
         }
     };
+
 
     return { form, onFinish, vaccineDetail, isEditMode, navigate };
 };
