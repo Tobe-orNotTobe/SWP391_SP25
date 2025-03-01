@@ -26,7 +26,14 @@ namespace ChildVaccineSystem.Repository.Repositories
         }
 
         // Lấy vaccine tồn kho theo ID vaccine
-        public async Task<VaccineInventory> GetByVaccineIdAsync(int vaccineId)
+        public async Task<IEnumerable<VaccineInventory>> GetByVaccineIdAsync(int vaccineId)
+        {
+            return await _context.VaccineInventories
+                                 .Where(vi => vi.VaccineId == vaccineId)
+                                 .Include(vi => vi.Vaccine)  // Đảm bảo lấy Vaccine
+                                 .ToListAsync();
+        }
+        public async Task<VaccineInventory> GetVaccineByIdAsync(int vaccineId)
         {
             return await _context.VaccineInventories
                 .Include(vi => vi.Vaccine)
@@ -53,7 +60,7 @@ namespace ChildVaccineSystem.Repository.Repositories
     }
 
         // Lấy danh sách vaccine đã xuất kho
-        public async Task<IEnumerable<VaccineInventory>> GetIssuedVaccinesAsync()
+        public async Task<IEnumerable<VaccineInventory>> GetExportVaccinesAsync()
         {
             return await _context.VaccineInventories
                 .Include(vi => vi.Vaccine) 
@@ -67,7 +74,7 @@ namespace ChildVaccineSystem.Repository.Repositories
         public async Task<IEnumerable<VaccineInventory>> GetReturnedVaccinesAsync()
         {
             return await _context.VaccineInventories
-                .Where(vi => vi.QuantityInStock > vi.InitialQuantity)
+                .Where(vi => vi.QuantityInStock > 0 && vi.QuantityInStock != vi.InitialQuantity)
                 .Include(vi => vi.Vaccine)
                 .ToListAsync();
         }
@@ -101,6 +108,10 @@ namespace ChildVaccineSystem.Repository.Repositories
                 .Where(v => v.VaccineId == vaccineId && v.QuantityInStock > 0)
                 .OrderBy(v => v.ExpiryDate)
                 .ToListAsync();
+        }
+        public async Task<VaccineInventory?> GetByIdAsync(int id)
+        {
+            return await _context.VaccineInventories.FindAsync(id);
         }
     }
 }

@@ -22,11 +22,14 @@ namespace ChildVaccineSystem.Data.Entities
         public DateTime ManufacturingDate { get; set; }
         public int InitialQuantity { get; set; }
         public int QuantityInStock { get; set; }
+        public int ReturnedQuantity { get; set; } = 0;
         public string Supplier { get; set; }
         public DateTime ExpiryDate { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
-		public virtual ICollection<VaccinationRecord> VaccinationRecords { get; set; }
+        public virtual ICollection<VaccinationRecord> VaccinationRecords { get; set; }
+        public virtual ICollection<VaccineTransactionHistory> TransactionHistories { get; set; }
 
-	}
+    }
 
 }

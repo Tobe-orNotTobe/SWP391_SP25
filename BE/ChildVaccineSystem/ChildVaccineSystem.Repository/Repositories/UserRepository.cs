@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -94,6 +95,10 @@ namespace ChildVaccineSystem.Repository.Repositories
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             return await _context.Users.ToListAsync();
+        }
+        public async Task<User> GetAsync(Expression<Func<User, bool>> filter)
+        {
+            return await _context.Users.FirstOrDefaultAsync(filter);
         }
     }
 }

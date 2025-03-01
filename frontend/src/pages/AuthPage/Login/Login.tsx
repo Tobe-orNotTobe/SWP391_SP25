@@ -7,27 +7,26 @@ import { useLogin, useLoginGoogle } from "./useLogin";
 import "../Auth.scss"
 import LoadingRedirect from "../../../components/Loading/LoadingRedirect";
 
-const LoginPage : React.FC = () => {
+const Login : React.FC = () => {
 
     const {
-            username,
-            setUsername,
-            password,
-            setPassword,
-            handleLoginSubmit,
-            isLoading,
-            error,
-            showPassword,
-            togglePasswordVisibility,
-            isRedirecting
-        } = useLogin();
+        username,
+        setUsername,
+        password,
+        setPassword,
+        handleLoginSubmit,
+        error,
+        showPassword,
+        togglePasswordVisibility,
+        isRedirecting
+    } = useLogin();
 
     const {handleGoogleLogin} = useLoginGoogle();
 
     if (isRedirecting) {
         return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng tới trang Login..." delay={5000} to="/homepage" />;
     }
-        
+
     return (
         <>
             <CustomerNavbar/>
@@ -61,8 +60,8 @@ const LoginPage : React.FC = () => {
                         </div>
 
                         {error && <p className="errorText">{error}</p>}
-                        <button type="submit" className="authButton" disabled={isLoading}>
-                            {isLoading ? "Đang Đăng Nhập..." : "Đăng Nhập"}
+                        <button type="submit" className="authButton" >
+                           Đăng Nhập
                         </button>
                     </form>
 
@@ -90,4 +89,4 @@ const LoginPage : React.FC = () => {
     );
 }
 
-export default LoginPage
+export default Login

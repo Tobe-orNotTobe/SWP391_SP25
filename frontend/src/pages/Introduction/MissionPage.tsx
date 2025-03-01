@@ -4,6 +4,7 @@ import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx
 import Footer from "../../components/Footer/Footer.tsx";
 import {Link} from "react-router-dom";
 import MissionImage from "../../assets/introduction/Mission.png";
+import "./Introduction.scss";
 
 const MissionPage: React.FC = () => {
     return (

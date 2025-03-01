@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ForgotPasswordRequest } from "../../../interfaces/Auth";
 import { apiForgotPassword } from "../../../apis/apiAuth";
-import { notification } from "antd";  
+import { notification } from "antd";
+import {AxiosError} from "axios";
 
 export const useForgotPassWord  = () => {
     const [email, setEmail] = useState<string>("");
@@ -34,9 +35,20 @@ export const useForgotPassWord  = () => {
             } else {
                 notification.error({ message: response.error || "Lỗi Server" });
             }
-        } catch (error) {
-            console.error(error);
-            notification.error({ message: "Đổi Mật Khẩu Thất Bại", description: "Lỗi Server" });
+        } catch (error : unknown) {
+            if (error instanceof AxiosError) {
+                console.error("Lỗi API:", error.response?.data || error.message);
+                notification.error({
+                    message: "Thay Đổi Mật Khẩu Thất Bại",
+                    description: error.response?.data?.error || "Lỗi không xác định từ server",
+                });
+            } else {
+                console.error("Lỗi không xác định:", error);
+                notification.error({
+                    message: "Lỗi không xác định",
+                    description: "Vui lòng thử lại sau.",
+                });
+            }
         } finally {
             setLoading(false);
         }

@@ -4,6 +4,7 @@ import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx
 import Footer from "../../components/Footer/Footer.tsx";
 import {Link} from "react-router-dom";
 import VisionImage from "../../assets/introduction/Vision.png";
+import "./Introduction.scss";
 
 const VisionPage: React.FC = () => {
     return (

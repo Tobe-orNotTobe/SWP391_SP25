@@ -100,7 +100,8 @@ const ScheduleVaccinationList: React.FC = () => {
                         <h3>Chi tiết vắc xin</h3>
                         {selectedSchedule.vaccineScheduleDetails.map((vaccine) => (
                             <div key={vaccine.vaccineId} style={{ marginBottom: "15px", padding: "10px", border: "1px solid #ddd", borderRadius: "5px" }}>
-                                <p><strong>Mã vắc xin:</strong> {vaccine.vaccineId}</p>
+                                <p><strong>Mã Vắc Xin: </strong> {vaccine.vaccineId}</p>
+                                <p><strong>Tên vắc xin:</strong> {vaccine.vaccineName}</p>
                                 <h4>Lịch tiêm</h4>
                                 <Table
                                     columns={[

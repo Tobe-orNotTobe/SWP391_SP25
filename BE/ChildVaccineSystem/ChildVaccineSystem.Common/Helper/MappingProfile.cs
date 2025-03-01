@@ -4,14 +4,17 @@ using System.Reflection;
 using AutoMapper;
 using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.DTO.Auth;
+using ChildVaccineSystem.Data.DTO.Blog;
 using ChildVaccineSystem.Data.DTO.Booking;
 using ChildVaccineSystem.Data.DTO.Booking.BookingDetail;
 using ChildVaccineSystem.Data.DTO.Children;
 using ChildVaccineSystem.Data.DTO.ComboVaccine;
+using ChildVaccineSystem.Data.DTO.DoctorWorkSchedule;
 using ChildVaccineSystem.Data.DTO.InjectionSchedule;
 using ChildVaccineSystem.Data.DTO.Transaction;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
 using ChildVaccineSystem.Data.DTO.Vaccine;
+using ChildVaccineSystem.Data.DTO.VaccineInventory;
 using ChildVaccineSystem.Data.DTO.VaccineScheduleDetail;
 using ChildVaccineSystem.Data.Entities;
 
@@ -111,21 +114,51 @@ namespace ChildVaccineSystem.Common.Helper
             CreateMap<UpdateInjectionScheduleDTO, InjectionSchedule>();
 
             CreateMap<VaccineInventory, VaccineInventoryDTO>()
-    .ForMember(dest => dest.VaccineId, opt => opt.MapFrom(src => src.Vaccine.VaccineId))
-    .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Vaccine.Name))
-    .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Vaccine.Manufacturer))
-    .ForMember(dest => dest.BatchNumber, opt => opt.MapFrom(src => src.BatchNumber))
-    .ForMember(dest => dest.ManufacturingDate, opt => opt.MapFrom(src => src.ManufacturingDate))
-    .ForMember(dest => dest.ExpiryDate, opt => opt.MapFrom(src => src.ExpiryDate))
-    .ForMember(dest => dest.Supplier, opt => opt.MapFrom(src => src.Supplier))
-    .ForMember(dest => dest.InitialQuantity, opt => opt.MapFrom(src => src.InitialQuantity)) // Đảm bảo ánh xạ đúng
-    .ForMember(dest => dest.TotalQuantity, opt => opt.MapFrom(src => src.InitialQuantity - src.QuantityInStock)); // Số vaccine đã xuất
+                .ForMember(dest => dest.VaccineId, opt => opt.MapFrom(src => src.VaccineId))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Vaccine.Name))
+                .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Vaccine.Manufacturer))
+                .ForMember(dest => dest.BatchNumber, opt => opt.MapFrom(src => src.BatchNumber))
+                .ForMember(dest => dest.ManufacturingDate, opt => opt.MapFrom(src => src.ManufacturingDate))
+                .ForMember(dest => dest.ExpiryDate, opt => opt.MapFrom(src => src.ExpiryDate))
+                .ForMember(dest => dest.Supplier, opt => opt.MapFrom(src => src.Supplier))
+                .ForMember(dest => dest.InitialQuantity, opt => opt.MapFrom(src => src.InitialQuantity)) 
+                .ForMember(dest => dest.TotalQuantity, opt => opt.MapFrom(src => src.InitialQuantity - src.QuantityInStock));
 
+            CreateMap<VaccineInventory, ReturnedVaccineDTO>()
+                .ForMember(dest => dest.VaccineId, opt => opt.MapFrom(src => src.VaccineId))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Vaccine != null ? src.Vaccine.Name : "Unknown"))
+                .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Vaccine != null ? src.Vaccine.Manufacturer : "Unknown"))
+                .ForMember(dest => dest.BatchNumber, opt => opt.MapFrom(src => src.BatchNumber))
+                .ForMember(dest => dest.InitialQuantity, opt => opt.MapFrom(src => src.InitialQuantity))
+                .ForMember(dest => dest.QuantityInStock, opt => opt.MapFrom(src => src.QuantityInStock))
+                .ForMember(dest => dest.ReturnedQuantity, opt => opt.MapFrom(src => src.QuantityInStock - src.InitialQuantity))
+                .ForMember(dest => dest.ManufacturingDate, opt => opt.MapFrom(src => src.ManufacturingDate))
+                .ForMember(dest => dest.ExpiryDate, opt => opt.MapFrom(src => src.ExpiryDate))
+                .ForMember(dest => dest.Supplier, opt => opt.MapFrom(src => src.Supplier));
 
             // Transaction
-			CreateMap<Transaction, TransactionDTO>().ReverseMap();
-			CreateMap<CreateTransactionDTO, Transaction>();
-		}
+            CreateMap<Transaction, TransactionDTO>().ReverseMap();
+            CreateMap<CreateTransactionDTO, Transaction>();
+            //Doctor
+            CreateMap<DoctorWorkSchedule, DoctorWorkScheduleDTO>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Booking.BookingId))
+                .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.User.FullName))
+                .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => src.Booking.BookingDate))
+                .ForMember(dest => dest.ChildName, opt => opt.MapFrom(src => src.Booking.Children.FullName));
+
+            // BlogPost Mapping
+            CreateMap<BlogPost, BlogPostDTO>()
+                .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.AuthorName));  // Ánh xạ AuthorName
+
+            CreateMap<CreateBlogPostDTO, BlogPost>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));  // Tự động gán CreatedAt khi tạo mới
+
+            CreateMap<UpdateBlogPostDTO, BlogPost>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl));
+        }
     }
 }
 

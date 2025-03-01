@@ -13,13 +13,16 @@ namespace ChildVaccineSystem.Data.Entities
         [Key]
         public int DoctorWorkScheduleId { get; set; }
 
+        [Required]
         [ForeignKey("User")]
         public string UserId { get; set; }
         public User User { get; set; }
 
+        [Required]
         [ForeignKey("Booking")]
         public int BookingId { get; set; }
         public Booking Booking { get; set; }
-    }
 
+        public DateTime AssignedDate { get; set; } = DateTime.UtcNow;
+    }
 }
