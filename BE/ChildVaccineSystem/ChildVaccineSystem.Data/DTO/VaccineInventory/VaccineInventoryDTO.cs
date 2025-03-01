@@ -18,6 +18,7 @@ namespace ChildVaccineSystem.Data.DTO.VaccineInventory
         public string Supplier { get; set; }
         public int InitialQuantity { get; set; }
         public int QuantityInStock { get; set; }
+        public int ReturnedQuantity { get; set; }
         public int TotalQuantity { get; set; }
         public bool Status => ExpiryDate >= DateTime.UtcNow;
     }

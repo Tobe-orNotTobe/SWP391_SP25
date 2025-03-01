@@ -61,32 +61,40 @@ namespace ChildVaccineSystem.Service.Services
             return _mapper.Map<VaccineInventoryDTO>(newInventory);
         }
 
-        // Lấy danh sách tồn kho vaccine
-        public async Task<IEnumerable<VaccineInventoryDTO>> GetVaccineStockReportAsync()
+        // Lấy danh sách tồn kho vaccine, bao gồm danh sách vaccine đã xuất kho và hoàn trả
+        public async Task<IEnumerable<VaccineInventoryDTO>> GetVaccineInventoryAsync()
         {
-            // Lấy danh sách vaccine stock, chỉ lấy những vaccine chưa bị xóa mềm
-            var vaccineStockList = await _unitOfWork.VaccineInventories.GetAllAsync();
+            var vaccineInventories = await _unitOfWork.VaccineInventories.GetAllAsync();
+            vaccineInventories = vaccineInventories.Where(vi => !vi.IsDeleted).ToList();
 
-            // Lọc những vaccine chưa bị xóa mềm
-            vaccineStockList = vaccineStockList.Where(vi => !vi.IsDeleted).ToList();
-
-            var stockReport = vaccineStockList.Select(vi => new VaccineInventoryDTO
+            var vaccineInventoryDTOs = vaccineInventories.Select(vi =>
             {
-                VaccineInventoryId = vi.VaccineInventoryId,
-                VaccineId = vi.VaccineId,
-                Name = vi.Vaccine.Name ?? "Unknown",
-                Manufacturer = vi.Vaccine.Manufacturer ?? "Unknown",
-                BatchNumber = vi.BatchNumber,
-                ManufacturingDate = vi.ManufacturingDate,
-                ExpiryDate = vi.ExpiryDate,
-                Supplier = vi.Supplier,
-                InitialQuantity = vi.InitialQuantity,
-                QuantityInStock = vi.QuantityInStock,
-                TotalQuantity = vi.InitialQuantity - vi.QuantityInStock,
+                // Tính số tồn kho thực tế, bao gồm cả vaccine đã xuất và hoàn trả
+                var stockWithoutReturns = vi.QuantityInStock - vi.ReturnedQuantity;
+                var exported = vi.InitialQuantity - stockWithoutReturns;
+                var acceptedReturn = Math.Min(vi.ReturnedQuantity, exported);
+                var actualStock = stockWithoutReturns + acceptedReturn;
+
+                return new VaccineInventoryDTO
+                {
+                    VaccineInventoryId = vi.VaccineInventoryId,
+                    VaccineId = vi.VaccineId,
+                    Name = vi.Vaccine?.Name ?? "Unknown",
+                    Manufacturer = vi.Vaccine?.Manufacturer ?? "Unknown",
+                    BatchNumber = vi.BatchNumber,
+                    ManufacturingDate = vi.ManufacturingDate,
+                    ExpiryDate = vi.ExpiryDate,
+                    Supplier = vi.Supplier,
+                    InitialQuantity = vi.InitialQuantity,
+                    QuantityInStock = actualStock,
+                    TotalQuantity = vi.InitialQuantity - vi.QuantityInStock, // Vaccine đã xuất (Exported)
+                    ReturnedQuantity = acceptedReturn // Vaccine đã hoàn trả
+                };
             }).ToList();
 
-            return stockReport;
+            return vaccineInventoryDTOs;
         }
+
 
 
 
@@ -188,24 +196,24 @@ namespace ChildVaccineSystem.Service.Services
         }
 
         // Lấy danh sách vaccine đã xuất kho (Export Vaccines)
-        public async Task<IEnumerable<VaccineInventoryDTO>> GetExportVaccinesAsync()
-        {
-            var issuedVaccines = await _unitOfWork.VaccineInventories.GetExportVaccinesAsync();
+        //public async Task<IEnumerable<VaccineInventoryDTO>> GetExportVaccinesAsync()
+        //{
+        //    var issuedVaccines = await _unitOfWork.VaccineInventories.GetExportVaccinesAsync();
 
-            return issuedVaccines.Select(vi => new VaccineInventoryDTO
-            {
-                VaccineId = vi.VaccineInventoryId,
-                Name = vi.Vaccine?.Name ?? "Unknown",
-                Manufacturer = vi.Vaccine?.Manufacturer ?? "Unknown",
-                BatchNumber = vi.BatchNumber,
-                ManufacturingDate = vi.ManufacturingDate,
-                ExpiryDate = vi.ExpiryDate,
-                InitialQuantity = vi.InitialQuantity,
-                QuantityInStock = vi.QuantityInStock,
-                TotalQuantity = vi.InitialQuantity - vi.QuantityInStock, // Số lượng vaccine đã xuất (Exported)
-                Supplier = vi.Supplier
-            }).ToList();
-        }
+        //    return issuedVaccines.Select(vi => new VaccineInventoryDTO
+        //    {
+        //        VaccineId = vi.VaccineInventoryId,
+        //        Name = vi.Vaccine?.Name ?? "Unknown",
+        //        Manufacturer = vi.Vaccine?.Manufacturer ?? "Unknown",
+        //        BatchNumber = vi.BatchNumber,
+        //        ManufacturingDate = vi.ManufacturingDate,
+        //        ExpiryDate = vi.ExpiryDate,
+        //        InitialQuantity = vi.InitialQuantity,
+        //        QuantityInStock = vi.QuantityInStock,
+        //        TotalQuantity = vi.InitialQuantity - vi.QuantityInStock, // Số lượng vaccine đã xuất (Exported)
+        //        Supplier = vi.Supplier
+        //    }).ToList();
+        //}
 
         // Kiểm tra vaccine sắp hết hạn
         public async Task<IEnumerable<VaccineInventoryDTO>> GetExpiringVaccinesAsync(int daysThreshold)
@@ -320,38 +328,38 @@ namespace ChildVaccineSystem.Service.Services
 
 
         // Lấy danh sách vaccine đã hoàn trả về kho (Returned Vaccines)
-        public async Task<IEnumerable<ReturnedVaccineDTO>> GetReturnedVaccinesAsync()
-        {
-            var returnedVaccines = await _unitOfWork.VaccineInventories.GetReturnedVaccinesAsync();
+        //public async Task<IEnumerable<ReturnedVaccineDTO>> GetReturnedVaccinesAsync()
+        //{
+        //    var returnedVaccines = await _unitOfWork.VaccineInventories.GetReturnedVaccinesAsync();
 
-            var returnedVaccineDTOs = returnedVaccines.Select(vi =>
-            {
-                // Tính số tồn nếu chưa cộng các giao dịch trả
-                var stockWithoutReturns = vi.QuantityInStock - vi.ReturnedQuantity;
-                // Số vaccine đã xuất = InitialQuantity - stockWithoutReturns
-                var exported = vi.InitialQuantity - stockWithoutReturns;
-                // Số vaccine trả được chấp nhận không vượt quá số đã xuất
-                var acceptedReturn = Math.Min(vi.ReturnedQuantity, exported);
-                // Số tồn thực tế sau khi cộng các giao dịch trả
-                var actualStock = stockWithoutReturns + acceptedReturn;
+        //    var returnedVaccineDTOs = returnedVaccines.Select(vi =>
+        //    {
+        //        // Tính số tồn nếu chưa cộng các giao dịch trả
+        //        var stockWithoutReturns = vi.QuantityInStock - vi.ReturnedQuantity;
+        //        // Số vaccine đã xuất = InitialQuantity - stockWithoutReturns
+        //        var exported = vi.InitialQuantity - stockWithoutReturns;
+        //        // Số vaccine trả được chấp nhận không vượt quá số đã xuất
+        //        var acceptedReturn = Math.Min(vi.ReturnedQuantity, exported);
+        //        // Số tồn thực tế sau khi cộng các giao dịch trả
+        //        var actualStock = stockWithoutReturns + acceptedReturn;
 
-                return new ReturnedVaccineDTO
-                {
-                    VaccineId = vi.VaccineInventoryId,
-                    Name = vi.Vaccine != null ? vi.Vaccine.Name : "Unknown",
-                    Manufacturer = vi.Vaccine != null ? vi.Vaccine.Manufacturer : "Unknown",
-                    BatchNumber = vi.BatchNumber,
-                    InitialQuantity = vi.InitialQuantity,
-                    QuantityInStock = actualStock,
-                    ReturnedQuantity = acceptedReturn,
-                    ManufacturingDate = vi.ManufacturingDate,
-                    ExpiryDate = vi.ExpiryDate,
-                    Supplier = vi.Supplier
-                };
-            }).ToList();
+        //        return new ReturnedVaccineDTO
+        //        {
+        //            VaccineId = vi.VaccineInventoryId,
+        //            Name = vi.Vaccine != null ? vi.Vaccine.Name : "Unknown",
+        //            Manufacturer = vi.Vaccine != null ? vi.Vaccine.Manufacturer : "Unknown",
+        //            BatchNumber = vi.BatchNumber,
+        //            InitialQuantity = vi.InitialQuantity,
+        //            QuantityInStock = actualStock,
+        //            ReturnedQuantity = acceptedReturn,
+        //            ManufacturingDate = vi.ManufacturingDate,
+        //            ExpiryDate = vi.ExpiryDate,
+        //            Supplier = vi.Supplier
+        //        };
+        //    }).ToList();
 
-            return returnedVaccineDTOs;
-        }
+        //    return returnedVaccineDTOs;
+        //}
 
         // Xóa Mềm  Vaccine Inventory
         public async Task<string> SoftDeleteVaccineInventoryAsync(int id)
