@@ -30,7 +30,7 @@ namespace ChildVaccineSystem.Data.Models
 		public DbSet<ComboVaccine> ComboVaccines { get; set; }
 		public DbSet<InjectionSchedule> InjectionSchedules { get; set; }
         public DbSet<VaccineTransactionHistory> VaccineTransactions { get; set; }
-
+		public DbSet<BlogPost> BlogPosts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);

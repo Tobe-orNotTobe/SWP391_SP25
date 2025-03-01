@@ -4,6 +4,7 @@ using System.Reflection;
 using AutoMapper;
 using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.DTO.Auth;
+using ChildVaccineSystem.Data.DTO.Blog;
 using ChildVaccineSystem.Data.DTO.Booking;
 using ChildVaccineSystem.Data.DTO.Booking.BookingDetail;
 using ChildVaccineSystem.Data.DTO.Children;
@@ -145,6 +146,18 @@ namespace ChildVaccineSystem.Common.Helper
                 .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.User.FullName))
                 .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => src.Booking.BookingDate))
                 .ForMember(dest => dest.ChildName, opt => opt.MapFrom(src => src.Booking.Children.FullName));
+
+            // BlogPost Mapping
+            CreateMap<BlogPost, BlogPostDTO>()
+                .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.AuthorName));  // Ánh xạ AuthorName
+
+            CreateMap<CreateBlogPostDTO, BlogPost>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));  // Tự động gán CreatedAt khi tạo mới
+
+            CreateMap<UpdateBlogPostDTO, BlogPost>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl));
         }
     }
 }
