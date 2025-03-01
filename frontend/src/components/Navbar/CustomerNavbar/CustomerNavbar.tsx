@@ -48,7 +48,7 @@ const CustomerNavbar: React.FC = () => {
                     <ul className="cusNavbarLink">
                         <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
                         <li className="cusNavDropdown">
-                            <Link to="#" className="cusNavItem">Giới thiệu</Link>
+                            <Link to="/introduction" className="cusNavItem">Giới thiệu</Link>
                             <ul className="cusNavDropdown-menu">
                                 <li className="cusNavDropdownSub">
                                     <Link to="/introduction" style={{
@@ -63,7 +63,7 @@ const CustomerNavbar: React.FC = () => {
                                         <li><Link to="/mission" className={"cusNavDropdown-link"}>Sứ Mệnh</Link></li>
                                     </ul>
                                 </li>
-                                <li><Link to="/team">Đội Ngũ</Link></li>
+                                <li><Link to="/our-team">Đội Ngũ</Link></li>
                             </ul>
                         </li>
 

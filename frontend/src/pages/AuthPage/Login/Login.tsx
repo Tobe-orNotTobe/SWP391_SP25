@@ -7,6 +7,9 @@ import { useLogin, useLoginGoogle } from "./useLogin";
 import "../Auth.scss"
 import LoadingRedirect from "../../../components/Loading/LoadingRedirect";
 
+
+
+
 const Login : React.FC = () => {
 
     const {
@@ -24,7 +27,7 @@ const Login : React.FC = () => {
     const {handleGoogleLogin} = useLoginGoogle();
 
     if (isRedirecting) {
-        return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng tới trang Login..." delay={5000} to="/homepage" />;
+        return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng..." delay={5000} to="/homepage" />;
     }
 
     return (
