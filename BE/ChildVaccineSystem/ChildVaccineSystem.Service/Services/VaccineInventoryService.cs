@@ -65,7 +65,7 @@ namespace ChildVaccineSystem.Service.Services
         public async Task<IEnumerable<VaccineInventoryDTO>> GetVaccineInventoryAsync()
         {
             var vaccineInventories = await _unitOfWork.VaccineInventories.GetAllAsync();
-            vaccineInventories = vaccineInventories.Where(vi => !vi.IsDeleted).ToList();
+            vaccineInventories = vaccineInventories.Where(vi => !vi.IsActive).ToList();
 
             var vaccineInventoryDTOs = vaccineInventories.Select(vi =>
             {
@@ -104,7 +104,7 @@ namespace ChildVaccineSystem.Service.Services
             var vaccineInventory = await _unitOfWork.VaccineInventories.SearchVaccineStockAsync(keyword);
 
             // Lọc những vaccine chưa bị xóa mềm
-            vaccineInventory = vaccineInventory.Where(vi => !vi.IsDeleted).ToList();
+            vaccineInventory = vaccineInventory.Where(vi => !vi.IsActive).ToList();
 
             return _mapper.Map<IEnumerable<VaccineInventoryDTO>>(vaccineInventory);
         }
@@ -299,7 +299,7 @@ namespace ChildVaccineSystem.Service.Services
             var vaccineInventories = await _unitOfWork.VaccineInventories.GetByVaccineIdAsync(vaccineId);
 
             // Lọc những vaccine chưa bị xóa mềm
-            vaccineInventories = vaccineInventories.Where(vi => !vi.IsDeleted).ToList();
+            vaccineInventories = vaccineInventories.Where(vi => !vi.IsActive).ToList();
 
             if (vaccineInventories == null || !vaccineInventories.Any())
             {
@@ -370,7 +370,7 @@ namespace ChildVaccineSystem.Service.Services
             {
                 throw new Exception("Vaccine inventory not found.");
             }
-            inventory.IsDeleted = true;
+            inventory.IsActive = true;
             await _unitOfWork.CompleteAsync();
 
             return "Vaccine inventory deleted successfully.";
