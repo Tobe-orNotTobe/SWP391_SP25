@@ -25,7 +25,7 @@ namespace ChildVaccineSystem.API.Controllers
 		{
 			try
 			{
-				string ipAddress = "http://localhost:7134";
+				string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
 
 				var paymentUrl = await _vnPaymentService.CreatePaymentUrl(bookingId, ipAddress);
 
@@ -35,6 +35,13 @@ namespace ChildVaccineSystem.API.Controllers
 				return Ok(_response);
 			}
 			catch (ArgumentException ex)
+			{
+				_response.StatusCode = HttpStatusCode.BadRequest;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add(ex.Message);
+				return BadRequest(_response);
+			}
+			catch (InvalidOperationException ex)
 			{
 				_response.StatusCode = HttpStatusCode.BadRequest;
 				_response.IsSuccess = false;
@@ -59,7 +66,7 @@ namespace ChildVaccineSystem.API.Controllers
 				vnpayData[key] = Request.Query[key];
 			}
 
-			var frontendUrl = HttpContext.RequestServices.GetRequiredService<IConfiguration>().GetValue<string>("http://localhost:7134");
+			var frontendUrl = HttpContext.RequestServices.GetRequiredService<IConfiguration>().GetValue<string>("AppSettings:FrontendUrl");
 			var successUrl = $"{frontendUrl}/payment-success";
 			var failureUrl = $"{frontendUrl}/payment-failure";
 
