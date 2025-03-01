@@ -16,21 +16,19 @@ import Login from "./pages/AuthPage/Login/Login.tsx";
 import Register from "./pages/AuthPage/Register/Register.tsx";
 import ForgotPassword from "./pages/AuthPage/ForgotPassword/ForgotPassword.tsx";
 import ResetPassword from "./pages/AuthPage/ResetPassword/ResetPassword.tsx";
-import MyChildsPage from "./pages/ChildPage/MyChilds/MyChildsPage.tsx";
-import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx"
-
 import NotFound from "./components/NotFound/NotFound.tsx";
+
+import MyChildsPage from "./pages/ChildPage/MyChilds/MyChildsPage.tsx";
+import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
 
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
 import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineForm/VaccineComboForm.tsx";
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
-import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
 import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
 import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import ServicePage from "./pages/Staff/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
-
 
 function App() {
 
