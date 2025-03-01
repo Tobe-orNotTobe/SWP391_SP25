@@ -27,7 +27,9 @@ namespace ChildVaccineSystem.Repository.Repositories
         public IDoctorWorkScheduleRepository DoctorWorkSchedules { get; }
         public IVaccineTransactionHistoryRepository VaccineTransactionHistories { get; }
         public IBlogPostRepository BlogPosts { get; }
-        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository, IDoctorWorkScheduleRepository doctorWorkScheduleRepositories, IVaccineTransactionHistoryRepository vaccineTransactionHistoryRepository, IBlogPostRepository blogPostRepository)
+        public IFeedbackRepository Feedbacks { get; }
+
+        public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository, IDoctorWorkScheduleRepository doctorWorkScheduleRepositories, IVaccineTransactionHistoryRepository vaccineTransactionHistoryRepository, IBlogPostRepository blogPostRepository, IFeedbackRepository feedbackRepository)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -46,6 +48,7 @@ namespace ChildVaccineSystem.Repository.Repositories
             DoctorWorkSchedules = doctorWorkScheduleRepositories;
             VaccineTransactionHistories = vaccineTransactionHistoryRepository;
             BlogPosts = blogPostRepository;
+            Feedbacks = feedbackRepository;
         }
 
         public async Task<int> CompleteAsync()

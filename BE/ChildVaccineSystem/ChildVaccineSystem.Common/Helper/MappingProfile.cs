@@ -10,6 +10,7 @@ using ChildVaccineSystem.Data.DTO.Booking.BookingDetail;
 using ChildVaccineSystem.Data.DTO.Children;
 using ChildVaccineSystem.Data.DTO.ComboVaccine;
 using ChildVaccineSystem.Data.DTO.DoctorWorkSchedule;
+using ChildVaccineSystem.Data.DTO.Feedback;
 using ChildVaccineSystem.Data.DTO.InjectionSchedule;
 using ChildVaccineSystem.Data.DTO.Transaction;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
@@ -162,6 +163,9 @@ namespace ChildVaccineSystem.Common.Helper
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl));
+            //feedback
+            CreateMap<Feedback, FeedbackDTO>();
+            CreateMap<CreateFeedbackDTO, Feedback>();
         }
     }
 }
