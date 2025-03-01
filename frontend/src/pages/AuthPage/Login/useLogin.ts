@@ -55,7 +55,7 @@ export const useLogin = () => {
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-                console.error("Lỗi API:", error.response?.data || error.message);
+
                 notification.error({
                     message: "Đăng Nhập Thất Bại",
                     description: error.response?.data?.error || "Lỗi không xác định từ server",

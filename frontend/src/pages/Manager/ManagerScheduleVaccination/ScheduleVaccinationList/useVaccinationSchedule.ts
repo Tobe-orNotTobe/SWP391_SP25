@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { notification } from "antd";
 import { VaccinationSchedule } from "../../../../interfaces/Vaccine";
 import { apiDeleteVaccinationSchedule } from "../../../../apis/apiVaccine";
+import {AxiosError} from "axios";
+
 
 export const useVaccinationSchedule = () => {
     const navigate = useNavigate();
@@ -38,12 +40,21 @@ export const useVaccinationSchedule = () => {
                     description: "Có lỗi xảy ra"
                 });
             }
-        } catch (error) {
-            console.error("Delete error:", error);
-            notification.error({
-                message: "Lỗi xóa dữ liệu",
-                description: "Không thể xóa vaccine. Vui lòng thử lại sau."
-            });
+        } catch (error : unknown) {
+
+            if (error instanceof AxiosError) {
+                console.log("hehe", error.response?.data?.errorMessages);
+                notification.error({
+                    message: "Xóa Vaccine Thất Bại",
+                    description: error.response?.data?.errorMessages ,
+                });
+            } else {
+                console.error("Lỗi không xác định:", error);
+                notification.error({
+                    message: "Lỗi không xác định",
+                    description: "Vui lòng thử lại sau.",
+                });
+            }
         } finally {
             setDeletingId(null);
         }

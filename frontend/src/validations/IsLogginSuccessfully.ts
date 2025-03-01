@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { decodeToken } from "../utils/decodeToken";
-import {apiRefreshToken} from "../apis/apiAuth.ts";// Import hàm API làm mới token
+import {apiRefreshToken} from "../apis/apiAuth.ts";
 
 export const IsLoginSuccessFully = () => {
     const [username, setUsername] = useState<string>("");
