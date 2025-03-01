@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Booking } from "../types/VaccineRegistration";
+import { Booking } from "../interfaces/VaccineRegistration.ts";
 
 export const apiBooking = async (userId: string, booking: Booking) => {
   try {

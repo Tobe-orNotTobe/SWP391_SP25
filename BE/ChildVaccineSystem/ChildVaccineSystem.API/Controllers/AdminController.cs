@@ -206,6 +206,50 @@ namespace ChildVaccineSystem.API.Controllers
             _response.Result = "User deactivated successfully";
             return Ok(_response);
         }
+        [HttpGet("getAllDoctors")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> GetAllDoctors()
+        {
+            try
+            {
+                var role = await _roleManager.FindByNameAsync("Doctor");
+                if (role == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages.Add("Role 'Doctor' does not exist.");
+                    return NotFound(_response);
+                }
+
+                var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
+
+                var doctorDTOs = usersInRole.Select(user => new UserDTO
+                {
+                    Id = user.Id,
+                    FullName = user.FullName,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    Address = user.Address,
+                    DateOfBirth = user.DateOfBirth,
+                    IsActive = user.IsActive,
+                    Role = "Doctor"
+                }).ToList();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = doctorDTOs;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Error retrieving doctors: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
+
 
     }
 }

@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Parent,
   Child,
   BookingDetail,
   Booking,
-} from "../types/VaccineRegistration";
-import { getChildren } from "../apis/apiChildren";
+} from "../interfaces/VaccineRegistration.ts";
 import { apiBooking } from "../apis/apiBooking"; // Sử dụng hàm apiBooking đã được tách riêng
 import { apiPostVNPayTransaction } from "../apis/apiTransaction";
 import { Navigate, useNavigate } from "react-router-dom";
 import { IsLoginSuccessFully } from "../validations/IsLogginSuccessfully";
+import { apiGetChildById, apiGetMyChilds } from "../apis/apiChild.ts";
 
 const useVaccinationForm = () => {
   const [booking, setBooking] = useState<Booking>({
@@ -28,7 +27,7 @@ const useVaccinationForm = () => {
   const [error, setError] = useState<string | null>(null);
   const Navigate = useNavigate();
 
-  const { username ,sub } = IsLoginSuccessFully();
+  const { username, sub } = IsLoginSuccessFully();
 
   // Hàm xử lý tìm kiếm thông tin phụ huynh và trẻ
   // const handleSearch = async (searchInput: string) => {
@@ -68,44 +67,43 @@ const useVaccinationForm = () => {
   //   }
   // };
 
-useEffect(() => {
+  useEffect(() => {
     const fetchParentAndChildrenInfo = async () => {
-        setLoading(true);
-        setError(null);
+      setLoading(true);
+      setError(null);
 
-        try {
-            const data = await getChildren(sub);
+      try {
+        const data = await apiGetMyChilds();
+        // const data = await getChildren(sub);
 
-            if (data.isSuccess && data.result) {
-                const children = data.result.map((child: Child) => ({
-                    childId: child.childId,
-                    fullName: child.fullName,
-                    dateOfBirth: child.dateOfBirth?.split("T")[0] || "",
-                    gender: child.gender === "Female" ? "Nữ" : "Nam",
-                }));
+        if (data.isSuccess && data.result) {
+          const children = data.result.map((child: Child) => ({
+            childId: child.childId,
+            fullName: child.fullName,
+            dateOfBirth: child.dateOfBirth?.split("T")[0] || "",
+            gender: child.gender === "Female" ? "Nữ" : "Nam",
+          }));
 
-                setParentInfo({
-                    customerCode: sub,
-                    parentName: username || "Không rõ", // Kiểm tra nếu API trả về parentName
-                    children: children,
-                });
-            } else {
-                setError("Không tìm thấy thông tin phụ huynh.");
-            }
-        } catch (error) {
-            console.error("Lỗi khi lấy thông tin phụ huynh:", error);
-            setError("Có lỗi xảy ra khi tải dữ liệu.");
-        } finally {
-            setLoading(false);
+          setParentInfo({
+            customerCode: sub,
+            parentName: username || "Không rõ", // Kiểm tra nếu API trả về parentName
+            children: children,
+          });
+        } else {
+          setError("Không tìm thấy thông tin phụ huynh.");
         }
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin phụ huynh:", error);
+        setError("Có lỗi xảy ra khi tải dữ liệu.");
+      } finally {
+        setLoading(false);
+      }
     };
 
     if (sub) {
-        fetchParentAndChildrenInfo();
+      fetchParentAndChildrenInfo();
     }
-}, [sub]); // Chạy khi `userId` thay đổi
-
-
+  }, [sub]); // Chạy khi `userId` thay đổi
 
   // Hàm xử lý chọn trẻ
   const handleSelectChild = (child: Child | null) => {
@@ -115,7 +113,7 @@ useEffect(() => {
 
   // Hàm xử lý thêm trẻ mới
   const handleAddNewChild = () => {
-    setSelectedChild(null); // Bỏ chọn trẻ hiện tại
+    Navigate("/child-register");
   };
 
   // Hàm gửi dữ liệu đặt lịch tiêm chủng

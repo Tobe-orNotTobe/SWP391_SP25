@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ChildVaccineSystem.RepositoryContract.Interfaces
 {
-    public interface IBookingRepository : IRepository<Booking>
+    public interface IFeedbackRepository : IRepository<Feedback>
     {
-        Task<bool> HasConflictingBookingAsync(string userId, DateTime bookingDate);
-        Task<Booking> GetBookingWithDetailsAsync(int bookingId);
+        Task<Feedback> GetFeedbackByBookingIdAsync(int bookingId);
     }
+
 }
