@@ -1,10 +1,11 @@
-
 import { useState, useEffect } from "react";
 import { decodeToken } from "../utils/decodeToken";
+import {apiRefreshToken} from "../apis/apiAuth.ts";// Import hàm API làm mới token
 
 export const IsLoginSuccessFully = () => {
     const [username, setUsername] = useState<string>("");
     const [role, setRole] = useState<string>("");
+    const [sub, setSub] = useState<string>("");
 
     useEffect(() => {
         const checkToken = async () => {
@@ -14,10 +15,11 @@ export const IsLoginSuccessFully = () => {
             if (token) {
                 const decodedToken = decodeToken(token);
                 if (decodedToken) {
-                    const expTime = decodedToken.exp * 1000; // Chuyển từ giây sang milliseconds
+                    const expTime = decodedToken.exp * 1000;
                     const currentTime = Date.now();
-                    const userSub = decodedToken.sub;                    if (currentTime >= expTime) {
-                        // Token đã hết hạn, gọi API refresh token
+
+                    if (currentTime >= expTime) {
+
                         if (refreshToken) {
                             try {
                                 const newTokenData = await apiRefreshToken(refreshToken);
@@ -47,15 +49,11 @@ export const IsLoginSuccessFully = () => {
                         // Token vẫn hợp lệ
                         const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
                         const userName = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-        if (token) {
-            const decodedToken = decodeToken(token);
-            if (decodedToken) {
-                const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-                const userName = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-                const userSub = decodedToken.sub;
-
+                        const userSub  = decodedToken.sub;
                         setRole(userRole);
                         setUsername(userName);
+                        setSub(userSub);
+
                         localStorage.setItem("role", userRole);
                     }
                 } else {
@@ -66,16 +64,6 @@ export const IsLoginSuccessFully = () => {
 
         checkToken();
     }, []);
-                setRole(userRole);
-                setUsername(userName);
-                setSub(userSub)
 
-                localStorage.setItem("role", userRole);
-            } else {
-                console.log("Token không hợp lệ");
-            }
-        }
-    }, []);
-
-    return { username, role, sub };
+    return { username, role , sub};
 };

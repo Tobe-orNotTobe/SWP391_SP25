@@ -1,11 +1,11 @@
 import "./App.scss";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage.tsx";
-
+import ScheduleVaccinationForm
+  from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
 import VaccineDetailPage from "./pages/VaccinePage/VaccineDetailPage/VaccineDetailPage.tsx";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
 import VaccineListPage from "./pages/VaccinePage/VaccineListPage/VaccineListPage.tsx";
-import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
 import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
@@ -22,8 +22,7 @@ import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineFo
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
 import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
 import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
-import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
-import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
+
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import ServicePage from "./pages/Staff/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
