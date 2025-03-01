@@ -5,6 +5,7 @@ import {apiRefreshToken} from "../apis/apiAuth.ts";
 export const IsLoginSuccessFully = () => {
     const [username, setUsername] = useState<string>("");
     const [role, setRole] = useState<string>("");
+    const [sub, setSub] = useState<string>("");
 
     useEffect(() => {
         const checkToken = async () => {
@@ -48,9 +49,11 @@ export const IsLoginSuccessFully = () => {
                         // Token vẫn hợp lệ
                         const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
                         const userName = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-
+                        const userSub  = decodedToken.sub;
                         setRole(userRole);
                         setUsername(userName);
+                        setSub(userSub);
+
                         localStorage.setItem("role", userRole);
                     }
                 } else {
@@ -62,5 +65,5 @@ export const IsLoginSuccessFully = () => {
         checkToken();
     }, []);
 
-    return { username, role };
+    return { username, role , sub};
 };

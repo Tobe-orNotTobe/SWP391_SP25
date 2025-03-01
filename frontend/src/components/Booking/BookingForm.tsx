@@ -5,13 +5,14 @@ import useVaccineSelection from "../../hooks/useVaccineSelection";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
 
 const VaccinationRegistrationPage = () => {
+
+
   const {
     searchInput,
     parentInfo,
     selectedChild,
     isFormSplit,
     setSearchInput,
-    handleSearch,
     handleSelectChild,
     handleAddNewChild,
     submitBooking,
@@ -72,8 +73,7 @@ const VaccinationRegistrationPage = () => {
             {/* Tìm kiếm thông tin phụ huynh */}
             <div className="form-section">
               <div className="form-group">
-                <label>Nhập mã khách hàng của phụ huynh*</label>
-                <div className="search-container">
+                {/* <div className="search-container">
                   <input
                     type="text"
                     placeholder="Mã khách hàng"
@@ -82,18 +82,19 @@ const VaccinationRegistrationPage = () => {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        handleSearch();
+                        handleSearch(sub);
                       }
                     }}
                   />
                   <button
                     className="rouded-button"
                     type="button"
-                    onClick={handleSearch}
+                    onClick={() => handleSearch(sub)}
                   >
                     Tìm kiếm
                   </button>
-                </div>
+                </div> */
+                }
               </div>
 
               {/* Hiển thị thông tin phụ huynh */}
@@ -119,10 +120,10 @@ const VaccinationRegistrationPage = () => {
                             checked={selectedChild?.childId === child.childId}
                             onChange={() => {
                               if (selectedChild?.childId === child.childId) {
-                                console.log(child)
+                                console.log(child);
                                 handleSelectChild(null);
                               } else {
-                                console.log(child)
+                                console.log(child);
                                 handleSelectChild(child);
                               }
                             }}
@@ -156,9 +157,10 @@ const VaccinationRegistrationPage = () => {
               )}
             </div>
           </div>
+
           <div className="splited-part">
             {/* Lựa chọn vắc xin */}
-            {(selectedChild) && (
+            {selectedChild && (
               <div className="form-section">
                 <div className="form-section">
                   <h3>Thông tin dịch vụ</h3>
@@ -288,7 +290,7 @@ const VaccinationRegistrationPage = () => {
         </div>
 
         {/* Nút hoàn thành đăng ký */}
-        {(selectedChild) && (
+        {selectedChild && (
           <button type="submit" className="submit-button">
             Hoàn thành đăng ký
           </button>
