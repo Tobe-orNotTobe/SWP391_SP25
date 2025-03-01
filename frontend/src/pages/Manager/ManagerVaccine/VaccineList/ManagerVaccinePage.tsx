@@ -4,10 +4,12 @@ import { TiPlusOutline } from "react-icons/ti";
 import { TbListDetails } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit2 } from "react-icons/fi";
-import { VaccineDetail, VaccinationSchedule} from "../../../../interfaces/Vaccine.ts";
+
+import { VaccineDetail, VaccinationSchedule } from "../../../../interfaces/Vaccine.ts";
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
-import { useVaccineDetail, useVaccinationScheduleDetail } from "../../../../hooks/useVaccine.ts";
+import { useVaccineDetail, useVaccinationScheduleDetail, useVaccineInventoryStockDetail } from "../../../../hooks/useVaccine.ts";
 import { useVaccineManagement } from "./useVaccineManagement.ts";
+
 import "./ManagerVaccinePage.scss";
 
 const { TabPane } = Tabs;
@@ -15,6 +17,8 @@ const { TabPane } = Tabs;
 const ManagerVaccinePage: React.FC = () => {
     const { vaccineDetail } = useVaccineDetail();
     const { vaccinationSchedule } = useVaccinationScheduleDetail();
+    const { vaccineInventoryStockDetail } = useVaccineInventoryStockDetail();
+
     const {
         isDetailModalOpen,
         selectedVaccine,
@@ -26,31 +30,44 @@ const ManagerVaccinePage: React.FC = () => {
         handleDetailModalClose
     } = useVaccineManagement();
 
-    // Find relevant vaccination schedules for the selected vaccine
+
     const getRelevantSchedules = () => {
         if (!selectedVaccine || !vaccinationSchedule || !Array.isArray(vaccinationSchedule)) {
             return [];
         }
 
-        // Find schedules that contain the selected vaccine in their vaccineScheduleDetails
-        return vaccinationSchedule.filter(schedule => 
-            schedule.vaccineScheduleDetails && 
-            schedule.vaccineScheduleDetails.some(detail => 
+
+        return vaccinationSchedule.filter(schedule =>
+            schedule.vaccineScheduleDetails &&
+            schedule.vaccineScheduleDetails.some(detail =>
                 detail.vaccineId === selectedVaccine.vaccineId
             )
         );
     };
 
-    // Get the specific vaccine details from a schedule
+
     const getVaccineDetailsFromSchedule = (schedule: VaccinationSchedule) => {
         if (!selectedVaccine || !schedule.vaccineScheduleDetails) {
             return null;
         }
-        
-        return schedule.vaccineScheduleDetails.find(detail => 
+
+        return schedule.vaccineScheduleDetails.find(detail =>
             detail.vaccineId === selectedVaccine?.vaccineId
         );
     };
+
+    // Get inventory batches for the selected vaccine
+    const getVaccineBatches = () => {
+        if (!selectedVaccine || !vaccineInventoryStockDetail || !Array.isArray(vaccineInventoryStockDetail)) {
+            return [];
+        }
+
+        return vaccineInventoryStockDetail.filter(item =>
+            item.vaccineId === selectedVaccine.vaccineId
+        );
+    };
+
+
 
     const columns = [
         { title: "ID", dataIndex: "vaccineId", key: "id" },
@@ -107,6 +124,41 @@ const ManagerVaccinePage: React.FC = () => {
         },
     ];
 
+    const batchColumns = [
+        {
+            title: "Số hiệu lô",
+            dataIndex: "batchNumber",
+            key: "batchNumber",
+        },
+        {
+            title: "Ngày sản xuất",
+            dataIndex: "manufacturingDate",
+            key: "manufacturingDate",
+            render: (date: string) => new Date(date).toLocaleDateString("vi-VN"),
+        },
+        {
+            title: "Ngày hết hạn",
+            dataIndex: "expiryDate",
+            key: "expiryDate",
+            render: (date: string) => new Date(date).toLocaleDateString("vi-VN"),
+        },
+        {
+            title: "Nhà cung cấp",
+            dataIndex: "supplier",
+            key: "supplier",
+        },
+        {
+            title: "Số lượng ban đầu",
+            dataIndex: "initialQuantity",
+            key: "initialQuantity",
+        },
+        {
+            title: "Số hàng trong kho",
+            dataIndex: "quantityInStock",
+            key: "quantityInStock",
+        },
+    ];
+
     return (
         <ManagerLayout>
             <div className="manager-vaccine-page-container">
@@ -116,20 +168,20 @@ const ManagerVaccinePage: React.FC = () => {
                         Thêm Vaccine
                     </Button>
                 </div>
-                <Table 
-                    columns={columns} 
-                    dataSource={Array.isArray(vaccineDetail) ? vaccineDetail : []} 
-                    rowKey="vaccineId" 
-                    pagination={{ pageSize: 8, showSizeChanger: false }} 
-                    className="vaccine-table" 
+                <Table
+                    columns={columns}
+                    dataSource={Array.isArray(vaccineDetail) ? vaccineDetail : []}
+                    rowKey="vaccineId"
+                    pagination={{ pageSize: 8, showSizeChanger: false }}
+                    className="vaccine-table"
                 />
 
-                <Modal 
-                    title="Chi Tiết Vaccine" 
-                    open={isDetailModalOpen} 
-                    onCancel={handleDetailModalClose} 
-                    footer={null} 
-                    width={1000} 
+                <Modal
+                    title="Chi Tiết Vaccine"
+                    open={isDetailModalOpen}
+                    onCancel={handleDetailModalClose}
+                    footer={null}
+                    width={1000}
                     className="vaccine-detail-modal"
                 >
                     {selectedVaccine && (
@@ -213,7 +265,7 @@ const ManagerVaccinePage: React.FC = () => {
                                                         {schedule.notes && (
                                                             <p className="schedule-notes"><strong>Ghi chú chung:</strong> {schedule.notes}</p>
                                                         )}
-                                                        
+
                                                         {vaccineDetails && vaccineDetails.injectionSchedules && (
                                                             <>
                                                                 <h4>Lịch tiêm:</h4>
@@ -223,9 +275,9 @@ const ManagerVaccinePage: React.FC = () => {
                                                                         <List.Item>
                                                                             <div className="injection-item">
                                                                                 <div>
-                                                                                    <Badge 
-                                                                                        status={injection.isRequired ? "success" : "default"} 
-                                                                                        text={`Mũi ${injection.doseNumber}`} 
+                                                                                    <Badge
+                                                                                        status={injection.isRequired ? "success" : "default"}
+                                                                                        text={`Mũi ${injection.doseNumber}`}
                                                                                     />
                                                                                     <span className="injection-month">{injection.injectionMonth} tháng tuổi</span>
                                                                                 </div>
@@ -254,9 +306,33 @@ const ManagerVaccinePage: React.FC = () => {
                                     )}
                                 </div>
                             </TabPane>
+                            <TabPane tab="Kho Vaccine" key="3">
+                                <div className="inventory-section">
+                                    <div className="inventory-header">
+                                        <h3>Thông Tin Kho Vaccine - {selectedVaccine.name}</h3>
+                                    </div>
+                                    <div className="inventory-content">
+                                        {getVaccineBatches().length > 0 ? (
+                                            <Table
+                                                dataSource={getVaccineBatches()}
+                                                columns={batchColumns}
+                                                rowKey="batchNumber"
+                                                pagination={false}
+                                                bordered
+                                                className="inventory-table"
+                                            />
+                                        ) : (
+                                            <div className="no-inventory-message">
+                                                <p>Chưa có thông tin lô vaccine trong kho.</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </TabPane>
                         </Tabs>
                     )}
                 </Modal>
+
             </div>
         </ManagerLayout>
     );

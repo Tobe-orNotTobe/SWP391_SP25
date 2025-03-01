@@ -9,7 +9,7 @@ import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
 import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
-import ChildRegistrationPage from "./pages/ChildRegistration/ChildRegistrationPage.tsx";
+
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
 import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
 import Login from "./pages/AuthPage/Login/Login.tsx";
@@ -21,6 +21,7 @@ import NotFound from "./components/NotFound/NotFound.tsx";
 import MyChildsPage from "./pages/ChildPage/MyChilds/MyChildsPage.tsx";
 import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
 
+import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistrationPage.tsx";
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
 import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineForm/VaccineComboForm.tsx";
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
@@ -31,8 +32,9 @@ import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import ServicePage from "./pages/Staff/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
 
-import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
+import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
+import HandBookAfter from "./pages/Handbook/HandBookAfter.tsx";
 
 function App() {
 
@@ -50,6 +52,8 @@ function App() {
         <Route path="/vaccines-list" element={<VaccineListPage />} />
         <Route path="/vaccines-list/:id" element={<VaccineDetailPage/>}/>
         <Route path="/handbook/before" element={<BeforeHandbook/>}/>
+        <Route path="/handbook/process" element={<VaccinationProcess/>}/>
+        <Route path="/handbook/after" element={<HandBookAfter/>}/>
 
 
 
@@ -71,14 +75,8 @@ function App() {
 
         <Route path="/child-register" element={<ChildRegistrationPage />} />
 
-        <Route
-          path="/booking"
-          element={<VaccinationRegistrationPage />}
-        ></Route>
-        <Route
-          path="/payment"
-          element={<TransactionPage />}
-        ></Route>
+        <Route path="/booking" element={<VaccinationRegistrationPage />}></Route>
+        <Route path="/payment" element={<TransactionPage />}></Route>
         <Route path="/staff/service" element={<ServicePage />}></Route>
 
         {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}

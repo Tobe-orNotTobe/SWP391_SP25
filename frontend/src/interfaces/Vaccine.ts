@@ -86,6 +86,13 @@ export interface VaccineInventoryStock {
     status: boolean;
 }
 
+export interface VaccineInventoryResponse {
+    statusCode: string;
+    isSuccess: boolean;
+    errorMessages: string[];
+    result: VaccineInventoryStock[];
+}
+
   
   
   
