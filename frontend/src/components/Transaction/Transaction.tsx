@@ -7,7 +7,7 @@ import {
   apiGetVaccineDetailById,
   apiGetComBoVaccineById,
 } from "../../apis/apiVaccine";
-import { Booking, Vaccine, VaccinePackage } from "../../types/VaccineRegistration";
+import { Booking, Vaccine, VaccinePackage } from "../../interfaces/VaccineRegistration.ts";
 
 const Payment: React.FC = () => {
   const location = useLocation();
