@@ -25,7 +25,7 @@ const VaccineDetailPage: React.FC = () => {
             <span className="separator">»</span>
             <span>Thông tin sản phẩm vaccine</span>
             <span className="separator">»</span>
-            <span className="last">{vaccine?.name}</span>
+            <span className="last">Vắc xin {vaccine?.name}</span>
           </div>
 
           <div className="vaccine-Title">
