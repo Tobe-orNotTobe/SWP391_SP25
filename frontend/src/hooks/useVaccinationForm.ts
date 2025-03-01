@@ -1,8 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { Parent, Child, BookingDetail, Booking } from "../types/VaccineRegistration";
+import {
+  Parent,
+  Child,
+  BookingDetail,
+  Booking,
+} from "../types/VaccineRegistration";
 import { getChildren } from "../apis/apiChildren";
 import { apiBooking } from "../apis/apiBooking"; // Sử dụng hàm apiBooking đã được tách riêng
+import { apiPostVNPayTransaction } from "../apis/apiTransaction";
+import { Navigate, useNavigate } from "react-router-dom";
+import { IsLoginSuccessFully } from "../validations/IsLogginSuccessfully";
 
 const useVaccinationForm = () => {
   const [booking, setBooking] = useState<Booking>({
@@ -18,44 +26,86 @@ const useVaccinationForm = () => {
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const Navigate = useNavigate();
+
+  const { username ,sub } = IsLoginSuccessFully();
 
   // Hàm xử lý tìm kiếm thông tin phụ huynh và trẻ
-  const handleSearch = async () => {
-    const userId = "f2385d11-1597-4ca9-aa96-b4443076c6c2"; // Giả sử userId là cố định
+  // const handleSearch = async (searchInput: string) => {
+  //   const userId = searchInput; // Giả sử userId là cố định
 
-    if (!userId) {
-      alert("Vui lòng nhập mã khách hàng.");
-      return;
+  //   if (!userId) {
+  //     alert("Vui lòng nhập mã khách hàng.");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   setError(null);
+
+  //   try {
+  //     const data = await getChildren(userId);
+  //     if (data.isSuccess && data.result) {
+  //       const children = data.result.map((child: Child) => ({
+  //         childId: child.childId,
+  //         fullName: child.fullName,
+  //         dateOfBirth: child.dateOfBirth.split("T")[0],
+  //         gender: child.gender === "Female" ? "Nữ" : "Nam",
+  //       }));
+
+  //       setParentInfo({
+  //         customerCode: userId,
+  //         parentName: userId, // Có thể thay bằng data.parentName nếu API trả về
+  //         children: children,
+  //       });
+  //     } else {
+  //       setError("Không tìm thấy thông tin phụ huynh.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi khi lấy dữ liệu:", error);
+  //     setError("Có lỗi xảy ra khi tải dữ liệu.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+useEffect(() => {
+    const fetchParentAndChildrenInfo = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const data = await getChildren(sub);
+
+            if (data.isSuccess && data.result) {
+                const children = data.result.map((child: Child) => ({
+                    childId: child.childId,
+                    fullName: child.fullName,
+                    dateOfBirth: child.dateOfBirth?.split("T")[0] || "",
+                    gender: child.gender === "Female" ? "Nữ" : "Nam",
+                }));
+
+                setParentInfo({
+                    customerCode: sub,
+                    parentName: username || "Không rõ", // Kiểm tra nếu API trả về parentName
+                    children: children,
+                });
+            } else {
+                setError("Không tìm thấy thông tin phụ huynh.");
+            }
+        } catch (error) {
+            console.error("Lỗi khi lấy thông tin phụ huynh:", error);
+            setError("Có lỗi xảy ra khi tải dữ liệu.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (sub) {
+        fetchParentAndChildrenInfo();
     }
+}, [sub]); // Chạy khi `userId` thay đổi
 
-    setLoading(true);
-    setError(null);
 
-    try {
-      const data = await getChildren(userId);
-      if (data.isSuccess && data.result) {
-        const children = data.result.map((child: Child) => ({
-          childId: child.childId,
-          fullName: child.fullName,
-          dateOfBirth: child.dateOfBirth.split("T")[0],
-          gender: child.gender === "Female" ? "Nữ" : "Nam",
-        }));
-
-        setParentInfo({
-          customerCode: userId,
-          parentName: userId, // Có thể thay bằng data.parentName nếu API trả về
-          children: children,
-        });
-      } else {
-        setError("Không tìm thấy thông tin phụ huynh.");
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy dữ liệu:", error);
-      setError("Có lỗi xảy ra khi tải dữ liệu.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Hàm xử lý chọn trẻ
   const handleSelectChild = (child: Child | null) => {
@@ -69,7 +119,10 @@ const useVaccinationForm = () => {
   };
 
   // Hàm gửi dữ liệu đặt lịch tiêm chủng
-  const submitBooking = async (bookingDate: string, bookingDetails: BookingDetail[]) => {
+  const submitBooking = async (
+    bookingDate: string,
+    bookingDetails: BookingDetail[]
+  ) => {
     if (!selectedChild) {
       alert("Vui lòng chọn trẻ để đặt lịch.");
       return;
@@ -90,14 +143,22 @@ const useVaccinationForm = () => {
         notes: "Ghi chú đặt lịch", // Có thể thay đổi thành trường nhập liệu
         bookingDetails: bookingDetails,
       };
+      setBooking(bookingData);
 
       const status = await apiBooking(parentInfo.customerCode, bookingData);
 
-      if (status === 201) {
-        alert("Đặt lịch thành công!");
+      const paymentResponse = await apiPostVNPayTransaction(
+        status.result?.bookingId
+      );
+
+      console.log(paymentResponse);
+      if (paymentResponse.isSuccess) {
+        window.location.href = paymentResponse.result?.paymentUrl;
       } else {
-        setError("Có lỗi xảy ra khi đặt lịch.");
+        setError("Không lấy được đường dẫn thanh toán.");
       }
+
+      // Navigate("/payment", { state: { bookingData } });
     } catch (error) {
       console.error("Error submitting booking:", error);
       setError("Có lỗi xảy ra khi gửi dữ liệu.");
@@ -114,7 +175,6 @@ const useVaccinationForm = () => {
     loading,
     error,
     setSearchInput,
-    handleSearch,
     handleSelectChild,
     handleAddNewChild,
     submitBooking,
