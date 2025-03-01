@@ -14,11 +14,11 @@ export const IsLoginSuccessFully = () => {
             if (token) {
                 const decodedToken = decodeToken(token);
                 if (decodedToken) {
-                    const expTime = decodedToken.exp * 1000; // Chuyển từ giây sang milliseconds
+                    const expTime = decodedToken.exp * 1000;
                     const currentTime = Date.now();
 
                     if (currentTime >= expTime) {
-                        // Token đã hết hạn, gọi API refresh token
+
                         if (refreshToken) {
                             try {
                                 const newTokenData = await apiRefreshToken(refreshToken);
