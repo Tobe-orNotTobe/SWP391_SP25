@@ -19,8 +19,6 @@ import ResetPassword from "./pages/AuthPage/ResetPassword/ResetPassword.tsx";
 import MyChildsPage from "./pages/ChildPage/MyChilds/MyChildsPage.tsx";
 import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx"
 
-import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
-
 import NotFound from "./components/NotFound/NotFound.tsx";
 
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
@@ -84,9 +82,6 @@ function App() {
         <Route path="/manager/schedule-vaccines/add" element={<ScheduleVaccinationForm/>}/>
         <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm/>}/>
         <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList/>}/>
-
-       
-
 
 
         {/* Trang 404 */}
