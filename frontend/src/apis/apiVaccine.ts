@@ -6,6 +6,7 @@ import {
     VaccineInventoryStock
 } from "../interfaces/Vaccine.ts";
 
+
 export const apiGetVaccineIntro = async () => {
     try {
         const response = await axiosInstance.get("/api/Vaccine/basic");
@@ -138,7 +139,6 @@ export const apiAddVaccinationSchedule = async (data: VaccinationSchedule) => {
 
 export const apiUpdateVaccinationSchedule = async (scheduleId: number, data: VaccinationSchedule) => {
     try {
-        console.log("Updating Schedule:", scheduleId, data);
         const response = await axiosInstance.put(`/api/VaccinationSchedule/${scheduleId}`, data);
         return response.data || {};
     } catch (error) {
@@ -200,3 +200,22 @@ export const apiSearchVaccineInventory = async (keyword: string) => {
     }
 };
 
+export const apiUpdateVaccineInventory = async (id : number, data : VaccineInventoryStock) => {
+    try{
+        const respone = await axiosInstance.put(`/api/VaccineInventory/update/${id}`, data);
+        return respone.data;
+    }catch (err){
+        console.error("API Update VaccineInventory Error:", err);
+        throw err;
+    }
+}
+
+export const apiDeleteVaccineInventory = async (id: number) => {
+    try{
+        const response = await axiosInstance.delete(`/api/VaccineInventory/delete/${id}`);
+        return response.data
+    }catch (err){
+        console.error("API Delete VaccineInventory Error:", err);
+        throw err;
+    }
+}

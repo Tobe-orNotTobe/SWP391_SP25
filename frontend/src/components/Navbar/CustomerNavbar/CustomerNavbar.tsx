@@ -104,7 +104,7 @@ const CustomerNavbar: React.FC = () => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/kids" className="user-dropdown-item">
+                                            <Link to="/my-childs" className="user-dropdown-item">
                                                 <TbMoodKid size={23}/> Trẻ của bạn
                                             </Link>
                                         </li>
