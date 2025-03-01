@@ -8,6 +8,7 @@ namespace ChildVaccineSystem.Data.DTO.VaccineInventory
 {
     public class ReturnedVaccineDTO
     {
+        public int VaccineInventoryId { get; set; }
         public int VaccineId { get; set; }
         public string Name { get; set; }
         public string Manufacturer { get; set; }

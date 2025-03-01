@@ -114,6 +114,7 @@ namespace ChildVaccineSystem.Common.Helper
             CreateMap<UpdateInjectionScheduleDTO, InjectionSchedule>();
 
             CreateMap<VaccineInventory, VaccineInventoryDTO>()
+                .ForMember(dest => dest.VaccineInventoryId, opt => opt.MapFrom(src => src.VaccineInventoryId))
                 .ForMember(dest => dest.VaccineId, opt => opt.MapFrom(src => src.VaccineId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Vaccine.Name))
                 .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Vaccine.Manufacturer))
@@ -125,6 +126,7 @@ namespace ChildVaccineSystem.Common.Helper
                 .ForMember(dest => dest.TotalQuantity, opt => opt.MapFrom(src => src.InitialQuantity - src.QuantityInStock));
 
             CreateMap<VaccineInventory, ReturnedVaccineDTO>()
+                .ForMember(dest => dest.VaccineInventoryId, opt => opt.MapFrom(src => src.VaccineInventoryId))
                 .ForMember(dest => dest.VaccineId, opt => opt.MapFrom(src => src.VaccineId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Vaccine != null ? src.Vaccine.Name : "Unknown"))
                 .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Vaccine != null ? src.Vaccine.Manufacturer : "Unknown"))

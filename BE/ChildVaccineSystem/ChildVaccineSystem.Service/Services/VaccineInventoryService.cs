@@ -72,6 +72,7 @@ namespace ChildVaccineSystem.Service.Services
 
             var stockReport = vaccineStockList.Select(vi => new VaccineInventoryDTO
             {
+                VaccineInventoryId = vi.VaccineInventoryId,
                 VaccineId = vi.VaccineId,
                 Name = vi.Vaccine.Name ?? "Unknown",
                 Manufacturer = vi.Vaccine.Manufacturer ?? "Unknown",
@@ -104,7 +105,8 @@ namespace ChildVaccineSystem.Service.Services
         // Xuất vaccine khỏi kho
         public async Task ExportVaccineAsync(int vaccineId, int quantity)
         {
-            var vaccineInventories = await _unitOfWork.VaccineInventories.GetAvailableInventoriesByVaccineIdAsync(vaccineId);
+            var vaccineInventories = await _unitOfWork.VaccineInventories
+                .GetAvailableInventoriesByVaccineIdAsync(vaccineId);
 
             if (vaccineInventories == null || vaccineInventories.Count == 0)
             {
@@ -117,21 +119,11 @@ namespace ChildVaccineSystem.Service.Services
             {
                 if (remainingQuantity <= 0) break;
 
-                int issuedQuantity = 0;
-                if (inventory.QuantityInStock >= remainingQuantity)
-                {
-                    issuedQuantity = remainingQuantity;
-                    inventory.QuantityInStock -= remainingQuantity;
-                    remainingQuantity = 0;
-                }
-                else
-                {
-                    issuedQuantity = inventory.QuantityInStock;
-                    remainingQuantity -= inventory.QuantityInStock;
-                    inventory.QuantityInStock = 0;
-                }
+                int issuedQuantity = Math.Min(inventory.QuantityInStock, remainingQuantity);
+                inventory.QuantityInStock -= issuedQuantity;
+                remainingQuantity -= issuedQuantity;
 
-                // Tạo giao dịch xuất (Export)
+                // Tạo giao dịch xuất kho
                 var transaction = new VaccineTransactionHistory
                 {
                     VaccineInventoryId = inventory.VaccineInventoryId,
@@ -141,7 +133,6 @@ namespace ChildVaccineSystem.Service.Services
                     Description = $"Issued {issuedQuantity} unit(s) from Batch {inventory.BatchNumber}."
                 };
 
-                // Lưu giao dịch vào lịch sử (Dùng IVaccineTransactionHistoryRepository)
                 await _unitOfWork.VaccineTransactionHistories.AddAsync(transaction);
             }
 
@@ -311,6 +302,7 @@ namespace ChildVaccineSystem.Service.Services
             // Chuyển đổi danh sách đối tượng thành danh sách DTO
             var vaccineInventoryDTOs = vaccineInventories.Select(vi => new VaccineInventoryDTO
             {
+                VaccineInventoryId = vi.VaccineInventoryId,
                 VaccineId = vi.VaccineId,
                 Name = vi.Vaccine?.Name ?? "Unknown",
                 Manufacturer = vi.Vaccine?.Manufacturer ?? "Unknown",
