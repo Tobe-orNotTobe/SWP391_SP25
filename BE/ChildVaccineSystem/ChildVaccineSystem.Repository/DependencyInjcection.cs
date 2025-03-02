@@ -26,6 +26,7 @@ namespace ChildVaccineSystem.Repository
             services.AddTransient<IVaccineTransactionHistoryRepository, VaccineTransactionHistoryRepository>();
             services.AddTransient<IDoctorWorkScheduleRepository, DoctorWorkScheduleRepository>();
             services.AddTransient<IBlogPostRepository, BlogPostRepository>();
+            services.AddTransient<IFeedbackRepository, FeedbackRepository>();
 
             //DI Unit of Work
             services.AddTransient<IUnitOfWork, UnitOfWork>();

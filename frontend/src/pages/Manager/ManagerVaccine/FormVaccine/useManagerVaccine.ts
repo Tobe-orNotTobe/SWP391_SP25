@@ -5,7 +5,7 @@ import { VaccineDetail } from "../../../../interfaces/Vaccine";
 import { apiAddVaccine, apiUpdateVaccine } from "../../../../apis/apiVaccine";
 import { useVaccineDetail } from "../../../../hooks/useVaccine";
 import { uploadImageToCloudinary } from "../../../../utils/cloudinary";
-
+import {AxiosError} from "axios";
 
 export const useVaccineForm = () => {
   const [form] = Form.useForm();
@@ -18,18 +18,41 @@ export const useVaccineForm = () => {
   const [loading, setLoading] = useState(false);
   const { vaccineDetail } = useVaccineDetail();
 
+  // Store rich text editor content
+  const [editorContent, setEditorContent] = useState<Record<string, string>>({
+    description: '',
+    diseasePrevented: '',
+    sideEffect: '',
+    vaccineInteractions: '',
+    undesirableEffects: '',
+    notes: ''
+  });
+
   useEffect(() => {
     if (isEditMode && vaccineDetail) {
-      const currentVaccine = Array.isArray(vaccineDetail) 
-        ? vaccineDetail.find(v => v.vaccineId === Number(id))
-        : null;
+      const currentVaccine = Array.isArray(vaccineDetail)
+          ? vaccineDetail.find(v => v.vaccineId === Number(id))
+          : null;
 
       if (currentVaccine) {
         form.setFieldsValue(currentVaccine);
         setImageUrl(currentVaccine.image);
+
+        // Initialize editor content from existing data
+        if (currentVaccine.description) setEditorContent(prev => ({ ...prev, description: currentVaccine.description }));
+        if (currentVaccine.diseasePrevented) setEditorContent(prev => ({ ...prev, diseasePrevented: currentVaccine.diseasePrevented }));
+        if (currentVaccine.sideEffect) setEditorContent(prev => ({ ...prev, sideEffect: currentVaccine.sideEffect }));
+        if (currentVaccine.vaccineInteractions) setEditorContent(prev => ({ ...prev, vaccineInteractions: currentVaccine.vaccineInteractions }));
+        if (currentVaccine.undesirableEffects) setEditorContent(prev => ({ ...prev, undesirableEffects: currentVaccine.undesirableEffects }));
+        if (currentVaccine.notes) setEditorContent(prev => ({ ...prev, notes: currentVaccine.notes }));
       }
     }
   }, [isEditMode, id, vaccineDetail, form]);
+
+  const handleEditorChange = (field: string, content: string) => {
+    setEditorContent(prev => ({ ...prev, [field]: content }));
+    form.setFieldsValue({ [field]: content });
+  };
 
   const handleUploadImage = async (file: File) => {
     try {
@@ -50,12 +73,18 @@ export const useVaccineForm = () => {
   const handleSubmit = async (values: VaccineDetail) => {
     setLoading(true);
     try {
+      // Merge form values with rich text editor content
+      const submitData = {
+        ...values,
+        ...editorContent
+      };
+
       let response;
-      
+
       if (isEditMode) {
-        response = await apiUpdateVaccine(id, values); // Cập nhật vaccine (PUT)
+        response = await apiUpdateVaccine(id, submitData);
       } else {
-        response = await apiAddVaccine(values); // Thêm mới vaccine (POST)
+        response = await apiAddVaccine(submitData);
       }
 
       if (response.isSuccess) {
@@ -64,22 +93,37 @@ export const useVaccineForm = () => {
           description: isEditMode ? "Đã cập nhật vaccine thành công" : "Đã thêm vaccine thành công",
         });
         setTimeout(() => navigate("/manager/vaccines"), 1000);
-      } else {
+
+      }
+    } catch (error : unknown) {
+      if (error instanceof AxiosError) {
         notification.error({
-          message: "Có lỗi xảy ra",
-          description: response?.message || "Lỗi không xác định",
+          message: "Đăng Nhập Thất Bại",
+          description: error.response?.data?.error || "Lỗi không xác định từ server",
+        });
+      } else {
+        console.error("Lỗi không xác định:", error);
+        notification.error({
+          message: "Lỗi không xác định",
+          description: "Vui lòng thử lại sau.",
         });
       }
-    } catch (error) {
-      console.error("Error submitting vaccine:", error);
-      notification.error({
-        message: "Lỗi khi gửi thông tin vaccine",
-        description: "Không thể gửi dữ liệu lên server. Vui lòng thử lại!",
-      });
     } finally {
       setLoading(false);
     }
   };
 
-  return { form, file, setFile, imageUrl, loading, handleUploadImage, handleSubmit, isEditMode, navigate };
+  return {
+    form,
+    file,
+    setFile,
+    imageUrl,
+    loading,
+    handleUploadImage,
+    handleSubmit,
+    isEditMode,
+    navigate,
+    handleEditorChange,
+    editorContent
+  };
 };

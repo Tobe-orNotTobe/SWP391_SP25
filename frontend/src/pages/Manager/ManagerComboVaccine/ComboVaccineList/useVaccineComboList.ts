@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { notification } from "antd";
 import { GetVaccineComboDetail } from "../../../../interfaces/Vaccine";
 import { apiDeleteComboVaccine } from "../../../../apis/apiVaccine";
+import {AxiosError} from "axios";
+
 
 export const useComboVaccineList = () => {
     const navigate = useNavigate();
@@ -22,28 +24,37 @@ export const useComboVaccineList = () => {
     const handleDelete = async (comboVaccineId: number) => {
         try {
             setDeletingId(comboVaccineId);
-            const response = await apiDeleteComboVaccine(comboVaccineId);
+            const data = await apiDeleteComboVaccine(comboVaccineId);
 
-            if (response.isSuccess) {
+            if (data.isSuccess) {
                 notification.success({
-                    message: response.message,
+                    message: data.message,
                     description: "Đã Xóa Thành Công"
                 });
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
-            } else {
+            }
+
+        }catch (error: unknown) {
+
+            if (error instanceof AxiosError) {
+                console.log("hehe", error.response?.data?.error);
+
                 notification.error({
-                    message: response.message,
-                    description: "Có lỗi xảy ra"
+                    message: "Xóa Combo Vaccine Thất Bại",
+                    description: error.response?.data?.error,
+                });
+
+            } else {
+                console.error("Lỗi không xác định:", error);
+                notification.error({
+                    message: "Lỗi không xác định",
+                    description: "Vui lòng thử lại sau.",
                 });
             }
-        } catch (error) {
-            console.error("Delete error:", error);
-            notification.error({
-                message: "Lỗi xóa dữ liệu",
-                description: "Không thể xóa combo vaccine. Vui lòng thử lại sau."
-            });
+
+
         } finally {
             setDeletingId(null);
         }

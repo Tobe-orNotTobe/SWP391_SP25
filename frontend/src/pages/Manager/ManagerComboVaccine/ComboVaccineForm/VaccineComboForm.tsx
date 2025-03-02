@@ -15,7 +15,7 @@ const VaccineComboForm: React.FC = () => {
             <div className="vaccine-combo-form-container">
             <Button 
                 icon={<ArrowLeftOutlined />} 
-                onClick={() => navigate("/manager/vaccines")}
+                onClick={() => navigate("/manager/combo-vaccines")}
                 className="back-button"
                 style={{marginBottom: "20px"}}
             >

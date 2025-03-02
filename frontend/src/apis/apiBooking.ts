@@ -1,18 +1,20 @@
 import axios from "axios";
-import { Booking } from "../types/VaccineRegistration";
+import { Booking } from "../interfaces/VaccineRegistration.ts";
 
-export const apiBooking = async (userId: string, booking: Booking): Promise<number | void> => {
+export const apiBooking = async (userId: string, booking: Booking) => {
   try {
     const response = await axios.post(
       `https://localhost:7134/api/Booking?userId=${userId}`,
       booking
     );
 
+    console.log(response)
+
     if (response.status === 201) {
       const data = response.data;
       if (data.isSuccess) {
         alert("Đặt lịch thành công!");
-        return response.status; // Trả về status code nếu thành công
+        return response.data; // Trả về status code nếu thành công
       } else {
         // Hiển thị thông báo lỗi từ API (nếu có)
         return data.error?.errorMessages?.join(", ") || "Có lỗi xảy ra khi đặt lịch.";

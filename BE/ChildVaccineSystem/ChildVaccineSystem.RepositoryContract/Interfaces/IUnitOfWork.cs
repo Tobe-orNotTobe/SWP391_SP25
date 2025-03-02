@@ -24,6 +24,8 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         IDoctorWorkScheduleRepository DoctorWorkSchedules { get; }
         IVaccineTransactionHistoryRepository VaccineTransactionHistories { get; }
         IBlogPostRepository BlogPosts { get; }
+        IFeedbackRepository Feedbacks { get; }
+
         Task<int> CompleteAsync();
 		Task<IDbContextTransaction> BeginTransactionAsync();
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Vaccine, VaccinePackage, BookingDetail } from "../types/VaccineRegistration";
+import { Vaccine, VaccinePackage, BookingDetail } from "../interfaces/VaccineRegistration.ts";
 import { useVaccineDetail, useComboVaccineDetail } from "./useVaccine";
 
 const useVaccineSelection = () => {

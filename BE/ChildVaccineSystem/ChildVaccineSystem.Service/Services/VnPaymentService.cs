@@ -29,6 +29,11 @@ namespace ChildVaccineSystem.Service.Services
 				throw new ArgumentException($"Booking with ID {bookingId} not found");
 			}
 
+			if (booking.Status != BookingStatus.Pending)
+			{
+				throw new InvalidOperationException($"Payment can only be processed for bookings with 'Pending' status. Current status: {booking.Status}");
+			}
+
 			var transaction = await CreateTransactionAsync(booking);
 
 			var tick = DateTime.Now.Ticks.ToString();

@@ -42,7 +42,7 @@ export const getChildren = async (userId: string) => {
         console.log(data)
 
         if (data.isSuccess) {
-          console.log(data)
+            console.log(data)
             return {
                 isSuccess: true,
                 result: data.result // Trả về danh sách trẻ em thô từ API
