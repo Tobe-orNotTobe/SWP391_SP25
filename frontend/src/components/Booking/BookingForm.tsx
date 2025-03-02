@@ -188,16 +188,17 @@ const VaccinationRegistrationPage = () => {
   };
 
   // Handle selecting booking date
-  const handleSelectBookingDate = (date: Date) => {
+  const handleSelectBookingDate = (date: unknown) => {
     if (!(date instanceof Date) || isNaN(date.getTime())) {
       notification.error({
         message: "Lỗi",
         description: "Ngày không hợp lệ.",
       });
-      throw new Error("Ngày không hợp lệ");
+      return;
     }
     setBookingDate(date.toISOString());
   };
+
 
   // Update booking details when selected vaccines change
   useEffect(() => {

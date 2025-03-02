@@ -76,7 +76,7 @@ export interface Booking {
   bookingDate: string;
   notes: string;
   bookingDetails: BookingDetail[];
-};
+}
 
 export interface BookingDetail {
   vaccineId: number | null;
