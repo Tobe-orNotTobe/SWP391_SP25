@@ -72,7 +72,6 @@ export interface VaccinePackage {
 }
 
 export interface Booking {
-  bookingID: string;
   childId: string;
   bookingDate: string;
   notes: string;

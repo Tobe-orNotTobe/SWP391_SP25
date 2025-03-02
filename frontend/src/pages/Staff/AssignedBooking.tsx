@@ -4,13 +4,15 @@ import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
 import { apiGetDoctorBookings } from "../../apis/apiBooking.ts";
 import "./VaccinationSchedulePage.scss";
 import Modal from "react-modal";
+import { BookingResponse } from "../../interfaces/Booking.ts";
 
 Modal.setAppElement("#root"); // Đặt root để đảm bảo modal hoạt động tốt
 
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();
   const [bookings, setBookings] = useState([]);
-  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [selectedBooking, setSelectedBooking] =
+    useState<BookingResponse | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
@@ -18,7 +20,7 @@ const VaccinationSchedulePage: React.FC = () => {
       if (doctorId) {
         const data = await apiGetDoctorBookings(doctorId);
         if (data?.isSuccess) {
-            console.log(data.result)
+          console.log(data.result);
           setBookings(data.result);
         }
       }
@@ -27,7 +29,7 @@ const VaccinationSchedulePage: React.FC = () => {
     fetchBookings();
   }, [doctorId]);
 
-  const openModal = (booking) => {
+  const openModal = (booking: BookingResponse) => {
     setSelectedBooking(booking);
     setModalIsOpen(true);
   };
@@ -54,7 +56,7 @@ const VaccinationSchedulePage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {bookings.map((booking) => (
+            {bookings.map((booking: BookingResponse) => (
               <tr key={booking.bookingId}>
                 <td>{booking.bookingId}</td>
                 <td>{booking.childName}</td>
@@ -102,7 +104,7 @@ const VaccinationSchedulePage: React.FC = () => {
               <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
             </p>
             <p>
-              <strong>Ghi Chú:</strong> {selectedBooking.notes}
+              <strong>Ghi Chú:</strong> {selectedBooking.note}
             </p>
             <p>
               <strong>Trạng Thái:</strong> {selectedBooking.status}
