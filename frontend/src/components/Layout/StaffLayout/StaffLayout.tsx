@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import "./adminLayout.scss";
-import AdminNavBar from "../Navbar/AdminNavbar/AdminNavbar";
-import logo from "../../assets/navbar/Logo_Navbar.png";
+import { useNavigate } from "react-router-dom";
+import "./StaffLayout.scss";
+import AdminNavBar from "../../Navbar/AdminNavbar/AdminNavbar";
+import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { DownOutlined } from "@ant-design/icons";
+import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully";
 
 interface CustomLayoutProps {
   children: React.ReactNode;
@@ -14,14 +16,10 @@ interface OpenGroupsState {
   vaccination: boolean;
 }
 
-// Mock user dữ liệu giả lập
-const mockUser = {
-  username: "Nguyễn Văn A",
-  avatarUrl: "", // Để trống sẽ hiển thị Avatar mặc định của Ant Design
-};
-
-const AdminLayout: React.FC<CustomLayoutProps> = ({ children }) => {
-  const [activeTab, setActiveTab] = useState<string>("Đăng cẩm nang");
+const StaffLayout: React.FC<CustomLayoutProps> = ({ children }) => {
+  const navigate = useNavigate();
+  const { username } = IsLoginSuccessFully();
+  const [activeTab, setActiveTab] = useState<string>("/post-guide");
   const [openGroups, setOpenGroups] = useState<OpenGroupsState>({
     management: true,
     posting: false,
@@ -35,10 +33,15 @@ const AdminLayout: React.FC<CustomLayoutProps> = ({ children }) => {
     }));
   };
 
+  const handleNavigation = (path: string) => {
+    setActiveTab(path);
+    navigate(path);
+  };
+
   return (
-    <div className="custom-layout">
+    <div className="admin-layout">
       <aside className="sidebar">
-        <div className="logo">
+        <div className="sidebarlogo">
           <img src={logo} alt="Logo" />
         </div>
         <div className="nav">
@@ -47,7 +50,7 @@ const AdminLayout: React.FC<CustomLayoutProps> = ({ children }) => {
               className="nav-group-header"
               onClick={() => toggleGroup("management")}
             >
-              <h3 className="nav-group-title">Quản lý</h3>
+              <h3 className="nav-group-title">Tiêm chủng</h3>
               <DownOutlined
                 className={`nav-group-icon ${
                   openGroups.management ? "open" : ""
@@ -56,10 +59,19 @@ const AdminLayout: React.FC<CustomLayoutProps> = ({ children }) => {
             </div>
             {openGroups.management && (
               <ul>
-                {["Quản lý người dùng", "Quản lý bài viết"].map((tab) => (
-                  <li key={tab} className={activeTab === tab ? "active" : ""}>
-                    <a href="#" onClick={() => setActiveTab(tab)}>
-                      {tab}
+                {[
+                  { label: "Ghi nhận tiêm chủng", path: "/staff/service" },
+                  {
+                    label: "Lịch tiêm chủng",
+                    path: "/staff/vaccination-schedule",
+                  },
+                ].map((tab) => (
+                  <li
+                    key={tab.path}
+                    className={activeTab === tab.path ? "active" : ""}
+                  >
+                    <a onClick={() => handleNavigation(tab.path)}>
+                      {tab.label}
                     </a>
                   </li>
                 ))}
@@ -79,10 +91,16 @@ const AdminLayout: React.FC<CustomLayoutProps> = ({ children }) => {
             </div>
             {openGroups.posting && (
               <ul>
-                {["Đăng cẩm nang", "Đăng tin tức"].map((tab) => (
-                  <li key={tab} className={activeTab === tab ? "active" : ""}>
-                    <a href="#" onClick={() => setActiveTab(tab)}>
-                      {tab}
+                {[
+                  { label: "Đăng cẩm nang", path: "/post-guide" },
+                  { label: "Đăng tin tức", path: "/post-news" },
+                ].map((tab) => (
+                  <li
+                    key={tab.path}
+                    className={activeTab === tab.path ? "active" : ""}
+                  >
+                    <a onClick={() => handleNavigation(tab.path)}>
+                      {tab.label}
                     </a>
                   </li>
                 ))}
@@ -104,10 +122,16 @@ const AdminLayout: React.FC<CustomLayoutProps> = ({ children }) => {
             </div>
             {openGroups.vaccination && (
               <ul>
-                {["Lịch tiêm chủng", "Quản lý vaccine"].map((tab) => (
-                  <li key={tab} className={activeTab === tab ? "active" : ""}>
-                    <a href="#" onClick={() => setActiveTab(tab)}>
-                      {tab}
+                {[
+                  { label: "Lịch tiêm chủng", path: "/vaccination-schedule" },
+                  { label: "Quản lý vaccine", path: "/manage-vaccine" },
+                ].map((tab) => (
+                  <li
+                    key={tab.path}
+                    className={activeTab === tab.path ? "active" : ""}
+                  >
+                    <a onClick={() => handleNavigation(tab.path)}>
+                      {tab.label}
                     </a>
                   </li>
                 ))}
@@ -119,14 +143,11 @@ const AdminLayout: React.FC<CustomLayoutProps> = ({ children }) => {
 
       <main className="main">
         {/* Truyền mock user vào AdminNavBar */}
-        <AdminNavBar
-          username={mockUser.username}
-          avatarUrl={mockUser.avatarUrl}
-        />
+        <AdminNavBar username={username} avatarUrl={""} />
         <div className="content">{children}</div>
       </main>
     </div>
   );
 };
 
-export default AdminLayout;
+export default StaffLayout;

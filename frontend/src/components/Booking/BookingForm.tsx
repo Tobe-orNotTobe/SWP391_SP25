@@ -1,41 +1,190 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./BookingForm.scss";
-import useVaccinationForm from "../../hooks/useVaccinationForm";
-import useVaccineSelection from "../../hooks/useVaccineSelection";
+import {
+  Parent,
+  Child,
+  BookingDetail,
+  Booking,
+  Vaccine,
+  VaccinePackage,
+} from "../../interfaces/VaccineRegistration.ts";
+import { apiBooking } from "../../apis/apiBooking";
+import { apiPostVNPayTransaction } from "../../apis/apiTransaction";
+import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
+import { apiGetMyChilds } from "../../apis/apiChild.ts";
+import {
+  useVaccineDetail,
+  useComboVaccineDetail,
+} from "../../hooks/useVaccine";
 
 const VaccinationRegistrationPage = () => {
+  const navigate = useNavigate();
+  const { username, sub } = IsLoginSuccessFully();
 
+  // State for vaccination form
+  const [isFormSplit, setIsFormSplit] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [parentInfo, setParentInfo] = useState<Parent | null>(null);
+  const [selectedChild, setSelectedChild] = useState<Child | null>(null);
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
+  // State for vaccine selection
+  const [vaccineType, setVaccineType] = useState<"Gói" | "Lẻ">("Gói");
+  const [selectedVaccines, setSelectedVaccines] = useState<string[]>([]);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [bookingDate, setBookingDate] = useState<string | null>(null);
+  const [bookingDetails, setBookingDetails] = useState<BookingDetail[]>([]);
+
+  // Fetch vaccine data
   const {
-    searchInput,
-    parentInfo,
-    selectedChild,
-    isFormSplit,
-    setSearchInput,
-    handleSelectChild,
-    handleAddNewChild,
-    submitBooking,
-    loading: formLoading,
-    error: formError,
-  } = useVaccinationForm();
-
-  const {
-    vaccineType,
-    selectedVaccines,
-    expandedCategory,
-    vaccinePackages,
-    singleVaccines,
-    bookingDetails,
-    bookingDate,
-    handleVaccineTypeChange,
-    handleSelectVaccine,
-    toggleCategory,
-    handleSelectBookingDate,
+    vaccineDetail: singleVaccines,
     loading: vaccineLoading,
     error: vaccineError,
-  } = useVaccineSelection();
+  } = useVaccineDetail();
 
-  // Xử lý khi form được submit
+  const {
+    comboVaccineDetail: vaccinePackages,
+    loading: comboLoading,
+    error: comboError,
+  } = useComboVaccineDetail();
+
+  // Fetch parent and children info
+  useEffect(() => {
+    const fetchParentAndChildrenInfo = async () => {
+      setFormLoading(true);
+      setFormError(null);
+
+      try {
+        const data = await apiGetMyChilds();
+
+        if (data.isSuccess && data.result) {
+          const children = data.result.map((child: Child) => ({
+            childId: child.childId,
+            fullName: child.fullName,
+            dateOfBirth: child.dateOfBirth?.split("T")[0] || "",
+            gender: child.gender === "Female" ? "Nữ" : "Nam",
+          }));
+
+          setParentInfo({
+            customerCode: sub,
+            parentName: username || "Không rõ",
+            children: children,
+          });
+        } else {
+          setFormError("Không tìm thấy thông tin phụ huynh.");
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin phụ huynh:", error);
+        setFormError("Có lỗi xảy ra khi tải dữ liệu.");
+      } finally {
+        setFormLoading(false);
+      }
+    };
+
+    if (sub) {
+      fetchParentAndChildrenInfo();
+    }
+  }, [sub, username]);
+
+  // Handle selecting a child
+  const handleSelectChild = (child: Child | null) => {
+    setSelectedChild(child);
+    setIsFormSplit(!!child);
+  };
+
+  // Handle adding a new child
+  const handleAddNewChild = () => {
+    navigate("/child-register");
+  };
+
+  // Handle submitting the booking
+  const submitBooking = async (
+    bookingDate: string,
+    bookingDetails: BookingDetail[]
+  ) => {
+    if (!selectedChild) {
+      alert("Vui lòng chọn trẻ để đặt lịch.");
+      return;
+    }
+
+    if (!parentInfo?.customerCode) {
+      alert("Không tìm thấy thông tin phụ huynh.");
+      return;
+    }
+
+    setFormLoading(true);
+    setFormError(null);
+
+    try {
+      const bookingData: Booking = {
+        childId: selectedChild.childId,
+        bookingDate: bookingDate,
+        notes: "Ghi chú đặt lịch",
+        bookingDetails: bookingDetails,
+      };
+
+      const status = await apiBooking(parentInfo.customerCode, bookingData);
+
+      const paymentResponse = await apiPostVNPayTransaction(
+        status.result?.bookingId
+      );
+
+      console.log(paymentResponse);
+      if (paymentResponse.isSuccess) {
+        window.location.href = paymentResponse.result?.paymentUrl;
+      } else {
+        setFormError("Không lấy được đường dẫn thanh toán.");
+      }
+    } catch (error) {
+      console.error("Error submitting booking:", error);
+      setFormError("Có lỗi xảy ra khi gửi dữ liệu.");
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  // Handle vaccine type change
+  const handleVaccineTypeChange = (type: "Gói" | "Lẻ") => {
+    setVaccineType(type);
+    setSelectedVaccines([]);
+  };
+
+  // Handle selecting a vaccine
+  const handleSelectVaccine = (vaccineId: string) => {
+    setSelectedVaccines((prevSelected) => {
+      if (prevSelected.includes(vaccineId)) {
+        return prevSelected.filter((id) => id !== vaccineId);
+      } else {
+        return [...prevSelected, vaccineId];
+      }
+    });
+  };
+
+  // Toggle vaccine category
+  const toggleCategory = (category: string) => {
+    setExpandedCategory((prev) => (prev === category ? null : category));
+  };
+
+  // Handle selecting booking date
+  const handleSelectBookingDate = (date: Date) => {
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+      throw new Error("Ngày không hợp lệ");
+    }
+    setBookingDate(date.toISOString());
+  };
+
+  // Update booking details when selected vaccines change
+  useEffect(() => {
+    const newBookingDetails = selectedVaccines.map((id) => ({
+      vaccineId: vaccineType === "Lẻ" ? Number(id) : null,
+      comboVaccineId: vaccineType === "Gói" ? Number(id) : null,
+    }));
+    setBookingDetails(newBookingDetails);
+  }, [selectedVaccines, vaccineType]);
+
+  // Handle form submission
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -54,7 +203,6 @@ const VaccinationRegistrationPage = () => {
       return;
     }
 
-    // Gọi hàm submitBooking
     await submitBooking(bookingDate, bookingDetails);
   };
 
@@ -69,34 +217,11 @@ const VaccinationRegistrationPage = () => {
         <h1>Đăng ký tiêm chủng</h1>
         <div className="split-form">
           <div className="splited-part">
-            {/* Tìm kiếm thông tin phụ huynh */}
             <div className="form-section">
               <div className="form-group">
-                {/* <div className="search-container">
-                  <input
-                    type="text"
-                    placeholder="Mã khách hàng"
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleSearch(sub);
-                      }
-                    }}
-                  />
-                  <button
-                    className="rouded-button"
-                    type="button"
-                    onClick={() => handleSearch(sub)}
-                  >
-                    Tìm kiếm
-                  </button>
-                </div> */
-                }
+                {/* Search input and button can be added here */}
               </div>
 
-              {/* Hiển thị thông tin phụ huynh */}
               {parentInfo && (
                 <div className="parent-info">
                   <h3>Thông tin phụ huynh</h3>
@@ -106,8 +231,7 @@ const VaccinationRegistrationPage = () => {
                 </div>
               )}
 
-              {/* Hiển thị danh sách trẻ */}
-              {parentInfo && parentInfo.children.length > 0 && (
+              {parentInfo && parentInfo.children.length > 0 ? (
                 <div className="registered-children">
                   <h3>Danh sách trẻ</h3>
                   <ul>
@@ -119,10 +243,8 @@ const VaccinationRegistrationPage = () => {
                             checked={selectedChild?.childId === child.childId}
                             onChange={() => {
                               if (selectedChild?.childId === child.childId) {
-                                console.log(child);
                                 handleSelectChild(null);
                               } else {
-                                console.log(child);
                                 handleSelectChild(child);
                               }
                             }}
@@ -136,16 +258,23 @@ const VaccinationRegistrationPage = () => {
                     ))}
                   </ul>
                   <button
-                    className="rouded-button"
+                    className="rounded-button"
                     type="button"
                     onClick={handleAddNewChild}
                   >
                     Đăng ký thêm trẻ
                   </button>
                 </div>
+              ) : (
+                <button
+                  className="rounded-button"
+                  type="button"
+                  onClick={handleAddNewChild}
+                >
+                  Đăng ký thêm trẻ
+                </button>
               )}
 
-              {/* Không có trẻ nào */}
               {parentInfo && parentInfo.children.length === 0 && (
                 <div className="no-children-found">
                   <p>Không tìm thấy trẻ nào.</p>
@@ -158,13 +287,11 @@ const VaccinationRegistrationPage = () => {
           </div>
 
           <div className="splited-part">
-            {/* Lựa chọn vắc xin */}
             {selectedChild && (
               <div className="form-section">
                 <div className="form-section">
                   <h3>Thông tin dịch vụ</h3>
 
-                  {/* Chọn ngày đặt lịch */}
                   <div className="form-group">
                     <label>Ngày muốn đặt lịch tiêm *</label>
                     <input
@@ -178,7 +305,6 @@ const VaccinationRegistrationPage = () => {
                     />
                   </div>
 
-                  {/* Chọn loại vắc xin */}
                   <div className="form-group">
                     <label>* Loại vắc xin muốn đăng ký</label>
                     <div className="vaccine-selection">
@@ -199,7 +325,6 @@ const VaccinationRegistrationPage = () => {
                     </div>
                   </div>
 
-                  {/* Danh sách vắc xin */}
                   <div className="vaccine-list">
                     <label>* Chọn vắc xin</label>
                     {vaccineType === "Gói" ? (
@@ -215,7 +340,9 @@ const VaccinationRegistrationPage = () => {
                               if (
                                 expandedCategory !== vaccinePackage.comboName
                               ) {
-                                handleSelectVaccine(vaccinePackage.comboId.toString());
+                                handleSelectVaccine(
+                                  vaccinePackage.comboId.toString()
+                                );
                               }
                             }}
                           >
@@ -267,7 +394,9 @@ const VaccinationRegistrationPage = () => {
                                 vaccine.vaccineId.toString()
                               )}
                               onChange={() =>
-                                handleSelectVaccine(vaccine.vaccineId.toString())
+                                handleSelectVaccine(
+                                  vaccine.vaccineId.toString()
+                                )
                               }
                             />
                             <div className="vaccine-info">
@@ -288,7 +417,6 @@ const VaccinationRegistrationPage = () => {
           </div>
         </div>
 
-        {/* Nút hoàn thành đăng ký */}
         {selectedChild && (
           <button type="submit" className="submit-button">
             Hoàn thành đăng ký

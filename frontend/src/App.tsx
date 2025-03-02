@@ -35,6 +35,7 @@ import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineF
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
 import HandBookAfter from "./pages/Handbook/HandBookAfter.tsx";
+import VaccinationSchedulePage from "./pages/Staff/AssignedBooking.tsx";
 
 function App() {
 
@@ -78,6 +79,8 @@ function App() {
         <Route path="/booking" element={<VaccinationRegistrationPage />}></Route>
         <Route path="/payment" element={<TransactionPage />}></Route>
         <Route path="/staff/service" element={<ServicePage />}></Route>
+        <Route path="/staff/vaccination-schedule" element={<VaccinationSchedulePage />}></Route>
+
 
         {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}
         <Route path="/manager/dashboard" element={<ManagerDashBoard />} />

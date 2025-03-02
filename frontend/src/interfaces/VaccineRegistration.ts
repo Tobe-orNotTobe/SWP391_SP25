@@ -46,11 +46,15 @@ export interface Vaccine {
   sideEffect: string;
   diseasePrevented: string;
   price: string;
-  status: boolean;
+  status: string;
   isNecessary: boolean;
+  lotNumber: string;
   image: string;
+  reminder: string;
+  reminderDate: string;
   injectionSite: string;
   notes: string;
+  dose: string;
   vaccineInteractions: string;
   undesirableEffects: string;
   preserve: string;
@@ -68,6 +72,7 @@ export interface VaccinePackage {
 }
 
 export interface Booking {
+  bookingID: string;
   childId: string;
   bookingDate: string;
   notes: string;
