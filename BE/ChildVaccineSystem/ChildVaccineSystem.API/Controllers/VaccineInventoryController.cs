@@ -14,7 +14,7 @@ namespace ChildVaccineSystem.API.Controllers
     [ApiController]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Staff,Manager")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Staff,Manager")]
     public class VaccineInventoryController : ControllerBase
     {
         private readonly IVaccineInventoryService _vaccineInventoryService;
