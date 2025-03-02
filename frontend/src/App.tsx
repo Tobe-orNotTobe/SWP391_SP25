@@ -31,7 +31,6 @@ import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import ServicePage from "./pages/Staff/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
-import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
 
 import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
 import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx";
@@ -50,74 +49,69 @@ function App() {
   
   return (
       <>
+          <BrowserRouter>
+              <PageLoader/>
+              <Routes>
+                {/*Các trang này thì người dùng có thể xem thoải mái nhưng khi đăng nhập các role như staff, manager sẽ khong xem được kiểu vậy*/}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/homepage" element={<HomePage />} />
+                <Route path="/introduction" element={<IntroductionPage />} />
+                <Route path="/mission" element={<MissionPage />} />
+                <Route path="/vision" element={<VisionPage />} />
+                <Route path="/our-team" element={<OurTeamPage />} />
+                <Route path="/vaccines-list" element={<VaccineListPage />} />
+                <Route path="/vaccines-list/:id" element={<VaccineDetailPage/>}/>
+                <Route path="/handbook/before" element={<BeforeHandbook/>}/>
+                <Route path="/handbook/process" element={<VaccinationProcess/>}/>
+                <Route path="/handbook/after" element={<HandBookAfter/>}/>
 
-        <BrowserRouter>
-          <PageLoader/>
-          <Routes>
-            {/*Các trang này thì người dùng có thể xem thoải mái nhưng khi đăng nhập các role như staff, manager sẽ khong xem được kiểu vậy*/}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/homepage" element={<HomePage />} />
-            <Route path="/introduction" element={<IntroductionPage />} />
-            <Route path="/mission" element={<MissionPage />} />
-            <Route path="/vision" element={<VisionPage />} />
-            <Route path="/our-team" element={<OurTeamPage />} />
-            <Route path="/vaccines-list" element={<VaccineListPage />} />
-            <Route path="/vaccines-list/:id" element={<VaccineDetailPage/>}/>
-            <Route path="/handbook/before" element={<BeforeHandbook/>}/>
-            <Route path="/handbook/process" element={<VaccinationProcess/>}/>
-            <Route path="/handbook/after" element={<HandBookAfter/>}/>
-
-
-
-            {/*Lưu ý: Các trang này là phục vụ việc authencation thôi chứ cũng không có gì*/}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/confirm-email" element={<ConfirmEmail />} />
+                {/*Lưu ý: Các trang này là phục vụ việc authencation thôi chứ cũng không có gì*/}
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/confirm-email" element={<ConfirmEmail />} />
 
 
+                {/*Lưu ý: Trang này phải đăng nhập và có role là Customer mới sử dụng được*/}
+                <Route path="/child-register" element={<ChildRegistrationPage/>}/>
+                <Route path={"/my-childs"} element={<MyChildsPage/>}/>
+                <Route path={"/child-detail"} element={<ChildDetailPage/>}/>
+                <Route path="/booking" element={<VaccinationRegistrationPage/>}></Route>
+                <Route path="/staff/service" element={<ServicePage/>}></Route>
 
-            {/*Lưu ý: Trang này phải đăng nhập và có role là Customer mới sử dụng được*/}
-            <Route path="/child-register" element={<ChildRegistrationPage/>}/>
-            <Route path={"/my-childs"} element={<MyChildsPage/>}/>
-            <Route path={"/child-detail"} element={<ChildDetailPage/>}/>
-            <Route path="/booking" element={<VaccinationRegistrationPage/>}></Route>
-            <Route path="/staff/service" element={<ServicePage/>}></Route>
+                <Route path="/child-register" element={<ChildRegistrationPage />} />
 
-            <Route path="/child-register" element={<ChildRegistrationPage />} />
+                <Route path="/booking" element={<VaccinationRegistrationPage />}></Route>
+                <Route path="/payment" element={<TransactionPage />}></Route>
+                <Route path="/staff/service" element={<ServicePage />}></Route>
+                <Route path="/staff/vaccination-schedule" element={<VaccinationSchedulePage />}></Route>
 
-        <Route path="/booking" element={<VaccinationRegistrationPage />}></Route>
-        <Route path="/payment" element={<TransactionPage />}></Route>
-        <Route path="/staff/service" element={<ServicePage />}></Route>
-        <Route path="/staff/vaccination-schedule" element={<VaccinationSchedulePage />}></Route>
+                {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}
+                <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
+                <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
+                <Route path="/manager/combo-vaccines" element={<VaccineComboList/>}/>
+                <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
+                <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
+                <Route path="/manager/combo-vaccines/add" element={<VaccineComboForm/>}/>
+                <Route path="/manager/combo-vaccines/edit/:id" element={<VaccineComboForm/>}/>
+                <Route path="/manager/schedule-vaccines" element={< ScheduleVaccinationList/>}/>
+                <Route path="/manager/schedule-vaccines/add" element={<ScheduleVaccinationForm/>}/>
+                <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm/>}/>
+                <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList/>}/>
+                <Route path="/manager/inventory-vacccines/add" element={<VaccineInventoryForm/>}/>
+                <Route path="/manager/inventory-vacccines/edit/:id" element={<VaccineInventoryForm/>}/>
 
+                  <Route path={"/admin/dashboard"} element={<AdminDashboardPage/>}/>
+                  <Route path={"/admin/account"} element={<AdminAccountPage/>}/>
+                  <Route path={"/admin/account/add"} element={<AdminAccountFormPage/>}/>
+                  <Route path={"/admin/account/edit/:id"} element={<AdminAccountFormPage/>}/>
 
-            {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}
-            <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
-            <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
-            <Route path="/manager/combo-vaccines" element={<VaccineComboList/>}/>
-            <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
-            <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
-            <Route path="/manager/combo-vaccines/add" element={<VaccineComboForm/>}/>
-            <Route path="/manager/combo-vaccines/edit/:id" element={<VaccineComboForm/>}/>
-            <Route path="/manager/schedule-vaccines" element={< ScheduleVaccinationList/>}/>
-            <Route path="/manager/schedule-vaccines/add" element={<ScheduleVaccinationForm/>}/>
-            <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm/>}/>
-            <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList/>}/>
-            <Route path="/manager/inventory-vacccines/add" element={<VaccineInventoryForm/>}/>
-            <Route path="/manager/inventory-vacccines/edit/:id" element={<VaccineInventoryForm/>}/>
-
-
-              <Route path={"/admin/dashboard"} element={<AdminDashboardPage/>}/>
-              <Route path={"/admin/account"} element={<AdminAccountPage/>}/>
-              <Route path={"/admin/account/add"} element={<AdminAccountFormPage/>}/>
-              <Route path={"/admin/account/edit/:id"} element={<AdminAccountFormPage/>}/>
-
-        {/* Trang 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+            {/* Trang 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+          </>
   );
 }
 
