@@ -1,14 +1,13 @@
 import React from "react";
-import AdminLayout from "../../components/AdminLayout/AdminLayout";
+import StaffLayout from "../../components/Layout/StaffLayout/StaffLayout.tsx";
 import VaccinationRecordForm from "../../components/VaccinationRecordForm/VaccinationRecordForm";
 
+const ServicePage: React.FC = () => {
+  return (
+    <StaffLayout>
+      <VaccinationRecordForm />
+    </StaffLayout>
+  );
+};
 
-const ServicePage : React.FC  = () => {
-    return(
-        <AdminLayout>
-           <VaccinationRecordForm/>
-        </AdminLayout>
-    );
-}
-
-export default ServicePage
+export default ServicePage;

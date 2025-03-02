@@ -25,13 +25,12 @@ import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistra
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
 import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineForm/VaccineComboForm.tsx";
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
-import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList/VaccineInventoryList.tsx";
+import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
 import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
 import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import ServicePage from "./pages/Staff/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
-
 
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
@@ -40,6 +39,7 @@ import PageLoader from "./components/PageLoader/PageLoader.tsx";
 import VaccineInventoryForm
   from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryForm/VaccineInventoryForm.tsx";
 
+import VaccinationSchedulePage from "./pages/Staff/AssignedBooking.tsx";
 
 function App() {
 
@@ -83,9 +83,11 @@ function App() {
 
             <Route path="/child-register" element={<ChildRegistrationPage />} />
 
-            <Route path="/booking" element={<VaccinationRegistrationPage />}></Route>
-            <Route path="/payment" element={<TransactionPage />}></Route>
-            <Route path="/staff/service" element={<ServicePage />}></Route>
+        <Route path="/booking" element={<VaccinationRegistrationPage />}></Route>
+        <Route path="/payment" element={<TransactionPage />}></Route>
+        <Route path="/staff/service" element={<ServicePage />}></Route>
+        <Route path="/staff/vaccination-schedule" element={<VaccinationSchedulePage />}></Route>
+
 
             {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}
             <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
@@ -102,7 +104,7 @@ function App() {
             <Route path="/manager/inventory-vacccines/add" element={<VaccineInventoryForm/>}/>
             <Route path="/manager/inventory-vacccines/edit/:id" element={<VaccineInventoryForm/>}/>
 
-
+       
 
 
 
