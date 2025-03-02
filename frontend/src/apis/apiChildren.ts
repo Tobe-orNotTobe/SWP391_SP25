@@ -31,7 +31,7 @@
 //     }
 //   };
 import axios from "axios";
-import { Child } from "../types/VaccineRegistration";
+// import { Child } from "../types/VaccineRegistration";
 
 export const getChildren = async (userId: string) => {
     try {

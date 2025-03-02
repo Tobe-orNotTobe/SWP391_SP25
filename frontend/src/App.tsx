@@ -27,8 +27,13 @@ import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/
 import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
 import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
-import ServicePage from "./pages/Staff/ServicePage.tsx";
+// import ServicePage from "./pages/Staff/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
+import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
+
+import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
+import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx";
+import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
 
 function App() {
 
@@ -60,12 +65,10 @@ function App() {
 
         {/*Lưu ý: Trang này phải đăng nhập và có role là Customer mới sử dụng được*/}
         <Route path="/child-register" element={<ChildRegistrationPage/>}/>
-
-          <Route path="/booking" element={<VaccinationRegistrationPage/>}></Route>
-          <Route path="/staff/service" element={<ServicePage/>}></Route>
-
         <Route path={"/my-childs"} element={<MyChildsPage/>}/>
         <Route path={"/child-detail"} element={<ChildDetailPage/>}/>
+        <Route path="/booking" element={<VaccinationRegistrationPage/>}></Route>
+        {/*<Route path="/staff/service" element={<ServicePage/>}></Route>*/}
 
 
         {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}
@@ -81,6 +84,10 @@ function App() {
         <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm/>}/>
         <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList/>}/>
 
+        <Route path={"/admin/dashboard"} element={<AdminDashboardPage/>}/>
+        <Route path={"/admin/account"} element={<AdminAccountPage/>}/>
+        <Route path={"/admin/account/add"} element={<AdminAccountFormPage/>}/>
+        <Route path={"/admin/account/edit/:id"} element={<AdminAccountFormPage/>}/>
 
         {/* Trang 404 */}
         <Route path="*" element={<NotFound />} />
