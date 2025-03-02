@@ -31,7 +31,11 @@ import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import ServicePage from "./pages/Staff/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
+import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
 
+import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
+import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx";
+import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
 import HandBookAfter from "./pages/Handbook/HandBookAfter.tsx";
@@ -105,13 +109,15 @@ function App() {
             <Route path="/manager/inventory-vacccines/edit/:id" element={<VaccineInventoryForm/>}/>
 
 
+              <Route path={"/admin/dashboard"} element={<AdminDashboardPage/>}/>
+              <Route path={"/admin/account"} element={<AdminAccountPage/>}/>
+              <Route path={"/admin/account/add"} element={<AdminAccountFormPage/>}/>
+              <Route path={"/admin/account/edit/:id"} element={<AdminAccountFormPage/>}/>
 
-            {/* Trang 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-
-      </>
+        {/* Trang 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
