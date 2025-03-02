@@ -20,8 +20,8 @@ createRoot(document.getElementById('root')!).render(
           transition={Slide}
           toastStyle={{
               fontSize: "16px",  // Cỡ chữ
-              padding: "10px 20px", // Khoảng cách bên trong
-              borderRadius: "15px", // Bo tròn góc
+              padding: "20px", // Khoảng cách bên trong
+              borderRadius: "99px", // Bo tròn góc
               whiteSpace: "nowrap", // Đảm bảo nội dung hiển thị trên 1 dòng
               overflow: "hidden", // Ẩn phần bị tràn
               textOverflow: "ellipsis",
