@@ -121,6 +121,11 @@ namespace ChildVaccineSystem.Service.Services
                 throw new Exception("No available vaccine stock.");
             }
 
+            if (vaccineInventories.Any(vi => vi.IsActive))
+            {
+                throw new InvalidOperationException("Cannot export vaccine. This vaccine inventory has been deleted (soft delete).");
+            }
+
             int remainingQuantity = quantity;
 
             foreach (var inventory in vaccineInventories)
@@ -159,6 +164,11 @@ namespace ChildVaccineSystem.Service.Services
             if (vaccineInventory == null)
             {
                 throw new Exception("Vaccine with the specified ID was not found.");
+            }
+
+            if (vaccineInventory.IsActive)
+            {
+                throw new InvalidOperationException("Cannot return vaccine. This vaccine inventory has been deleted (soft delete).");
             }
 
             // Tính số vaccine đã xuất:
@@ -299,12 +309,18 @@ namespace ChildVaccineSystem.Service.Services
             var vaccineInventories = await _unitOfWork.VaccineInventories.GetByVaccineIdAsync(vaccineId);
 
             // Lọc những vaccine chưa bị xóa mềm
-            vaccineInventories = vaccineInventories.Where(vi => !vi.IsActive).ToList();
+            //vaccineInventories = vaccineInventories.Where(vi => !vi.IsActive).ToList();
 
             if (vaccineInventories == null || !vaccineInventories.Any())
             {
                 // Ném ngoại lệ nếu không tìm thấy vaccine tồn kho
                 throw new KeyNotFoundException($"No inventory information found for vaccine with ID: {vaccineId}");
+            }
+
+            // Kiểm tra xem có vaccine nào bị xóa mềm không
+            if (vaccineInventories.Any(vi => vi.IsActive))
+            {
+                throw new InvalidOperationException("This vaccine inventory has been deleted (soft delete).");
             }
 
             // Chuyển đổi danh sách đối tượng thành danh sách DTO
@@ -376,5 +392,44 @@ namespace ChildVaccineSystem.Service.Services
             return "Vaccine inventory deleted successfully.";
         }
 
+        // Lấy danh sách tồn kho vaccine theo VaccineInventoryId
+        public async Task<IEnumerable<VaccineInventoryDTO>> GetVaccineInventoryByVaccineInventoryIdAsync(int vaccineInventoryId)
+        {
+            // Lấy danh sách tồn kho của vaccine theo ID, chỉ lấy những vaccine chưa bị xóa mềm
+            var vaccineInventories = await _unitOfWork.VaccineInventories.GetByVaccineInventoryIdAsync(vaccineInventoryId);
+
+            // Lọc những vaccine chưa bị xóa mềm
+            //vaccineInventories = vaccineInventories.Where(vi => !vi.IsActive).ToList();
+
+            if (vaccineInventories == null || !vaccineInventories.Any())
+            {
+                // Ném ngoại lệ nếu không tìm thấy vaccine tồn kho
+                throw new KeyNotFoundException($"No inventory information found for vaccine with ID: {vaccineInventoryId}");
+            }
+
+            // Kiểm tra xem có vaccine nào bị xóa mềm không
+            if (vaccineInventories.Any(vi => vi.IsActive))
+            {
+                throw new InvalidOperationException("This vaccine inventory has been deleted (soft delete).");
+            }
+
+            // Chuyển đổi danh sách đối tượng thành danh sách DTO
+            var vaccineInventoryDTOs = vaccineInventories.Select(vi => new VaccineInventoryDTO
+            {
+                VaccineInventoryId = vi.VaccineInventoryId,
+                VaccineId = vi.VaccineId,
+                Name = vi.Vaccine?.Name ?? "Unknown",
+                Manufacturer = vi.Vaccine?.Manufacturer ?? "Unknown",
+                TotalQuantity = vi.InitialQuantity - vi.QuantityInStock,
+                InitialQuantity = vi.InitialQuantity,
+                QuantityInStock = vi.QuantityInStock,
+                BatchNumber = vi.BatchNumber,
+                ManufacturingDate = vi.ManufacturingDate,
+                ExpiryDate = vi.ExpiryDate,
+                Supplier = vi.Supplier
+            }).ToList();
+
+            return vaccineInventoryDTOs;
+        }
     }
 }

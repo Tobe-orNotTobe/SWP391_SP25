@@ -20,5 +20,6 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         Task<List<VaccineInventory>> GetAvailableInventoriesByVaccineIdAsync(int vaccineId);
         Task<VaccineInventory?> GetByIdAsync(int id);
         Task<VaccineInventory> GetVaccineByIdAsync(int vaccineId);
+        Task<IEnumerable<VaccineInventory>> GetByVaccineInventoryIdAsync(int vaccineInventoryId);
     }
 }
