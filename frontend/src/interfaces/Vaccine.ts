@@ -1,3 +1,5 @@
+
+
 export interface VaccineIntro{
     id: string;
     name: string;
@@ -94,6 +96,14 @@ export interface VaccineInventoryResponse {
     result: VaccineInventoryStock[];
 }
 
+export interface  VaccineInventory {
+    vaccineId: number;
+    batchNumber: string;
+    manufacturingDate : string;
+    expiryDate : string;
+    initialQuantity: number;
+    supplier: string;
+}
   
   
   

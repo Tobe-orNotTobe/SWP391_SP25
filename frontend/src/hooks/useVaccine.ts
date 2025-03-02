@@ -4,7 +4,7 @@ import {
     GetVaccineComboDetail,
     VaccinationSchedule,
     VaccineDetail,
-    VaccineIntro, VaccineInventoryResponse,
+    VaccineIntro,
     VaccineInventoryStock
 } from "../interfaces/Vaccine";
 import {
@@ -15,7 +15,7 @@ import {
     apiGetVaccinationSchedule,
     apiGetVaccineDetailById,
     apiGetVaccinationScheduleById,
-    apiGetVaccineInventoryStock, apiGetVacccineInventoryStockById
+    apiGetVaccineInventoryStock, apiGetStockByVaccineInventoryId
 } from "../apis/apiVaccine";
 
 export const useVaccineIntro = () =>{
@@ -172,7 +172,9 @@ export const useVaccineDetailById = (id: number | null) => {
             setLoading(true);
             try {
                 const data = await apiGetVaccineDetailById(id);
-                setVaccineDetail(data);
+                if(data.isSuccess && data.result) {
+                    setVaccineDetail(data.result);
+                }
             } catch (err) {
                 console.error(err);
                 setError("Lỗi khi tải thông tin vaccine");
@@ -245,9 +247,9 @@ export const useVaccineInventoryStockDetail = () => {
     return {vaccineInventoryStockDetail, loading, error}
 }
 
-export const useVaccineInventoryDetailById = (vaccineId: number ) => {
+export const useVaccineInventoryDetailByVaccineInventoryId = (vaccineId: number ) => {
 
-    const [vaccineInventoryDetailById, setVaccineInventoryDetailById] = useState<VaccineInventoryResponse | null>(null);
+    const [vaccineInventoryDetailById, setVaccineInventoryDetailById] = useState<VaccineInventoryStock | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -256,7 +258,7 @@ export const useVaccineInventoryDetailById = (vaccineId: number ) => {
             setLoading(true);
             setError(null);
             try{
-                const data= await apiGetVacccineInventoryStockById(vaccineId);
+                const data= await apiGetStockByVaccineInventoryId(vaccineId);
                 if(data.isSuccess && data.result){
                     setVaccineInventoryDetailById(data.result);
                 }

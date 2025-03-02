@@ -3,7 +3,7 @@ import {
     PostVaccineComboDetail,
     VaccineDetail,
     VaccinationSchedule,
-    VaccineInventoryStock
+    VaccineInventory
 } from "../interfaces/Vaccine.ts";
 
 
@@ -177,7 +177,7 @@ export const apiGetVaccineInventoryStock = async () => {
     }
 };
 
-export const apiAddVaccineInventory = async (data: VaccineInventoryStock) => {
+export const apiAddVaccineInventory = async (data: VaccineInventory) => {
     try {
         const response = await axiosInstance.post("/api/VaccineInventory/add", data);
         return response.data || {};
@@ -200,7 +200,7 @@ export const apiSearchVaccineInventory = async (keyword: string) => {
     }
 };
 
-export const apiUpdateVaccineInventory = async (id : number, data : VaccineInventoryStock) => {
+export const apiUpdateVaccineInventory = async (id : number, data : VaccineInventory) => {
     try{
         const respone = await axiosInstance.put(`/api/VaccineInventory/update/${id}`, data);
         return respone.data;
@@ -230,12 +230,12 @@ export const apiReturnVaccineInventory = async (id: number, data : number) => {
     }
 }
 
-export const apiGetVacccineInventoryStockById = async (vaccineId : number) => {
+export const apiGetStockByVaccineInventoryId = async (vaccineInventoryId : number) => {
     try{
-        const response = await axiosInstance.get(`/api/VaccineInventory/stock/${vaccineId}`);
-        return response.data;
-    }catch (err) {
-        console.log(err);
+        const respone = await axiosInstance.get(`/api/VaccineInventory/stockByVaccineInventory/${vaccineInventoryId}`);
+        return respone.data;
+    }catch(err){
+        console.error(err);
         throw err;
     }
 }
