@@ -219,3 +219,23 @@ export const apiDeleteVaccineInventory = async (id: number) => {
         throw err;
     }
 }
+
+export const apiReturnVaccineInventory = async (id: number, data : number) => {
+    try {
+        const respone = await axiosInstance.post(`/api/VaccineInventory/return/${id}`, data);
+        return respone.data;
+    }catch (err){
+        console.error("API Return VaccineInventory Error:", err);
+        throw err;
+    }
+}
+
+export const apiGetVacccineInventoryStockById = async (vaccineId : number) => {
+    try{
+        const response = await axiosInstance.get(`/api/VaccineInventory/stock/${vaccineId}`);
+        return response.data;
+    }catch (err) {
+        console.log(err);
+        throw err;
+    }
+}

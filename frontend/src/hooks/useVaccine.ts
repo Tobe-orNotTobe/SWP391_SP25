@@ -4,7 +4,7 @@ import {
     GetVaccineComboDetail,
     VaccinationSchedule,
     VaccineDetail,
-    VaccineIntro,
+    VaccineIntro, VaccineInventoryResponse,
     VaccineInventoryStock
 } from "../interfaces/Vaccine";
 import {
@@ -15,9 +15,8 @@ import {
     apiGetVaccinationSchedule,
     apiGetVaccineDetailById,
     apiGetVaccinationScheduleById,
-    apiGetVaccineInventoryStock
+    apiGetVaccineInventoryStock, apiGetVacccineInventoryStockById
 } from "../apis/apiVaccine";
-
 
 export const useVaccineIntro = () =>{
     const[vaccineIntro, setVaccineIntro] = useState<VaccineIntro[]>([]);
@@ -244,4 +243,32 @@ export const useVaccineInventoryStockDetail = () => {
         fetchVaccineInventoryScheduleDetail();
     }, [])
     return {vaccineInventoryStockDetail, loading, error}
+}
+
+export const useVaccineInventoryDetailById = (vaccineId: number ) => {
+
+    const [vaccineInventoryDetailById, setVaccineInventoryDetailById] = useState<VaccineInventoryResponse | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchVaccineInventoryDetail = async () => {
+            setLoading(true);
+            setError(null);
+            try{
+                const data= await apiGetVacccineInventoryStockById(vaccineId);
+                if(data.isSuccess && data.result){
+                    setVaccineInventoryDetailById(data.result);
+                }
+            }catch (err){
+                console.error(err);
+                setError("Lỗi Khi Tải danh sách vaccine trong kho");
+            }finally {
+                setLoading(false);
+            }
+        }
+        fetchVaccineInventoryDetail();
+    }, [vaccineId]);
+
+    return{vaccineInventoryDetailById, loading, error};
 }

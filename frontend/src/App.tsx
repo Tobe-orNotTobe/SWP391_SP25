@@ -25,7 +25,7 @@ import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistra
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
 import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineForm/VaccineComboForm.tsx";
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
-import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
+import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList/VaccineInventoryList.tsx";
 import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
 import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
@@ -37,6 +37,8 @@ import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
 import HandBookAfter from "./pages/Handbook/HandBookAfter.tsx";
 import PageLoader from "./components/PageLoader/PageLoader.tsx";
+import VaccineInventoryForm
+  from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryForm/VaccineInventoryForm.tsx";
 
 
 function App() {
@@ -97,6 +99,8 @@ function App() {
             <Route path="/manager/schedule-vaccines/add" element={<ScheduleVaccinationForm/>}/>
             <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm/>}/>
             <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList/>}/>
+            <Route path="/manager/inventory-vacccines/add" element={<VaccineInventoryForm/>}/>
+            <Route path="/manager/inventory-vacccines/edit/:id" element={<VaccineInventoryForm/>}/>
 
 
 

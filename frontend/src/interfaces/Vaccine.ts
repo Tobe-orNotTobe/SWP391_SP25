@@ -73,6 +73,7 @@ export interface VaccinationSchedule {
 }
 
 export interface VaccineInventoryStock {
+    vaccineInventoryId : number;
     vaccineId: number;
     name: string;
     manufacturer: string;

@@ -5,6 +5,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
 import { useVaccineForm } from "./useManagerVaccine.ts";
 import "./ManagerFormVaccine.scss";
+import {TinyMCEE_API_KEY} from "../../../../config/cloudinaryConfig.ts";
 
 const VaccineFormPage: React.FC = () => {
     const {
@@ -99,7 +100,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập mô tả cho vaccine" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -174,7 +175,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập bệnh phòng ngừa của vaccine" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -202,7 +203,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập tác dụng phụ của vaccine" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -250,7 +251,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập tương tác vaccine" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -278,7 +279,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập tác dụng không mong muốn" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -299,7 +300,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập các lưu ý" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
