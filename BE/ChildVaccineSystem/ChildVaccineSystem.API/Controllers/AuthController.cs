@@ -69,10 +69,11 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO model)
         {
+            // Kiểm tra nếu RefreshToken không có trong yêu cầu
             if (string.IsNullOrWhiteSpace(model.RefreshToken))
             {
                 return BadRequest(new { Error = "Refresh token is required." });
@@ -80,14 +81,19 @@ namespace ChildVaccineSystem.API.Controllers
 
             try
             {
+                // Gọi dịch vụ để làm mới token
                 var result = await _authService.RefreshTokenAsync(model.RefreshToken);
+
+                // Trả về kết quả
                 return Ok(result);
             }
             catch (Exception ex)
             {
+                // Nếu có lỗi, trả về thông báo lỗi
                 return BadRequest(new { Error = ex.Message });
             }
         }
+
 
         [AllowAnonymous]
         [HttpPost("forget-password")]
