@@ -10,7 +10,7 @@ namespace ChildVaccineSystem.Data.DTO.ComboVaccine
 	{
 		public string ComboName { get; set; }
 		public string Description { get; set; }
-		public decimal TotalPrice { get; set; }
+	//	public decimal TotalPrice { get; set; }
 		public bool IsActive { get; set; }
 
 		public List<int> VaccineIds { get; set; }
