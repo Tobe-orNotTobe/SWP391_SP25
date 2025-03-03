@@ -81,6 +81,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireAuthenticatedUser().RequireRole("Admin"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireAuthenticatedUser().RequireRole("Customer"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireAuthenticatedUser().RequireRole("Staff"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireAuthenticatedUser().RequireRole("Manager"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireAuthenticatedUser().RequireRole("Doctor"));
 });
 
 // Add CORS Configuration

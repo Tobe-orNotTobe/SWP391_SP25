@@ -1,12 +1,12 @@
 ﻿using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.DTO.Auth;
-using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using ChildVaccineSystem.Data.DTO.User;
 
 namespace ChildVaccineSystem.API.Controllers
 {
