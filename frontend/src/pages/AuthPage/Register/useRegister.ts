@@ -136,7 +136,6 @@ export const useRegister = () => {
         if (errorUsername || errorEmail || errorPassword || errorConfirmPassword || errorPhoneNumber || errorAddress || errorDoB) {
 
             toast.warning("Vui Lòng nhập thông tin đúng yêu cầu")
-            console.log("hahahahaha")
             return;
         }
 
@@ -144,21 +143,18 @@ export const useRegister = () => {
 
         try {
             const response = await apiRegister(data);
-            if (response?.message) {
-               toast.success(response.message);
+            if (response.result) {
+                toast.success(response.result.message);
 
                 setIsRedirecting(true);
-            } else {
-
-                toast.error(response?.error);
             }
         } catch (error: unknown) {
 
             if (error instanceof AxiosError) {
-                console.error("Lỗi API:", error.response?.data || error.message);
-               toast.error( error.response?.data?.error)
+
+               toast.error(`${error.response?.data?.errorMessages}`)
             } else {
-                console.error("Lỗi không xác định:", error);
+
                toast.error("Lỗi không xác định")
             }
         } finally {

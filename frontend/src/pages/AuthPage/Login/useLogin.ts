@@ -35,8 +35,8 @@ export const useLogin = () => {
 
         try {
             const response = await apiLogIn(data);
-            if (response.token) {
-                localStorage.setItem("token", response.token);
+            if (response.result) {
+                localStorage.setItem("token", response.result.token);
                 console.log("Login Successful", response);
 
                 toast.success("Đăng nhập thành công!");
@@ -51,7 +51,7 @@ export const useLogin = () => {
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-                toast.error(`${error.response?.data?.error || "Lỗi không xác định từ server"}`);
+                toast.error(`${error.response?.data?.errorMessages || "Lỗi không xác định từ server"}`);
             } else {
                 console.error("Lỗi không xác định:", error);
                 toast.error("Lỗi không xác định, vui lòng thử lại sau.");

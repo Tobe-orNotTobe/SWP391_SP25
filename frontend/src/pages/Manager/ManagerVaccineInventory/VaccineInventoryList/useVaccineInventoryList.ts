@@ -154,27 +154,13 @@ export const useVaccineInventoryList = (vaccineInventoryStockDetail: VaccineInve
             const response = await apiAddVaccineInventory(batchData);
 
             if (response.isSuccess) {
-                notification.success({
-                    message: "Thêm lô vaccine thành công"
-                });
-                setAddBatchModalVisible(false);
-            } else {
-                notification.error({
-                    message: "Thêm vaccine thất bại"
-                });
+               toast.success("Thêm Lô Vaccine Thành Công")
             }
         } catch (error: unknown) {
             if (error instanceof AxiosError) {
-                notification.error({
-                    message: "Thêm lô Vaccine Thất bại",
-                    description: error.response?.data?.error || "Lỗi không xác định từ server",
-                });
+                toast.error(error.response?.data?.errorMessages);
             } else {
-                console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
+               toast.error("Lỗi không xác định");
             }
         }
     };

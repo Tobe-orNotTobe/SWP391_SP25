@@ -55,7 +55,7 @@ export const useVaccineInventoryForm = () => {
             }
         } catch (error: unknown) {
             if (error instanceof AxiosError) {
-               toast.error(error.response?.data?.errorMessages);
+               toast.error(`${error.response?.data?.errorMessages}`);
             } else {
                 toast.error("Lỗi Không Xác Định");
             }

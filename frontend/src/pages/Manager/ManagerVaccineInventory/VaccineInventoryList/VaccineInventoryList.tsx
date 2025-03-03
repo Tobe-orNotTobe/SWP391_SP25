@@ -8,6 +8,8 @@ import {VaccineInventoryStock} from "../../../../interfaces/Vaccine.ts";
 import {TbListDetails} from "react-icons/tb";
 import { FaPlus } from "react-icons/fa6";
 import { SearchOutlined } from "@ant-design/icons";
+import {FiEdit2} from "react-icons/fi";
+import {MdDeleteOutline} from "react-icons/md";
 
 type GroupedVaccine = VaccineInventoryStock & { batches: VaccineInventoryStock[] };
 
@@ -119,12 +121,12 @@ const VaccineInventoryList: React.FC = () => {
             title: "Thao Tác",
             key: "batchAction",
             render: (_: unknown, record: VaccineInventoryStock) => (
-                <div>
+                <div className="vaccine-action-buttons">
                     <Button onClick={() => handleEditBatch(record)} className="edit-button">
-                        Chỉnh sửa
+                        <FiEdit2 />Chỉnh sửa
                     </Button>
                     <Button onClick={() => handleDeleteBatch(record)} className="delete-button">
-                        Xóa
+                        <MdDeleteOutline/>Xóa
                     </Button>
                 </div>
             )
@@ -192,7 +194,7 @@ const VaccineInventoryList: React.FC = () => {
                     open={modalVisible}
                     onCancel={handleCloseModal}
                     footer={null}
-                    width={1200}
+                    width={1400}
                 >
                     <Table
                         dataSource={selectedVaccine?.batches || []}

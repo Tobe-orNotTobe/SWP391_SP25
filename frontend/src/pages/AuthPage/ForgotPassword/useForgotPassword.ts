@@ -30,15 +30,15 @@ export const useForgotPassWord  = () => {
         try {
             const response = await apiForgotPassword(data);
 
-            if (response.message) {
-                toast.success(response.message);
+            if (response.result) {
+                toast.success(response.result.message);
                 setTimeout(() => navigate("/login"), 5000);
             } else {
                 notification.error({ message: response.error || "Lỗi Server" });
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-               toast.error(error.response?.data?.error);
+               toast.error(error.response?.data?.errorMessages);
             } else {
                toast.error("Lỗi không xác định");
             }

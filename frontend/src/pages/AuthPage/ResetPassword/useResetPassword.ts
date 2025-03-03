@@ -62,13 +62,13 @@ export const useResetPassword = () => {
         setIsLoading(true);
         try {
             const response = await apiResetPassword(data);
-            if (response.message) {
+            if (response.result) {
                 toast.success("Bạn sẽ được chuyển đến trang login trong ít giât")
                 setTimeout(() => navigate("/login"), 2000);
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-                toast.error(error.response?.data?.error);
+                toast.error(error.response?.data?.errorMessages);
             } else {
                 toast.error("Lỗi không xác định")
             }

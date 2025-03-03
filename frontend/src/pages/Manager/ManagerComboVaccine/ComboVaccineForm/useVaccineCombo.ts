@@ -82,11 +82,11 @@ export const useVaccineComboForm = () => {
             console.log(response);
             if (response.isSuccess) {
                 toast.success(isEditMode ? "Cập nhật thành công" : "Thêm mới thành công")
-                // navigate("/manager/combo-vaccines");
+                navigate("/manager/combo-vaccines");
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-                toast.error(error.response?.data?.errorMessages);
+                toast.error(`${error.response?.data?.errorMessages}`);
             } else {
                 toast.error("Lỗi Không Xác Định");
             }

@@ -52,9 +52,15 @@
 .vaccine-action-buttons{
 
 
-  .detail-button  {
+  .edit-button{
     color: white;
-    background-color: #007bff;
+    background-color: #28a745;
+    margin-left: 10px;
+  }
+
+  .delete-button{
+    color: white;
+    background-color: #dc3545;
     margin-left: 10px;
   }
 
@@ -64,6 +70,16 @@
     margin-left: 10px;
   }
 
+}
+
+.vaccine-action-buttons{
+
+
+  .detail-button{
+    color: white;
+    background-color: #007bff;
+    margin-left: 10px;
+  }
 
   .edit-button{
     color: white;

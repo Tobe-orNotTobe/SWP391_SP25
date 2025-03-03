@@ -33,6 +33,11 @@ const VaccineComboList: React.FC = () => {
 
     const columns = [
         {
+            title: "ComboId",
+            dataIndex: "comboId",
+            key: "comboId",
+        },
+        {
             title: "Tên Combo",
             dataIndex: "comboName",
             key: "comboName",

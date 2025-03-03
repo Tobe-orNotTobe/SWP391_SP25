@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Select, Switch } from "antd";
+import {Form, Input, Button, Select, Switch, InputNumber} from "antd";
 import { Editor } from '@tinymce/tinymce-react';
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout";
 import { useVaccineComboForm } from "./useVaccineCombo";
@@ -80,7 +80,15 @@ const VaccineComboForm: React.FC = () => {
                         />
                     </Form.Item>
 
-                    <h3>Tổng Giá Tiền : {form.getFieldValue("totalPrice")}</h3>
+                    <Form.Item
+                        className="form-item"
+                        label="Tổng giá tiền"
+                        name="totalPrice"
+                        rules={[{ required: true, message: "Vui lòng nhập  giá tiền cho combo" }]}
+                    >
+                        <InputNumber placeholder="Nhập Giá Tiền của combo"></InputNumber>
+
+                    </Form.Item>
 
                     <Form.Item
                         className="form-item"
