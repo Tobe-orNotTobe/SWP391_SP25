@@ -28,8 +28,8 @@ export const apiBooking = async (userId: string, booking: Booking) => {
 
     // Xử lý lỗi từ axios hoặc server
     if (axios.isAxiosError(error)) {
-      const serverError = error.response?.data?.error?.errorMessages?.join(", ");
-      alert(serverError || "Có lỗi xảy ra khi gửi dữ liệu.");
+      const serverError = error.response?.data.errorMessages.join(", ");
+      throw serverError
     } else {
       alert("Có lỗi xảy ra khi gửi dữ liệu.");
     }

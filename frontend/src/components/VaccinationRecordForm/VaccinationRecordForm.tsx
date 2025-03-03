@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Select } from "antd"; // Import Select từ Ant Design
 import "./VaccinationRecordForm.scss";
-import {Vaccine} from "../../interfaces/VaccineRegistration.ts";
+import {BookingDetail, Vaccine} from "../../interfaces/VaccineRegistration.ts";
+import { BookingResponse } from "../../interfaces/Booking.ts";
 
 const { Option } = Select;
 
@@ -21,7 +22,11 @@ interface FormData {
   notes: string;
 }
 
-const VaccinationRecordForm: React.FC = () => {
+interface props {
+  booking : BookingResponse
+}
+
+const VaccinationRecordForm: React.FC<props> = ({booking}) => {
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     birthDate: "",
@@ -85,9 +90,9 @@ const VaccinationRecordForm: React.FC = () => {
   ]);
 
   const mockUser = {
-    fullName: "Nguyễn Văn A",
+    fullName: booking.childName,
     birthDate: "1990-01-01",
-    height: "170",
+    height: booking.bookingId,
     weight: "65",
   };
 
