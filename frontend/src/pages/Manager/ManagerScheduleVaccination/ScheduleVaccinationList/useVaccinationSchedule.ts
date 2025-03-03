@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification } from "antd";
+
 import { VaccinationSchedule } from "../../../../interfaces/Vaccine";
 import { apiDeleteVaccinationSchedule } from "../../../../apis/apiVaccine";
 import {AxiosError} from "axios";
+import {toast} from "react-toastify";
 
 
 export const useVaccinationSchedule = () => {
@@ -27,33 +28,16 @@ export const useVaccinationSchedule = () => {
             const response = await apiDeleteVaccinationSchedule(scheduleId);
             
             if(response.isSuccess) {
-                notification.success({
-                    message: response.message,
-                    description: "Đã Xóa Thành Công"
-                });
+                toast.success("Đã Xóa Thành Công");
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
-            } else {
-                notification.error({
-                    message: response.message,
-                    description: "Có lỗi xảy ra"
-                });
             }
         } catch (error : unknown) {
-
             if (error instanceof AxiosError) {
-                console.log("hehe", error.response?.data?.errorMessages);
-                notification.error({
-                    message: "Xóa Vaccine Thất Bại",
-                    description: error.response?.data?.errorMessages ,
-                });
+                toast.error(error.response?.data?.errorMessages);
             } else {
-                console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
+                toast.error("Lỗi Không Xác Định");
             }
         } finally {
             setDeletingId(null);

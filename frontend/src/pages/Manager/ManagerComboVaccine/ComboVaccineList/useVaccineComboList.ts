@@ -1,10 +1,11 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification } from "antd";
+
 import { GetVaccineComboDetail } from "../../../../interfaces/Vaccine";
 import { apiDeleteComboVaccine } from "../../../../apis/apiVaccine";
 import {AxiosError} from "axios";
+import {toast} from "react-toastify";
 
 
 export const useComboVaccineList = () => {
@@ -27,34 +28,18 @@ export const useComboVaccineList = () => {
             const data = await apiDeleteComboVaccine(comboVaccineId);
 
             if (data.isSuccess) {
-                notification.success({
-                    message: data.message,
-                    description: "Đã Xóa Thành Công"
-                });
+                toast.success("Đã Xóa Thành Công");
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
             }
 
-        }catch (error: unknown) {
-
+        } catch (error : unknown) {
             if (error instanceof AxiosError) {
-                console.log("hehe", error.response?.data?.error);
-
-                notification.error({
-                    message: "Xóa Combo Vaccine Thất Bại",
-                    description: error.response?.data?.error,
-                });
-
+                toast.error(error.response?.data?.errorMessages);
             } else {
-                console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
+                toast.error("Lỗi Không Xác Định");
             }
-
-
         } finally {
             setDeletingId(null);
         }

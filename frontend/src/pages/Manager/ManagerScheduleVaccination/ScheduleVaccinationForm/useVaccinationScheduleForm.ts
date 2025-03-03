@@ -6,6 +6,7 @@ import { useVaccineDetail } from '../../../../hooks/useVaccine';
 import {useVaccinationScheduleDetailById} from "../../../../hooks/useVaccine";
 import { VaccinationSchedule, VaccineScheduleDetail } from '../../../../interfaces/Vaccine';
 import {AxiosError} from "axios";
+import {toast} from "react-toastify";
 
 export const useScheduleVaccinationForm = () => {
   const [form] = Form.useForm();
@@ -55,33 +56,18 @@ export const useScheduleVaccinationForm = () => {
           ? await apiUpdateVaccinationSchedule(Number(scheduleId), values)
           : await apiAddVaccinationSchedule(values);
 
-      console.log('Response:', response);
-
       if (response.isSuccess) {
-        notification.success({
-          message: "Thành công",
-          description: response.message || "Thao tác đã được thực hiện thành công.",
-        });
+        toast.success(isEditMode ? "Cập nhật thành công" : "Thêm mới thành công");
         navigate("/manager/schedule-vaccines");
       }
 
-    }catch (error: unknown) {
-
-        if (error instanceof AxiosError) {
-          console.log("hehe", error.response?.data?.errorMessages);
-          notification.error({
-            message: "Thất Bại",
-            description: error.response?.data?.errorMessages ,
-          });
-        } else {
-          console.error("Lỗi không xác định:", error);
-          notification.error({
-            message: "Lỗi không xác định",
-            description: "Vui lòng thử lại sau.",
-          });
-        }
-
-    }finally{
+    } catch (error : unknown) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.errorMessages);
+      } else {
+        toast.error("Lỗi Không Xác Định");
+      }
+    } finally {
       setLoading(false);
     }
   };

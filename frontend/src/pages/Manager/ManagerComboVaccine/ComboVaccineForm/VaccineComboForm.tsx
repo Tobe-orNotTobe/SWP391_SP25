@@ -1,28 +1,38 @@
 import React from "react";
 import { Form, Input, Button, InputNumber, Select, Switch } from "antd";
+import { Editor } from '@tinymce/tinymce-react';
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout";
 import { useVaccineComboForm } from "./useVaccineCombo";
 import "./VaccineComboForm.scss"
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import {TinyMCEE_API_KEY} from "../../../../config/cloudinaryConfig.ts";
 
 const { Option } = Select;
 
 const VaccineComboForm: React.FC = () => {
-    const { form, onFinish, vaccineDetail, isEditMode, navigate } = useVaccineComboForm();
+    const {
+        form,
+        onFinish,
+        vaccineDetail,
+        isEditMode,
+        navigate,
+        handleEditorChange,
+        initialEditorContent
+    } = useVaccineComboForm();
 
     return (
         <ManagerLayout>
             <div className="vaccine-combo-form-container">
-            <Button 
-                icon={<ArrowLeftOutlined />} 
-                onClick={() => navigate("/manager/combo-vaccines")}
-                className="back-button"
-                style={{marginBottom: "20px"}}
-            >
-                Quay lại danh sách
-            </Button>
-            
-            <h1>{isEditMode ? "Chỉnh Sửa Combo Vaccine" : "Thêm Combo Vaccine"}</h1>
+                <Button
+                    icon={<ArrowLeftOutlined />}
+                    onClick={() => navigate("/manager/combo-vaccines")}
+                    className="back-button"
+                    style={{marginBottom: "20px"}}
+                >
+                    Quay lại danh sách
+                </Button>
+
+                <h1>{isEditMode ? "Chỉnh Sửa Combo Vaccine" : "Thêm Combo Vaccine"}</h1>
                 <Form
                     form={form}
                     layout="vertical"
@@ -43,7 +53,31 @@ const VaccineComboForm: React.FC = () => {
                         name="description"
                         rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
                     >
-                        <Input.TextArea placeholder="Nhập mô tả combo vaccine" rows={4} />
+                        <Editor
+                            apiKey={TinyMCEE_API_KEY}
+                            initialValue={initialEditorContent}
+                            init={{
+                                height: 300,
+                                menubar: true,
+                                plugins: [
+                                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                                    'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                                ],
+                                toolbar:
+                                    'undo redo | blocks | ' +
+                                    'bold italic forecolor | alignleft aligncenter ' +
+                                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                                    'removeformat | help',
+                                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                                images_upload_handler: () => {
+                                    return Promise.reject('Upload không được hỗ trợ');
+                                },
+                                images_upload_url: '',
+                                automatic_uploads: false,
+                            }}
+                            onEditorChange={(content) => handleEditorChange('description', content)}
+                        />
                     </Form.Item>
 
                     <Form.Item

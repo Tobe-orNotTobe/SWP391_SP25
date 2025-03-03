@@ -4,6 +4,7 @@ import { ForgotPasswordRequest } from "../../../interfaces/Auth";
 import { apiForgotPassword } from "../../../apis/apiAuth";
 import { notification } from "antd";
 import {AxiosError} from "axios";
+import {toast} from "react-toastify";
 
 export const useForgotPassWord  = () => {
     const [email, setEmail] = useState<string>("");
@@ -30,24 +31,16 @@ export const useForgotPassWord  = () => {
             const response = await apiForgotPassword(data);
 
             if (response.message) {
-                notification.success({ message: response.message, description: "Vui Lòng check hộp thư email của bạn" });
+                toast.success(response.message);
                 setTimeout(() => navigate("/login"), 5000);
             } else {
                 notification.error({ message: response.error || "Lỗi Server" });
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-                console.error("Lỗi API:", error.response?.data || error.message);
-                notification.error({
-                    message: "Thay Đổi Mật Khẩu Thất Bại",
-                    description: error.response?.data?.error || "Lỗi không xác định từ server",
-                });
+               toast.error(error.response?.data?.error);
             } else {
-                console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
+               toast.error("Lỗi không xác định");
             }
         } finally {
             setLoading(false);
