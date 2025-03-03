@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace ChildVaccineSystem.Repository.Repositories
 {
-	public class ComboDetailRepository : Repository<ComboDetail>, IComboDetailRepository
-	{
-		private readonly ChildVaccineSystemDBContext _context;
+    public class ComboDetailRepository : Repository<ComboDetail>, IComboDetailRepository
+    {
+        private readonly ChildVaccineSystemDBContext _context;
 
-		public ComboDetailRepository(ChildVaccineSystemDBContext context) : base(context) => _context = context;
-	}
+        public ComboDetailRepository(ChildVaccineSystemDBContext context) : base(context) => _context = context;
+    }
 }

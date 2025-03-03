@@ -43,6 +43,12 @@ namespace ChildVaccineSystem.Service.Services
                 throw new Exception("Batch number already exists.");
             }
 
+            // Validate the manufacturing date and expiry date
+            if (dto.ManufacturingDate > dto.ExpiryDate)
+            {
+                throw new Exception("Manufacturing date cannot be later than expiry date.");
+            }
+
             // Tạo mới một bản ghi VaccineInventory
             var newInventory = new VaccineInventory
             {
@@ -272,6 +278,12 @@ namespace ChildVaccineSystem.Service.Services
                     throw new Exception("Batch number already exists.");
                 }
                 inventory.BatchNumber = dto.BatchNumber;
+            }
+
+            // Validate the manufacturing date and expiry date
+            if (dto.ManufacturingDate.HasValue && dto.ExpiryDate.HasValue && dto.ManufacturingDate.Value > dto.ExpiryDate.Value)
+            {
+                throw new Exception("Manufacturing date cannot be later than expiry date.");
             }
 
             // Cập nhật thông tin khác nếu có

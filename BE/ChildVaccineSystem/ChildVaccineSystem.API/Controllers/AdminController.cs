@@ -1,12 +1,12 @@
 ﻿using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.DTO.Auth;
-using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using ChildVaccineSystem.Data.DTO.User;
 
 namespace ChildVaccineSystem.API.Controllers
 {
@@ -250,6 +250,31 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+        [HttpGet("getAllRoles")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> GetAllRoles()
+        {
+            try
+            {
+                var roles = _roleManager.Roles.Select(role => new
+                {
+                    role.Name,
+                    role.Id
+                }).ToList();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = roles;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Error retrieving roles: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
 
     }
 }

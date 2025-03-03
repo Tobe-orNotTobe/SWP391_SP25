@@ -10,7 +10,7 @@ namespace ChildVaccineSystem.Data.DTO.Auth
     {
         //public UserDTO User { get; set; }
         public string Token { get; set; }
-        //public string RefreshToken { get; set; }
+        public string RefeshToken { get; set; }
         //public IEnumerable<string> Role { get; set; }
     }
 }
