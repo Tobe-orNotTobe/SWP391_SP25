@@ -10,5 +10,5 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         Task<IEnumerable<ComboVaccine>> GetAll();
 
         Task<ComboVaccine> GetById(int id);
-	}
+    }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChildVaccineSystem.RepositoryContract.Interfaces
 {
-	public interface IComboDetailRepository : IRepository<ComboDetail>
-	{
-	}
+    public interface IComboDetailRepository : IRepository<ComboDetail>
+    {
+    }
 }
