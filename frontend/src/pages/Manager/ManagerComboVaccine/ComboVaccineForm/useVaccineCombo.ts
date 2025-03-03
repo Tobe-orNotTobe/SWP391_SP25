@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Form, notification } from "antd";
+import { Form } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useVaccineDetail, useComboVaccineDetailById } from "../../../../hooks/useVaccine";
 import { apiAddComboVaccine, apiUpdateComboVaccine } from "../../../../apis/apiVaccine";
 import { PostVaccineComboDetail } from "../../../../interfaces/Vaccine";
 import { AxiosError } from "axios";
+import {toast} from "react-toastify";
+
 
 export const useVaccineComboForm = () => {
     const [form] = Form.useForm();
@@ -63,7 +65,7 @@ export const useVaccineComboForm = () => {
         // Use the content from TinyMCE editor stored in our state
         const payload: PostVaccineComboDetail = {
             comboName: values.comboName,
-            description: editorContent.description, // Use the editor content from our state
+            description: editorContent.description,
             totalPrice: values.totalPrice,
             isActive: values.isActive,
             vaccineIds: values.vaccineIds,
@@ -79,29 +81,14 @@ export const useVaccineComboForm = () => {
 
             console.log(response);
             if (response.isSuccess) {
-                notification.success({
-                    message: isEditMode ? "Cập nhật thành công" : "Thêm mới thành công",
-                });
-                navigate("/manager/combo-vaccines");
+                toast.success(isEditMode ? "Cập nhật thành công" : "Thêm mới thành công")
+                // navigate("/manager/combo-vaccines");
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-                const errorMessages = error.response?.data?.errorMessages;
-                console.log(errorMessages);
-                const errorMessageText = Array.isArray(errorMessages) && errorMessages.length
-                    ? errorMessages.join(", ")
-                    : "Không thể kết nối với máy chủ. Vui lòng thử lại sau.";
-
-                notification.error({
-                    message: "Đăng Nhập Thất Bại",
-                    description: errorMessageText || "Lỗi không xác định từ server",
-                });
+                toast.error(error.response?.data?.errorMessages);
             } else {
-                console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
+                toast.error("Lỗi Không Xác Định");
             }
         }
     };

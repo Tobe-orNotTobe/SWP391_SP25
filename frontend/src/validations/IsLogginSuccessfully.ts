@@ -9,11 +9,11 @@ export const IsLoginSuccessFully = () => {
     const [showSessionAlert, setShowSessionAlert] = useState<boolean>(false);
 
     const refreshUserSession = async () => {
-        const refreshToken = localStorage.getItem("refreshToken");
+        const token = localStorage.getItem("token");
 
-        if (refreshToken) {
+        if (token) {
             try {
-                const newTokenData = await apiRefreshToken(refreshToken);
+                const newTokenData = await apiRefreshToken(token);
                 if (newTokenData?.token) {
                     localStorage.setItem("token", newTokenData.token);
 
@@ -53,7 +53,7 @@ export const IsLoginSuccessFully = () => {
         localStorage.removeItem("role");
 
         // Redirect to login page
-        window.location.href = "/login"; // Adjust the URL as needed
+        window.location.href = "/login";
     };
 
     useEffect(() => {

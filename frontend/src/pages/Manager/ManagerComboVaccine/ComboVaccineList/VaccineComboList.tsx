@@ -13,6 +13,8 @@ import "./VaccineComboList.scss"
 const VaccineComboList: React.FC = () => {
 
     const {comboVaccineDetail} = useComboVaccineDetail();
+
+    console.log(comboVaccineDetail);
     const {
         deletingId,
         isDetailModalOpen,
@@ -144,7 +146,7 @@ const VaccineComboList: React.FC = () => {
                         <div className="combo-vaccine-list">
                             <div className="combo-vaccine-list-title">Danh sách Vaccine</div>
                             <div className="combo-vaccine-grid">
-                                {selectedCombo.vaccines.map(vaccine => (
+                                {selectedCombo.vaccines && selectedCombo.vaccines.map((vaccine) => (
                                     <div key={vaccine.vaccineId} className="combo-vaccine-item">
                                         <div className="combo-vaccine-item-name">{vaccine.name}</div>
                                         <div className="combo-vaccine-item-image">

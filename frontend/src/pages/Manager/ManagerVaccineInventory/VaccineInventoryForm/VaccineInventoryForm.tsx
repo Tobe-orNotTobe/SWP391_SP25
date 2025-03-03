@@ -22,25 +22,25 @@ const VaccineInventoryForm: React.FC = () => {
                 >
                     Quay lại danh sách
                 </Button>
-                <Title level={2}>{isEditMode ? "Chỉnh sửa lô vaccine" : "Thêm lô vaccine mới"}</Title>
+                <Title level={2}>{isEditMode ? `Chỉnh sửa lô vaccine ${vaccineDetailById?.name}` : "Thêm lô vaccine mới"}</Title>
                 <Divider />
 
                 <Form form={form} layout="vertical" onFinish={onFinish} requiredMark={true}>
                     <Row gutter={24}>
                         <Col xs={24} sm={12}>
-                            <Form.Item name="vaccineId" label="Vaccine" rules={[{ required: true, message: "Vui lòng chọn vaccine" }]}>
                                 {isEditMode && vaccineInventoryDetailById ? (
-                                    <h3>{vaccineDetailById?.name}</h3>
+                                    <h3> Vắc Xin : {vaccineDetailById?.name}</h3>
                                 ) : (
-                                    <Select placeholder="Chọn vaccine" disabled={isEditMode} loading={!vaccineDetail}>
-                                        {vaccineDetail?.map(vaccine => (
-                                            <Option key={vaccine.vaccineId} value={vaccine.vaccineId}>
-                                                {vaccine.name} ({vaccine.manufacturer})
-                                            </Option>
-                                        ))}
-                                    </Select>
+                                    <Form.Item name="vaccineId" label="Vaccine" rules={[{ required: true, message: "Vui lòng chọn vaccine" }]}>
+                                        <Select placeholder="Chọn vaccine" disabled={isEditMode} loading={!vaccineDetail}>
+                                            {vaccineDetail?.map(vaccine => (
+                                                <Option key={vaccine.vaccineId} value={vaccine.vaccineId}>
+                                                    {vaccine.name} ({vaccine.manufacturer})
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
                                 )}
-                            </Form.Item>
                         </Col>
 
                         <Col xs={24} sm={12}>
