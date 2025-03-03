@@ -1,21 +1,28 @@
-﻿using ChildVaccineSystem.Data.DTO.Auth;
+﻿using ChildVaccineSystem.Common.Helper;
+using ChildVaccineSystem.Data.DTO.Auth;
 using ChildVaccineSystem.Data.DTO.Category;
 using ChildVaccineSystem.Data.DTO.Email;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace ChildVaccineSystem.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly APIResponse _response;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, APIResponse response)
         {
             _authService = authService;
+            _response = response;
         }
 
         [AllowAnonymous]
@@ -25,11 +32,17 @@ namespace ChildVaccineSystem.API.Controllers
             try
             {
                 var user = await _authService.RegisterAsync(dto);
-                return Ok(new { Message = "Registration successful. Please confirm your email." });
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = new { Message = "Registration successful. Please confirm your email." };
+                return Ok(_response);
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Error = ex.Message });
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
             }
         }
 
@@ -43,16 +56,26 @@ namespace ChildVaccineSystem.API.Controllers
                 var result = await _authService.ConfirmEmailAsync(model.Email, model.Token);
 
                 if (!result)
-                    return BadRequest(new { Error = "Invalid or expired token." });
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages.Add("Invalid or expired token.");
+                    return BadRequest(_response);
+                }
 
-                return Ok(new { Message = "Email confirmed successfully." });
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = new { Message = "Email confirmed successfully." };
+                return Ok(_response);
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Error = ex.Message });
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
             }
         }
-
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -61,11 +84,17 @@ namespace ChildVaccineSystem.API.Controllers
             try
             {
                 var result = await _authService.LoginAsync(loginRequestDTO);
-                return Ok(result);
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = result;
+                return Ok(_response);
             }
             catch (Exception ex)
             {
-                return Unauthorized(new { Error = ex.Message });
+                _response.StatusCode = HttpStatusCode.Unauthorized;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return Unauthorized(_response);
             }
         }
 
@@ -76,7 +105,10 @@ namespace ChildVaccineSystem.API.Controllers
             // Kiểm tra nếu RefreshToken không có trong yêu cầu
             if (string.IsNullOrWhiteSpace(model.RefreshToken))
             {
-                return BadRequest(new { Error = "Refresh token is required." });
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add("Refresh token is required.");
+                return BadRequest(_response);
             }
 
             try
@@ -84,16 +116,19 @@ namespace ChildVaccineSystem.API.Controllers
                 // Gọi dịch vụ để làm mới token
                 var result = await _authService.RefreshTokenAsync(model.RefreshToken);
 
-                // Trả về kết quả
-                return Ok(result);
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = result;
+                return Ok(_response);
             }
             catch (Exception ex)
             {
-                // Nếu có lỗi, trả về thông báo lỗi
-                return BadRequest(new { Error = ex.Message });
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
             }
         }
-
 
         [AllowAnonymous]
         [HttpPost("forget-password")]
@@ -101,17 +136,26 @@ namespace ChildVaccineSystem.API.Controllers
         {
             if (string.IsNullOrWhiteSpace(model.Email))
             {
-                return BadRequest(new { Error = "Email is required." });
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add("Email is required.");
+                return BadRequest(_response);
             }
 
             try
             {
                 await _authService.ForgetPasswordAsync(model.Email);
-                return Ok(new { Message = "Password reset link sent." });
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = new { Message = "Password reset link sent." };
+                return Ok(_response);
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Error = ex.Message });
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
             }
         }
 
@@ -123,23 +167,34 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Token) || string.IsNullOrWhiteSpace(dto.NewPassword))
                 {
-                    return BadRequest(new { Error = "Email, Token, and New Password are required." });
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages.Add("Email, Token, and New Password are required.");
+                    return BadRequest(_response);
                 }
 
                 var (success, message) = await _authService.ResetPasswordAsync(dto.Email, dto.Token, dto.NewPassword);
 
                 if (!success)
                 {
-                    return BadRequest(new { Success = false, Error = message });
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages.Add(message);
+                    return BadRequest(_response);
                 }
 
-                return Ok(new { Success = true, Message = message });
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = new { Success = true, Message = message };
+                return Ok(_response);
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Error = $"System Error: {ex.Message}" });
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"System Error: {ex.Message}");
+                return BadRequest(_response);
             }
         }
-
     }
 }
