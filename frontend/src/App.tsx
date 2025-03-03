@@ -19,7 +19,7 @@ import ResetPassword from "./pages/AuthPage/ResetPassword/ResetPassword.tsx";
 import NotFound from "./components/NotFound/NotFound.tsx";
 
 import MyChildsPage from "./pages/ChildPage/MyChilds/MyChildsPage.tsx";
-import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
+// import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
 
 import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistrationPage.tsx";
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
@@ -28,7 +28,7 @@ import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/
 import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
 import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
-import ServicePage from "./pages/Staff/ServicePage.tsx";
+// import ServicePage from "./pages/Staff/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
 
 import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
@@ -72,15 +72,15 @@ function App() {
         {/*Lưu ý: Trang này phải đăng nhập và có role là Customer mới sử dụng được*/}
         <Route path="/child-register" element={<ChildRegistrationPage/>}/>
         <Route path={"/my-childs"} element={<MyChildsPage/>}/>
-        <Route path={"/child-detail"} element={<ChildDetailPage/>}/>
+        {/*<Route path={"/child-detail"} element={<ChildDetailPage/>}/>*/}
         <Route path="/booking" element={<VaccinationRegistrationPage/>}></Route>
-        <Route path="/staff/service" element={<ServicePage/>}></Route>
+        {/*<Route path="/staff/service" element={<ServicePage/>}></Route>*/}
 
         <Route path="/child-register" element={<ChildRegistrationPage />} />
 
         <Route path="/booking" element={<VaccinationRegistrationPage />}></Route>
         <Route path="/payment" element={<TransactionPage />}></Route>
-        <Route path="/staff/service" element={<ServicePage />}></Route>
+        {/*<Route path="/staff/service" element={<ServicePage />}></Route>*/}
 
         {/*<Route path="/staff/service" element={<ServicePage/>}></Route>*/}
 

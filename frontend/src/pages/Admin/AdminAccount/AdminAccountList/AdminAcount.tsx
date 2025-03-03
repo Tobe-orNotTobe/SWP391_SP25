@@ -133,22 +133,21 @@ const AdminAccountPage: React.FC = () => {
                                             </div>
 
                                             <div className="vaccine-detail-mananger-popups-right">
-                                                <div className="detail-section">
-                                                    <p><strong style={{paddingRight: "2px"}}>Xác thực email:</strong>
-                                                        {detailUser.emailConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
-                                                    </p>
-                                                    <p><strong style={{paddingRight: "2px"}}>Xác thực số điệm
-                                                        thoại: </strong> {detailUser.phoneNumberConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
-                                                    </p>
-                                                    <p><strong style={{paddingRight: "2px"}}>Bảo mật hai yếu
-                                                        tố: </strong> {detailUser.twoFactorEnabled ? ("Cho phép") : ("Không cho phép")}
-                                                    </p>
-                                                    <p><strong style={{paddingRight: "2px"}}>Khóa tài
-                                                        khoản: </strong> {detailUser.lockoutEnabled ? ("Cho phép") : ("Không cho phép")}
-                                                    </p>
-                                                    <p><strong style={{paddingRight: "2px"}}>Số lần nhập sai: </strong> {detailUser.accessFailedCount}
-                                                    </p>
-                                                </div>
+
+                                                <p><strong style={{paddingRight: "2px"}}>Xác thực email:</strong>
+                                                    {detailUser.emailConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
+                                                </p>
+                                                <p><strong style={{paddingRight: "2px"}}>Xác thực số điệm thoại:
+                                                    </strong> {detailUser.phoneNumberConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
+                                                </p>
+                                                <p><strong style={{paddingRight: "2px"}}>Bảo mật hai yếu tố:
+                                                    </strong> {detailUser.twoFactorEnabled ? ("Cho phép") : ("Không cho phép")}
+                                                </p>
+                                                <p><strong style={{paddingRight: "2px"}}>Khóa tài khoản:
+                                                    </strong> {detailUser.lockoutEnabled ? ("Cho phép") : ("Không cho phép")}
+                                                </p>
+                                                <p><strong style={{paddingRight: "2px"}}>Số lần nhập sai: </strong> {detailUser.accessFailedCount}
+                                                </p>
                                             </div>
                                         </div>
                                     </TabPane>

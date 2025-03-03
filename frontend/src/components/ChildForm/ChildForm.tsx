@@ -5,6 +5,7 @@ import "./ChildForm.scss";
 import { ChildDetailResponse } from "../../interfaces/Child.ts";
 import { useChildForm } from "../../hooks/useChild.ts";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { FaArrowRight } from "react-icons/fa";
 import { useNavigate} from "react-router-dom";
 
 const genderOptions = [
@@ -67,10 +68,22 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
     return (
         <>
             {!isUpdate && (
-                <span className={"backButton"} onClick={() => {navigate("/my-childs")}}>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <span className={"navigateButton"} onClick={() => {
+                        navigate("/my-childs")
+                    }}>
                     <IoMdArrowRoundBack/>
-                    Back
+                    Trở về trẻ của tôi
                 </span>
+                    <span style={{display: "flex", justifyContent: "end", width: "18%"}} className={"navigateButton"} onClick={() => {
+                        navigate("/booking")
+                    }}>
+                        Đăng ký tiêm
+                    <FaArrowRight/>
+                </span>
+                </div>
+
+
             )}
             <h2 className="childTitle">{isUpdate ? "Cập Nhật Thông Tin Trẻ" : "Đăng Ký Trẻ"}</h2>
             <form className="childRegistrationForm" onSubmit={isUpdate ? handleUpdate : handleRegister}>
