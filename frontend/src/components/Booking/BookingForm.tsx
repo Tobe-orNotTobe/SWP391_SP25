@@ -16,6 +16,7 @@ import {
   useVaccineDetail,
   useComboVaccineDetail,
 } from "../../hooks/useVaccine";
+import { toast } from "react-toastify";
 
 const VaccinationRegistrationPage = () => {
   const navigate = useNavigate();
@@ -75,19 +76,13 @@ const VaccinationRegistrationPage = () => {
           }));
         } else {
           setFormError("Không có trẻ.");
-          notification.error({
-            message: "Lỗi",
-            description: "Không có dữ liệu trẻ.",
-          });
+          toast.warning("Không có dữ liệu trẻ.") 
         }
       } catch (error) {
         const errorMessage = error || "Lỗi không xác định";
         console.error("Lỗi khi lấy thông tin phụ huynh:", error);
         setFormError(errorMessage.toString()); // Sử dụng thông báo lỗi từ API
-        notification.error({
-          message: "Lỗi",
-          description: errorMessage.toString(), // Hiển thị thông báo lỗi từ API
-        });
+        toast.warning(errorMessage.toString()) 
       } finally {
         setFormLoading(false);
       }
@@ -112,18 +107,12 @@ const VaccinationRegistrationPage = () => {
     bookingDetails: BookingDetail[]
   ) => {
     if (!selectedChild) {
-      notification.warning({
-        message: "Cảnh báo",
-        description: "Vui lòng chọn trẻ để đặt lịch.",
-      });
+      toast.warning("Vui lòng chọn trẻ để đặt lịch.")
       return;
     }
 
     if (!parentInfo?.customerCode) {
-      notification.warning({
-        message: "Cảnh báo",
-        description: "Không tìm thấy thông tin phụ huynh.",
-      });
+      toast.warning("Không tìm thấy thông tin phụ huynh.")
       return;
     }
 
@@ -149,19 +138,13 @@ const VaccinationRegistrationPage = () => {
         window.location.href = paymentResponse.result?.paymentUrl;
       } else {
         setFormError("Không lấy được đường dẫn thanh toán.");
-        notification.error({
-          message: "Lỗi",
-          description: "Không lấy được đường dẫn thanh toán.",
-        });
+        toast.warning("Không lấy được đường dẫn thanh toán.") 
       }
     } catch (error) {
       let errorMessage = error || "Lỗi không xác định";
       console.error("Error submitting booking:", error);
       setFormError("Có lỗi xảy ra khi gửi dữ liệu.");
-      notification.error({
-        message: "Lỗi",
-        description: errorMessage.toString(),
-      });
+      toast.error(errorMessage.toString()) 
     } finally {
       setFormLoading(false);
     }
@@ -192,10 +175,7 @@ const VaccinationRegistrationPage = () => {
   // Handle selecting booking date
   const handleSelectBookingDate = (date: unknown) => {
     if (!(date instanceof Date) || isNaN(date.getTime())) {
-      notification.error({
-        message: "Lỗi",
-        description: "Ngày không hợp lệ.",
-      });
+      toast.error("Ngày không hợp lệ.")
       return;
     }
     setBookingDate(date.toISOString());
@@ -215,26 +195,17 @@ const VaccinationRegistrationPage = () => {
     event.preventDefault();
 
     if (!selectedChild) {
-      notification.warning({
-        message: "Cảnh báo",
-        description: "Vui lòng chọn trẻ để đặt lịch.",
-      });
+      toast.warning("Vui lòng chọn trẻ để đặt lịch.") 
       return;
     }
 
     if (!bookingDate) {
-      notification.warning({
-        message: "Cảnh báo",
-        description: "Vui lòng chọn ngày đặt lịch.",
-      });
+      toast.warning("Vui lòng chọn ngày đặt lịch.")
       return;
     }
 
     if (bookingDetails.length === 0) {
-      notification.warning({
-        message: "Cảnh báo",
-        description: "Vui lòng chọn ít nhất một vaccine.",
-      });
+      toast.warning("Vui lòng chọn ít nhất một vaccine.")
       return;
     }
 
