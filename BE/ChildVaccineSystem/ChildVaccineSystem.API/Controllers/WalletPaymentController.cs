@@ -59,16 +59,6 @@ namespace ChildVaccineSystem.API.Controllers
 					return Unauthorized(_response);
 				}
 
-				// Check wallet balance before processing
-				var wallet = await _walletService.GetUserWalletAsync(userId);
-				if (wallet.Balance < paymentDto.Amount)
-				{
-					_response.StatusCode = HttpStatusCode.BadRequest;
-					_response.IsSuccess = false;
-					_response.ErrorMessages.Add($"Insufficient wallet balance. Available: {wallet.Balance:C}, Required: {paymentDto.Amount:C}");
-					return BadRequest(_response);
-				}
-
 				var result = await _paymentService.ProcessWalletPaymentAsync(userId, paymentDto);
 
 				if (result.Success)

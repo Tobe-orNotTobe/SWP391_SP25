@@ -27,16 +27,23 @@ namespace ChildVaccineSystem.Service.Services
 
 			var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == paymentDto.BookingId);
 
-			// Validate payment amount
-			if (paymentDto.Amount > booking.TotalPrice)
+			var wallet = await _walletService.GetUserWalletAsync(userId);
+
+			if (wallet.Balance <= 0)
 			{
-				throw new InvalidOperationException("Payment amount exceeds booking total price.");
+				throw new InvalidOperationException("Your wallet balance is empty. Please add funds to your wallet.");
 			}
 
-			// Process payment from wallet
+			decimal amountToPay = booking.TotalPrice;
+
+			if (wallet.Balance < amountToPay)
+			{
+				throw new InvalidOperationException($"Insufficient wallet balance. Available: {wallet.Balance:C}, Required: {amountToPay:C}");
+			}
+
 			try
 			{
-				bool success = await _walletService.PayFromWalletAsync(paymentDto.BookingId, userId, paymentDto.Amount);
+				bool success = await _walletService.PayFromWalletAsync(paymentDto.BookingId, userId, amountToPay);
 
 				if (success)
 				{
@@ -50,22 +57,22 @@ namespace ChildVaccineSystem.Service.Services
 						CreatedAt = DateTime.UtcNow,
 						PaymentMethod = "Wallet",
 						Status = "Completed",
-						Amount = paymentDto.Amount
+						Amount = amountToPay
 					};
 
 					await _unitOfWork.Transactions.AddAsync(transaction);
 					await _unitOfWork.CompleteAsync();
 
 					// Get updated wallet balance
-					var walletDto = await _walletService.GetUserWalletAsync(userId);
+					var updatedWallet = await _walletService.GetUserWalletAsync(userId);
 
 					return new WalletPaymentResponseDTO
 					{
 						Success = true,
 						Message = "Payment processed successfully",
 						BookingId = booking.BookingId,
-						AmountPaid = paymentDto.Amount,
-						RemainingWalletBalance = walletDto.Balance,
+						AmountPaid = amountToPay,
+						RemainingWalletBalance = updatedWallet.Balance,
 						PaymentDate = DateTime.UtcNow,
 						TransactionId = transaction.TransactionId.ToString()
 					};
