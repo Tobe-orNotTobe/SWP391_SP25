@@ -29,7 +29,6 @@ import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import ServicePage from "./pages/Staff/ServicePage.tsx";
-import VaccinationSchedulePage from "./pages/Staff/AssignedBooking.tsx";
 
 // Manager Pages
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
@@ -48,6 +47,8 @@ import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminA
 import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
 
 import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
+import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
+import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
 
 function App() {
     return (
