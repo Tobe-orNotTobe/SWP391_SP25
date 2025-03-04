@@ -4,7 +4,7 @@ using ChildVaccineSystem.Data.DTO.ComboVaccine;
 
 namespace ChildVaccineSystem.ServiceContract.Interfaces
 {
-	public interface IComboVaccineService
+    public interface IComboVaccineService
     {
         Task<IEnumerable<ComboVaccineDTO>> GetAllAsync();
         Task<ComboVaccineDTO> GetByIdAsync(int id);

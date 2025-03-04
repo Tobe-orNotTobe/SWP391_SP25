@@ -21,7 +21,7 @@ namespace ChildVaccineSystem.Data.Entities
         public DateTime CreatedAtUpdatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<ComboDetail> ComboDetails { get; set; } = new List<ComboDetail>();
-    
-	}
+
+    }
 
 }

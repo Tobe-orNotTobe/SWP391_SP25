@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Form, notification } from "antd";
+import { Form } from "antd";
 import {useVaccineDetailById, useVaccineDetail, useVaccineInventoryDetailByVaccineInventoryId} from "../../../../hooks/useVaccine.ts";
 import {apiAddVaccineInventory, apiUpdateVaccineInventory} from "../../../../apis/apiVaccine.ts";
 import { AxiosError } from "axios";
 import {VaccineInventory} from "../../../../interfaces/Vaccine.ts";
+import {toast} from "react-toastify";
 
 export const useVaccineInventoryForm = () => {
 
@@ -49,27 +50,14 @@ export const useVaccineInventoryForm = () => {
             }
 
             if (response.isSuccess) {
-                notification.success({
-                    message: isEditMode ? "Cập nhật lô vaccine thành công" : "Thêm lô vaccine thành công"
-                });
+                toast.success(isEditMode ? "Cập nhật lô vaccine thành công" : "Thêm lô vaccine thành công");
                 navigate("/manager/inventory-vaccines");
-            } else {
-                notification.error({
-                    message: isEditMode ? "Cập nhật lô vaccine thất bại" : "Thêm lô vaccine thất bại",
-                    description: response.errorMessages
-                });
             }
         } catch (error: unknown) {
             if (error instanceof AxiosError) {
-                notification.error({
-                    message: isEditMode ? "Cập nhật lô vaccine thất bại" : "Thêm lô vaccine thất bại",
-                    description: error.response?.data?.errorMessages || "Lỗi không xác định từ server"
-                });
+               toast.error(`${error.response?.data?.errorMessages}`);
             } else {
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau."
-                });
+                toast.error("Lỗi Không Xác Định");
             }
         }
     };

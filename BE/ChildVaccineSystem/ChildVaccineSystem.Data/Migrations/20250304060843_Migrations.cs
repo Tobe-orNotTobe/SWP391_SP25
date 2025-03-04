@@ -34,6 +34,8 @@ namespace ChildVaccineSystem.Data.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -505,7 +507,8 @@ namespace ChildVaccineSystem.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BookingId = table.Column<int>(type: "int", nullable: false),
-                    AssignedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    AssignedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BookingId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -522,6 +525,11 @@ namespace ChildVaccineSystem.Data.Migrations
                         principalTable: "Bookings",
                         principalColumn: "BookingId",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DoctorWorkSchedules_Bookings_BookingId1",
+                        column: x => x.BookingId1,
+                        principalTable: "Bookings",
+                        principalColumn: "BookingId");
                 });
 
             migrationBuilder.CreateTable(
@@ -736,6 +744,11 @@ namespace ChildVaccineSystem.Data.Migrations
                 name: "IX_DoctorWorkSchedules_BookingId",
                 table: "DoctorWorkSchedules",
                 column: "BookingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorWorkSchedules_BookingId1",
+                table: "DoctorWorkSchedules",
+                column: "BookingId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DoctorWorkSchedules_UserId",

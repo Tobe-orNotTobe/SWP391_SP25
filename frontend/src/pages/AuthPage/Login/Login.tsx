@@ -7,9 +7,6 @@ import { useLogin, useLoginGoogle } from "./useLogin";
 import "../Auth.scss"
 import LoadingRedirect from "../../../components/Loading/LoadingRedirect";
 
-
-
-
 const Login : React.FC = () => {
 
     const {

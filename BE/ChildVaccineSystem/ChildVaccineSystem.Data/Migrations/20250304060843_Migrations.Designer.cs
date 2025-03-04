@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChildVaccineSystem.Data.Migrations
 {
     [DbContext(typeof(ChildVaccineSystemDBContext))]
-    [Migration("20250302160530_Migrations")]
+    [Migration("20250304060843_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />
@@ -246,6 +246,9 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("BookingId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -253,6 +256,8 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.HasKey("DoctorWorkScheduleId");
 
                     b.HasIndex("BookingId");
+
+                    b.HasIndex("BookingId1");
 
                     b.HasIndex("UserId");
 
@@ -471,6 +476,9 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -496,6 +504,9 @@ namespace ChildVaccineSystem.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -977,6 +988,10 @@ namespace ChildVaccineSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ChildVaccineSystem.Data.Entities.Booking", null)
+                        .WithMany("DoctorWorkSchedules")
+                        .HasForeignKey("BookingId1");
+
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -1189,6 +1204,8 @@ namespace ChildVaccineSystem.Data.Migrations
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.Booking", b =>
                 {
                     b.Navigation("BookingDetails");
+
+                    b.Navigation("DoctorWorkSchedules");
                 });
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.ComboVaccine", b =>

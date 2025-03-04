@@ -43,6 +43,12 @@ namespace ChildVaccineSystem.Service.Services
                 throw new Exception("Batch number already exists.");
             }
 
+            // Validate the manufacturing date and expiry date
+            if (dto.ManufacturingDate > dto.ExpiryDate)
+            {
+                throw new Exception("Manufacturing date cannot be later than expiry date.");
+            }
+
             // Tạo mới một bản ghi VaccineInventory
             var newInventory = new VaccineInventory
             {
@@ -113,37 +119,37 @@ namespace ChildVaccineSystem.Service.Services
         // Xuất vaccine khỏi kho
         public async Task ExportVaccineAsync(int vaccineId, int quantity)
         {
-            var vaccineInventories = await _unitOfWork.VaccineInventories
-                .GetAvailableInventoriesByVaccineIdAsync(vaccineId);
+            var vaccineInventories = await _unitOfWork.VaccineInventories.GetAvailableInventoriesByVaccineIdAsync(vaccineId);
 
-            if (vaccineInventories == null || vaccineInventories.Count == 0)
+            // Lọc ra các lô vaccine chưa bị xóa mềm (IsActive = false) và sắp xếp theo hạn sử dụng gần nhất
+            var sortedInventories = vaccineInventories
+                .Where(vi => !vi.IsActive) // Chỉ lấy những lô chưa bị xóa mềm
+                .OrderBy(vi => vi.ExpiryDate) // Ưu tiên xuất lô gần hết hạn trước
+                .ToList();
+
+            if (!sortedInventories.Any())
             {
                 throw new Exception("No available vaccine stock.");
             }
 
-            if (vaccineInventories.Any(vi => vi.IsActive))
-            {
-                throw new InvalidOperationException("Cannot export vaccine. This vaccine inventory has been deleted (soft delete).");
-            }
-
             int remainingQuantity = quantity;
 
-            foreach (var inventory in vaccineInventories)
+            foreach (var inventory in sortedInventories)
             {
                 if (remainingQuantity <= 0) break;
 
-                int issuedQuantity = Math.Min(inventory.QuantityInStock, remainingQuantity);
+                int issuedQuantity = Math.Min(remainingQuantity, inventory.QuantityInStock);
                 inventory.QuantityInStock -= issuedQuantity;
                 remainingQuantity -= issuedQuantity;
 
-                // Tạo giao dịch xuất kho
+                // Tạo giao dịch xuất vaccine
                 var transaction = new VaccineTransactionHistory
                 {
                     VaccineInventoryId = inventory.VaccineInventoryId,
                     TransactionType = "Export",
                     Quantity = issuedQuantity,
                     TransactionDate = DateTime.UtcNow,
-                    Description = $"Issued {issuedQuantity} unit(s) from Batch {inventory.BatchNumber}."
+                    Description = $"Export {issuedQuantity} unit(s) from Batch {inventory.BatchNumber}."
                 };
 
                 await _unitOfWork.VaccineTransactionHistories.AddAsync(transaction);
@@ -274,6 +280,12 @@ namespace ChildVaccineSystem.Service.Services
                 inventory.BatchNumber = dto.BatchNumber;
             }
 
+            // Validate the manufacturing date and expiry date
+            if (dto.ManufacturingDate.HasValue && dto.ExpiryDate.HasValue && dto.ManufacturingDate.Value > dto.ExpiryDate.Value)
+            {
+                throw new Exception("Manufacturing date cannot be later than expiry date.");
+            }
+
             // Cập nhật thông tin khác nếu có
             if (dto.ManufacturingDate.HasValue)
             {
@@ -305,26 +317,22 @@ namespace ChildVaccineSystem.Service.Services
         // Lấy danh sách tồn kho vaccine theo VaccineId
         public async Task<IEnumerable<VaccineInventoryDTO>> GetVaccineInventoryByIdAsync(int vaccineId)
         {
-            // Lấy danh sách tồn kho của vaccine theo ID, chỉ lấy những vaccine chưa bị xóa mềm
             var vaccineInventories = await _unitOfWork.VaccineInventories.GetByVaccineIdAsync(vaccineId);
-
-            // Lọc những vaccine chưa bị xóa mềm
-            //vaccineInventories = vaccineInventories.Where(vi => !vi.IsActive).ToList();
 
             if (vaccineInventories == null || !vaccineInventories.Any())
             {
-                // Ném ngoại lệ nếu không tìm thấy vaccine tồn kho
                 throw new KeyNotFoundException($"No inventory information found for vaccine with ID: {vaccineId}");
             }
 
-            // Kiểm tra xem có vaccine nào bị xóa mềm không
-            if (vaccineInventories.Any(vi => vi.IsActive))
+            // Lọc bỏ các lô đã bị soft delete
+            var activeInventories = vaccineInventories.Where(vi => !vi.IsActive).ToList();
+
+            if (!activeInventories.Any())
             {
-                throw new InvalidOperationException("This vaccine inventory has been deleted (soft delete).");
+                throw new Exception("No active inventory available for this vaccine.");
             }
 
-            // Chuyển đổi danh sách đối tượng thành danh sách DTO
-            var vaccineInventoryDTOs = vaccineInventories.Select(vi => new VaccineInventoryDTO
+            return activeInventories.Select(vi => new VaccineInventoryDTO
             {
                 VaccineInventoryId = vi.VaccineInventoryId,
                 VaccineId = vi.VaccineId,
@@ -333,13 +341,12 @@ namespace ChildVaccineSystem.Service.Services
                 TotalQuantity = vi.InitialQuantity - vi.QuantityInStock,
                 InitialQuantity = vi.InitialQuantity,
                 QuantityInStock = vi.QuantityInStock,
+                ReturnedQuantity = vi.ReturnedQuantity,
                 BatchNumber = vi.BatchNumber,
                 ManufacturingDate = vi.ManufacturingDate,
                 ExpiryDate = vi.ExpiryDate,
                 Supplier = vi.Supplier
             }).ToList();
-
-            return vaccineInventoryDTOs;
         }
 
 
@@ -378,18 +385,20 @@ namespace ChildVaccineSystem.Service.Services
         //}
 
         // Xóa Mềm  Vaccine Inventory
-        public async Task<string> SoftDeleteVaccineInventoryAsync(int id)
+        public async Task<string> SoftDeleteVaccineInventoryAsync(int vaccineInventoryId)
         {
-            var inventory = await _unitOfWork.VaccineInventories.GetByIdAsync(id);
+            var inventory = await _unitOfWork.VaccineInventories.GetByIdAsync(vaccineInventoryId);
 
             if (inventory == null)
             {
                 throw new Exception("Vaccine inventory not found.");
             }
+
+            // Đánh dấu lô vaccine này là xóa mềm, nhưng không ảnh hưởng đến các lô khác
             inventory.IsActive = true;
             await _unitOfWork.CompleteAsync();
 
-            return "Vaccine inventory deleted successfully.";
+            return $"Vaccine inventory with ID {vaccineInventoryId} has been soft deleted.";
         }
 
         // Lấy danh sách tồn kho vaccine theo VaccineInventoryId

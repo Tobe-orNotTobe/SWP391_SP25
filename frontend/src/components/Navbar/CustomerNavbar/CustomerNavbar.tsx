@@ -94,7 +94,7 @@ const CustomerNavbar: React.FC = () => {
                                     </Link>
                                     <ul className="user-dropdown-menu">
                                         <li>
-                                            <Link to="/your-profile" className="user-dropdown-item">
+                                            <Link to="/user-profile" className="user-dropdown-item">
                                                 <ImProfile size={23}/> Thông tin tài khoản
                                             </Link>
                                         </li>

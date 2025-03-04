@@ -30,8 +30,8 @@ const ConfirmEmail: React.FC = () => {
             try {
                 const response = await apiConfirmEmail(data);
 
-                if (response.message) {
-                    setStatus("Email đã xác nhận thành công! Đang chuyển hướng tới login...");
+                if (response.isSuccess) {
+                    setStatus(response.result.message);
                     setStatusType("success");
                 }else if (response.error){
                     setStatus("Xác nhận thất bại! Vui lòng thử lại.");
