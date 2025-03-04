@@ -29,17 +29,17 @@ import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/Vaccin
 import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
 import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
-import ServicePage from "./pages/Staff/ServicePage.tsx";
+import ServicePage from "./pages/Doctor/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
 
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
 import HandBookAfter from "./pages/Handbook/HandBookAfter.tsx";
-import VaccinationSchedulePage from "./pages/Staff/AssignedBooking.tsx";
+import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
+import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
+import AssignPage from "./pages/Staff/AssignPage.tsx";
 
 function App() {
-
-  
   return (
     <BrowserRouter>
       <Routes>
@@ -51,12 +51,10 @@ function App() {
         <Route path="/vision" element={<VisionPage />} />
         <Route path="/our-team" element={<OurTeamPage />} />
         <Route path="/vaccines-list" element={<VaccineListPage />} />
-        <Route path="/vaccines-list/:id" element={<VaccineDetailPage/>}/>
-        <Route path="/handbook/before" element={<BeforeHandbook/>}/>
-        <Route path="/handbook/process" element={<VaccinationProcess/>}/>
-        <Route path="/handbook/after" element={<HandBookAfter/>}/>
-
-
+        <Route path="/vaccines-list/:id" element={<VaccineDetailPage />} />
+        <Route path="/handbook/before" element={<BeforeHandbook />} />
+        <Route path="/handbook/process" element={<VaccinationProcess />} />
+        <Route path="/handbook/after" element={<HandBookAfter />} />
 
         {/*Lưu ý: Các trang này là phục vụ việc authencation thôi chứ cũng không có gì*/}
         <Route path="/login" element={<Login />} />
@@ -65,39 +63,60 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/confirm-email" element={<ConfirmEmail />} />
 
-
-
         {/*Lưu ý: Trang này phải đăng nhập và có role là Customer mới sử dụng được*/}
-        <Route path="/child-register" element={<ChildRegistrationPage/>}/>
-        <Route path={"/my-childs"} element={<MyChildsPage/>}/>
-        <Route path={"/child-detail"} element={<ChildDetailPage/>}/>
-        <Route path="/booking" element={<VaccinationRegistrationPage/>}></Route>
-        <Route path="/staff/service" element={<ServicePage/>}></Route>
-
+        <Route path="/child-register" element={<ChildRegistrationPage />} />
+        <Route path={"/my-childs"} element={<MyChildsPage />} />
+        <Route path={"/child-detail"} element={<ChildDetailPage />} />
+        <Route
+          path="/booking"
+          element={<VaccinationRegistrationPage />}
+        ></Route>
+        <Route path="/doctor/service" element={<ServicePage />}></Route>
         <Route path="/child-register" element={<ChildRegistrationPage />} />
 
-        <Route path="/booking" element={<VaccinationRegistrationPage />}></Route>
+        <Route path="/booking" element={<VaccinationRegistrationPage />}/>
         <Route path="/payment" element={<TransactionPage />}></Route>
-        <Route path="/staff/service" element={<ServicePage />}></Route>
-        <Route path="/staff/vaccination-schedule" element={<VaccinationSchedulePage />}></Route>
-
+        <Route path="/doctor/service" element={<ServicePage />}></Route>
+        <Route
+          path="/doctor/vaccination-schedule"
+          element={<VaccinationSchedulePage />}
+        ></Route>
+        <Route path="/staff/booking" element={<BookingForStaff/>}></Route>
+        <Route path="/staff/assignDoctor" element={<AssignPage/>}></Route>
 
         {/*Lưu ý: Trang này phải đăng nhập và có role là manager mới sử dụng được*/}
         <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
         <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
-        <Route path="/manager/combo-vaccines" element={<VaccineComboList/>}/>
+        <Route path="/manager/combo-vaccines" element={<VaccineComboList />} />
         <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
-        <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
-        <Route path="/manager/combo-vaccines/add" element={<VaccineComboForm/>}/>
-        <Route path="/manager/combo-vaccines/edit/:id" element={<VaccineComboForm/>}/>
-        <Route path="/manager/schedule-vaccines" element={< ScheduleVaccinationList/>}/>
-        <Route path="/manager/schedule-vaccines/add" element={<ScheduleVaccinationForm/>}/>
-        <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm/>}/>
-        <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList/>}/>
-
-       
-
-
+        <Route
+          path="/manager/vaccines/edit/:id"
+          element={<VaccineFormPage />}
+        />
+        <Route
+          path="/manager/combo-vaccines/add"
+          element={<VaccineComboForm />}
+        />
+        <Route
+          path="/manager/combo-vaccines/edit/:id"
+          element={<VaccineComboForm />}
+        />
+        <Route
+          path="/manager/schedule-vaccines"
+          element={<ScheduleVaccinationList />}
+        />
+        <Route
+          path="/manager/schedule-vaccines/add"
+          element={<ScheduleVaccinationForm />}
+        />
+        <Route
+          path="/manager/schedule-vaccines/edit/:scheduleId"
+          element={<ScheduleVaccinationForm />}
+        />
+        <Route
+          path="/manager/inventory-vaccines"
+          element={<VaccineInventoryList />}
+        />
 
         {/* Trang 404 */}
         <Route path="*" element={<NotFound />} />

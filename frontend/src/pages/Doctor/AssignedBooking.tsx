@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import StaffLayout from "../../components/Layout/StaffLayout/StaffLayout.tsx";
+//import StaffLayout from "../../components/Layout/StaffLayout/StaffLayout.tsx";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
 import { apiGetDoctorBookings } from "../../apis/apiBooking.ts";
 import "./VaccinationSchedulePage.scss";
 import Modal from "react-modal";
 import { BookingResponse } from "../../interfaces/Booking.ts";
 import { useNavigate } from "react-router-dom";
+import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
 
 Modal.setAppElement("#root"); // Đặt root để đảm bảo modal hoạt động tốt
 
@@ -42,7 +43,7 @@ const VaccinationSchedulePage: React.FC = () => {
 
   const navigate = useNavigate();
   return (
-    <StaffLayout>
+    <DoctorLayout>
       <h1>Lịch Tiêm Chủng</h1>
       {bookings.length > 0 ? (
         <table className="schedule-table">
@@ -75,10 +76,10 @@ const VaccinationSchedulePage: React.FC = () => {
                   </button>
                   <button
                     className="detail-btn"
-                    onClick={() =>
-{                     navigate("/staff/service", { state: bookings[index] })
-                      console.log(bookings)}
-                    }
+                    onClick={() => {
+                      navigate("/doctor/service", { state: bookings[index] });
+                      console.log(bookings);
+                    }}
                   >
                     Tiến hành tiêm
                   </button>
@@ -126,7 +127,7 @@ const VaccinationSchedulePage: React.FC = () => {
           </div>
         )}
       </Modal>
-    </StaffLayout>
+    </DoctorLayout>
   );
 };
 
