@@ -9,5 +9,6 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
 		Task<IEnumerable<TransactionDTO>> GetTransactionsByBookingAsync(int bookingId);
 		Task<TransactionDTO> CreateTransactionAsync(CreateTransactionDTO transactionDto);
 		Task<TransactionDTO> UpdateTransactionStatusAsync(int transactionId, string statusl);
-	}
+        Task<decimal> GetTotalRevenueByDateAsync(DateTime date);
+    }
 }

@@ -76,6 +76,24 @@ namespace ChildVaccineSystem.Service.Services
             await _unitOfWork.CompleteAsync();
             return true;
         }
+        public async Task<IEnumerable<FeedbackDTO>> GetAllFeedbackAsync()
+        {
+            var feedbacks = await _unitOfWork.Feedbacks.GetAllAsync(includeProperties: "User,Booking");
+
+            var feedbackDtos = _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
+
+            foreach (var feedbackDto in feedbackDtos)
+            {
+                var user = feedbacks.FirstOrDefault(f => f.FeedbackId == feedbackDto.FeedbackId)?.User;
+                if (user != null)
+                {
+                    feedbackDto.UserName = user.UserName;
+                }
+            }
+
+            return feedbackDtos;
+        }
+
 
     }
 
