@@ -2,8 +2,9 @@ import { useState } from "react";
 // import { useNavigate } from "react-router-dom";
 import { apiRegister } from "../../../apis/apiAuth";
 import { RegisterRequest } from "../../../interfaces/Auth";
-import { notification } from "antd";
+
 import {AxiosError} from "axios";
+import { toast } from "react-toastify";
 
 
 export const useRegister = () => {
@@ -133,11 +134,8 @@ export const useRegister = () => {
         const data: RegisterRequest = { email, password, userName, fullName, phoneNumber, address, dateOfBirth };
 
         if (errorUsername || errorEmail || errorPassword || errorConfirmPassword || errorPhoneNumber || errorAddress || errorDoB) {
-            notification.error({
-                message: "Đăng Kí Thất Bại",
-                description: "Vui lòng kiểm tra lại thông tin nhập vào.",
-            });
 
+            toast.warning("Vui Lòng nhập thông tin đúng yêu cầu")
             console.log("hahahahaha")
             return;
         }
@@ -147,31 +145,21 @@ export const useRegister = () => {
         try {
             const response = await apiRegister(data);
             if (response?.message) {
-                notification.success({
-                    message: "Đăng Kí Thành Công",
-                    description: response.message,
-                });
+               toast.success(response.message);
 
                 setIsRedirecting(true);
             } else {
-                notification.error({
-                    message: response?.error ?? "Có lỗi xảy ra, vui lòng thử lại!",
-                });
+
+                toast.error(response?.error);
             }
         } catch (error: unknown) {
 
             if (error instanceof AxiosError) {
                 console.error("Lỗi API:", error.response?.data || error.message);
-                notification.error({
-                    message: "Đăng Kí Thất Bại",
-                    description: error.response?.data?.error || "Lỗi không xác định từ server",
-                });
+               toast.error( error.response?.data?.error)
             } else {
                 console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
+               toast.error("Lỗi không xác định")
             }
         } finally {
             setIsLoading(false);

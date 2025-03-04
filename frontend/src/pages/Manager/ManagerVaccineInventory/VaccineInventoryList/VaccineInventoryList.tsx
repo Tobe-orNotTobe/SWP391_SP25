@@ -1,101 +1,39 @@
-import React, { useState } from "react";
-import {Table, Button, Modal, Form, Input, DatePicker, InputNumber, notification, Row, Col} from "antd";
-import ManagerLayout from "../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
-import { useVaccineInventoryStockDetail } from "../../../hooks/useVaccine.ts";
+import React from "react";
+import {Table, Button, Modal, Form, Input, DatePicker, InputNumber, Row, Col} from "antd";
+import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
+import {useVaccineInventoryStockDetail} from "../../../../hooks/useVaccine.ts";
+import {useVaccineInventoryList} from "./useVaccineInventoryList.ts";
 import "./VaccineInventoryList.scss";
-import {VaccineInventoryResponse, VaccineInventoryStock} from "../../../interfaces/Vaccine.ts";
-import {apiAddVaccineInventory, apiSearchVaccineInventory} from "../../../apis/apiVaccine.ts";
-import {AxiosError} from "axios";
+import {VaccineInventoryStock} from "../../../../interfaces/Vaccine.ts";
 import {TbListDetails} from "react-icons/tb";
 import { FaPlus } from "react-icons/fa6";
 import { SearchOutlined } from "@ant-design/icons";
 
 type GroupedVaccine = VaccineInventoryStock & { batches: VaccineInventoryStock[] };
 
-// Type for API response
-
-
 const VaccineInventoryList: React.FC = () => {
     const { vaccineInventoryStockDetail } = useVaccineInventoryStockDetail();
-    const [selectedVaccine, setSelectedVaccine] = useState<GroupedVaccine | null>(null);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [addBatchModalVisible, setAddBatchModalVisible] = useState(false);
-    const [form] = Form.useForm();
-
-    const [searchKeyword, setSearchKeyword] = useState("");
-    const [searchResults, setSearchResults] = useState<GroupedVaccine[]>([]);
-    const [isSearching, setIsSearching] = useState(false);
-    const [searchPerformed, setSearchPerformed] = useState(false);
-
-    const handleSearch = async () => {
-        try {
-            if (!searchKeyword.trim()) {
-                notification.warning({
-                    message: "Vui lòng nhập từ khóa tìm kiếm",
-                });
-                return;
-            }
-
-            setIsSearching(true);
-            const response = await apiSearchVaccineInventory(searchKeyword);
-
-            // Extract result array from the API response
-            const resultData = (response as VaccineInventoryResponse).result || [];
-
-            // Group the search results by vaccineId
-            const groupedResults: Record<number, GroupedVaccine> = {};
-
-            resultData.forEach((item) => {
-                const vaccineId = item.vaccineId;
-
-                if (!groupedResults[vaccineId]) {
-                    // Initialize a new group with this vaccine
-                    groupedResults[vaccineId] = {
-                        ...item,
-                        batches: []
-                    };
-                }
-
-                // Add this item as a batch
-                groupedResults[vaccineId].batches.push(item);
-            });
-
-            const finalResults = Object.values(groupedResults);
-            setSearchResults(finalResults);
-            setSearchPerformed(true);
-
-            if (finalResults.length === 0) {
-                notification.info({
-                    message: "Không tìm thấy kết quả",
-                    description: "Không có vaccine nào phù hợp với từ khóa tìm kiếm",
-                });
-            }
-        } catch (error) {
-            console.error("Search error:", error);
-            notification.error({
-                message: "Lỗi khi tìm kiếm vaccine",
-                description: "Đã xảy ra lỗi trong quá trình tìm kiếm. Vui lòng thử lại sau.",
-            });
-        } finally {
-            setIsSearching(false);
-        }
-    };
-
-    const resetSearch = () => {
-        setSearchKeyword("");
-        setSearchResults([]);
-        setSearchPerformed(false);
-    };
-
-    const groupedData = (vaccineInventoryStockDetail ?? []).reduce((acc: Record<string, GroupedVaccine>, item: VaccineInventoryStock) => {
-        if (!acc[item.vaccineId]) {
-            acc[item.vaccineId] = { ...item, batches: [] };
-        }
-        acc[item.vaccineId].batches.push(item);
-        return acc;
-    }, {} as Record<string, GroupedVaccine>);
-
-    const vaccineInventoryList = searchPerformed ? searchResults : Object.values(groupedData);
+    const {
+        form,
+        selectedVaccine,
+        modalVisible,
+        addBatchModalVisible,
+        searchKeyword,
+        isSearching,
+        searchPerformed,
+        vaccineInventoryList,
+        setSearchKeyword,
+        handleSearch,
+        resetSearch,
+        handleCreateBatch,
+        handleEditBatch,
+        handleDeleteBatch,
+        handleOpenModal,
+        handleCloseModal,
+        handleOpenAddBatchModal,
+        setAddBatchModalVisible,
+        handleAddVaccineInventory
+    } = useVaccineInventoryList(vaccineInventoryStockDetail);
 
     const columns = [
         {
@@ -141,6 +79,11 @@ const VaccineInventoryList: React.FC = () => {
 
     const batchColumns = [
         {
+            title: "Vaccine Inventory Id",
+            dataIndex: "vaccineInventoryId",
+            key: "vaccineInventoryId",
+        },
+        {
             title: "Số hiệu lô",
             dataIndex: "batchNumber",
             key: "batchNumber",
@@ -172,64 +115,21 @@ const VaccineInventoryList: React.FC = () => {
             dataIndex: "quantityInStock",
             key: "quantityInStock",
         },
-    ];
-
-    const handleOpenModal = (record: GroupedVaccine) => {
-        setSelectedVaccine(record);
-        setModalVisible(true);
-    };
-
-    const handleCloseModal = () => {
-        setModalVisible(false);
-        setSelectedVaccine(null);
-    };
-
-    const handleOpenAddBatchModal = (record: GroupedVaccine) => {
-        setSelectedVaccine(record);
-        form.resetFields();
-        setAddBatchModalVisible(true);
-    };
-
-    const handleAddVaccineInventory = async () => {
-        try {
-            const values = await form.validateFields();
-
-            // Thêm vaccineId và các trường cần thiết
-            const batchData = {
-                ...values,
-                vaccineId: selectedVaccine?.vaccineId,
-                manufacturingDate: values.manufacturingDate?.format('YYYY-MM-DD'),
-                expiryDate: values.expiryDate?.format('YYYY-MM-DD'),
-                quantityInStock: values.initialQuantity
-            };
-
-            const response = await apiAddVaccineInventory(batchData);
-
-            if(response.isSuccess) {
-                notification.success({
-                    message: "Thêm lô vaccine thành công"
-                });
-                setAddBatchModalVisible(false);
-            } else {
-                notification.error({
-                    message: "Thêm vaccine thất bại"
-                });
-            }
-        } catch (error: unknown) {
-            if (error instanceof AxiosError) {
-                notification.error({
-                    message: "Thêm lô Vaccine Thất bại",
-                    description: error.response?.data?.error || "Lỗi không xác định từ server",
-                });
-            } else {
-                console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
-            }
+        {
+            title: "Thao Tác",
+            key: "batchAction",
+            render: (_: unknown, record: VaccineInventoryStock) => (
+                <div>
+                    <Button onClick={() => handleEditBatch(record)} className="edit-button">
+                        Chỉnh sửa
+                    </Button>
+                    <Button onClick={() => handleDeleteBatch(record)} className="delete-button">
+                        Xóa
+                    </Button>
+                </div>
+            )
         }
-    };
+    ];
 
     return (
         <ManagerLayout>
@@ -238,7 +138,7 @@ const VaccineInventoryList: React.FC = () => {
                     <h1>Quản lí kho Vaccine</h1>
 
                     <div className="search-container">
-                        <Row gutter={16} className="search-row">
+                        <Row gutter={16} className="search-row" align="middle" justify="space-between">
                             <Col xs={24} sm={16} md={12} lg={8}>
                                 <Input.Search
                                     placeholder="Tìm kiếm theo tên, mã vaccine, nhà sản xuất..."
@@ -246,11 +146,10 @@ const VaccineInventoryList: React.FC = () => {
                                     onChange={(e) => setSearchKeyword(e.target.value)}
                                     onSearch={handleSearch}
                                     enterButton={
-                                    <Button type="primary" style={{color: "#2A388F"}} icon={<SearchOutlined  style={{color: "white"}} />}>
-                                        <span style={{color : "white"}}>Tim Kiem</span>
-                                    </Button>}
+                                        <Button type="primary" style={{color: "#2A388F"}} icon={<SearchOutlined  style={{color: "white"}} />}>
+                                            <span style={{color : "white"}}>Tim Kiem</span>
+                                        </Button>}
                                     loading={isSearching}
-
                                 />
                             </Col>
                             {searchPerformed && (
@@ -258,11 +157,21 @@ const VaccineInventoryList: React.FC = () => {
                                     <Button onClick={resetSearch}>Xóa tìm kiếm</Button>
                                 </Col>
                             )}
+                            <Col className="create-batch-button-container">
+                                <Button
+                                    type="primary"
+                                    icon={<FaPlus />}
+                                    onClick={handleCreateBatch}
+                                    className="create-batch-button"
+                                >
+                                    Tạo Lô Vaccine Mới
+                                </Button>
+                            </Col>
                         </Row>
 
                         {searchPerformed && (
                             <div className="search-results-info">
-                                <p>Kết quả tìm kiếm cho: <strong>"{searchKeyword}"</strong> - {searchResults.length} kết quả</p>
+                                <p>Kết quả tìm kiếm cho: <strong>"{searchKeyword}"</strong> - {vaccineInventoryList.length} kết quả</p>
                             </div>
                         )}
                     </div>
@@ -283,7 +192,7 @@ const VaccineInventoryList: React.FC = () => {
                     open={modalVisible}
                     onCancel={handleCloseModal}
                     footer={null}
-                    width={800}
+                    width={1200}
                 >
                     <Table
                         dataSource={selectedVaccine?.batches || []}

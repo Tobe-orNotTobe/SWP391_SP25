@@ -394,3 +394,6 @@ frontend/.vscode
 /BE/ChildVaccineSystem/ChildVaccineSystem.API/appsettings.Development.json
 /BE/ChildVaccineSystem/ChildVaccineSystem.API/appsettings.Development.json
 /BE/ChildVaccineSystem/ChildVaccineSystem.API/appsettings.Development.json
+
+
+frontend/.env

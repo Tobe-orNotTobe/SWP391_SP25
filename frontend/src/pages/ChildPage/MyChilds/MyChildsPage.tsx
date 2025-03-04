@@ -65,11 +65,13 @@ const MyChildPage: React.FC = () => {
         <>
             <CustomerNavbar />
             <div className="childPageContainer">
-                <h2 className="title">Trẻ của bạn</h2>
-                <div style={{display: "flex", justifyContent: "end"}}>
-                    <button className="addChildButton" onClick={() => navigate("/child-register")}>
-                        <IoMdAdd/> Đăng ký trẻ
-                    </button>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <h2 className="title">Trẻ của bạn</h2>
+                    <div style={{display: "flex", justifyContent: "end"}}>
+                        <button className="addChildButton" onClick={() => navigate("/child-register")}>
+                            <IoMdAdd/> Đăng ký trẻ
+                        </button>
+                    </div>
                 </div>
                 <br/>
 

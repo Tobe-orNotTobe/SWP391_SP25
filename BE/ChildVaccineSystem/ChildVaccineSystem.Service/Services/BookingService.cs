@@ -16,11 +16,13 @@ namespace ChildVaccineSystem.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IVaccineInventoryService _inventoryService;
 
-        public BookingService(IUnitOfWork unitOfWork, IMapper mapper)
+        public BookingService(IUnitOfWork unitOfWork, IMapper mapper, IVaccineInventoryService inventoryService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _inventoryService = inventoryService;
         }
 
         public async Task<BookingDTO> GetByIdAsync(int id)
@@ -198,10 +200,15 @@ namespace ChildVaccineSystem.Service.Services
         }
         public async Task<bool> AssignDoctorToBooking(int bookingId, string userId)
         {
-            var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
+            var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(bookingId);
             if (booking == null)
             {
                 throw new ArgumentException("Booking not found.");
+            }
+
+            if (booking.BookingDetails == null || !booking.BookingDetails.Any())
+            {
+                throw new Exception("Booking does not contain any details.");
             }
 
             var doctor = await _unitOfWork.Users.GetAsync(u => u.Id == userId);
@@ -217,10 +224,30 @@ namespace ChildVaccineSystem.Service.Services
             };
 
             await _unitOfWork.DoctorWorkSchedules.AddAsync(doctorSchedule);
+
+            // Trừ vaccine khỏi kho khi lịch tiêm được gán thành công
+            foreach (var detail in booking.BookingDetails)
+            {
+                if (detail.VaccineId.HasValue)
+                {
+                    await _inventoryService.ExportVaccineAsync(detail.VaccineId.Value, 1);
+                }
+                else if (detail.ComboVaccineId.HasValue)
+                {
+                    var comboDetails = await _unitOfWork.ComboDetails.GetAllAsync(cd => cd.ComboId == detail.ComboVaccineId);
+                    foreach (var comboDetail in comboDetails)
+                    {
+                        await _inventoryService.ExportVaccineAsync(comboDetail.VaccineId, 1);
+                    }
+                }
+            }
+
+            booking.Status = BookingStatus.Completed;
             await _unitOfWork.CompleteAsync();
 
             return true;
         }
+
 
         public async Task<List<BookingDTO>> GetDoctorBookingsAsync(string userId)
         {
