@@ -18,8 +18,8 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<bool> ActivateUser(string id);
         Task<bool> DeactivateUser(string id);
         Task<IEnumerable<User>> SearchUsers(string keyword);
-        Task<UserDTO> GetProfileAsync(string userId);
-        Task<bool> UpdateProfileAsync(UserDTO userDTO);
+        Task<UserProfileDTO> GetProfileAsync(string userId);
+        Task<bool> UpdateProfileAsync(UserProfileDTO userDTO);
         Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
     }
 }

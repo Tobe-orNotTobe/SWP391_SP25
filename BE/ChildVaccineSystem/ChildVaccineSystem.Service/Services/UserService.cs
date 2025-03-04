@@ -55,17 +55,16 @@ namespace ChildVaccineSystem.Service.Services
         {
             return _unitOfWork.Users.SearchUsersAsync(keyword);
         }
-        public async Task<UserDTO> GetProfileAsync(string userId)
+        public async Task<UserProfileDTO> GetProfileAsync(string userId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null) return null;
 
-            return new UserDTO
+            return new UserProfileDTO
             {
                 Id = user.Id,
                 UserName = user.UserName,
                 FullName = user.FullName,
-                Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
                 DateOfBirth = user.DateOfBirth,
@@ -73,7 +72,7 @@ namespace ChildVaccineSystem.Service.Services
             };
         }
 
-        public async Task<bool> UpdateProfileAsync(UserDTO userDTO)
+        public async Task<bool> UpdateProfileAsync(UserProfileDTO userDTO)
         {
             var user = await _userRepository.GetUserByIdAsync(userDTO.Id);
             if (user == null) return false;
