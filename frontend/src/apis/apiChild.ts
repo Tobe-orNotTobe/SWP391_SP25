@@ -3,24 +3,26 @@ import { decodeToken } from "../utils/decodeToken.ts";
 import { ChildDetailRequest } from "../interfaces/Child.ts";
 import axios, { AxiosError } from "axios";
 
-export const apiGetMyChilds = async () => {
-    try {
-      const userId = decodeToken(localStorage.getItem("token"))?.sub;
-      if (!userId) {
-        throw new Error("User ID not found");
-      }
-  
-      const response = await axiosInstance.get(`/api/Children/user/${userId}`);
-      return response.data;
-    } catch (error: any) {
-      if (axios.isAxiosError(error) && error.response) {
-        // Lấy danh sách lỗi từ response
-        throw error.response.data.errorMessages || ["Unknown error occurred"];
-      } else {
-        throw ["An unexpected error occurred"];
-      }
+export const apiGetMyChilds = async (userId?: string) => {
+  try {
+    // Nếu không truyền userId, lấy từ token trong localStorage
+    const finalUserId = userId || decodeToken(localStorage.getItem("token"))?.sub;
+    if (!finalUserId) {
+      throw new Error("User ID not found");
     }
-  };
+
+    const response = await axiosInstance.get(`/api/Children/user/${finalUserId}`);
+    return response.data;
+  } catch (error: any) {
+    if (axios.isAxiosError(error) && error.response) {
+      // Lấy danh sách lỗi từ response
+      throw error.response.data.errorMessages || ["Unknown error occurred"];
+    } else {
+      throw ["An unexpected error occurred"];
+    }
+  }
+};
+
 
 export const apiChildRegister = async (data: ChildDetailRequest) => {
   const userId = decodeToken(localStorage.getItem("token"))?.sub;
