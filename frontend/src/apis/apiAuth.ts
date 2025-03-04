@@ -57,7 +57,7 @@ export const apiResetPassword = async (data: ResetPasswordRequest) => {
     }
 };
 
-export  const apiRefreshToken = async (refreshToken : string) => {
+export  const apiRefreshToken = async (refreshToken : string | null) => {
     try {
         const response = await axiosInstance.post("/api/Auth/refresh-token", refreshToken);
         return response.data;

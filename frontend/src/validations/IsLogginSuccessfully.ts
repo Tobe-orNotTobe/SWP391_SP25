@@ -2,20 +2,25 @@ import { useState, useEffect } from "react";
 import { decodeToken } from "../utils/decodeToken";
 import { apiRefreshToken } from "../apis/apiAuth";
 
+
 export const IsLoginSuccessFully = () => {
     const [username, setUsername] = useState<string>("");
     const [role, setRole] = useState<string>("");
     const [sub, setSub] = useState<string>("");
     const [showSessionAlert, setShowSessionAlert] = useState<boolean>(false);
 
+
     const refreshUserSession = async () => {
         const token = localStorage.getItem("token");
 
+        const refreshToken = localStorage.getItem("refeshToken");
+
         if (token) {
             try {
-                const newTokenData = await apiRefreshToken(token);
+                const newTokenData = await apiRefreshToken(refreshToken);
                 if (newTokenData?.token) {
-                    localStorage.setItem("token", newTokenData.token);
+                    localStorage.setItem("token", newTokenData.result.token);
+                    localStorage.setItem("refeshToken", newTokenData.result.refeshToken);
 
                     const newDecodedToken = decodeToken(newTokenData.token);
                     if (newDecodedToken) {
@@ -52,7 +57,6 @@ export const IsLoginSuccessFully = () => {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("role");
 
-        // Redirect to login page
         window.location.href = "/login";
     };
 
