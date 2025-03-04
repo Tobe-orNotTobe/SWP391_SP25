@@ -14,5 +14,11 @@ namespace ChildVaccineSystem.Repository.Repositories
         private readonly ChildVaccineSystemDBContext _context;
 
         public ComboDetailRepository(ChildVaccineSystemDBContext context) : base(context) => _context = context;
+        public async Task RemoveRange(IEnumerable<ComboDetail> comboDetails)
+        {
+            _context.ComboDetails.RemoveRange(comboDetails); // Xóa tất cả các ComboDetails trong danh sách
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

@@ -37,5 +37,14 @@ namespace ChildVaccineSystem.Repository.Repositories
                 .ThenInclude(d => d.ComboVaccine)  // Nếu có combo vaccine
                 .FirstOrDefaultAsync(b => b.BookingId == bookingId);
         }
+        public async Task<List<Booking>> GetUnassignedBookingsAsync()
+        {
+            return await _context.Bookings
+                .Where(b => b.Status == BookingStatus.Pending && !b.DoctorWorkSchedules.Any())
+                .Include(b => b.Children)
+                .Include(b => b.User)
+                .ToListAsync();
+        }
+
     }
 }
