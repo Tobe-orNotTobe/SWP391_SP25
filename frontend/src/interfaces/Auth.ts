@@ -50,10 +50,20 @@ export interface UserProfile {
     id: string;
     fullName: string;
     userName: string;
+    phoneNumber: string;
     email: string;
+    address: string;
+    dateOfBirth: string;
+    imageUrl: string;
+}
+
+export interface UserProfileUpdate{
+    id: string;
+    fullName: string;
+    userName: string;
     phoneNumber: string;
     address: string;
     dateOfBirth: string;
-    isActive: boolean;
     imageUrl: string;
 }
+

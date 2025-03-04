@@ -8,6 +8,7 @@ import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { GoPackage } from "react-icons/go";
 import { MdOutlineCalendarToday } from "react-icons/md";
 import { MdOutlineInventory2 } from "react-icons/md";
+import {CiUser} from "react-icons/ci";
 
 const { Header, Sider, Content } = Layout;
 
@@ -34,6 +35,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             key: 'admin-dashboard',
             icon: <AppstoreOutlined />,
             label: <Link to="/admin/dashboard">Trang Dashboard</Link>
+        },
+        {
+            key: 'admin-profile',
+            icon:  <CiUser/>,
+            label: <Link to="/admin/profile">Thông tin cá nhân</Link>
         },
         {
             key: 'account',

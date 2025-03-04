@@ -48,6 +48,8 @@ import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminA
 import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
 
 import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
+import ManagerProfile from "./pages/Manager/ManagerProfile.tsx";
+import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
 
 function App() {
     return (
@@ -102,12 +104,14 @@ function App() {
                 <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList />} />
                 <Route path="/manager/inventory-vaccines/add" element={<VaccineInventoryForm />} />
                 <Route path="/manager/inventory-vaccines/edit/:id" element={<VaccineInventoryForm />} />
+                <Route path="/manager/profile" element={<ManagerProfile/>}/>
 
                 {/* Admin Routes */}
                 <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
                 <Route path="/admin/account" element={<AdminAccountPage />} />
                 <Route path="/admin/account/add" element={<AdminAccountFormPage />} />
                 <Route path="/admin/account/edit/:id" element={<AdminAccountFormPage />} />
+                <Route path="/admin/profile" element={<AdminProfile/>}/>
 
 
                 {/* 404 Page */}

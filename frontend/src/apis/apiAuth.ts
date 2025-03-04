@@ -3,7 +3,7 @@ import {
     ForgotPasswordRequest,
     LoginRequest,
     RegisterRequest,
-    ResetPasswordRequest, ResetPasswordUserProfile, UserProfile
+    ResetPasswordRequest, ResetPasswordUserProfile, UserProfileUpdate
 } from "../interfaces/Auth";
 import axiosInstance from "../utils/axiosInstance";
 
@@ -78,7 +78,7 @@ export const apiGetProfileUser = async () => {
     }
 }
 
-export const apiUpdateProfileUser = async (data : UserProfile ) => {
+export const apiUpdateProfileUser = async (data : UserProfileUpdate ) => {
     try {
         const response = await  axiosInstance.put("/api/user/profile", data);
         return response.data;
