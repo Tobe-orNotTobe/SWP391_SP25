@@ -38,6 +38,8 @@ namespace ChildVaccineSystem.Data.Entities
         public PricingPolicy PricingPolicy { get; set; }
 
         public ICollection<BookingDetail> BookingDetails { get; set; }
+        public ICollection<DoctorWorkSchedule> DoctorWorkSchedules { get; set; }
+
 
     }
 }

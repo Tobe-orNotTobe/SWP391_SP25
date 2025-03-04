@@ -282,6 +282,11 @@ namespace ChildVaccineSystem.Service.Services
 
             return _mapper.Map<BookingDTO>(booking);
         }
-
+        // BookingService.cs
+        public async Task<List<BookingDTO>> GetUnassignedBookingsAsync()
+        {
+            var unassignedBookings = await _unitOfWork.Bookings.GetUnassignedBookingsAsync();
+            return _mapper.Map<List<BookingDTO>>(unassignedBookings);
+        }
     }
 }

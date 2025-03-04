@@ -11,5 +11,7 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
     {
         Task<bool> HasConflictingBookingAsync(string userId, DateTime bookingDate);
         Task<Booking> GetBookingWithDetailsAsync(int bookingId);
+        Task<List<Booking>> GetUnassignedBookingsAsync();
+
     }
 }
