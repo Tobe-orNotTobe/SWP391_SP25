@@ -22,38 +22,6 @@ namespace ChildVaccineSystem.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.BlogPost", b =>
-                {
-                    b.Property<int>("BlogPostId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogPostId"));
-
-                    b.Property<string>("AuthorName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("BlogPostId");
-
-                    b.ToTable("BlogPosts");
-                });
-
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.Booking", b =>
                 {
                     b.Property<int>("BookingId")
@@ -243,9 +211,6 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BookingId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -253,8 +218,6 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.HasKey("DoctorWorkScheduleId");
 
                     b.HasIndex("BookingId");
-
-                    b.HasIndex("BookingId1");
 
                     b.HasIndex("UserId");
 
@@ -473,9 +436,6 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -501,9 +461,6 @@ namespace ChildVaccineSystem.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -679,7 +636,7 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<int>("InitialQuantity")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("ManufacturingDate")
@@ -985,10 +942,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ChildVaccineSystem.Data.Entities.Booking", null)
-                        .WithMany("DoctorWorkSchedules")
-                        .HasForeignKey("BookingId1");
-
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -1201,8 +1154,6 @@ namespace ChildVaccineSystem.Data.Migrations
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.Booking", b =>
                 {
                     b.Navigation("BookingDetails");
-
-                    b.Navigation("DoctorWorkSchedules");
                 });
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.ComboVaccine", b =>
