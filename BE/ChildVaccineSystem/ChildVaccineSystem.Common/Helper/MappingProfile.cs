@@ -13,6 +13,7 @@ using ChildVaccineSystem.Data.DTO.DoctorWorkSchedule;
 using ChildVaccineSystem.Data.DTO.Feedback;
 using ChildVaccineSystem.Data.DTO.InjectionSchedule;
 using ChildVaccineSystem.Data.DTO.Transaction;
+using ChildVaccineSystem.Data.DTO.User;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
 using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Data.DTO.VaccineInventory;
@@ -168,6 +169,6 @@ namespace ChildVaccineSystem.Common.Helper
             CreateMap<CreateFeedbackDTO, Feedback>();
         }
     }
-}
+};
 
 

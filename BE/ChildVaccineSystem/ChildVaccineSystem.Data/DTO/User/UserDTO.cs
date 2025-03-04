@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChildVaccineSystem.Data.DTO
+namespace ChildVaccineSystem.Data.DTO.User
 {
     public class UserDTO
     {
@@ -16,6 +16,7 @@ namespace ChildVaccineSystem.Data.DTO
         public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool IsActive { get; set; }
-        public string Role {  get; set; }
+        public string ImageUrl { get; set; }
+        public string Role { get; set; }
     }
 }
