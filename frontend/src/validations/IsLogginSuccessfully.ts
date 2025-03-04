@@ -18,7 +18,7 @@ export const IsLoginSuccessFully = () => {
         if (token) {
             try {
                 const newTokenData = await apiRefreshToken(refreshToken);
-                if (newTokenData?.token) {
+                if (newTokenData?.isSuccess) {
                     localStorage.setItem("token", newTokenData.result.token);
                     localStorage.setItem("refeshToken", newTokenData.result.refeshToken);
 
@@ -31,10 +31,9 @@ export const IsLoginSuccessFully = () => {
                         setUsername(newUserName);
                         localStorage.setItem("role", newUserRole);
 
-                        // Hide the alert after successful refresh
                         setShowSessionAlert(false);
 
-                        // Reload the current page to ensure the app is in sync
+
                         window.location.reload();
 
                         return true;
@@ -42,12 +41,11 @@ export const IsLoginSuccessFully = () => {
                 }
             } catch (error) {
                 console.log("Lỗi khi làm mới token:", error);
-                handleLogout();
                 return false;
             }
         } else {
             console.log("Không có refreshToken để làm mới token");
-            handleLogout();
+            // handleLogout();
             return false;
         }
     };

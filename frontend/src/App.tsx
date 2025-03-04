@@ -47,11 +47,15 @@ import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx"
 import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
 import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
 
+import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
+
 function App() {
     return (
         <BrowserRouter>
             <PageLoader />
             <Routes>
+
+
                 {/* Public Routes */}
                 <Route path="/" element={<HomePage />} />
                 <Route path="/homepage" element={<HomePage />} />
@@ -78,6 +82,7 @@ function App() {
                 <Route path="/child-detail" element={<ChildDetailPage />} />
                 <Route path="/booking" element={<VaccinationRegistrationPage />} />
                 <Route path="/payment" element={<TransactionPage />} />
+                <Route path="/user-profile" element={<CustomerProfile/>}/>
 
                 {/* Staff Routes */}
                 <Route path="/staff/service" element={<ServicePage />} />
@@ -103,6 +108,7 @@ function App() {
                 <Route path="/admin/account" element={<AdminAccountPage />} />
                 <Route path="/admin/account/add" element={<AdminAccountFormPage />} />
                 <Route path="/admin/account/edit/:id" element={<AdminAccountFormPage />} />
+
 
                 {/* 404 Page */}
                 <Route path="*" element={<NotFound />} />

@@ -41,3 +41,19 @@ export interface ResetPasswordRequest {
     token: string;
     newPassword: string;
 }
+export  interface  ResetPasswordUserProfile{
+    oldPassword: string;
+    newPassword: string;
+}
+
+export interface UserProfile {
+    id: string;
+    fullName: string;
+    userName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    dateOfBirth: string;
+    isActive: boolean;
+    imageUrl: string;
+}
