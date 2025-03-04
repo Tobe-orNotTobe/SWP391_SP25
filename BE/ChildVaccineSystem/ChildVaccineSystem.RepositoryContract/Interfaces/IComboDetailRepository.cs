@@ -9,5 +9,7 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
 {
     public interface IComboDetailRepository : IRepository<ComboDetail>
     {
+        Task RemoveRange(IEnumerable<ComboDetail> comboDetails);
+
     }
 }

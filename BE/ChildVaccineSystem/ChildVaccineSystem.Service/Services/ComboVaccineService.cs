@@ -77,7 +77,8 @@ namespace ChildVaccineSystem.Service.Services
                     throw new Exception($"The following vaccine IDs already exist in the combo: {string.Join(", ", duplicates)}. Please remove them and try again.");
                 }
 
-                existingCombo.ComboDetails.Clear();
+                var comboDetailsToDelete = existingCombo.ComboDetails.ToList();
+                _unitOfWork.ComboDetails.RemoveRange(comboDetailsToDelete);
 
                 foreach (var vaccineId in comboDto.VaccineIds)
                 {
