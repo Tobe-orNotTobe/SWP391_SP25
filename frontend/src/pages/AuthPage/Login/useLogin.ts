@@ -14,6 +14,7 @@ export const useLogin = () => {
     const navigate = useNavigate();  
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
+
     const togglePasswordVisibility = () =>{
         setShowPassword((prev)=> !prev)
     }
@@ -37,6 +38,8 @@ export const useLogin = () => {
             const response = await apiLogIn(data);
             if (response.result) {
                 localStorage.setItem("token", response.result.token);
+                // Cái này chắc để bàn với BE lại sao, tại vì cái này mà lưu lên local ngoài đời thật, về mặt nguyên lí là sai cmnr
+                localStorage.setItem("refeshToken", response.result.refeshToken);
                 console.log("Login Successful", response);
 
                 toast.success("Đăng nhập thành công!");
