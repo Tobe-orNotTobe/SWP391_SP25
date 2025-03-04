@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import StaffLayout from "../../components/Layout/StaffLayout/StaffLayout.tsx";
+//import StaffLayout from "../../components/Layout/StaffLayout/StaffLayout.tsx";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
 import { apiGetDoctorBookings } from "../../apis/apiBooking.ts";
 import "./VaccinationSchedulePage.scss";
 import Modal from "react-modal";
 import { BookingResponse } from "../../interfaces/Booking.ts";
+import { useNavigate } from "react-router-dom";
+import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
 
 Modal.setAppElement("#root"); // Đặt root để đảm bảo modal hoạt động tốt
 
@@ -39,8 +41,9 @@ const VaccinationSchedulePage: React.FC = () => {
     setModalIsOpen(false);
   };
 
+  const navigate = useNavigate();
   return (
-    <StaffLayout>
+    <DoctorLayout>
       <h1>Lịch Tiêm Chủng</h1>
       {bookings.length > 0 ? (
         <table className="schedule-table">
@@ -56,8 +59,8 @@ const VaccinationSchedulePage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {bookings.map((booking: BookingResponse) => (
-              <tr key={booking.bookingId}>
+            {bookings.map((booking: BookingResponse, index) => (
+              <tr key={index}>
                 <td>{booking.bookingId}</td>
                 <td>{booking.childName}</td>
                 <td>{new Date(booking.bookingDate).toLocaleDateString()}</td>
@@ -70,6 +73,15 @@ const VaccinationSchedulePage: React.FC = () => {
                     onClick={() => openModal(booking)}
                   >
                     Detail
+                  </button>
+                  <button
+                    className="detail-btn"
+                    onClick={() => {
+                      navigate("/doctor/service", { state: bookings[index] });
+                      console.log(bookings);
+                    }}
+                  >
+                    Tiến hành tiêm
                   </button>
                 </td>
               </tr>
@@ -115,7 +127,7 @@ const VaccinationSchedulePage: React.FC = () => {
           </div>
         )}
       </Modal>
-    </StaffLayout>
+    </DoctorLayout>
   );
 };
 
