@@ -167,6 +167,7 @@ namespace ChildVaccineSystem.Common.Helper
             //feedback
             CreateMap<Feedback, FeedbackDTO>();
             CreateMap<CreateFeedbackDTO, Feedback>();
+            CreateMap<User, UserProfileDTO>();
         }
     }
 };
