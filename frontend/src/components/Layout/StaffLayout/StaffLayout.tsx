@@ -5,31 +5,40 @@ import AdminNavBar from "../../Navbar/AdminNavbar/AdminNavbar";
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { DownOutlined } from "@ant-design/icons";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully";
+import { Group } from "../../../interfaces/Layout";
 
 interface CustomLayoutProps {
   children: React.ReactNode;
+  groups: Group[]; // Thêm prop groups
 }
 
 interface OpenGroupsState {
-  management: boolean;
-  posting: boolean;
-  vaccination: boolean;
+  [key: string]: boolean; // Sử dụng key động để quản lý trạng thái mở/đóng của các nhóm
 }
 
-const StaffLayout: React.FC<CustomLayoutProps> = ({ children }) => {
+const StaffLayout: React.FC<CustomLayoutProps> = ({ children, groups }) => {
   const navigate = useNavigate();
   const { username } = IsLoginSuccessFully();
   const [activeTab, setActiveTab] = useState<string>("/post-guide");
-  const [openGroups, setOpenGroups] = useState<OpenGroupsState>({
-    management: true,
-    posting: false,
-    vaccination: false,
-  });
+  //const [openGroups, setOpenGroups] = useState<OpenGroupsState>({});
 
-  const toggleGroup = (group: keyof OpenGroupsState) => {
+  // Khởi tạo trạng thái mở/đóng cho các nhóm
+  const initializeOpenGroups = () => {
+    const initialState: OpenGroupsState = {};
+    groups.forEach((group, index) => {
+      initialState[`group${index}`] = index === 0; // Mặc định mở nhóm đầu tiên
+    });
+    return initialState;
+  };
+
+  const [openGroups, setOpenGroups] = useState<OpenGroupsState>(
+    initializeOpenGroups()
+  );
+
+  const toggleGroup = (groupKey: string) => {
     setOpenGroups((prev) => ({
       ...prev,
-      [group]: !prev[group],
+      [groupKey]: !prev[groupKey],
     }));
   };
 
@@ -45,104 +54,39 @@ const StaffLayout: React.FC<CustomLayoutProps> = ({ children }) => {
           <img src={logo} alt="Logo" />
         </div>
         <div className="nav">
-          <div className="nav-group">
-            <div
-              className="nav-group-header"
-              onClick={() => toggleGroup("management")}
-            >
-              <h3 className="nav-group-title">Tiêm chủng</h3>
-              <DownOutlined
-                className={`nav-group-icon ${
-                  openGroups.management ? "open" : ""
-                }`}
-              />
+          {groups.map((group, index) => (
+            <div className="nav-group" key={`group${index}`}>
+              <div
+                className="nav-group-header"
+                onClick={() => toggleGroup(`group${index}`)}
+              >
+                <h3 className="nav-group-title">{group.title}</h3>
+                <DownOutlined
+                  className={`nav-group-item ${
+                    openGroups[`group${index}`] ? "open" : ""
+                  }`}
+                />
+              </div>
+              {openGroups[`group${index}`] && (
+                <ul>
+                  {group.items.map((item) => (
+                    <li
+                      key={item.path}
+                      className={activeTab === item.path ? "active" : ""}
+                    >
+                      <a onClick={() => handleNavigation(item.path)}>
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-            {openGroups.management && (
-              <ul>
-                {[
-                  { label: "Ghi nhận tiêm chủng", path: "/staff/service" },
-                  {
-                    label: "Lịch tiêm chủng",
-                    path: "/staff/vaccination-schedule",
-                  },
-                ].map((tab) => (
-                  <li
-                    key={tab.path}
-                    className={activeTab === tab.path ? "active" : ""}
-                  >
-                    <a onClick={() => handleNavigation(tab.path)}>
-                      {tab.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div className="nav-group">
-            <div
-              className="nav-group-header"
-              onClick={() => toggleGroup("posting")}
-            >
-              <h3 className="nav-group-title">Đăng bài</h3>
-              <DownOutlined
-                className={`nav-group-icon ${openGroups.posting ? "open" : ""}`}
-              />
-            </div>
-            {openGroups.posting && (
-              <ul>
-                {[
-                  { label: "Đăng cẩm nang", path: "/post-guide" },
-                  { label: "Đăng tin tức", path: "/post-news" },
-                ].map((tab) => (
-                  <li
-                    key={tab.path}
-                    className={activeTab === tab.path ? "active" : ""}
-                  >
-                    <a onClick={() => handleNavigation(tab.path)}>
-                      {tab.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div className="nav-group">
-            <div
-              className="nav-group-header"
-              onClick={() => toggleGroup("vaccination")}
-            >
-              <h3 className="nav-group-title">Tiêm chủng</h3>
-              <DownOutlined
-                className={`nav-group-icon ${
-                  openGroups.vaccination ? "open" : ""
-                }`}
-              />
-            </div>
-            {openGroups.vaccination && (
-              <ul>
-                {[
-                  { label: "Lịch tiêm chủng", path: "/vaccination-schedule" },
-                  { label: "Quản lý vaccine", path: "/manage-vaccine" },
-                ].map((tab) => (
-                  <li
-                    key={tab.path}
-                    className={activeTab === tab.path ? "active" : ""}
-                  >
-                    <a onClick={() => handleNavigation(tab.path)}>
-                      {tab.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          ))}
         </div>
       </aside>
 
       <main className="main">
-        {/* Truyền mock user vào AdminNavBar */}
         <AdminNavBar username={username} avatarUrl={""} />
         <div className="content">{children}</div>
       </main>
