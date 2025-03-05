@@ -2,9 +2,7 @@ import React from "react";
 import './CustomerNavbar.scss';
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import {MdNavigateNext} from "react-icons/md";
-
 import {GiPositionMarker} from "react-icons/gi";
-
 import {MdLogin, MdLogout} from "react-icons/md";
 import {Link, useNavigate} from "react-router-dom";
 import {FaCalendarAlt, FaUserCircle} from "react-icons/fa";
@@ -14,6 +12,8 @@ import {Button} from "antd";
 import {TbMoodKid} from "react-icons/tb";
 import {BsCalendar2MinusFill} from "react-icons/bs";
 import { ImProfile } from "react-icons/im";
+import { FaWallet } from "react-icons/fa6";
+import {useWalletUserDetail} from "../../../hooks/useWallet.ts";
 
 const CustomerNavbar: React.FC = () => {
     const {username, role} = IsLoginSuccessFully();
@@ -22,6 +22,7 @@ const CustomerNavbar: React.FC = () => {
         localStorage.clear();
         navigate("/login");
     };
+    const {walletDetail} = useWalletUserDetail();
 
     return (
         <>
@@ -110,7 +111,12 @@ const CustomerNavbar: React.FC = () => {
                                         </li>
                                         <li>
                                             <Link to="/booking-history" className="user-dropdown-item">
-                                                <BsCalendar2MinusFill  size={20}/> Lịch sử tiêm
+                                                <BsCalendar2MinusFill size={20}/> Lịch sử tiêm
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/user-wallet" className="user-dropdown-item">
+                                                <FaWallet size={20}/> Ví Của Bạn <p style={{color: "#FFB400"}}>{walletDetail?.balance} VND</p>
                                             </Link>
                                         </li>
 
@@ -119,6 +125,8 @@ const CustomerNavbar: React.FC = () => {
                                               <MdLogout size={23}/> Đăng Xuất
                                             </span>
                                         </li>
+
+
                                     </ul>
                                 </li>
                             </div>

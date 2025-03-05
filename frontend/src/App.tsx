@@ -49,7 +49,7 @@ import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/Ad
 import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
 import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
 import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
-import ManagerProfile from "./pages/Manager/ManagerProfile.tsx";
+import ManagerProfile from "./pages/Manager/ManagerProfile/ManagerProfile.tsx";
 import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
 import AssignPage from "./pages/Staff/AssignPage.tsx";
 import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";

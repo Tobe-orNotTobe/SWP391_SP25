@@ -1,3 +1,5 @@
+
+
 export interface AccountRequest {
     fullName: string;
     userName: string;
@@ -39,4 +41,21 @@ export interface AccountDetailResponse {
     twoFactorEnabled: boolean;
     lockoutEnabled: boolean;
     accessFailedCount: number;
+}
+
+export interface WalletDetail {
+    walletId: number;
+    userId: string;
+    balance: number;
+    totalRefunded: number;
+    isAdminWallet: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface WalletResponse {
+    statusCode: number;
+    isSuccess: boolean;
+    errorMessages: string[];
+    result: WalletDetail[];
 }
