@@ -20,7 +20,7 @@ import Login from "./pages/AuthPage/Login/Login.tsx";
 import Register from "./pages/AuthPage/Register/Register.tsx";
 import ForgotPassword from "./pages/AuthPage/ForgotPassword/ForgotPassword.tsx";
 import ResetPassword from "./pages/AuthPage/ResetPassword/ResetPassword.tsx";
-import {ConfirmEmail, PaymentSuccess} from "./components/ConfirmEmail/Confirm.tsx";
+import {ConfirmEmail, PaymentSuccess} from "./components/Confirm/Confirm.tsx";
 
 // Customer Pages
 import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistrationPage.tsx";
@@ -51,6 +51,8 @@ import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
 import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
 import ManagerProfile from "./pages/Manager/ManagerProfile.tsx";
 import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
+import AssignPage from "./pages/Staff/AssignPage.tsx";
+import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
 
 function App() {
     return (
@@ -94,6 +96,8 @@ function App() {
                 <Route path="/staff/service" element={<ServicePage />} />
                 <Route path="/doctor/vaccination-schedule" element={<VaccinationSchedulePage />} />
 
+                <Route path="/staff/assignDoctor" element={<AssignPage/>}/>
+                <Route path="/staff/booking" element={<AssignedBooking/>} />
                 {/* Manager Routes */}
                 <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
                 <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />

@@ -12,7 +12,7 @@ const SessionExpiryAlert: React.FC = () => {
     if (!showSessionAlert) return null;
 
     return (
-        <div className="session-alert-overlay">
+        <div className="session-alert-overlay "  >
             <div className="session-alert-container">
                 <h3 className="session-alert-title">Phiên đăng nhập đã hết hạn</h3>
                 <p className="session-alert-message">Bạn có muốn duy trì phiên đăng nhập không?</p>

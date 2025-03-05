@@ -19,6 +19,7 @@ export const IsLoginSuccessFully = () => {
             try {
                 const newTokenData = await apiRefreshToken(refreshToken);
                 if (newTokenData?.isSuccess) {
+                    setShowSessionAlert(false);
                     localStorage.setItem("token", newTokenData.result.token);
                     localStorage.setItem("refeshToken", newTokenData.result.refeshToken);
 
@@ -30,8 +31,6 @@ export const IsLoginSuccessFully = () => {
                         setRole(newUserRole);
                         setUsername(newUserName);
                         localStorage.setItem("role", newUserRole);
-
-                        setShowSessionAlert(false);
 
 
                         window.location.reload();

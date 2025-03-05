@@ -1,8 +1,6 @@
 //tạo bảng booking và assign cho bác sĩ
 import React, { useEffect, useState } from "react";
-import StaffLayout from "../../components/Layout/StaffLayout/StaffLayout";
-import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout";
-import DoctorList from "./DoctorList";
+
 import { apiAssignDoctor, apiGetAllBookings } from "../../apis/apiBooking";
 import { toast } from "react-toastify";
 import { BookingResponse } from "../../interfaces/Booking";

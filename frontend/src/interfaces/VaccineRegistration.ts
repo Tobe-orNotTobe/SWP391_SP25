@@ -96,3 +96,9 @@ export interface BookingUser {
   status: string;
   bookingDetails: BookingDetail[];
 }
+
+export interface Feedback {
+  bookingId: number;
+  rating : number;
+  comment: string;
+}

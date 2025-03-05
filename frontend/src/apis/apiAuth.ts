@@ -57,15 +57,24 @@ export const apiResetPassword = async (data: ResetPasswordRequest) => {
     }
 };
 
-export  const apiRefreshToken = async (refreshToken : string | null) => {
+export const apiRefreshToken = async (refreshToken: string | null) => {
     try {
-        const response = await axiosInstance.post("/api/Auth/refresh-token", refreshToken);
+        const response = await axiosInstance.post(
+            "/api/Auth/refresh-token",
+            { refreshToken }, // ✅ Gửi đúng dạng JSON object
+            {
+                headers: {
+                    "Content-Type": "application/json", // ✅ Đảm bảo server nhận đúng định dạng
+                },
+            }
+        );
         return response.data;
     } catch (error) {
         console.error("API Refresh Error:", error);
         throw error;
     }
 };
+
 
 
 export const apiGetProfileUser = async () => {

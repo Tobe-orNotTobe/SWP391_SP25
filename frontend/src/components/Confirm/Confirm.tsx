@@ -14,11 +14,10 @@ export const ConfirmEmail : React.FC = () => {
     const token = searchParams.get("token");
     const [status, setStatus] = useState<string>("Đang xác nhận...");
     const [statusType, setStatusType] = useState<"loading" | "success" | "error">("loading");
-    const hasRun = useRef(false); // Ngăn `useEffect` chạy lại
+    const hasRun = useRef(false);
 
     useEffect(() => {
-        if (hasRun.current) return; // Ngăn không chạy lần 2
-        hasRun.current = true;
+        if (hasRun.current) return;
 
         const confirmEmail = async () => {
             if (!email || !token) {
@@ -110,7 +109,7 @@ export const PaymentSuccess: React.FC = () => {
 
     if (statusType === "success") {
         return <LoadingRedirect
-            message={`Thanh toán thành công! Mã đơn hàng: ${orderId} với giá tiền ${amount}`}
+            message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${amount}`}
             delay={5000}
             to="/booking-history"
         />;
