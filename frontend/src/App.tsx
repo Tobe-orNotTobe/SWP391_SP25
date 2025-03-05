@@ -38,6 +38,9 @@ import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
 import HandBookAfter from "./pages/Handbook/HandBookAfter.tsx";
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
+import FeedbackPage from "./pages/Customer/FeedbackPage.tsx"
+import AdminBlogPage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlog.tsx";
+import AdminBlogFormPage from "./pages/Admin/AdminBlog/AdminBlogForm/AdminBogForm.tsx";
 
 function App() {
 
@@ -57,7 +60,7 @@ function App() {
         <Route path="/handbook/before" element={<BeforeHandbook/>}/>
         <Route path="/handbook/process" element={<VaccinationProcess/>}/>
         <Route path="/handbook/after" element={<HandBookAfter/>}/>
-
+        <Route path={"/feedback"} element={<FeedbackPage/>}/>
 
 
         {/*Lưu ý: Các trang này là phục vụ việc authencation thôi chứ cũng không có gì*/}
@@ -105,7 +108,9 @@ function App() {
         <Route path={"/admin/account"} element={<AdminAccountPage/>}/>
         <Route path={"/admin/account/add"} element={<AdminAccountFormPage/>}/>
         <Route path={"/admin/account/edit/:id"} element={<AdminAccountFormPage/>}/>
-
+        <Route path={"/admin/blog"} element={<AdminBlogPage/>}/>
+        <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
+        <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
 
 
         {/* Trang 404 */}
