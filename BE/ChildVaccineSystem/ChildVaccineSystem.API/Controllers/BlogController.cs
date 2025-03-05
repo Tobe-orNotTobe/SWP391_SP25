@@ -23,10 +23,11 @@ namespace ChildVaccineSystem.API.Controllers
             _response = response;
         }
 
+        // Get all posts, only active ones by default
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<APIResponse>> GetAllPosts()
+        public async Task<ActionResult<APIResponse>> GetAllPosts([FromQuery] bool onlyActive = true)
         {
             try
             {
@@ -45,6 +46,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+        // Create a new blog post
         [HttpPost]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -68,6 +70,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+        // Get a single post by ID
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -98,6 +101,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+        // Update a blog post
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -121,6 +125,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+        // Delete a blog post
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
