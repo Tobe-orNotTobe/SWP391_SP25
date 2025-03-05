@@ -11,6 +11,7 @@ const Login : React.FC = () => {
 
     const {
         username,
+        isLoading,
         setUsername,
         password,
         setPassword,
@@ -24,7 +25,7 @@ const Login : React.FC = () => {
     const {handleGoogleLogin} = useLoginGoogle();
 
     if (isRedirecting) {
-        return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng tới trang Login..." delay={1000} to="/homepage" />;
+        return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng..." delay={5000} to="/homepage" />;
     }
 
     return (
@@ -60,7 +61,7 @@ const Login : React.FC = () => {
                         </div>
 
                         {error && <p className="errorText">{error}</p>}
-                        <button type="submit" className="authButton" >
+                        <button type="submit" className="authButton"  disabled={isLoading}>
                            Đăng Nhập
                         </button>
                     </form>

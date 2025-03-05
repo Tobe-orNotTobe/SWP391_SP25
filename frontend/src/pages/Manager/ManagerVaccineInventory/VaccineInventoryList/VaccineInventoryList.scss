@@ -1,0 +1,103 @@
+.vaccine-inventory-list {
+  &-container {
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+  }
+
+  &-header {
+    margin-bottom: 20px;
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1a3353;
+      margin-bottom: 16px;
+    }
+
+    .header-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin: 16px 0;
+
+      .search-filters {
+        display: flex;
+        gap: 12px;
+      }
+    }
+  }
+
+  &-table {
+    .status {
+      &-active {
+        color: #52c41a;
+        font-weight: 500;
+      }
+
+      &-inactive {
+        color: #f5222d;
+        font-weight: 500;
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
+  }
+}
+
+
+.vaccine-action-buttons{
+
+
+  .edit-button{
+    color: white;
+    background-color: #28a745;
+    margin-left: 10px;
+  }
+
+  .delete-button{
+    color: white;
+    background-color: #dc3545;
+    margin-left: 10px;
+  }
+
+  .add-button {
+    color: white;
+    background-color: #007bff;
+    margin-left: 10px;
+  }
+
+}
+
+.vaccine-action-buttons{
+
+
+  .detail-button{
+    color: white;
+    background-color: #007bff;
+    margin-left: 10px;
+  }
+
+  .edit-button{
+    color: white;
+    background-color: #28a745;
+    margin-left: 10px;
+  }
+
+  .delete-button{
+    color: white;
+    background-color: #dc3545;
+    margin-left: 10px;
+  }
+
+}
+
+.search-results-info{
+  margin-top: 20px;
+  color: #28a745;
+  justify-content: flex-end;
+  align-items: center;
+}

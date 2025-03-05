@@ -46,11 +46,15 @@ export interface Vaccine {
   sideEffect: string;
   diseasePrevented: string;
   price: string;
-  status: boolean;
+  status: string;
   isNecessary: boolean;
+  lotNumber: string;
   image: string;
+  reminder: string;
+  reminderDate: string;
   injectionSite: string;
   notes: string;
+  dose: string;
   vaccineInteractions: string;
   undesirableEffects: string;
   preserve: string;
@@ -72,9 +76,29 @@ export interface Booking {
   bookingDate: string;
   notes: string;
   bookingDetails: BookingDetail[];
-};
+}
 
 export interface BookingDetail {
   vaccineId: number | null;
   comboVaccineId: number | null;
+}
+
+
+export interface BookingUser {
+  bookingId: number;
+  userId: string;
+  childId: number;
+  childName: string;
+  bookingType: string;
+  bookingDate: string;
+  totalPrice: number;
+  notes: string;
+  status: string;
+  bookingDetails: BookingDetail[];
+}
+
+export interface Feedback {
+  bookingId: number;
+  rating : number;
+  comment: string;
 }

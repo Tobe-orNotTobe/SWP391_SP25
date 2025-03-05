@@ -6,7 +6,7 @@ import {MdNavigateNext} from "react-icons/md";
 import {GiPositionMarker} from "react-icons/gi";
 
 import {MdLogin, MdLogout} from "react-icons/md";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {FaCalendarAlt, FaUserCircle} from "react-icons/fa";
 import {IsLoginSuccessFully} from "../../../validations/IsLogginSuccessfully";
 import {IoIosNotifications} from "react-icons/io";
@@ -17,10 +17,11 @@ import { ImProfile } from "react-icons/im";
 
 const CustomerNavbar: React.FC = () => {
     const {username, role} = IsLoginSuccessFully();
-
+    const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.clear();
         window.location.reload();
+        navigate("/homepage");
     };
 
     return (
@@ -48,7 +49,7 @@ const CustomerNavbar: React.FC = () => {
                     <ul className="cusNavbarLink">
                         <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
                         <li className="cusNavDropdown">
-                            <Link to="#" className="cusNavItem">Giới thiệu</Link>
+                            <Link to="/introduction" className="cusNavItem">Giới thiệu</Link>
                             <ul className="cusNavDropdown-menu">
                                 <li className="cusNavDropdownSub">
                                     <Link to="/introduction" style={{
@@ -63,7 +64,7 @@ const CustomerNavbar: React.FC = () => {
                                         <li><Link to="/mission" className={"cusNavDropdown-link"}>Sứ Mệnh</Link></li>
                                     </ul>
                                 </li>
-                                <li><Link to="/team">Đội Ngũ</Link></li>
+                                <li><Link to="/our-team">Đội Ngũ</Link></li>
                             </ul>
                         </li>
 
@@ -94,7 +95,7 @@ const CustomerNavbar: React.FC = () => {
                                     </Link>
                                     <ul className="user-dropdown-menu">
                                         <li>
-                                            <Link to="/your-profile" className="user-dropdown-item">
+                                            <Link to="/user-profile" className="user-dropdown-item">
                                                 <ImProfile size={23}/> Thông tin tài khoản
                                             </Link>
                                         </li>
@@ -109,7 +110,7 @@ const CustomerNavbar: React.FC = () => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/history" className="user-dropdown-item">
+                                            <Link to="/booking-history" className="user-dropdown-item">
                                                 <BsCalendar2MinusFill  size={20}/> Lịch sử tiêm
                                             </Link>
                                         </li>

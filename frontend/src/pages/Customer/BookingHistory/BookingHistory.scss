@@ -1,0 +1,145 @@
+.booking-calendar-container{
+
+  padding-top: 40px; /* padding-top, padding-left/right, padding-bottom */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto; /* Centering */
+}
+
+
+
+.booking-details-modal {
+
+  .ant-modal-content {
+
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    // Modal header styling
+    .ant-modal-header {
+      color: #1890ff;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+
+      .ant-modal-title {
+        color: #1890ff;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+    }
+
+    // Modal body styling
+    .ant-modal-body {
+      padding: 20px;
+
+    }
+  }
+
+  // Booking list item styling
+  .booking-list-item {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0.1, 0.1, 0.1, 0.4);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    // Typography
+    .booking-details {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+
+      .label {
+        font-weight: 600;
+        color: #1890ff;
+        margin-right: 10px;
+      }
+
+      .value {
+        font-size: 1rem;
+        color: #333;
+      }
+
+      // Special styling for certain fields
+      .booking-id {
+        font-size: 1.1rem;
+        color: #1890ff;
+        font-weight: 700;
+      }
+
+      .total-price {
+        color: #52c41a;
+        font-weight: 600;
+      }
+    }
+
+    // Feedback button styling
+    .feedback-button {
+      margin-top: 10px;
+      margin-left: 10px;
+      width: 100%;
+      background-color: #1890ff;
+      border-color: #1890ff;
+      border-radius: 6px;
+      font-weight: 600;
+
+      &:hover {
+        background-color: white;
+        border-color: #40a9ff;
+      }
+    }
+
+    .Pending-Button{
+      margin-top: 10px;
+      margin-left: 10px;
+      width: 100%;
+      background-color: #faad14;
+      border-color: #faad14;
+      border-radius: 6px;
+      font-weight: 600;
+
+      &:hover {
+        background-color: white;
+       color: #FFB400;
+      }
+    }
+
+    .Cancel-button{
+      margin-top: 10px;
+      margin-left: 10px;
+      width: 100%;
+      background-color: #ff4d4f;
+      border-color: #ff4d4f;
+      border-radius: 6px;
+      font-weight: 600;
+
+      &:hover {
+        background-color: white;
+        color: #ff4d4f;
+      }
+    }
+    .vaccine-record-button{
+      margin-top: 10px;
+      margin-left: 10px;
+      width: 100%;
+      background-color: #52c41a;
+      border-color: #52c41a;
+      border-radius: 6px;
+      font-weight: 600;
+
+      &:hover {
+        background-color: white;
+        color: #52c41a;
+      }
+    }
+
+  }
+}
+
+

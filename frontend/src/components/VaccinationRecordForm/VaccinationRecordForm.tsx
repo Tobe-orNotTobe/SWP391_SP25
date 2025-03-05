@@ -1,11 +1,44 @@
-import React, { useState } from "react";
-import { Tag, Select } from "antd"; // Import Select từ Ant Design
+import React, { useState, useEffect } from "react";
+import { Select } from "antd"; // Import Select từ Ant Design
 import "./VaccinationRecordForm.scss";
+import {
+  Booking,
+  BookingDetail,
+  Vaccine,
+} from "../../interfaces/VaccineRegistration.ts";
+import { BookingResponse } from "../../interfaces/Booking.ts";
+import {
+  apiGetBookingById,
+  apiPutBookingComplete,
+} from "../../apis/apiBooking"; // Import các hàm API
+import { apiGetChildById } from "../../apis/apiChild.ts";
+import { apiGetVaccineDetailById } from "../../apis/apiVaccine.ts";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
 
-const VaccinationRecordForm = () => {
-  const [formData, setFormData] = useState({
+// Định nghĩa kiểu dữ liệu cho FormData
+interface FormData {
+  fullName: string;
+  birthDate: string;
+  height: string;
+  weight: string;
+  vaccineType: string;
+  vaccineName: string;
+  vaccineDose: string;
+  vaccinePrice: string;
+  reminder: string;
+  lotNumber: string;
+  reminderDate: string;
+  notes: string;
+}
+
+interface Props {
+  booking: BookingResponse; // Truyền bookingId thay vì booking
+}
+
+const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
+  const [formData, setFormData] = useState<FormData>({
     fullName: "",
     birthDate: "",
     height: "",
@@ -20,61 +53,93 @@ const VaccinationRecordForm = () => {
     notes: "",
   });
 
-  const [registeredVaccines, setRegisteredVaccines] = useState([
-    {
-      image:
-        "https://vnvc.vn/wp-content/uploads/2019/11/vacxin-prevenar-13-1.jpg",
-      name: "Covid Vaccine",
-      type: "Gói",
-      dose: "1 ml",
-      price: "200,000 VND",
-      reminder: "1 tháng",
-      reminderDate: "",
-      notes: "Không có ghi chú",
-      status: "Chờ tiêm", // Trạng thái mặc định
-      lotNumber: "CK11212", // Số lô mặc định
-    },
-    {
-      image:
-        "https://vnvc.vn/wp-content/uploads/2019/11/vacxin-prevenar-13-1.jpg",
-      name: "Flu Vaccine",
-      type: "Lẻ",
-      dose: "0.5 ml",
-      price: "150,000 VND",
-      reminder: "6 tháng",
-      reminderDate: "",
-      notes: "Cần theo dõi phản ứng",
-      status: "Đã tiêm", // Trạng thái mặc định
-      lotNumber: "CD12121", // Số lô mặc định
-    },
-  ]);
+  const [registeredVaccines, setRegisteredVaccines] = useState<Vaccine[]>([]);
+  const [childInfo, setChildInfo] = useState<any>(null);
+  const [bookings, setBooking] = useState<Booking | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const mockUser = {
-    fullName: "Nguyễn Văn A",
-    birthDate: "1990-01-01",
-    height: "170",
-    weight: "65",
+  // Fetch thông tin booking và vaccine từ API
+  useEffect(() => {
+    const fetchData = async () => {
+
+      console.log(bookings);
+      try {
+        // Lấy thông tin booking từ API
+        const bookingData = await apiGetBookingById(booking.bookingId);
+        setBooking(bookingData.result);
+        console.log(bookingData.result);
+
+        // Lấy thông tin trẻ từ API
+        const childData = await apiGetChildById(bookingData.result.childId);
+        setChildInfo(childData.result);
+        console.log(childData);
+
+        // Lấy thông tin vaccine từ API dựa trên bookingDetails
+        const vaccineDetails = await Promise.all(
+          bookingData.result.bookingDetails.map(
+            async (detail: BookingDetail) => {
+              const vaccineResponse = await apiGetVaccineDetailById(
+                detail.vaccineId || detail.comboVaccineId || 0
+              );
+              const vaccine = vaccineResponse.result;
+              return {
+                ...vaccine,
+                dose: "1 ml", // Giả sử liều vaccine là 1 ml
+                price: vaccine.price?.toLocaleString("vi-VN") + " VND", // Định dạng giá
+                reminder: "1 tháng", // Giả sử nhắc lại sau 1 tháng
+                reminderDate: "",
+                notes: "Không có ghi chú",
+                status: "Chờ tiêm",
+                lotNumber: "CK11212", // Giả sử số lô
+              };
+            }
+          )
+        );
+
+        setRegisteredVaccines(vaccineDetails);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu từ API:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [booking.bookingId]);
+
+  const handleComplete = async (bookingId: string) => {
+    try {
+      const response = await apiPutBookingComplete(bookingId);
+      toast.success(response.status)
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.error("Error completing booking:", error);
+      throw error; // Hoặc xử lý error theo cách bạn muốn
+    }
   };
 
-  const handleReminderDateChange = (index, date) => {
+  const handleReminderDateChange = (index: number, date: string) => {
     const updatedVaccines = [...registeredVaccines];
     updatedVaccines[index].reminderDate = date;
     setRegisteredVaccines(updatedVaccines);
   };
 
-  const handleStatusChange = (index, status) => {
+  const handleStatusChange = (index: number, status: string) => {
     const updatedVaccines = [...registeredVaccines];
     updatedVaccines[index].status = status;
     setRegisteredVaccines(updatedVaccines);
   };
 
-  const handleLotNumberChange = (index, lotNumber) => {
+  const handleLotNumberChange = (index: number, lotNumber: string) => {
     const updatedVaccines = [...registeredVaccines];
     updatedVaccines[index].lotNumber = lotNumber;
     setRegisteredVaccines(updatedVaccines);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -82,11 +147,14 @@ const VaccinationRecordForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Xử lý dữ liệu form ở đây
     console.log(formData);
   };
+
+  if (loading) {
+    return <div>Đang tải dữ liệu...</div>;
+  }
 
   return (
     <div className="vaccination-record-container">
@@ -101,7 +169,7 @@ const VaccinationRecordForm = () => {
             <input
               type="text"
               name="fullName"
-              value={mockUser.fullName}
+              value={childInfo?.fullName || ""}
               onChange={handleChange}
               required
             />
@@ -111,7 +179,7 @@ const VaccinationRecordForm = () => {
             <input
               type="date"
               name="birthDate"
-              value={mockUser.birthDate}
+              value={childInfo?.dateOfBirth?.split("T")[0] || ""}
               onChange={handleChange}
               required
             />
@@ -121,7 +189,7 @@ const VaccinationRecordForm = () => {
             <input
               type="number"
               name="height"
-              value={mockUser.height}
+              value={childInfo.height}
               onChange={handleChange}
               required
             />
@@ -131,7 +199,7 @@ const VaccinationRecordForm = () => {
             <input
               type="number"
               name="weight"
-              value={mockUser.weight}
+              value={childInfo.weight}
               onChange={handleChange}
               required
             />
@@ -145,7 +213,6 @@ const VaccinationRecordForm = () => {
             <thead>
               <tr>
                 <th>Tên vaccine</th>
-                <th>Loại vaccine</th>
                 <th>Liều vaccine</th>
                 <th>Giá vaccine</th>
                 <th>Nhắc lại sau</th>
@@ -161,11 +228,6 @@ const VaccinationRecordForm = () => {
                   {/* Tên vaccine (read-only) */}
                   <td>
                     <input type="text" value={vaccine.name} readOnly />
-                  </td>
-
-                  {/* Loại vaccine (read-only) */}
-                  <td>
-                    <input type="text" value={vaccine.type} readOnly />
                   </td>
 
                   {/* Liều vaccine (read-only) */}
@@ -217,11 +279,14 @@ const VaccinationRecordForm = () => {
                       }
                     />
                   </td>
+
                   {/* Trạng thái (sử dụng Antd Select) */}
                   <td>
                     <Select
                       value={vaccine.status}
-                      onChange={(value) => handleStatusChange(index, value)}
+                      onChange={(value: string) =>
+                        handleStatusChange(index, value)
+                      }
                       style={{ width: "100%" }}
                     >
                       <Option value="Chờ tiêm">Chờ tiêm</Option>
@@ -240,7 +305,11 @@ const VaccinationRecordForm = () => {
         </div>
 
         {/* Nút hoàn thành */}
-        <button type="submit" className="submit-button">
+        <button
+          type="submit"
+          className="submit-button"
+          onClick={() => handleComplete(booking.bookingId)}
+        >
           Hoàn thành
         </button>
       </form>

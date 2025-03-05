@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "rates": 4,
+    "comment": "Sản phẩm rất tốt, tôi hài lòng với chất lượng.",
+    "userName": "Nguyễn Văn A"
+  },
+  {
+    "id": "2",
+    "rates": 5,
+    "comment": "Dịch vụ tuyệt vời! Tôi sẽ quay lại.",
+    "userName": "Trần Thị B"
+  },
+  {
+    "id": "3",
+    "rates": 3,
+    "comment": "Chất lượng khá ổn, nhưng cần cải thiện một số điểm.",
+    "userName": "Lê Minh C"
+  },
+  {
+    "id": "4",
+    "rates": 5,
+    "comment": "Tôi rất hài lòng, sẽ giới thiệu cho bạn bè!",
+    "userName": "Phan Thị D"
+  },
+  {
+    "id": "5",
+    "rates": 2,
+    "comment": "Sản phẩm chưa đạt như mong đợi, cần cải thiện.",
+    "userName": "Hoàng Văn E"
+  }
+]

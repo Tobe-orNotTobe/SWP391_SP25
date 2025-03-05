@@ -60,10 +60,10 @@ const VisionPage: React.FC = () => {
 
                     <figure style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}>
                         <img src={VisionImage} width="800" height="534"/>
-                        <figcaption id="caption-attachment-84785" className="wp-caption-text"
-                                    style={{fontStyle: "italic", fontSize: "17px"}}> Side_Effect đặt mục tiêu xây dựng một nền tảng tiêm chủng thông minh, an toàn và
-                            tiện lợi nhất.
-                        </figcaption>
+                        {/*<figcaption id="caption-attachment-84785" className="wp-caption-text"*/}
+                        {/*            style={{fontStyle: "italic", fontSize: "17px"}}> Side_Effect đặt mục tiêu xây dựng một nền tảng tiêm chủng thông minh, an toàn và*/}
+                        {/*    tiện lợi nhất.*/}
+                        {/*</figcaption>*/}
                     </figure>
 
                 </div>

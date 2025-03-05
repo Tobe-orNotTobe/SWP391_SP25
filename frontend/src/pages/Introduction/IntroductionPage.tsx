@@ -52,7 +52,7 @@ const IntroductionPage: React.FC = () => {
                   </p>
 
                   <p style={{textAlign: "center", paddingBottom: "10px"}}>
-                      <img fetchPriority="high" decoding="async"
+                      <img decoding="async"
                            src="https://vnvc.vn/wp-content/uploads/2024/12/vnvc-co-mat-tai-55-tinh-thanh.jpg"
                            alt="vnvc có mặt tại 55 tỉnh thành"/>
                   </p>

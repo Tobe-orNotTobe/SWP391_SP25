@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoadingRedirectProps } from "../../interfaces/Decorative";
-import "./LoadingRedirect.scss"
 
-const LoadingRedirect : React.FC<LoadingRedirectProps> = ({message, delay, to}) => {
+import "./LoadingRedirect.scss";
+import {Hourglass} from "react-loader-spinner";
 
+const LoadingRedirect: React.FC<LoadingRedirectProps> = ({ message, delay, to }) => {
     const navigate = useNavigate();
-    const [countdown, setCountdown] = useState(delay / 1000); 
+    const [countdown, setCountdown] = useState(delay / 1000);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -23,16 +24,21 @@ const LoadingRedirect : React.FC<LoadingRedirectProps> = ({message, delay, to}) 
         };
     }, [navigate, to, delay]);
 
-    return(
-        <>
-             <div className="loadingScreen">
-                <h2>{message}</h2>
-                <p>Chuyển hướng sau {countdown} giây...</p>
-                <div className="loadingSpinner"></div>
-            </div>       
-        </>
+    return (
+        <div className="loadingScreen">
+            <h2>{message}</h2>
+            <p>Chuyển hướng sau {countdown} giây...</p>
+            <Hourglass
+                visible={true}
+                height="80"
+                width="80"
+                ariaLabel="hourglass-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                colors={['#2A388F', '#FFB400']}
+            />
+        </div>
     );
+};
 
-}
-
-export default LoadingRedirect
+export default LoadingRedirect;

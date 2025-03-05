@@ -3,7 +3,7 @@ import { useNavigate} from "react-router-dom";
 import { LoginRequest } from "../../../interfaces/Auth";
 import { apiLogIn } from "../../../apis/apiAuth";
 import {AxiosError} from "axios";
-import { notification } from "antd";
+import { toast } from "react-toastify";
 
 export const useLogin = () => {
     const [username, setUsername] = useState<string>("");
@@ -13,6 +13,7 @@ export const useLogin = () => {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();  
     const [showPassword, setShowPassword] = useState<boolean>(false);
+
 
     const togglePasswordVisibility = () =>{
         setShowPassword((prev)=> !prev)
@@ -26,9 +27,7 @@ export const useLogin = () => {
         
         if (!username || !password) {
             setError("Tài khoản và mật khẩu không được để trống");
-            notification.error({
-                message:"Đăng Nhập Thất Bại"
-            })
+            toast.error("Đăng nhập thất bại! Tài khoản và mật khẩu không được để trống.");
             return;
         }
 
@@ -37,13 +36,13 @@ export const useLogin = () => {
 
         try {
             const response = await apiLogIn(data);
-            if (response.token) {
-                localStorage.setItem("token", response.token);
+            if (response.result) {
+                localStorage.setItem("token", response.result.token);
+                // Cái này chắc để bàn với BE lại sao, tại vì cái này mà lưu lên local ngoài đời thật, về mặt nguyên lí là sai cmnr
+                localStorage.setItem("refeshToken", response.result.refeshToken);
                 console.log("Login Successful", response);
 
-                notification.success({
-                    message: "Đăng nhập thành công",
-                });
+                toast.success("Đăng nhập thành công!");
 
                 setIsLoading(false);
                 setIsRedirecting(true);
@@ -55,17 +54,10 @@ export const useLogin = () => {
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-
-                notification.error({
-                    message: "Đăng Nhập Thất Bại",
-                    description: error.response?.data?.error || "Lỗi không xác định từ server",
-                });
+                toast.error(`${error.response?.data?.errorMessages || "Lỗi không xác định từ server"}`);
             } else {
                 console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
+                toast.error("Lỗi không xác định, vui lòng thử lại sau.");
             }
         } finally {
             setIsLoading(false);

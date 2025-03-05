@@ -1,0 +1,82 @@
+.confirm-password {
+    text-align: center;
+    margin-top: 300px;
+    
+    
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 70px;
+      font-weight: bold;
+      gap: 10px;
+  
+      &--loading {
+        color: #007bff;
+      }
+  
+      &--success {
+        color: #28a745;
+      }
+  
+      &--error {
+        color: #dc3545;
+      }
+  
+      &__icon {
+        font-size: 3.5rem;
+  
+        &--spin {
+          animation: spin 1s linear infinite;
+        }
+      }
+    }
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+
+.payment-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+
+  .status {
+    font-size: 1.5rem;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    &--loading {
+      color: #ffa500;
+    }
+
+    &--success {
+      color: #28a745;
+    }
+
+    &--error {
+      color: #dc3545;
+    }
+  }
+
+  .status__icon {
+    font-size: 3rem;
+  }
+}
+
+

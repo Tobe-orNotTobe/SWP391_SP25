@@ -6,6 +6,7 @@ import { apiAddVaccine, apiUpdateVaccine } from "../../../../apis/apiVaccine";
 import { useVaccineDetail } from "../../../../hooks/useVaccine";
 import { uploadImageToCloudinary } from "../../../../utils/cloudinary";
 import {AxiosError} from "axios";
+import {toast} from "react-toastify";
 
 export const useVaccineForm = () => {
   const [form] = Form.useForm();
@@ -88,25 +89,15 @@ export const useVaccineForm = () => {
       }
 
       if (response.isSuccess) {
-        notification.success({
-          message: "Thành công",
-          description: isEditMode ? "Đã cập nhật vaccine thành công" : "Đã thêm vaccine thành công",
-        });
+        toast.success(isEditMode ? "Đã cập nhật vaccine thành công" : "Đã thêm vaccine thành công");
         setTimeout(() => navigate("/manager/vaccines"), 1000);
 
       }
     } catch (error : unknown) {
       if (error instanceof AxiosError) {
-        notification.error({
-          message: "Đăng Nhập Thất Bại",
-          description: error.response?.data?.error || "Lỗi không xác định từ server",
-        });
+        toast.error(`${error.response?.data?.errorMessages}`);
       } else {
-        console.error("Lỗi không xác định:", error);
-        notification.error({
-          message: "Lỗi không xác định",
-          description: "Vui lòng thử lại sau.",
-        });
+        toast.error("Lỗi Không Xác Định");
       }
     } finally {
       setLoading(false);
