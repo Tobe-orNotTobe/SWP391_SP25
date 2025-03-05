@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Vaccine A",
+    "quantity": 1000
+  },
+  {
+    "name": "Vaccine B",
+    "quantity": 200
+  },
+  {
+    "name": "Vaccine C",
+    "quantity": 150
+  },
+  {
+    "name": "Vaccine D",
+    "quantity": 300
+  },
+  {
+    "name": "Vaccine E",
+    "quantity": 50
+  },
+  {
+    "name": "Vaccine F",
+    "quantity": 120
+  },
+  {
+    "name": "Vaccine G",
+    "quantity": 80
+  }
+]
