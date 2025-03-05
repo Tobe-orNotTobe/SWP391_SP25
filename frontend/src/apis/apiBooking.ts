@@ -99,12 +99,42 @@ export const apiGetBookingById = async (id: string) => {
   }
 };
 
+export const apiGetAllBookings = async () => {
+  try {
+    const response = await axiosInstance.get(`/api/Booking/all-bookings`);
+    return response.data || {};
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const serverError =
+        error.response?.data?.error?.errorMessages?.join(", ");
+      alert(serverError || "Có lỗi xảy ra khi gửi yêu cầu.");
+    } else {
+      alert("Có lỗi xảy ra khi gửi yêu cầu.");
+    }
+    return null;
+    console.error("API Get Booking Detail By ID Error:", error);
+    throw error;
+  }
+};
+
 export const apiPutBookingComplete = async (id: string) => {
   try {
     const response = await axiosInstance.put(`/api/Booking/${id}/complete`);
     return response.data || {};
   } catch (error) {
     console.error("API Put Booking Complete By ID Error:", error);
+    throw error;
+  }
+};
+
+export const apiAssignDoctor = async (doctorId: string, bookingId: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/Booking/assign-doctor?bookingId=${bookingId}&userId=${doctorId}`
+    );
+    return response.data || {};
+  } catch (error) {
+    console.error("API Assign doctor Error:", error);
     throw error;
   }
 };
