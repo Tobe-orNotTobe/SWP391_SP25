@@ -92,7 +92,7 @@ function App() {
 
                 {/* Staff Routes */}
                 <Route path="/staff/service" element={<ServicePage />} />
-                <Route path="/staff/vaccination-schedule" element={<VaccinationSchedulePage />} />
+                <Route path="/doctor/vaccination-schedule" element={<VaccinationSchedulePage />} />
 
                 {/* Manager Routes */}
                 <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
