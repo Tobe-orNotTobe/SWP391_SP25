@@ -61,7 +61,7 @@ public class UserController : ControllerBase
 
     [HttpPut("profile")]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    public async Task<IActionResult> UpdateProfile([FromBody] UserDTO model)
+    public async Task<IActionResult> UpdateProfile([FromBody] UserProfileDTO model)
     {
         try
         {
