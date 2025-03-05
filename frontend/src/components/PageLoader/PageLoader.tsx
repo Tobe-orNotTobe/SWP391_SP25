@@ -11,7 +11,7 @@ const PageLoader: React.FC = () => {
 
     useEffect(() => {
         setLoading(true);
-        const timeout = setTimeout(() => setLoading(false), 500);
+        const timeout = setTimeout(() => setLoading(false), 200);
 
         return () => clearTimeout(timeout);
     }, [location]);

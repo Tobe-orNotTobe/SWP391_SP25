@@ -1,7 +1,7 @@
 import axiosInstance from "../utils/axiosInstance";
 import { decodeToken } from "../utils/decodeToken.ts";
 import { ChildDetailRequest } from "../interfaces/Child.ts";
-import axios, { AxiosError } from "axios";
+
 
 export const apiGetMyChilds = async (userId?: string) => {
   try {
@@ -13,13 +13,9 @@ export const apiGetMyChilds = async (userId?: string) => {
 
     const response = await axiosInstance.get(`/api/Children/user/${finalUserId}`);
     return response.data;
-  } catch (error: any) {
-    if (axios.isAxiosError(error) && error.response) {
-      // Lấy danh sách lỗi từ response
-      throw error.response.data.errorMessages || ["Unknown error occurred"];
-    } else {
-      throw ["An unexpected error occurred"];
-    }
+  } catch (error) {
+    console.error("API Get Vaccine Detail By ID Error:", error);
+    throw error;
   }
 };
 

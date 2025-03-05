@@ -49,6 +49,7 @@ import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/Ad
 import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
 import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
 import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
+import ManagerProfile from "./pages/Manager/ManagerProfile.tsx";
 
 function App() {
     return (
@@ -103,6 +104,7 @@ function App() {
                 <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList />} />
                 <Route path="/manager/inventory-vaccines/add" element={<VaccineInventoryForm />} />
                 <Route path="/manager/inventory-vaccines/edit/:id" element={<VaccineInventoryForm />} />
+                <Route path="/manager/profile" element={<ManagerProfile/>}/>
 
                 {/* Admin Routes */}
                 <Route path="/admin/dashboard" element={<AdminDashboardPage />} />

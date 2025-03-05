@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Select } from "antd"; // Import Select từ Ant Design
 import "./VaccinationRecordForm.scss";
-import {BookingDetail, Vaccine} from "../../interfaces/VaccineRegistration.ts";
+import { Vaccine} from "../../interfaces/VaccineRegistration.ts";
 import { BookingResponse } from "../../interfaces/Booking.ts";
 
 const { Option } = Select;

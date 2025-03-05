@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification, Spin } from "antd"; // Import Spin từ antd
+import { Spin } from "antd"; // Import Spin từ antd
 import "./BookingForm.scss";
 import {
   Parent,
@@ -135,14 +135,17 @@ const VaccinationRegistrationPage = () => {
 
       console.log(paymentResponse);
       if (paymentResponse.isSuccess) {
-        window.location.href = paymentResponse.result?.paymentUrl;
+        toast.success("Đặt lịch tiêm chuẩn thành công!")
+        setTimeout(() => {
+          window.location.href = paymentResponse.result?.paymentUrl;
+        }, 2000);
       } else {
         setFormError("Không lấy được đường dẫn thanh toán.");
         toast.warning("Không lấy được đường dẫn thanh toán.") 
       }
     } catch (error) {
-      let errorMessage = error || "Lỗi không xác định";
-      console.error("Error submitting booking:", error);
+      const errorMessage = error || "Lỗi không xác định";
+      console.error("Error submitting booking:", errorMessage);
       setFormError("Có lỗi xảy ra khi gửi dữ liệu.");
       toast.error(errorMessage.toString()) 
     } finally {

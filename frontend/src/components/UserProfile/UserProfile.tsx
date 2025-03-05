@@ -69,7 +69,7 @@ const UserProfile: React.FC = () => {
         <div className="user-profile">
             <div className="profile-container">
                 <div className="profile-left">
-                    <img src={imageUrl || userProfile.imageUrl} alt="Profile" className="profile-image" />
+                    <img src={userProfile.imageUrl} alt="Profile" className="profile-image" />
                 </div>
                 <div className="profile-right">
                     <h2 className="profile-name">{userProfile.fullName}</h2>

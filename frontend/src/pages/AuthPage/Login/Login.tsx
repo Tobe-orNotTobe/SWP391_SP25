@@ -11,6 +11,7 @@ const Login : React.FC = () => {
 
     const {
         username,
+        isLoading,
         setUsername,
         password,
         setPassword,
@@ -60,7 +61,7 @@ const Login : React.FC = () => {
                         </div>
 
                         {error && <p className="errorText">{error}</p>}
-                        <button type="submit" className="authButton" >
+                        <button type="submit" className="authButton"  disabled={isLoading}>
                            Đăng Nhập
                         </button>
                     </form>
