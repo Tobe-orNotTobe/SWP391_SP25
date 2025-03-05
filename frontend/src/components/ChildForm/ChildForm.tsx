@@ -40,6 +40,7 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
         updateForm,
         isLoading,
         error,
+        isSucessfull,
         formatDateForInput,
         handleDateChange,
         handleWeightChange,
@@ -75,19 +76,22 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
                     <IoMdArrowRoundBack/>
                     Trở về trẻ của tôi
                 </span>
-                    <span style={{display: "flex", justifyContent: "end", width: "18%"}} className={"navigateButton"} onClick={() => {
-                        navigate("/booking")
-                    }}>
+                    {isSucessfull && (
+                        <span style={{display: "flex", justifyContent: "end", width: "18%"}}
+                              className={"navigateButton"} onClick={() => {
+                            navigate("/booking")
+                        }}>
                         Đăng ký tiêm
                     <FaArrowRight/>
                 </span>
+                    )}
                 </div>
 
 
             )}
             <h2 className="childTitle">{isUpdate ? "Cập Nhật Thông Tin Trẻ" : "Đăng Ký Trẻ"}</h2>
             <form className="childRegistrationForm" onSubmit={isUpdate ? handleUpdate : handleRegister}>
-                <div className="childRegistrationFormColumn">
+            <div className="childRegistrationFormColumn">
                     <label className="childRegistrationLabel">Ảnh của trẻ</label>
                     <div className="imageUploadContainer" onClick={() => document.getElementById("imageUpload")?.click()}>
                         {form.selectedImage ? (

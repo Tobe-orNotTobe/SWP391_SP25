@@ -71,6 +71,7 @@ export const useChildForm = (refetch: () => void) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isSucessfull, setIsSuccessfull] = useState<boolean | null>(null);
 
     const updateForm = useCallback(
         (key: keyof typeof form, value: any) => setForm((prev) => ({ ...prev, [key]: value })),
@@ -118,7 +119,7 @@ export const useChildForm = (refetch: () => void) => {
     const handleSubmit = async (isUpdate: boolean, event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log("Disconme" + form)
-
+        setIsSuccessfull(null);
         setError(null);
         const validationError = validateForm();
         if (validationError) return setError(validationError);
@@ -153,6 +154,7 @@ export const useChildForm = (refetch: () => void) => {
             if (!response.isSuccess) throw new Error(response.errorMessages || "Lỗi xảy ra, vui lòng thử lại.");
             updateForm("imageUrl", imageUrl);
             notification.success({ message: isUpdate ? "Cập nhật thành công!" : "Đăng ký thành công!" });
+            setIsSuccessfull(true);
             if (isUpdate) {
                 refetch();
             }
@@ -169,6 +171,7 @@ export const useChildForm = (refetch: () => void) => {
         form,
         isLoading,
         error,
+        isSucessfull,
         updateForm,
         formatDateForInput,
         handleDateChange,
