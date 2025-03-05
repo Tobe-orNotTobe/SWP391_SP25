@@ -132,21 +132,38 @@ const BookingHistory: React.FC = () => {
 
     const monthCellRender = (value: Dayjs) => {
         const monthKey = value.format("YYYY-MM");
-        if (!bookingsByMonth[monthKey]) return null;
+
+        // Tạo thống kê số lượng đơn theo từng trạng thái trong tháng
+        const statusCount: Record<string, number> = {};
+
+        bookingsByYear.forEach((booking) => {
+            if (dayjs(booking.bookingDate).format("YYYY-MM") === monthKey) {
+                statusCount[booking.status] = (statusCount[booking.status] || 0) + 1;
+            }
+        });
+
+        // Nếu không có đơn nào trong tháng này, return null
+        if (Object.keys(statusCount).length === 0) return null;
 
         return (
-            <div
-                className="month-summary"
-                style={{
-                    backgroundColor: "#e6f7ff",
-                    color: "#1890ff",
-                    borderRadius: "4px",
-                    textAlign: "center",
-                    padding: "10px",
-                    fontWeight: "bold",
-                }}
-            >
-                {bookingsByMonth[monthKey]} đơn
+            <div className="month-summary" style={{ padding: "5px" }}>
+                {Object.entries(statusCount).map(([status, count]) => (
+                    <div
+                        key={status}
+                        style={{
+                            backgroundColor: STATUS_COLORS[status] || "#f0f0f0",
+                            color: "white",
+                            borderRadius: "4px",
+                            textAlign: "center",
+                            padding: "2px",
+                            marginBottom: "2px",
+                            fontSize: "12px",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        {status}: {count} đơn
+                    </div>
+                ))}
             </div>
         );
     };
