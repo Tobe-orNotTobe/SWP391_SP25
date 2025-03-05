@@ -51,7 +51,7 @@ export const useLogin = () => {
                 setTimeout(() => {
                     setIsRedirecting(false);
                     navigate("/homepage");
-                }, 5000); 
+                }, 1000);
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
