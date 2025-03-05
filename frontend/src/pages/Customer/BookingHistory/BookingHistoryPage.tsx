@@ -11,6 +11,7 @@ import {Link} from "react-router-dom";
 import FloatingButtons from "../../../components/FloatingButton/FloatingButtons.tsx";
 import {SelectInfo} from "antd/lib/calendar/generateCalendar";
 
+
 //Chỉnh màu sẵn ở đây để sử dụng cho các trạng thái cần thiết á mà
 const STATUS_COLORS : Record<string, string>= {
     Pending: "#faad14",
@@ -21,6 +22,7 @@ const STATUS_COLORS : Record<string, string>= {
 
 const BookingHistory: React.FC = () => {
     const { bookings } = useBookingUser();
+
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [visible, setVisible] = useState(false);
     const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
@@ -39,6 +41,8 @@ const BookingHistory: React.FC = () => {
     }, [bookings]);
     //Cái này áp dụng cái trên booking có id lớn nhất để lấy cái date, cập nhật default cho thằng Calendar
     // CÓ thể hiểu là khi calendar chạy, thì nó sẽ hiển thị cái booking gần nhất
+
+
     useEffect(() => {
         if (latestBooking && latestBooking.bookingDate !== latestDate) {
             console.log((latestBooking.bookingDate))
@@ -182,6 +186,7 @@ const BookingHistory: React.FC = () => {
                                             <span className="label">Loại đặt lịch:</span>
                                             <span className="value">{booking.bookingType}</span>
                                         </p>
+                                        <p></p>
                                         <p>
                                             <span className="label">Ngày đặt:</span>
                                             <span
@@ -200,20 +205,77 @@ const BookingHistory: React.FC = () => {
                                             <span className="label">Trạng thái:</span>
                                             <Tag color={STATUS_COLORS[booking.status]}>{booking.status}</Tag>
                                         </p>
+
                                         <div className="booking-actions">
-                                            <Button
-                                                type="primary"
-                                                className="feedback-button"
-                                                onClick={() => {
-                                                    setSelectedBooking(booking);
-                                                    setFeedbackModalVisible(true);
-                                                }}
-                                            >
-                                                Nhập Feedback
-                                            </Button>
+                                            {booking.status === "Pending" && (
+                                                <>
+                                                    <Button
+                                                        type="primary"
+                                                        className="Pending-Button"
+                                                        onClick={() => {
+                                                            setSelectedBooking(booking);
+                                                            setFeedbackModalVisible(true);
+                                                        }}
+                                                    >
+                                                        Thanh Toán
+                                                     </Button>
+
+                                                    <Button
+                                                        type="primary"
+                                                        className="Cancel-button"
+                                                        onClick={() => {
+                                                            setSelectedBooking(booking);
+                                                            setFeedbackModalVisible(true);
+                                                        }}
+                                                    >
+                                                        Hủy Lịch
+                                                    </Button>
+                                                </>
+                                            )}
+
+                                            {booking.status === "Confrimed" && (
+                                                <>
+                                                    <Button
+                                                        type="primary"
+                                                        className="Cancel-button"
+                                                        onClick={() => {
+                                                            setSelectedBooking(booking);
+                                                            setFeedbackModalVisible(true);
+                                                        }}
+                                                    >
+                                                        Hủy Lịch
+                                                    </Button>
+                                                </>
+                                            )}
+
+                                            {booking.status === "Completed" && (
+                                                <>
+                                                    <Button
+                                                        type="primary"
+                                                        className="feedback-button"
+                                                        onClick={() => {
+                                                            setSelectedBooking(booking);
+                                                            setFeedbackModalVisible(true);
+                                                        }}
+                                                    >
+                                                        Nhập Feedback
+                                                    </Button>
+                                                    <Button
+                                                        type="primary"
+                                                        className="vaccine-record-button"
+                                                        onClick={() => {
+                                                            setSelectedBooking(booking);
+                                                            setFeedbackModalVisible(true);
+                                                        }}
+                                                    >
+                                                       Xem Vaccine Record
+                                                    </Button>
+
+                                                </>
+                                            )}
+
                                         </div>
                                     </div>
-
 
                                 </div>
                             </List.Item>

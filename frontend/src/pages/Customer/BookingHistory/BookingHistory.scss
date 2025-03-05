@@ -1,39 +1,15 @@
-.booking-calendar-container {
-  max-width: 1200px;
-  padding: 0; /* padding-top, padding-left/right, padding-bottom */
+.booking-calendar-container{
+
+  padding-top: 40px; /* padding-top, padding-left/right, padding-bottom */
   width: 100%;
-  margin: 40px auto;
-
-  .ant-calendar {
-    .booking-cell {
-      transition: all 0.3s ease;
-      cursor: pointer;
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-  }
-
-  .ant-modal {
-    .ant-modal-content {
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .ant-list-item {
-      padding: 15px;
-      border-bottom: 1px solid #f0f0f0;
-
-      &:last-child {
-        border-bottom: none;
-      }
-    }
-  }
+  max-width: 1200px;
+  margin: 0 auto; /* Centering */
 }
 
+
+
 .booking-details-modal {
-  // Override default modal background and padding
+
   .ant-modal-content {
 
     border-radius: 12px;
@@ -55,6 +31,7 @@
     // Modal body styling
     .ant-modal-body {
       padding: 20px;
+
     }
   }
 
@@ -64,7 +41,7 @@
     padding: 15px;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0.1, 0.1, 0.1, 0.4);
     transition: all 0.3s ease;
 
     &:hover {
@@ -105,6 +82,7 @@
     // Feedback button styling
     .feedback-button {
       margin-top: 10px;
+      margin-left: 10px;
       width: 100%;
       background-color: #1890ff;
       border-color: #1890ff;
@@ -112,10 +90,55 @@
       font-weight: 600;
 
       &:hover {
-        background-color: #40a9ff;
+        background-color: white;
         border-color: #40a9ff;
       }
     }
+
+    .Pending-Button{
+      margin-top: 10px;
+      margin-left: 10px;
+      width: 100%;
+      background-color: #faad14;
+      border-color: #faad14;
+      border-radius: 6px;
+      font-weight: 600;
+
+      &:hover {
+        background-color: white;
+       color: #FFB400;
+      }
+    }
+
+    .Cancel-button{
+      margin-top: 10px;
+      margin-left: 10px;
+      width: 100%;
+      background-color: #ff4d4f;
+      border-color: #ff4d4f;
+      border-radius: 6px;
+      font-weight: 600;
+
+      &:hover {
+        background-color: white;
+        color: #ff4d4f;
+      }
+    }
+    .vaccine-record-button{
+      margin-top: 10px;
+      margin-left: 10px;
+      width: 100%;
+      background-color: #52c41a;
+      border-color: #52c41a;
+      border-radius: 6px;
+      font-weight: 600;
+
+      &:hover {
+        background-color: white;
+        color: #52c41a;
+      }
+    }
+
   }
 }
 
