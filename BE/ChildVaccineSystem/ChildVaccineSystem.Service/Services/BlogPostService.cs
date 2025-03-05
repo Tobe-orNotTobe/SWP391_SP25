@@ -22,7 +22,7 @@ namespace ChildVaccineSystem.Service.Services
 
         public async Task<IEnumerable<BlogPostDTO>> GetAllPostsAsync()
         {
-            var blogPosts = await _unitOfWork.BlogPosts.GetAllPostsAsync();
+            var blogPosts = await _unitOfWork.BlogPosts.GetAllPostsAsync(onlyActive: true); // only active posts
             return _mapper.Map<IEnumerable<BlogPostDTO>>(blogPosts);
         }
 
@@ -40,6 +40,8 @@ namespace ChildVaccineSystem.Service.Services
                 Content = createPostDto.Content,
                 ImageUrl = createPostDto.ImageUrl,
                 AuthorName = createPostDto.AuthorName,
+                Type = createPostDto.Type,  // Handling Type field
+                IsActive = false,  // Default value to false for newly created posts
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -60,6 +62,8 @@ namespace ChildVaccineSystem.Service.Services
             blogPost.Title = updatePostDto.Title;
             blogPost.Content = updatePostDto.Content;
             blogPost.ImageUrl = updatePostDto.ImageUrl;
+            blogPost.Type = updatePostDto.Type;  // Handle updating Type field
+            blogPost.IsActive = updatePostDto.IsActive;
 
             await _unitOfWork.CompleteAsync();
 
