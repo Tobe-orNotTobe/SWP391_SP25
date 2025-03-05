@@ -141,8 +141,8 @@ const VaccinationRegistrationPage = () => {
         toast.warning("Không lấy được đường dẫn thanh toán.") 
       }
     } catch (error) {
-      let errorMessage = error || "Lỗi không xác định";
-      console.error("Error submitting booking:", error);
+      const errorMessage = error || "Lỗi không xác định";
+      console.error("Error submitting booking:", errorMessage);
       setFormError("Có lỗi xảy ra khi gửi dữ liệu.");
       toast.error(errorMessage.toString()) 
     } finally {
