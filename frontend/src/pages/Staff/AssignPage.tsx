@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { apiGetAllDoctors } from "../../apis/apiAdmin";
 import { Doctor } from "../../interfaces/Doctor";
 import "./DoctorList.scss";
+import Staff1Layout from "../../components/Layout/StaffLayout/Stafff1Layout/Staff1Layout";
 
 function AssignPage() {
   const [bookings, setBookings] = useState([]);
@@ -80,7 +81,7 @@ function AssignPage() {
   const navigate = useNavigate();
 
   return (
-    <DoctorLayout>
+    <Staff1Layout>
       {bookings.length > 0 ? (
         <table className="schedule-table">
           <thead>
@@ -205,7 +206,7 @@ function AssignPage() {
           </div>
         </div>
       </Modal>
-    </DoctorLayout>
+    </Staff1Layout>
   );
 }
 
