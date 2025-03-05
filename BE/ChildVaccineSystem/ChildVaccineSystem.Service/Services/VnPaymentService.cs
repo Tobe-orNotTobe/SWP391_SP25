@@ -37,6 +37,7 @@ namespace ChildVaccineSystem.Service.Services
 			var transaction = await CreateTransactionAsync(booking);
 
 			var tick = DateTime.Now.Ticks.ToString();
+			var txnRef = $"{transaction.TransactionId} - {tick}";
 
 			var vnpay = new VnPayLibrary();
 
@@ -51,7 +52,7 @@ namespace ChildVaccineSystem.Service.Services
 			vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho đơn hàng #{bookingId}");
 			vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
 			vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
-			vnpay.AddRequestData("vnp_TxnRef", transaction.TransactionId.ToString());
+			vnpay.AddRequestData("vnp_TxnRef", txnRef);
 
 			var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
 
