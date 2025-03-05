@@ -1,6 +1,8 @@
 import axios from "axios";
 import { Booking } from "../interfaces/VaccineRegistration.ts";
 import axiosInstance from "../utils/axiosInstance.ts";
+import {IsLoginSuccessFully} from "../validations/IsLogginSuccessfully.ts";
+import {decodeToken} from "../utils/decodeToken.ts";
 
 export const apiBooking = async (userId: string, booking: Booking) => {
   try {
@@ -108,3 +110,17 @@ export const apiPutBookingComplete = async (id: string) => {
     throw error;
   }
 };
+
+export const apiGetBookingUser = async () => {
+  const finalUserId = decodeToken(localStorage.getItem("token"))?.sub;
+  if (!finalUserId) {
+    throw new Error("User ID not found");
+  }
+  try{
+    const response = await axiosInstance.get(`/api/Booking/user/${finalUserId}`);
+    return response.data;
+  }catch(error) {
+    console.error("API Get Booking User Error:", error);
+    throw error;
+  }
+}

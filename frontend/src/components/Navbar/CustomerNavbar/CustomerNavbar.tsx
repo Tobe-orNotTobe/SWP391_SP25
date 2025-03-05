@@ -6,7 +6,7 @@ import {MdNavigateNext} from "react-icons/md";
 import {GiPositionMarker} from "react-icons/gi";
 
 import {MdLogin, MdLogout} from "react-icons/md";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {FaCalendarAlt, FaUserCircle} from "react-icons/fa";
 import {IsLoginSuccessFully} from "../../../validations/IsLogginSuccessfully";
 import {IoIosNotifications} from "react-icons/io";
@@ -17,10 +17,11 @@ import { ImProfile } from "react-icons/im";
 
 const CustomerNavbar: React.FC = () => {
     const {username, role} = IsLoginSuccessFully();
-
+    const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.clear();
         window.location.reload();
+        navigate("/homepage");
     };
 
     return (
@@ -109,7 +110,7 @@ const CustomerNavbar: React.FC = () => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/history" className="user-dropdown-item">
+                                            <Link to="/booking-history" className="user-dropdown-item">
                                                 <BsCalendar2MinusFill  size={20}/> Lịch sử tiêm
                                             </Link>
                                         </li>

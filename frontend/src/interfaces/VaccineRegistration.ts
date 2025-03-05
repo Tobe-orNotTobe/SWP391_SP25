@@ -82,3 +82,17 @@ export interface BookingDetail {
   vaccineId: number | null;
   comboVaccineId: number | null;
 }
+
+
+export interface BookingUser {
+  bookingId: number;
+  userId: string;
+  childId: number;
+  childName: string;
+  bookingType: string;
+  bookingDate: string;
+  totalPrice: number;
+  notes: string;
+  status: string;
+  bookingDetails: BookingDetail[];
+}

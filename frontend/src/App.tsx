@@ -20,7 +20,7 @@ import Login from "./pages/AuthPage/Login/Login.tsx";
 import Register from "./pages/AuthPage/Register/Register.tsx";
 import ForgotPassword from "./pages/AuthPage/ForgotPassword/ForgotPassword.tsx";
 import ResetPassword from "./pages/AuthPage/ResetPassword/ResetPassword.tsx";
-import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
+import {ConfirmEmail, PaymentSuccess} from "./components/ConfirmEmail/Confirm.tsx";
 
 // Customer Pages
 import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistrationPage.tsx";
@@ -50,6 +50,7 @@ import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.ts
 import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
 import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
 import ManagerProfile from "./pages/Manager/ManagerProfile.tsx";
+import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
 
 function App() {
     return (
@@ -77,6 +78,8 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/confirm-email" element={<ConfirmEmail />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+
 
                 {/* Customer Routes */}
                 <Route path="/child-register" element={<ChildRegistrationPage />} />
@@ -85,6 +88,7 @@ function App() {
                 <Route path="/booking" element={<VaccinationRegistrationPage />} />
                 <Route path="/payment" element={<TransactionPage />} />
                 <Route path="/user-profile" element={<CustomerProfile/>}/>
+                <Route path="/booking-history" element={<BookingHistoryPage/>}/>
 
                 {/* Staff Routes */}
                 <Route path="/staff/service" element={<ServicePage />} />

@@ -61,6 +61,8 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
   // Fetch thông tin booking và vaccine từ API
   useEffect(() => {
     const fetchData = async () => {
+
+      console.log(bookings);
       try {
         // Lấy thông tin booking từ API
         const bookingData = await apiGetBookingById(booking.bookingId);
