@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ChildVaccineSystem.Service.Services
 {
@@ -37,7 +38,7 @@ namespace ChildVaccineSystem.Service.Services
 			var transaction = await CreateTransactionAsync(booking);
 
 			var tick = DateTime.Now.Ticks.ToString();
-			var txnRef = $"{transaction.TransactionId} - {tick}";
+			var txnRef = $"TXN{transaction.TransactionId}_TIME{tick}";
 
 			var vnpay = new VnPayLibrary();
 
@@ -99,10 +100,8 @@ namespace ChildVaccineSystem.Service.Services
 				return false;
 			}
 
-			if (!int.TryParse(vnpayParams["vnp_TxnRef"], out int transactionId))
-			{
-				return false;
-			}
+			var match = Regex.Match(vnpayParams["vnp_TxnRef"], @"TXN(\d+)_TIME");
+			int transactionId = int.Parse(match.Groups[1].Value);
 
 			if (!vnpayParams.TryGetValue("vnp_ResponseCode", out string responseCode) || responseCode != "00")
 			{
