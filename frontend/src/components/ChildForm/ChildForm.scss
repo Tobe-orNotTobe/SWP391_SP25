@@ -6,8 +6,8 @@
   font-size: 28px;
 }
 
-.backButton {
-  width: 10%;
+.navigateButton {
+  width: 22%;
   display: flex;
   justify-content: start;
   bottom: 20px;
@@ -35,6 +35,8 @@
     transform: scale(0.95);
   }
 }
+
+
 
 .childRegistrationForm {
   display: flex;
