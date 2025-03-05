@@ -34,6 +34,7 @@ namespace ChildVaccineSystem.Data.Models
 		public DbSet<Wallet> Wallets { get; set; }
 		public DbSet<WalletTransaction> WalletTransactions { get; set; }
 		public DbSet<RefundRequest> RefundRequests { get; set; }
+		public DbSet<WalletDeposit> WalletDeposits { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -366,6 +367,13 @@ namespace ChildVaccineSystem.Data.Models
 				.WithMany()
 				.HasForeignKey(t => t.RefundRequestId)
 				.IsRequired(false)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			//WalletDeposit
+			modelBuilder.Entity<WalletDeposit>()
+				.HasOne(wd => wd.User)
+				.WithMany()
+				.HasForeignKey(wd => wd.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
 		}
 	}

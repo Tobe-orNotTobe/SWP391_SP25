@@ -12,5 +12,6 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
 		Task<bool> TransferFundsAsync(string fromUserId, string toUserId, decimal amount, string description, int? refundRequestId = null, IDbContextTransaction existingTransaction = null);
 		Task<bool> ProcessRefundAsync(int refundRequestId, decimal amount, string processedById, IDbContextTransaction existingTransaction = null);
 		Task<bool> PayFromWalletAsync(int bookingId, string userId, decimal amount);
+		Task<bool> AddFundsToUserWalletAsync(string userId, decimal amount, string transactionReference);
 	}
 }

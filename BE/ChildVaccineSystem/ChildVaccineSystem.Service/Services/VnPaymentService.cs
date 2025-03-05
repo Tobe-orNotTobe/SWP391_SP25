@@ -60,6 +60,34 @@ namespace ChildVaccineSystem.Service.Services
 			return paymentUrl;
 		}
 
+		public async Task<string> CreateWalletDepositUrl(int transactionId, decimal amount, string userId, string clientIpAddress)
+		{
+			var transaction = await _unitOfWork.Transactions.GetAsync(t => t.TransactionId == transactionId);
+			if (transaction == null)
+			{
+				throw new ArgumentException($"Transaction with ID {transactionId} not found");
+			}
+
+			var vnpay = new VnPayLibrary();
+
+			vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
+			vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
+			vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
+			vnpay.AddRequestData("vnp_Amount", (Convert.ToInt64(amount) * 100).ToString());
+			vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+			vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
+			vnpay.AddRequestData("vnp_IpAddr", clientIpAddress);
+			vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
+			vnpay.AddRequestData("vnp_OrderInfo", $"Nạp tiền vào ví #{userId}");
+			vnpay.AddRequestData("vnp_OrderType", "topup");
+			vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:WalletDepositReturnUrl"]);
+			vnpay.AddRequestData("vnp_TxnRef", transactionId.ToString());
+
+			var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
+
+			return paymentUrl;
+		}
+
 		public async Task<bool> PaymentExecute(IDictionary<string, string> vnpayParams)
 		{
 			var vnpHashSecret = _config["VNPay:HashSecret"];
@@ -111,11 +139,18 @@ namespace ChildVaccineSystem.Service.Services
 
 			await UpdateTransactionStatusAsync(transactionId, "Completed", responseCode);
 
-			var transaction = await _unitOfWork.Transactions.GetAsync(t => t.TransactionId == transactionId, includeProperties: "Booking");
-			if (transaction != null && transaction.Booking != null)
+			if (vnpayParams.TryGetValue("vnp_OrderType", out string orderType) && orderType == "topup")
 			{
-				transaction.Booking.Status = BookingStatus.Confirmed;
-				await _unitOfWork.CompleteAsync();
+				return true;
+			}
+			else
+			{
+				var transaction = await _unitOfWork.Transactions.GetAsync(t => t.TransactionId == transactionId, includeProperties: "Booking");
+				if (transaction != null && transaction.Booking != null)
+				{
+					transaction.Booking.Status = BookingStatus.Confirmed;
+					await _unitOfWork.CompleteAsync();
+				}
 			}
 
 			return true;
@@ -145,6 +180,7 @@ namespace ChildVaccineSystem.Service.Services
 			if (transaction != null)
 			{
 				transaction.Status = status;
+				transaction.UpdatedAt = DateTime.UtcNow;
 				await _unitOfWork.Transactions.UpdateAsync(transaction);
 				await _unitOfWork.CompleteAsync();
 			}
