@@ -105,5 +105,15 @@ export interface  VaccineInventory {
     supplier: string;
 }
   
-  
+export interface ComboDetailOfBoookingDetails {
+    id: string;
+    name: string;
+    totalPrice: number;
+  };
+
+export interface VaccineDetailOfBoookingDetails {
+    id: string;
+    name: string;
+    price: number;
+  };
   

@@ -8,7 +8,8 @@ const DoctorList = () => {
   useEffect(() => {
     const loadDoctors = async () => {
       const doctorList = await apiGetAllDoctors();
-      setDoctors(doctorList);
+      console.log(doctorList.result);
+      setDoctors(doctorList.result);
     };
     loadDoctors();
   }, []);
