@@ -24,4 +24,14 @@ export const apiPostVNPayTransaction = async (bookingId: number) => {
       throw error;
     }
   };
-  
+
+
+export const apiGetWalletUser = async () => {
+  try {
+    const response = await axiosInstance.get("/api/Wallet/user");
+    return response.data;
+  }catch (error) {
+    console.error("API Get WalletUser Error:", error);
+    throw error;
+  }
+}

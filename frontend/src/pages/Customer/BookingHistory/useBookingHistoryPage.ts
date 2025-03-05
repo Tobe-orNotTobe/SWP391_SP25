@@ -3,7 +3,6 @@ import {apiGetBookingUser} from "../../../apis/apiBooking.ts";
 import {BookingUser} from "../../../interfaces/VaccineRegistration.ts";
 
 
-
 export const useBookingUser = () => {
     const [bookings, setBookings] = useState<BookingUser[]>([]);
     const [loading, setLoading] = useState<boolean>(true);

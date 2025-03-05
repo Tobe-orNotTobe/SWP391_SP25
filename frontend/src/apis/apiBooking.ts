@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Booking } from "../interfaces/VaccineRegistration.ts";
+import {Booking, Feedback} from "../interfaces/VaccineRegistration.ts";
 import axiosInstance from "../utils/axiosInstance.ts";
 
 import {decodeToken} from "../utils/decodeToken.ts";
@@ -167,4 +167,25 @@ export const apiCancelBooking = async (bookingId : number) => {
     throw error;
   }
 
+}
+
+export const apiPostFeedBack = async (data : Feedback)=> {
+  try {
+    const response = await axiosInstance.post(`/api/Feedback`, data);
+    return response.data;
+  }catch (err){
+    console.error("API Feedback Error:", err);
+    throw err;
+  }
+}
+
+
+export const apiGetFeebBackUserByBookingId = async (bookingId : number) => {
+  try {
+    const response = await axiosInstance.get(`/api/Feedback/${bookingId}`);
+    return response.data;
+  }catch (err){
+    console.error("API Feedback Error:", err);
+    throw err;
+  }
 }

@@ -33,6 +33,9 @@ const UserProfile: React.FC = () => {
             const response = await apiUpdateProfileUser(formattedValues);
             if(response.isSuccess) {
                 toast.success("Cập nhật thông tin người dùng thành công");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
         }catch (err : unknown){
             if (err instanceof AxiosError) {
@@ -76,7 +79,6 @@ const UserProfile: React.FC = () => {
                     <div className="profile-details">
                         <div className="profile-item"><strong>Username:</strong> <span>{userProfile.userName}</span></div>
                         <div className="profile-item"><strong>Fullname:</strong> <span>{userProfile.fullName}</span></div>
-                        <div className="profile-item"><strong>Email:</strong> <span>{userProfile.email}</span></div>
                         <div className="profile-item"><strong>Phone:</strong> <span>{userProfile.phoneNumber}</span></div>
                         <div className="profile-item"><strong>Address:</strong> <span>{userProfile.address}</span></div>
                         <div className="profile-item"><strong>Date of Birth:</strong> <span>{new Date(userProfile.dateOfBirth).toLocaleDateString()}</span></div>

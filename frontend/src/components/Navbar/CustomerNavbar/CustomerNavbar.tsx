@@ -20,7 +20,7 @@ const CustomerNavbar: React.FC = () => {
     const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.clear();
-        navigate("/homepage");
+        navigate("/login");
     };
 
     return (
