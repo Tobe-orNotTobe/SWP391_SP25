@@ -46,15 +46,15 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost("confirm-email")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest model)
         {
             try
             {
                 var result = await _authService.ConfirmEmailAsync(model.Email, model.Token);
 
+                // Check for success and handle different cases
                 if (!result)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
@@ -70,6 +70,16 @@ namespace ChildVaccineSystem.API.Controllers
             }
             catch (Exception ex)
             {
+                // Handling exception for already confirmed email
+                if (ex.Message == "Email has already been confirmed.")
+                {
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.IsSuccess = false;
+                    _response.Result = new { Message = "Email has already been confirmed." };
+                    return Ok(_response);
+                }
+
+                // Handle other exceptions
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
                 _response.ErrorMessages.Add(ex.Message);
