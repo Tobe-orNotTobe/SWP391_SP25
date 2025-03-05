@@ -24,6 +24,8 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         Task<bool> DeactivateUserAsync(string userId);
         Task<IEnumerable<User>> SearchUsersAsync(string keyword);
         Task<User> GetAsync(Expression<Func<User, bool>> filter);
+        Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
+        Task<bool> UpdateUserProfileAsync(User user);
         Task SaveChangesAsync();
     }
 }

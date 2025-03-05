@@ -25,7 +25,7 @@ namespace ChildVaccineSystem.API.Controllers
 		{
 			try
 			{
-				string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
+				string ipAddress = Utils.GetIpAddress(HttpContext);
 
 				var paymentUrl = await _vnPaymentService.CreatePaymentUrl(bookingId, ipAddress);
 

@@ -12,11 +12,14 @@ using ChildVaccineSystem.Data.DTO.ComboVaccine;
 using ChildVaccineSystem.Data.DTO.DoctorWorkSchedule;
 using ChildVaccineSystem.Data.DTO.Feedback;
 using ChildVaccineSystem.Data.DTO.InjectionSchedule;
+using ChildVaccineSystem.Data.DTO.Refund;
 using ChildVaccineSystem.Data.DTO.Transaction;
+using ChildVaccineSystem.Data.DTO.User;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
 using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Data.DTO.VaccineInventory;
 using ChildVaccineSystem.Data.DTO.VaccineScheduleDetail;
+using ChildVaccineSystem.Data.DTO.Wallet;
 using ChildVaccineSystem.Data.Entities;
 
 namespace ChildVaccineSystem.Common.Helper
@@ -166,8 +169,18 @@ namespace ChildVaccineSystem.Common.Helper
             //feedback
             CreateMap<Feedback, FeedbackDTO>();
             CreateMap<CreateFeedbackDTO, Feedback>();
-        }
+            CreateMap<User, UserProfileDTO>();
+
+			// Wallet mappings
+			CreateMap<Wallet, WalletDTO>();
+			CreateMap<WalletTransaction, WalletTransactionDTO>();
+
+			// Refund request mappings
+			CreateMap<RefundRequest, RefundRequestDTO>()
+				.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.FullName : "Unknown"))
+				.ForMember(dest => dest.ProcessedBy, opt => opt.MapFrom(src => src.ProcessedBy != null ? src.ProcessedBy.FullName : null));
+		}
     }
-}
+};
 
 

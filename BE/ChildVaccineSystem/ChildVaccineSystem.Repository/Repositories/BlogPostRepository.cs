@@ -17,9 +17,16 @@ namespace ChildVaccineSystem.Repository.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<BlogPost>> GetAllPostsAsync()
+        public async Task<IEnumerable<BlogPost>> GetAllPostsAsync(bool onlyActive = false)
         {
-            return await _context.BlogPosts
+            var query = _context.BlogPosts.AsQueryable();
+
+            if (onlyActive)
+            {
+                query = query.Where(b => b.IsActive);
+            }
+
+            return await query
                 .OrderByDescending(b => b.CreatedAt)
                 .ToListAsync();
         }

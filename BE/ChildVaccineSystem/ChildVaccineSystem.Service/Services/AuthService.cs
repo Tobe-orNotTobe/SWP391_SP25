@@ -51,9 +51,14 @@ namespace ChildVaccineSystem.Service.Services
 
             var token = GenerateJwtToken(user);
             var refreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            await _userManager.UpdateAsync(user);
+
             return new LoginResponseDTO
             {
                 Token = token,
+                RefeshToken = refreshToken
             };
         }
 
@@ -147,6 +152,12 @@ namespace ChildVaccineSystem.Service.Services
             if (user == null)
                 throw new Exception("User not found.");
 
+            // Check if the email is already confirmed
+            if (user.EmailConfirmed)
+            {
+                throw new Exception("Email has already been confirmed.");
+            }
+
             string decodedToken = Uri.UnescapeDataString(token).Replace(" ", "+");
 
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
@@ -163,19 +174,27 @@ namespace ChildVaccineSystem.Service.Services
 
         public async Task<LoginResponseDTO> RefreshTokenAsync(string refreshToken)
         {
-            // Mock logic to validate the refresh token
-            var user = await _userManager.FindByIdAsync(refreshToken); // Ensure to change this as per your storage logic
+            // Tìm người dùng thông qua refreshToken (refreshToken được lưu trữ trong cơ sở dữ liệu)
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
             if (user == null)
                 throw new Exception("Invalid refresh token.");
 
+            // Tạo lại access token và refresh token mới
             var newToken = GenerateJwtToken(user);
             var newRefreshToken = GenerateRefreshToken();
 
+            // Cập nhật refresh token mới cho người dùng trong cơ sở dữ liệu
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            // Trả về thông tin bao gồm token mới và refresh token mới
             return new LoginResponseDTO
             {
                 Token = newToken,
+                RefeshToken = newRefreshToken
             };
         }
+
 
         public async Task<bool> ForgetPasswordAsync(string email)
         {

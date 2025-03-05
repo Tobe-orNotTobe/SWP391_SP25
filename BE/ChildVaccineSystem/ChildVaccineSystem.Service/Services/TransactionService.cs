@@ -65,5 +65,17 @@ namespace ChildVaccineSystem.Service.Services
 
 			return _mapper.Map<TransactionDTO>(transaction);
 		}
-	}
+        public async Task<decimal> GetTotalRevenueByDateAsync(DateTime date)
+        {
+            // Lọc tất cả các giao dịch trong ngày từ cơ sở dữ liệu
+            var transactions = await _unitOfWork.Transactions.GetAllAsync(
+                t => t.CreatedAt.Date == date.Date,  // Sử dụng CreatedAt thay vì TransactionDate
+                includeProperties: "Booking"
+            );
+
+            // Tính tổng số tiền thu được trong ngày từ các giao dịch
+            return transactions.Sum(t => t.Amount);  // Sử dụng thuộc tính Amount từ Transaction
+        }
+
+    }
 }

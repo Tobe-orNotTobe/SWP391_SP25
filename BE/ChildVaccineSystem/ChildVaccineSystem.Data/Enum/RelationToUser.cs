@@ -8,13 +8,10 @@ namespace ChildVaccineSystem.Data.Enum
 {
     public enum RelationToUser
     {
-        Son,       // Con trai 0
-        Daughter,  // Con gái  1
-        Grandchild, // Cháu    2
-        YoungerBrother, // Em trai  3
-        YoungerSister,  // Em gái    4
-        Relative, // họ hàng 5
-        Other //khác 6
+        SonOrDaughter,     // Con (bao gồm Con trai, Con gái)
+        Grandchild,        // Cháu
+        Sibling,           // Anh chị em (bao gồm Em trai, Em gái)
+        Relative,          // Họ hàng
+        Other              // Khác
     }
-
 }
