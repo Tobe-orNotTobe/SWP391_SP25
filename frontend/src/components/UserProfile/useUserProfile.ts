@@ -13,7 +13,7 @@ export const useUserProfileDetail = () =>{
             setLoading(true)
             try{
                 const data = await apiGetProfileUser();
-                console.log(data)
+                // console.log(data)
                 if(data.isSuccess && data.result) {
                     setUserProfile(data.result);
                 }

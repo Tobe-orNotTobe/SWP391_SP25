@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Booking } from "../interfaces/VaccineRegistration.ts";
 import axiosInstance from "../utils/axiosInstance.ts";
-import {IsLoginSuccessFully} from "../validations/IsLogginSuccessfully.ts";
+
 import {decodeToken} from "../utils/decodeToken.ts";
 
 export const apiBooking = async (userId: string, booking: Booking) => {
@@ -154,3 +154,17 @@ export const apiAssignDoctor = async (doctorId: string, bookingId: string) => {
     throw error;
   }
 };
+export const apiCancelBooking = async (bookingId : number) => {
+  const finalUserId =  decodeToken(localStorage.getItem("token"))?.sub;
+
+  try {
+    const response = await axiosInstance.delete(`/api/Booking/${bookingId}/cancel`, {
+      params: { userId: finalUserId }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    throw error;
+  }
+
+}

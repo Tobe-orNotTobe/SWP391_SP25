@@ -31,12 +31,10 @@ export const ConfirmEmail : React.FC = () => {
             try {
                 const response = await apiConfirmEmail(data);
 
-                if (response.isSuccess) {
+                if (!response.isSuccess) {
+                    console.log(response.result);
                     setStatus(response.result.message);
                     setStatusType("success");
-                }else if (response.error){
-                    setStatus("Xác nhận thất bại! Vui lòng thử lại.");
-                    setStatusType("error");
                 }
             } catch (error) {
                 console.error("API Error:", error);

@@ -10,6 +10,9 @@ import Footer from "../../../components/Footer/Footer.tsx";
 import {Link} from "react-router-dom";
 import FloatingButtons from "../../../components/FloatingButton/FloatingButtons.tsx";
 import {SelectInfo} from "antd/lib/calendar/generateCalendar";
+import {apiCancelBooking} from "../../../apis/apiBooking.ts";
+import {AxiosError} from "axios";
+import {toast} from "react-toastify";
 
 
 //Chỉnh màu sẵn ở đây để sử dụng cho các trạng thái cần thiết á mà
@@ -17,7 +20,7 @@ const STATUS_COLORS : Record<string, string>= {
     Pending: "#faad14",
     Confirmed: "#1890ff",
     Completed: "#52c41a",
-    Cancel: "#ff4d4f"
+    Cancelled: "#ff4d4f"
 };
 
 const BookingHistory: React.FC = () => {
@@ -45,7 +48,7 @@ const BookingHistory: React.FC = () => {
 
     useEffect(() => {
         if (latestBooking && latestBooking.bookingDate !== latestDate) {
-            console.log((latestBooking.bookingDate))
+            // console.log((latestBooking.bookingDate))
             setLatestDate(latestBooking.bookingDate);
         }
         if (latestDate) {
@@ -133,6 +136,32 @@ const BookingHistory: React.FC = () => {
             </div>
         );
     };
+
+    const handleCancelBooking = async (bookingId : number) =>{
+        try{
+            const response = await apiCancelBooking(bookingId)
+
+            if(response.isSuccess){
+                toast.success("Hủy lịch thành công");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
+        } catch (error : unknown) {
+
+            console.error(error);
+            if (error instanceof AxiosError) {
+
+                if (error.response && error.response.data && error.response.data.errorMessages) {
+                    toast.error(`${error.response.data.errorMessages}`);
+                } else {
+                    toast.error("Lỗi không xác định");
+                }
+            } else {
+                toast.error("Lỗi không xác định");
+            }
+        }
+    }
 
     return (
         <>
@@ -224,8 +253,7 @@ const BookingHistory: React.FC = () => {
                                                         type="primary"
                                                         className="Cancel-button"
                                                         onClick={() => {
-                                                            setSelectedBooking(booking);
-                                                            setFeedbackModalVisible(true);
+                                                            handleCancelBooking(booking.bookingId);
                                                         }}
                                                     >
                                                         Hủy Lịch
