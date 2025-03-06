@@ -15,7 +15,7 @@ namespace ChildVaccineSystem.Data.Entities
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal Amount { get; set; }
 
-		public string TransactionType { get; set; } // Deposit, Withdraw, Refund
+		public string TransactionType { get; set; } // Deposit, Refund
 
 		public string Description { get; set; }
 

@@ -30,8 +30,9 @@ namespace ChildVaccineSystem.Repository.Repositories
         public IFeedbackRepository Feedbacks { get; }
 		public IWalletRepository Wallets { get; }
         public IRefundRequestRepository RefundRequests { get; }
+		public IWalletDepositRepository WalletDeposits { get; }
 
-		public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository, IDoctorWorkScheduleRepository doctorWorkScheduleRepositories, IVaccineTransactionHistoryRepository vaccineTransactionHistoryRepository, IBlogPostRepository blogPostRepository, IFeedbackRepository feedbackRepository, IWalletRepository walletRepository, IRefundRequestRepository refundRequestRepository)
+		public UnitOfWork(ChildVaccineSystemDBContext context, IVaccineRepository vaccineRepository, IVaccinationScheduleRepository vaccinationScheduleRepository, IComboVaccineRepository comboVaccineRepository, IComboDetailRepository comboDetailRepository, IBookingRepository bookingRepository, IBookingDetailRepository bookingDetailRepository, IInjectionScheduleRepository injectionScheduleRepository, IVaccineScheduleDetailRepository vaccineScheduleDetailRepository, IChildrenRepository childrenRepository, IUserRepository userRepository, IVaccineInventoryRepository vaccineInventories, IPricingPoliciesRepository pricingPolicies, ITransactionRepository transactionRepository, IDoctorWorkScheduleRepository doctorWorkScheduleRepositories, IVaccineTransactionHistoryRepository vaccineTransactionHistoryRepository, IBlogPostRepository blogPostRepository, IFeedbackRepository feedbackRepository, IWalletRepository walletRepository, IRefundRequestRepository refundRequestRepository, IWalletDepositRepository walletDepositRepository)
         {
             _context = context;
             Vaccines = vaccineRepository;
@@ -53,9 +54,10 @@ namespace ChildVaccineSystem.Repository.Repositories
             Feedbacks = feedbackRepository; 
             Wallets = walletRepository;
 			RefundRequests = refundRequestRepository;
+			WalletDeposits = walletDepositRepository;
 		}
 
-        public async Task<int> CompleteAsync()
+		public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
         }

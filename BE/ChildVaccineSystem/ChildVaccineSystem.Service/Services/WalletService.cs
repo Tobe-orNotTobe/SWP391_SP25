@@ -11,11 +11,16 @@ namespace ChildVaccineSystem.Service.Services
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
+		private readonly IVnPaymentService _vnPaymentService;
 
-		public WalletService(IUnitOfWork unitOfWork, IMapper mapper)
+		public WalletService(
+			IUnitOfWork unitOfWork,
+			IMapper mapper,
+			IVnPaymentService vnPaymentService)
 		{
 			_unitOfWork = unitOfWork;
 			_mapper = mapper;
+			_vnPaymentService = vnPaymentService;
 		}
 
 		public async Task<WalletDTO> GetUserWalletAsync(string userId)
@@ -207,6 +212,36 @@ namespace ChildVaccineSystem.Service.Services
 
 			var description = $"Payment for booking #{bookingId}";
 			return await TransferFundsAsync(userId, adminWallet.UserId, amount, description);
+		}
+
+		public async Task<bool> AddFundsToUserWalletAsync(string userId, decimal amount, string transactionReference)
+		{
+			try
+			{
+				var wallet = await _unitOfWork.Wallets.GetWalletByUserIdAsync(userId);
+				if (wallet == null)
+				{
+					wallet = await _unitOfWork.Wallets.CreateWalletAsync(userId);
+				}
+
+				var transaction = new WalletTransaction
+				{
+					WalletId = wallet.WalletId,
+					Amount = amount,
+					TransactionType = "Deposit",
+					Description = $"Deposit via VnPay (Ref: {transactionReference})",
+					CreatedAt = DateTime.UtcNow
+				};
+
+				await _unitOfWork.Wallets.AddTransactionAsync(transaction);
+				await _unitOfWork.Wallets.UpdateWalletBalanceAsync(wallet.WalletId, amount);
+
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
 		}
 	}
 }

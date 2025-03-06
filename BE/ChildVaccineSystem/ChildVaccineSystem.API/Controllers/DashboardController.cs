@@ -15,7 +15,7 @@ namespace ChildVaccineSystem.API.Controllers
         private readonly IVaccineInventoryService _vaccineInventoryService;
         private readonly APIResponse _response;
 
-        public DashboardController(ITransactionService transactionService,IFeedbackService feedbackService,IVaccineInventoryService vaccineInventoryService ,APIResponse response)
+        public DashboardController(ITransactionService transactionService, IFeedbackService feedbackService, IVaccineInventoryService vaccineInventoryService, APIResponse response)
         {
             _transactionService = transactionService;
             _feedbackService = feedbackService;
@@ -31,7 +31,6 @@ namespace ChildVaccineSystem.API.Controllers
             try
             {
                 var revenue = await _transactionService.GetTotalRevenueByDateAsync(date);
-
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
                 _response.Result = revenue;
@@ -42,6 +41,52 @@ namespace ChildVaccineSystem.API.Controllers
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
                 _response.ErrorMessages.Add($"Error retrieving revenue: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
+
+        [HttpGet("revenue/last-10-days")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<APIResponse>> GetRevenueLast10Days()
+        {
+            try
+            {
+                var revenueLast10Days = await _transactionService.GetTotalRevenueLast10DaysAsync();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = revenueLast10Days;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Error retrieving last 10 days revenue: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
+
+        [HttpGet("total-revenue")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<APIResponse>> GetTotalRevenue()
+        {
+            try
+            {
+                var totalRevenue = await _transactionService.GetTotalRevenueAsync();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = totalRevenue;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Error retrieving total revenue: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -67,6 +112,7 @@ namespace ChildVaccineSystem.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
+
         [HttpGet("exported-vaccines")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -74,10 +120,8 @@ namespace ChildVaccineSystem.API.Controllers
         {
             try
             {
-                // Lấy danh sách các vaccine đã xuất kho từ service
                 var exportedVaccines = await _vaccineInventoryService.GetExportVaccinesAsync();
 
-                // Trả về kết quả với dữ liệu vaccine đã xuất
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
                 _response.Result = exportedVaccines;
@@ -91,6 +135,5 @@ namespace ChildVaccineSystem.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
-
     }
 }
