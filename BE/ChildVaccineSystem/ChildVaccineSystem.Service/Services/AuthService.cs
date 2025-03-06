@@ -152,6 +152,12 @@ namespace ChildVaccineSystem.Service.Services
             if (user == null)
                 throw new Exception("User not found.");
 
+            // Check if the email is already confirmed
+            if (user.EmailConfirmed)
+            {
+                throw new Exception("Email has already been confirmed.");
+            }
+
             string decodedToken = Uri.UnescapeDataString(token).Replace(" ", "+");
 
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);

@@ -27,6 +27,7 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         IFeedbackRepository Feedbacks { get; }
 		IWalletRepository Wallets { get; }
 		IRefundRequestRepository RefundRequests { get; }
+		IWalletDepositRepository WalletDeposits { get; }
 
 		Task<int> CompleteAsync();
 		Task<IDbContextTransaction> BeginTransactionAsync();
