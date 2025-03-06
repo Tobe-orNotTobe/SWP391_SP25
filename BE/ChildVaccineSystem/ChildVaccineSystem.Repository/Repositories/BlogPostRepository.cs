@@ -23,13 +23,19 @@ namespace ChildVaccineSystem.Repository.Repositories
 
             if (onlyActive)
             {
-                query = query.Where(b => b.IsActive);
+                query = query.Where(b => b.IsActive == true);  // Only active posts
+            }
+            else
+            {
+                query = query.Where(b => b.IsActive == false);  // Only inactive posts
             }
 
             return await query
                 .OrderByDescending(b => b.CreatedAt)
                 .ToListAsync();
         }
+
+
 
         public async Task<BlogPost> GetPostByIdAsync(int id)
         {

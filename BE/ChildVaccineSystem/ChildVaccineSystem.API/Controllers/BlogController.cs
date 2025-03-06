@@ -31,7 +31,7 @@ namespace ChildVaccineSystem.API.Controllers
         {
             try
             {
-                var posts = await _blogPostService.GetAllPostsAsync();
+                var posts = await _blogPostService.GetAllPostsAsync(onlyActive);  
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
                 _response.Result = posts;

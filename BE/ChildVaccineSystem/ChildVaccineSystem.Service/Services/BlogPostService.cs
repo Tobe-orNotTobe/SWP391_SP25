@@ -20,9 +20,9 @@ namespace ChildVaccineSystem.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<BlogPostDTO>> GetAllPostsAsync()
+        public async Task<IEnumerable<BlogPostDTO>> GetAllPostsAsync(bool onlyActive = true)
         {
-            var blogPosts = await _unitOfWork.BlogPosts.GetAllPostsAsync(onlyActive: true); // only active posts
+            var blogPosts = await _unitOfWork.BlogPosts.GetAllPostsAsync(onlyActive);  // Pass the flag to repository
             return _mapper.Map<IEnumerable<BlogPostDTO>>(blogPosts);
         }
 
