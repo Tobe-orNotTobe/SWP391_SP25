@@ -49,7 +49,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         {
             key: 'blog',
             icon: <MedicineBoxOutlined />,
-            label: <Link to="/admin/blog">Quản lý Blog</Link>
+            label: 'Quản lý Blog',  // Không dùng <Link> ở đây vì nó có submenu
+            children: [
+                {
+                    key: 'blog-list',
+                    label: <Link to="/admin/blog">Danh sách Blog</Link>,
+                },
+                {
+                    key: 'blog-deactive',
+                    label: <Link to="/admin/blog/deactive">Chờ xét duyệt</Link>,
+                },
+            ],
         },
         {
             key: 'vaccine-schedule',

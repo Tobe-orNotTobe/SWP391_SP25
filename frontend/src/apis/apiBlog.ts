@@ -21,7 +21,7 @@ export const apiUpdateBlog = async (blogId: string, data: UpdateBlogRequest) => 
     return response.data ? response.data : { message: "An unexpected error occurred" };
 }
 
-export const apiDeleteBlog = async (blogId: number) => {
+export const apiDeleteBlog = async (blogId: string) => {
     const response = await axiosInstance.delete(`/api/Blog/${blogId}`);
     return response.data ? response.data : { message: "An unexpected error occurred" };
 }

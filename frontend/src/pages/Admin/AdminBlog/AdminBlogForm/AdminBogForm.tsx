@@ -26,6 +26,7 @@ const AdminBlogFormPage: React.FC = () => {
         if (initialImageUrl) setPreviewUrl(initialImageUrl);
     }, [form]);
 
+
     // // Xử lý chọn ảnh
     // const handleImageChange = (info: any) => {
     //     const file = info.file.originFileObj;
@@ -110,6 +111,7 @@ const AdminBlogFormPage: React.FC = () => {
         await handleSubmit(formData);
     };
 
+
     return (
         <AdminLayout>
             <div style={{padding: "20px"}}>
@@ -122,20 +124,36 @@ const AdminBlogFormPage: React.FC = () => {
                         Quay lại danh sách
                     </Button>
                 </div>
-                <Form form={form} layout="vertical" onFinish={onFinish} className="account-form">
-                    <h2 style={{paddingTop: "10px"}} className="blog-form-title">{isEditMode ? "Chỉnh sửa Blog" : "Tạo Blog"}</h2>
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={onFinish}
+                    className="account-form"
+                >
+                    <h2 style={{ paddingTop: "10px" }} className="blog-form-title">
+                        {isEditMode ? "Chỉnh sửa Blog" : "Tạo Blog"}
+                    </h2>
 
                     <Form.Item name="title" label="Đề mục:"
-                               rules={[{required: true, message: "Vui lòng nhập đề mục."}]}>
-                        <Input placeholder="Nhập tiêu đề blog"/>
+                               rules={[{ required: true, message: "Vui lòng nhập đề mục." }]}
+                    >
+                        <Input placeholder="Nhập tiêu đề blog" />
                     </Form.Item>
 
-                    <Form.Item name={"type"} label={"Loại"}>
-                        <Select placeholder="Chọn quyền" defaultValue="Blog">
+                    <Form.Item name="type" label="Loại">
+                        <Select placeholder="Chọn quyền">
                             <Select.Option value="Blog">Blog</Select.Option>
                             <Select.Option value="News">News</Select.Option>
                         </Select>
                     </Form.Item>
+                    {isEditMode && (
+                        <Form.Item name="isActive" label="Trạng thái">
+                            <Select placeholder="Trạng thái" defaultValue={true}>
+                                <Select.Option value={true}>Active</Select.Option>
+                                <Select.Option value={false}>Deactive</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    )}
 
                     <Form.Item name="imageUrl" label="Ảnh minh họa:">
                         <Upload
@@ -147,17 +165,20 @@ const AdminBlogFormPage: React.FC = () => {
                                 return false; // Ngăn không cho upload tự động
                             }}
                         >
-                            {previewUrl ? <img src={previewUrl} alt="Xem trước" style={{width: "100%"}}/> :
-                                isEditMode ?
-                                    <img src={imageUrl} alt="Xem trước" style={{width: "100%"}}/> : "+ Upload"}
+                            {previewUrl ? (
+                                <img src={previewUrl} alt="Xem trước" style={{ width: "100%" }} />
+                            ) : isEditMode ? (
+                                <img src={imageUrl} alt="Xem trước" style={{ width: "100%" }} />
+                            ) : (
+                                "+ Upload"
+                            )}
                         </Upload>
                     </Form.Item>
-
 
                     <div>
                         <h2>Text Editor</h2>
                         <Editor
-                            apiKey= {TinyMCEE_API_KEY}
+                            apiKey={TinyMCEE_API_KEY}
                             value={editorContent}
                             onEditorChange={(newContent) => {
                                 setEditorContent(newContent);
@@ -174,16 +195,15 @@ const AdminBlogFormPage: React.FC = () => {
                                 file_picker_types: "image",
                             }}
                         />
-
-
                     </div>
 
-                    <Form.Item style={{display: "flex", justifyContent: "end"}}>
-                        <Button htmlType="submit" loading={loading} style={{marginTop: "20px"}}>
+                    <Form.Item style={{ display: "flex", justifyContent: "end" }}>
+                        <Button htmlType="submit" loading={loading} style={{ marginTop: "20px" }}>
                             {isEditMode ? "Cập nhật" : "Đăng bài"}
                         </Button>
                     </Form.Item>
                 </Form>
+
             </div>
         </AdminLayout>
     );

@@ -45,7 +45,6 @@ import VaccineInventoryForm from "./pages/Manager/ManagerVaccineInventory/Vaccin
 import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx";
 import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
 import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
-import AdminBlogPage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlog.tsx"
 import AdminBlogFormPage from "./pages/Admin/AdminBlog/AdminBlogForm/AdminBogForm.tsx"
 
 
@@ -57,6 +56,8 @@ import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPa
 import AssignPage from "./pages/Staff/AssignPage.tsx";
 import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
 import VaccinePackagePage from "./pages/VaccinePage/VaccinePackagePage/VaccinePackagePage.tsx";
+import AdminBlogManagePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogManage/AdminBlogManage.tsx";
+import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogDeactive/AdminBlogDeactive.tsx";
 
 function App() {
     return (
@@ -126,7 +127,8 @@ function App() {
                 <Route path="/admin/account/add" element={<AdminAccountFormPage />} />
                 <Route path="/admin/account/edit/:id" element={<AdminAccountFormPage />} />
                 <Route path="/admin/profile" element={<AdminProfile/>}/>
-                <Route path={"/admin/blog"} element={<AdminBlogPage/>}/>
+                <Route path={"/admin/blog"} element={<AdminBlogManagePage/>}/>
+                <Route path={"/admin/blog/deactive"} element={<AdminBlogDeactivePage/>}/>
                 <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
                 <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
 

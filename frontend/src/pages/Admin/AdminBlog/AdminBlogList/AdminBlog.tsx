@@ -1,24 +1,33 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Table, Tabs} from "antd";
 import {TbListDetails} from "react-icons/tb";
 import {FiEdit2} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
 import {IoMdAdd} from "react-icons/io";
-import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import {useDeleteBlog, useGetAllBlog} from "../useAdminBlog.ts";
+import {useDeleteBlog, useGetAllBlog, useUpdateBlogActive} from "../useAdminBlog.ts";
 import dayjs from "dayjs";
 import {BlogResponse} from "../../../../interfaces/Blog.ts";
 import "./AdminBlog.scss"
 import {useNavigate} from "react-router-dom";
+import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
 
 const { TabPane } = Tabs;
 
-const AdminBlogPage: React.FC = () => {
+interface AdminBlogProps {
+    isActive?: boolean;
+}
+
+const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
 
     const navigate = useNavigate();
     const {blogs, loading, error, fetchAllBlog} = useGetAllBlog();
     const [detailBlog, setDetailBlog] = useState<BlogResponse | null>(null);
     const {handleDelete} = useDeleteBlog();
+    const {handleUpdateActive} = useUpdateBlogActive();
+
+    useEffect(() => {
+        fetchAllBlog(isActive);
+    }, []);
 
     const columns = [
         { title: "ID", dataIndex: "id", key: "id" },
@@ -68,18 +77,30 @@ const AdminBlogPage: React.FC = () => {
                     <Button className="detail-button" onClick={() => openDetailPopup(record)}>
                         <TbListDetails/>Chi tiết
                     </Button>
-                    <Button className="edit-button" onClick={() => navigate(`/admin/blog/edit/${record.blogPostId}`)}>
-                        <FiEdit2/>Chỉnh sửa
-                    </Button>
-                    <Button className="delete-button" onClick={() => handleDelete(record.blogPostId).then(fetchAllBlog)}>
-                        <MdDeleteOutline/> Xóa
-                    </Button>
+                    {!isActive ? (
+                        <Button className="edit-button" onClick={() => handleUpdateActive(record).then(() => fetchAllBlog(isActive))}>
+                            <FiEdit2/>Duyệt
+                        </Button>
+                    ): (
+                        <div>
+                            <Button className="edit-button" onClick={() => navigate(`/admin/blog/edit/${record.blogPostId}`)}>
+                                <FiEdit2/>Chỉnh sửa
+                            </Button>
+
+                            <Button className="delete-button" onClick={() =>
+                                handleDelete(record.blogPostId).then(() => fetchAllBlog(isActive))
+                            }>
+                                <MdDeleteOutline/> Xóa
+                            </Button>
+
+                        </div>
+                    )}
+
+
                 </div>
             ),
         },
     ];
-
-
 
     const openDetailPopup = (blog: BlogResponse) => {
         setDetailBlog(blog);
@@ -101,6 +122,20 @@ const AdminBlogPage: React.FC = () => {
                     </div>
                     {error && ("Lỗi tải danh sách blog.")}
                     {loading && ("Loading...")}
+
+                    {/*<Select*/}
+                    {/*    placeholder="Chọn cột"*/}
+                    {/*    // value={sortColumn}*/}
+                    {/*    // onChange={setSortColumn}*/}
+                    {/*    style={{width: 150}}*/}
+                    {/*>*/}
+                    {/*    <Select.Option value="comboId">Số thứ tự</Select.Option>*/}
+                    {/*    <Select.Option value="comboName">Gói combo</Select.Option>*/}
+                    {/*    <Select.Option value="description">Giới thiệu</Select.Option>*/}
+                    {/*    <Select.Option value="totalPrice">Tổng giá</Select.Option>*/}
+                    {/*</Select>*/}
+
+
                     <Table
                         columns={columns}
                         dataSource={Array.isArray(blogs) ? blogs.map(blog => ({

@@ -853,6 +853,48 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.ToTable("Wallets");
                 });
 
+            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.WalletDeposit", b =>
+                {
+                    b.Property<int>("DepositId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepositId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ResponseCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionRef")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("DepositId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WalletDeposits");
+                });
+
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.WalletTransaction", b =>
                 {
                     b.Property<int>("WalletTransactionId")
@@ -1301,6 +1343,17 @@ namespace ChildVaccineSystem.Data.Migrations
                 });
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.Wallet", b =>
+                {
+                    b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.WalletDeposit", b =>
                 {
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
                         .WithMany()
