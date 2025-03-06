@@ -14,6 +14,8 @@ import {
 import { apiGetChildById } from "../../apis/apiChild.ts";
 import { apiGetVaccineDetailById } from "../../apis/apiVaccine.ts";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { scheduler } from "timers/promises";
 
 const { Option } = Select;
 
@@ -57,6 +59,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
   const [childInfo, setChildInfo] = useState<any>(null);
   const [bookings, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate()
 
   // Fetch thông tin booking và vaccine từ API
   useEffect(() => {
@@ -112,6 +115,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
       const response = await apiPutBookingComplete(bookingId);
       toast.success(response.status)
       console.log(response);
+      navigate('/doctor/vaccination-schedule')
       return response;
     } catch (error) {
       console.error("Error completing booking:", error);

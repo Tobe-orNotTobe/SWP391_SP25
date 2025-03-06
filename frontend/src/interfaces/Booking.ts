@@ -1,12 +1,11 @@
-
 export interface BookingResponse {
-    bookingId: string;
-    childName: string;
-    bookingDate: string;
-    bookingType: string;
-    totalPrice: string;
-    note: string;
-    status: string;
+  bookingId: string | number;
+  childName: string;
+  bookingDate: string;
+  bookingType: string;
+  totalPrice: string;
+  note: string;
+  status: string;
 }
 
 export interface FeedbackDetailByBookingIdResponse {
