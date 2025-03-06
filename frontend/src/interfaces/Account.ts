@@ -43,19 +43,4 @@ export interface AccountDetailResponse {
     accessFailedCount: number;
 }
 
-export interface WalletDetail {
-    walletId: number;
-    userId: string;
-    balance: number;
-    totalRefunded: number;
-    isAdminWallet: boolean;
-    createdAt: string;
-    updatedAt: string;
-}
 
-export interface WalletResponse {
-    statusCode: number;
-    isSuccess: boolean;
-    errorMessages: string[];
-    result: WalletDetail[];
-}

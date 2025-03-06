@@ -13,7 +13,7 @@ import {TbMoodKid} from "react-icons/tb";
 import {BsCalendar2MinusFill} from "react-icons/bs";
 import { ImProfile } from "react-icons/im";
 import { FaWallet } from "react-icons/fa6";
-import {useWalletUserDetail} from "../../../hooks/useWallet.ts";
+
 
 const CustomerNavbar: React.FC = () => {
     const {username, role} = IsLoginSuccessFully();
@@ -22,7 +22,7 @@ const CustomerNavbar: React.FC = () => {
         localStorage.clear();
         navigate("/login");
     };
-    const {walletDetail} = useWalletUserDetail();
+
 
     return (
         <>
@@ -116,7 +116,7 @@ const CustomerNavbar: React.FC = () => {
                                         </li>
                                         <li>
                                             <Link to="/user-wallet" className="user-dropdown-item">
-                                                <FaWallet size={20}/> Ví Của Bạn <p style={{color: "#FFB400"}}>{walletDetail?.balance} VND</p>
+                                                <FaWallet size={20}/> Ví Của Bạn
                                             </Link>
                                         </li>
 
