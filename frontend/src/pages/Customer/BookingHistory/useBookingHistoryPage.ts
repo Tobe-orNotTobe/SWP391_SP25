@@ -36,7 +36,7 @@ export const useBookingUser = () => {
 
 export const STATUS_COLORS: Record<string, string> = {
     Pending: "#faad14",
-    Confirmed: "#1890ff",
+    Confirmed: "#2a388f",
     Completed: "#52c41a",
     Cancelled: "#ff4d4f",
 };
