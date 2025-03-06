@@ -6,7 +6,7 @@ import "./AdminLayout.scss";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully.ts";
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { GoPackage } from "react-icons/go";
-import { MdOutlineCalendarToday } from "react-icons/md";
+import {MdOutlineCalendarToday, MdOutlineChangeCircle} from "react-icons/md";
 import { MdOutlineInventory2 } from "react-icons/md";
 import {CiUser} from "react-icons/ci";
 
@@ -26,8 +26,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
     const handleLogout = () => {
         window.localStorage.clear();
-        navigate("/homepage");
+        navigate("/login");
     };
+
+    const handleChangeUser = () =>{
+        navigate("/homepage");
+    }
 
 
     const menuItems = [
@@ -73,10 +77,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 <div className="header-right">
                     <UserOutlined className="user-icon" />
                     <span className="user-info">Xin chào {role} {username}</span>
-
                     <Button
                         type="primary"
-                        icon={<LogoutOutlined />}
+                        icon={<MdOutlineChangeCircle size={20}/>}
+                        onClick={handleChangeUser}
+                        className="change-user-button"
+                    >
+                        Chế độ người dùng
+                    </Button>
+                    <Button
+                        type="primary"
+                        icon={<LogoutOutlined  size={20}/>}
                         onClick={handleLogout}
                         className="logout-button"
                     >

@@ -1,7 +1,7 @@
 import React from "react";
 import './CustomerNavbar.scss';
 import logo from "../../../assets/navbar/Logo_Navbar.png";
-import {MdNavigateNext} from "react-icons/md";
+import {MdNavigateNext, MdOutlineChangeCircle} from "react-icons/md";
 import {GiPositionMarker} from "react-icons/gi";
 import {MdLogin, MdLogout} from "react-icons/md";
 import {Link, useNavigate} from "react-router-dom";
@@ -94,6 +94,13 @@ const CustomerNavbar: React.FC = () => {
                                         </div>
                                     </Link>
                                     <ul className="user-dropdown-menu">
+                                        {role === 'Admin' && (
+                                            <li>
+                                                <Link to="/admin/dashboard" className="user-dropdown-item">
+                                                    <MdOutlineChangeCircle size={20}/>  Chuyển sang chế độ admin
+                                                </Link>
+                                            </li>
+                                        )}
                                         <li>
                                             <Link to="/user-profile" className="user-dropdown-item">
                                                 <ImProfile size={23}/> Thông tin tài khoản
