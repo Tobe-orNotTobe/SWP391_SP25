@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Upload, Button, notification } from "antd";
+import {Form, Input, Upload, Button, notification, Select} from "antd";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
 import { useBlogForm } from "../useAdminBlog.ts";
 import { Editor } from "@tinymce/tinymce-react";
 import { uploadImageToCloudinary } from "../../../../utils/cloudinary.ts";
 import {ArrowLeftOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
+import {TinyMCEE_API_KEY} from "../../../../config/cloudinaryConfig.ts"
+
 
 const AdminBlogFormPage: React.FC = () => {
     const { form, isEditMode, handleSubmit, loading, editorContent, setEditorContent, imageUrl } = useBlogForm();
@@ -128,6 +130,13 @@ const AdminBlogFormPage: React.FC = () => {
                         <Input placeholder="Nhập tiêu đề blog"/>
                     </Form.Item>
 
+                    <Form.Item name={"type"} label={"Loại"}>
+                        <Select placeholder="Chọn quyền" defaultValue="Blog">
+                            <Select.Option value="Blog">Blog</Select.Option>
+                            <Select.Option value="News">News</Select.Option>
+                        </Select>
+                    </Form.Item>
+
                     <Form.Item name="imageUrl" label="Ảnh minh họa:">
                         <Upload
                             listType="picture-card"
@@ -148,7 +157,7 @@ const AdminBlogFormPage: React.FC = () => {
                     <div>
                         <h2>Text Editor</h2>
                         <Editor
-                            apiKey="yhjx8d5ag43egl95r02jer0oxpjs86mwew5zas5vvwwc2x5b"
+                            apiKey= {TinyMCEE_API_KEY}
                             value={editorContent}
                             onEditorChange={(newContent) => {
                                 setEditorContent(newContent);

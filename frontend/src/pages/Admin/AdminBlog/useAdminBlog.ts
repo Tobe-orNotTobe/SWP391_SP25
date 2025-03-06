@@ -11,12 +11,13 @@ export const useGetAllBlog = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const hasFetched = useRef(false); // Biến kiểm tra đã gọi API hay chưa
+    const [onlyActive, setOnlyActive] = useState<boolean>(true);
 
     const fetchAllBlog = async () => {
         setLoading(true);
 
         try {
-            const response = await apiGetAllBlog();
+            const response = await apiGetAllBlog(onlyActive);
             if (response && response.result) {
                 console.log("cac: " + response)
                 setBlogs(response.result);
@@ -35,7 +36,7 @@ export const useGetAllBlog = () => {
         hasFetched.current = true; // Đánh dấu là đã gọi API
     }, []);
 
-    return { blogs, loading, error, fetchAllBlog };
+    return { blogs, loading, error, fetchAllBlog, onlyActive, setOnlyActive };
 };
 
 export const useDeleteBlog = () => {
@@ -106,6 +107,7 @@ export const useBlogForm = () => {
             } else {
                 const newBlogData: BlogRequest = {
                     ...values,
+                    type: "blog",
                     authorName: decodeToken(localStorage.getItem("token"))?.
                    ["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]
                 };

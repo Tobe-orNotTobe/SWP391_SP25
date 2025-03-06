@@ -45,6 +45,9 @@ import VaccineInventoryForm from "./pages/Manager/ManagerVaccineInventory/Vaccin
 import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx";
 import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
 import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
+import AdminBlogPage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlog.tsx"
+import AdminBlogFormPage from "./pages/Admin/AdminBlog/AdminBlogForm/AdminBogForm.tsx"
+
 
 import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
 import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
@@ -53,6 +56,7 @@ import ManagerProfile from "./pages/Manager/ManagerProfile.tsx";
 import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
 import AssignPage from "./pages/Staff/AssignPage.tsx";
 import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
+import VaccinePackagePage from "./pages/VaccinePage/VaccinePackagePage/VaccinePackagePage.tsx";
 
 function App() {
     return (
@@ -73,6 +77,8 @@ function App() {
                 <Route path="/handbook/before" element={<BeforeHandbook />} />
                 <Route path="/handbook/process" element={<VaccinationProcess />} />
                 <Route path="/handbook/after" element={<HandBookAfter />} />
+                <Route path="/vaccine-packages" element={<VaccinePackagePage/>} />
+
 
                 {/* Authentication Routes */}
                 <Route path="/login" element={<Login />} />
@@ -120,14 +126,9 @@ function App() {
                 <Route path="/admin/account/add" element={<AdminAccountFormPage />} />
                 <Route path="/admin/account/edit/:id" element={<AdminAccountFormPage />} />
                 <Route path="/admin/profile" element={<AdminProfile/>}/>
-
-        <Route path={"/admin/dashboard"} element={<AdminDashboardPage/>}/>
-        <Route path={"/admin/account"} element={<AdminAccountPage/>}/>
-        <Route path={"/admin/account/add"} element={<AdminAccountFormPage/>}/>
-        <Route path={"/admin/account/edit/:id"} element={<AdminAccountFormPage/>}/>
-        <Route path={"/admin/blog"} element={<AdminBlogPage/>}/>
-        <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
-        <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
+                <Route path={"/admin/blog"} element={<AdminBlogPage/>}/>
+                <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
+                <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
 
 
         {/* Trang 404 */}
