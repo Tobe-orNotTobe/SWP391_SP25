@@ -28,8 +28,8 @@ export const apiDashBoardRevenue = async  () => {
 
 export const apiDashBoardFeedBack = async  () => {
   try{
-    // const response = await axiosInstance.get("/api/Dashboard/feedbacks");
-    const response = await axios.get("/Dashboard/Feedback.json");
+    const response = await axiosInstance.get("/api/Dashboard/feedbacks");
+    // const response = await axios.get("/Dashboard/Feedback.json");
     return response.data;
   }catch (error){
     console.error("API Dashboard Error:", error);
