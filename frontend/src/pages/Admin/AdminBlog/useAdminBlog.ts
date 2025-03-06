@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {apiCreateBlog, apiDeleteBlog, apiGetAllBlog, apiGetBlogById, apiUpdateBlog} from "../../../apis/apiBlog.ts";
 import {BlogRequest, BlogResponse, UpdateBlogRequest} from "../../../interfaces/Blog.ts";
 import {notification} from "antd";
@@ -10,15 +10,14 @@ export const useGetAllBlog = () => {
     const [blogs, setBlogs] = useState<BlogResponse[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
-    const hasFetched = useRef(false); // Biến kiểm tra đã gọi API hay chưa
 
-    const fetchAllBlog = async () => {
+    const fetchAllBlog = async (isActive: boolean) => {
         setLoading(true);
 
         try {
-            const response = await apiGetAllBlog();
+            const response = await apiGetAllBlog(isActive);
             if (response && response.result) {
-                console.log("cac: " + response)
+                // console.log("cac: " + response)
                 setBlogs(response.result);
             }
         } catch (err) {
@@ -29,20 +28,14 @@ export const useGetAllBlog = () => {
         }
     };
 
-    useEffect(() => {
-        if (hasFetched.current) return; // Nếu đã gọi API trước đó thì không gọi lại
-        fetchAllBlog();
-        hasFetched.current = true; // Đánh dấu là đã gọi API
-    }, []);
-
-    return { blogs, loading, error, fetchAllBlog };
+    return { blogs, loading, error, fetchAllBlog};
 };
 
 export const useDeleteBlog = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleDelete = async (blogId: number) => {
+    const handleDelete = async (blogId: string) => {
         try {
             setError(null);
             setIsLoading(true);
@@ -61,6 +54,37 @@ export const useDeleteBlog = () => {
     return {handleDelete, isLoading, error}
 }
 
+export const useUpdateBlogActive = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleUpdateActive = async (blog: BlogResponse) => {
+
+        const updateActiveData: UpdateBlogRequest = {
+            title: blog.title,
+            content: blog.content,
+            imageUrl: blog.imageUrl,
+            type: blog.type,
+            isActive: true,
+        }
+
+        try {
+            setError(null);
+            setIsLoading(true);
+            const response = await apiUpdateBlog(blog.blogPostId, updateActiveData);
+            if (!response.isSuccess) throw new Error(response.errorMessages || "Lỗi xảy ra, vui lòng thử lại.");
+            notification.success({ message: "Duyệt thành công!" });
+
+        }catch (err: any) {
+            notification.error({ message: "Lỗi", description: err.message || "Có lỗi xảy ra, vui lòng thử lại." });
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return {handleUpdateActive, isLoading, error}
+}
 
 export const useBlogForm = () => {
     const [form] = useForm();

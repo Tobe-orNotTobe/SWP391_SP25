@@ -1,8 +1,8 @@
 import axiosInstance from "../utils/axiosInstance.ts";
 import {BlogRequest, UpdateBlogRequest} from "../interfaces/Blog.ts";
 
-export const apiGetAllBlog = async () => {
-    const response = await axiosInstance.get(`/api/Blog`);
+export const apiGetAllBlog = async (onlyActive: boolean) => {
+    const response = await axiosInstance.get(`/api/Blog?onlyActive=${onlyActive}`);
     return response.data ? response.data : { message: "An unexpected error occurred" };
 };
 
@@ -21,7 +21,7 @@ export const apiUpdateBlog = async (blogId: string, data: UpdateBlogRequest) => 
     return response.data ? response.data : { message: "An unexpected error occurred" };
 }
 
-export const apiDeleteBlog = async (blogId: number) => {
+export const apiDeleteBlog = async (blogId: string) => {
     const response = await axiosInstance.delete(`/api/Blog/${blogId}`);
     return response.data ? response.data : { message: "An unexpected error occurred" };
 }

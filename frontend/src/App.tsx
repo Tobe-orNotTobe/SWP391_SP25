@@ -1,73 +1,48 @@
 import "./App.scss";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
-import PageLoader from "./components/PageLoader/PageLoader.tsx";
-import NotFound from "./components/NotFound/NotFound.tsx";
-
-// Pages
 import HomePage from "./pages/HomePage/HomePage.tsx";
+
 import VaccineDetailPage from "./pages/VaccinePage/VaccineDetailPage/VaccineDetailPage.tsx";
-import {ConfirmEmail, PaymentSuccess} from "./components/Confirm/Confirm.tsx";
+import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
 import VaccineListPage from "./pages/VaccinePage/VaccineListPage/VaccineListPage.tsx";
 import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
 import MissionPage from "./pages/Introduction/MissionPage.tsx";
 import VisionPage from "./pages/Introduction/VisionPage.tsx";
 import OurTeamPage from "./pages/Introduction/OurTeamPage.tsx";
-import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
-import HandBookAfter from "./pages/Handbook/HandBookAfter.tsx";
+
+import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
+import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
 import Login from "./pages/AuthPage/Login/Login.tsx";
 import Register from "./pages/AuthPage/Register/Register.tsx";
 import ForgotPassword from "./pages/AuthPage/ForgotPassword/ForgotPassword.tsx";
 import ResetPassword from "./pages/AuthPage/ResetPassword/ResetPassword.tsx";
+import NotFound from "./components/NotFound/NotFound.tsx";
 
-// Customer Pages
-import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistrationPage.tsx";
 import MyChildsPage from "./pages/ChildPage/MyChilds/MyChildsPage.tsx";
 import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
-import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
-import TransactionPage from "./pages/Customer/TransactionPage.tsx";
-import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
-import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
 
-// Manager Pages
-import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
-import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
+import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistrationPage.tsx";
 import VaccineComboList from "./pages/Manager/ManagerComboVaccine/ComboVaccineList/VaccineComboList.tsx";
 import VaccineComboForm from "./pages/Manager/ManagerComboVaccine/ComboVaccineForm/VaccineComboForm.tsx";
 import ScheduleVaccinationList from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationList/SheduleVaccinationList.tsx";
+import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList.tsx";
+import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
 import ScheduleVaccinationForm from "./pages/Manager/ManagerScheduleVaccination/ScheduleVaccinationForm/ScheduleVaccinationForm.tsx";
+import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
+import ServicePage from "./pages/Staff/ServicePage.tsx";
 import VaccineFormPage from "./pages/Manager/ManagerVaccine/FormVaccine/VaccineFormPage.tsx";
-import VaccineInventoryList from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryList/VaccineInventoryList.tsx";
-import VaccineInventoryForm from "./pages/Manager/ManagerVaccineInventory/VaccineInventoryForm/VaccineInventoryForm.tsx";
 
-// Doctor and Staff Pages
-import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
-import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
-import AssignPage from "./pages/Staff/AssignPage.tsx";
-import ServicePage from "./pages/Doctor/ServicePage.tsx";
-import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
-
-// Admin Pages
-import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx";
-import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
-import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
-
-
-
-import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
-import ManagerProfile from "./pages/Manager/ManagerProfile/ManagerProfile.tsx";
-
-
-
-import AdminBlogPage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlog.tsx";
-import AdminBlogFormPage from "./pages/Admin/AdminBlog/AdminBlogForm/AdminBogForm.tsx";
-import FeedbackPage from "./pages/Customer/FeedbackPage.tsx";
+import TransactionPage from "./pages/Customer/TransactionPage.tsx";
+import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
+import HandBookAfter from "./pages/Handbook/HandBookAfter.tsx";
 
 function App() {
+
+  
   return (
     <BrowserRouter>
-      <PageLoader />
       <Routes>
-        {/* Public Routes */}
+        {/*Các trang này thì người dùng có thể xem thoải mái nhưng khi đăng nhập các role như staff, manager sẽ khong xem được kiểu vậy*/}
         <Route path="/" element={<HomePage />} />
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/introduction" element={<IntroductionPage />} />
@@ -75,29 +50,28 @@ function App() {
         <Route path="/vision" element={<VisionPage />} />
         <Route path="/our-team" element={<OurTeamPage />} />
         <Route path="/vaccines-list" element={<VaccineListPage />} />
-        <Route path="/vaccines-list/:id" element={<VaccineDetailPage />} />
-        <Route path="/handbook/before" element={<BeforeHandbook />} />
-        <Route path="/handbook/process" element={<VaccinationProcess />} />
-        <Route path="/handbook/after" element={<HandBookAfter />} />
+        <Route path="/vaccines-list/:id" element={<VaccineDetailPage/>}/>
+        <Route path="/handbook/before" element={<BeforeHandbook/>}/>
+        <Route path="/handbook/process" element={<VaccinationProcess/>}/>
+        <Route path="/handbook/after" element={<HandBookAfter/>}/>
 
-          {/* Authentication Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/confirm-email" element={<ConfirmEmail />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path={"/feedback"} element={<FeedbackPage/>}/>
 
-        {/* Customer Routes */}
 
-        <Route path="/child-register" element={<ChildRegistrationPage />} />
-        <Route path="/my-childs" element={<MyChildsPage />} />
-        <Route path="/child-detail" element={<ChildDetailPage />} />
-        <Route path="/booking" element={<VaccinationRegistrationPage />} />
-        <Route path="/payment" element={<TransactionPage />} />
-        <Route path="/user-profile" element={<CustomerProfile/>}/>
-        <Route path="/booking-history" element={<BookingHistoryPage/>}/>
+        {/*Lưu ý: Các trang này là phục vụ việc authencation thôi chứ cũng không có gì*/}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/confirm-email" element={<ConfirmEmail />} />
+
+
+
+        {/*Lưu ý: Trang này phải đăng nhập và có role là Customer mới sử dụng được*/}
+        <Route path="/child-register" element={<ChildRegistrationPage/>}/>
+        <Route path={"/my-childs"} element={<MyChildsPage/>}/>
+        <Route path={"/child-detail"} element={<ChildDetailPage/>}/>
+        <Route path="/booking" element={<VaccinationRegistrationPage/>}></Route>
+        <Route path="/staff/service" element={<ServicePage/>}></Route>
 
         {/* Doctor and Staff Routes */}
         <Route path="/doctor/service" element={<ServicePage />} />
@@ -122,17 +96,20 @@ function App() {
         <Route path="/manager/inventory-vaccines/edit/:id" element={<VaccineInventoryForm />} />
         <Route path="/manager/profile" element={<ManagerProfile/>}/>
 
-          {/* Admin Routes */}
-        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-        <Route path="/admin/account" element={<AdminAccountPage />} />
-        <Route path="/admin/account/add" element={<AdminAccountFormPage />} />
-        <Route path="/admin/account/edit/:id" element={<AdminAccountFormPage />} />
-        <Route path="/admin/profile" element={<AdminProfile/>}/>
-        <Route path={"/admin/blog"} element={<AdminBlogPage/>}/>
-        <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
-        <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
+                {/* Admin Routes */}
+                <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+                <Route path="/admin/account" element={<AdminAccountPage />} />
+                <Route path="/admin/account/add" element={<AdminAccountFormPage />} />
+                <Route path="/admin/account/edit/:id" element={<AdminAccountFormPage />} />
+                <Route path="/admin/profile" element={<AdminProfile/>}/>
+                <Route path={"/admin/blog"} element={<AdminBlogManagePage/>}/>
+                <Route path={"/admin/blog/deactive"} element={<AdminBlogDeactivePage/>}/>
+                <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
+                <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
 
-        {/* 404 Route */}
+
+
+        {/* Trang 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

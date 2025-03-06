@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Upload, Button, notification } from "antd";
+import {Form, Input, Upload, Button, notification, Select} from "antd";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
 import { useBlogForm } from "../useAdminBlog.ts";
 import { Editor } from "@tinymce/tinymce-react";
 import { uploadImageToCloudinary } from "../../../../utils/cloudinary.ts";
 import {ArrowLeftOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
+import {TinyMCEE_API_KEY} from "../../../../config/cloudinaryConfig.ts"
+
 
 const AdminBlogFormPage: React.FC = () => {
     const { form, isEditMode, handleSubmit, loading, editorContent, setEditorContent, imageUrl } = useBlogForm();
@@ -23,6 +25,7 @@ const AdminBlogFormPage: React.FC = () => {
         const initialImageUrl = form.getFieldValue("imageUrl");
         if (initialImageUrl) setPreviewUrl(initialImageUrl);
     }, [form]);
+
 
     // // Xử lý chọn ảnh
     // const handleImageChange = (info: any) => {
@@ -108,6 +111,7 @@ const AdminBlogFormPage: React.FC = () => {
         await handleSubmit(formData);
     };
 
+
     return (
         <AdminLayout>
             <div style={{padding: "20px"}}>
@@ -120,13 +124,36 @@ const AdminBlogFormPage: React.FC = () => {
                         Quay lại danh sách
                     </Button>
                 </div>
-                <Form form={form} layout="vertical" onFinish={onFinish} className="account-form">
-                    <h2 style={{paddingTop: "10px"}} className="blog-form-title">{isEditMode ? "Chỉnh sửa Blog" : "Tạo Blog"}</h2>
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={onFinish}
+                    className="account-form"
+                >
+                    <h2 style={{ paddingTop: "10px" }} className="blog-form-title">
+                        {isEditMode ? "Chỉnh sửa Blog" : "Tạo Blog"}
+                    </h2>
 
                     <Form.Item name="title" label="Đề mục:"
-                               rules={[{required: true, message: "Vui lòng nhập đề mục."}]}>
-                        <Input placeholder="Nhập tiêu đề blog"/>
+                               rules={[{ required: true, message: "Vui lòng nhập đề mục." }]}
+                    >
+                        <Input placeholder="Nhập tiêu đề blog" />
                     </Form.Item>
+
+                    <Form.Item name="type" label="Loại">
+                        <Select placeholder="Chọn quyền">
+                            <Select.Option value="Blog">Blog</Select.Option>
+                            <Select.Option value="News">News</Select.Option>
+                        </Select>
+                    </Form.Item>
+                    {isEditMode && (
+                        <Form.Item name="isActive" label="Trạng thái">
+                            <Select placeholder="Trạng thái" defaultValue={true}>
+                                <Select.Option value={true}>Active</Select.Option>
+                                <Select.Option value={false}>Deactive</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    )}
 
                     <Form.Item name="imageUrl" label="Ảnh minh họa:">
                         <Upload
@@ -138,17 +165,20 @@ const AdminBlogFormPage: React.FC = () => {
                                 return false; // Ngăn không cho upload tự động
                             }}
                         >
-                            {previewUrl ? <img src={previewUrl} alt="Xem trước" style={{width: "100%"}}/> :
-                                isEditMode ?
-                                    <img src={imageUrl} alt="Xem trước" style={{width: "100%"}}/> : "+ Upload"}
+                            {previewUrl ? (
+                                <img src={previewUrl} alt="Xem trước" style={{ width: "100%" }} />
+                            ) : isEditMode ? (
+                                <img src={imageUrl} alt="Xem trước" style={{ width: "100%" }} />
+                            ) : (
+                                "+ Upload"
+                            )}
                         </Upload>
                     </Form.Item>
-
 
                     <div>
                         <h2>Text Editor</h2>
                         <Editor
-                            apiKey="yhjx8d5ag43egl95r02jer0oxpjs86mwew5zas5vvwwc2x5b"
+                            apiKey={TinyMCEE_API_KEY}
                             value={editorContent}
                             onEditorChange={(newContent) => {
                                 setEditorContent(newContent);
@@ -165,16 +195,15 @@ const AdminBlogFormPage: React.FC = () => {
                                 file_picker_types: "image",
                             }}
                         />
-
-
                     </div>
 
-                    <Form.Item style={{display: "flex", justifyContent: "end"}}>
-                        <Button htmlType="submit" loading={loading} style={{marginTop: "20px"}}>
+                    <Form.Item style={{ display: "flex", justifyContent: "end" }}>
+                        <Button htmlType="submit" loading={loading} style={{ marginTop: "20px" }}>
                             {isEditMode ? "Cập nhật" : "Đăng bài"}
                         </Button>
                     </Form.Item>
                 </Form>
+
             </div>
         </AdminLayout>
     );

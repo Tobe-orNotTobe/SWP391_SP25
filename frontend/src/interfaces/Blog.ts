@@ -1,10 +1,12 @@
 export interface BlogResponse {
-    blogPostId: number;
+    blogPostId: string;
     title: string;
     content: string;
     imageUrl: string;
     createdAt: Date;
     authorName: string;
+    type: string;
+    isActive: boolean;
 }
 
 export interface BlogRequest {
@@ -18,4 +20,6 @@ export interface UpdateBlogRequest {
     title: string;
     content: string;
     imageUrl: string;
+    type: string;
+    isActive: boolean;
 }
