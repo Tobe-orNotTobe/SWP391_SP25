@@ -96,6 +96,7 @@ function App() {
                 <Route path="/child-detail" element={<ChildDetailPage />} />
                 <Route path="/booking" element={<VaccinationRegistrationPage />} />
                 <Route path="/payment" element={<TransactionPage />} />
+                <Route path="/payment/:bookingId" element={<TransactionPage/>}/>
                 <Route path="/user-profile" element={<CustomerProfile/>}/>
                 <Route path="/booking-history" element={<BookingHistoryPage/>}/>
 

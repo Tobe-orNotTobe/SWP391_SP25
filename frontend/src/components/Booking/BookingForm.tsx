@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification, Spin } from "antd"; // Import Spin từ antd
+import { Spin } from "antd"; // Import Spin từ antd
 import "./BookingForm.scss";
 import {
   Parent,
   Child,
   BookingDetail,
   Booking,
-  BookingResult,
 } from "../../interfaces/VaccineRegistration.ts";
 import { apiBooking } from "../../apis/apiBooking";
-import { apiPostVNPayTransaction } from "../../apis/apiTransaction";
+
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
 import { apiGetMyChilds } from "../../apis/apiChild.ts";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Space } from "antd";
+import { Avatar } from "antd";
 import {
   useVaccineDetail,
   useComboVaccineDetail,
 } from "../../hooks/useVaccine";
 import { toast } from "react-toastify";
-import { BookingResponse } from "../../interfaces/Booking.ts";
+
 
 const VaccinationRegistrationPage = () => {
   const navigate = useNavigate();

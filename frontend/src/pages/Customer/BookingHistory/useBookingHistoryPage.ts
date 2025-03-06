@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { BookingUser } from "../../../interfaces/VaccineRegistration.ts";
 import { apiCancelBooking, apiDeleteFeedBack, apiPostFeedBack, apiUpdateFeedback } from "../../../apis/apiBooking.ts";
 import { useFeedBackDetailByBookingId } from "../../../hooks/useFeedBack.ts";
+import {useNavigate} from "react-router-dom";
 
 
 export const useBookingUser = () => {
@@ -53,6 +54,8 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
     const [rating, setRating] = useState<number>(0);
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
     const [latestDate, setLatestDate] = useState<string | null>(null);
+
+    const navigate = useNavigate();
 
     const { feedbackBookingId } = useFeedBackDetailByBookingId(Number(selectedBooking?.bookingId));
 
@@ -251,7 +254,7 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
 
     const handleTransactionPedingStatus  = async (bookingId: number) => {
 
-        console.log(bookingId);
+        navigate(`/payment/${bookingId}`);
     }
 
     return {

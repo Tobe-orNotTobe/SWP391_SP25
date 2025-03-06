@@ -15,7 +15,7 @@ import { apiGetChildById } from "../../apis/apiChild.ts";
 import { apiGetVaccineDetailById } from "../../apis/apiVaccine.ts";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { scheduler } from "timers/promises";
+
 
 const { Option } = Select;
 
@@ -68,7 +68,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
       console.log(bookings);
       try {
         // Lấy thông tin booking từ API
-        const bookingData = await apiGetBookingById(booking.bookingId);
+        const bookingData = await apiGetBookingById(Number(booking.bookingId));
         setBooking(bookingData.result);
         console.log(bookingData.result);
 

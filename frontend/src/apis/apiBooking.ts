@@ -85,7 +85,7 @@ export const apiGetDoctorBookings = async (doctorId: string) => {
   }
 };
 
-export const apiGetBookingById = async (id: string) => {
+export const apiGetBookingById = async (id: number) => {
   try {
     const response = await axiosInstance.get(`/api/Booking/${id}`);
     return response.data || {};
