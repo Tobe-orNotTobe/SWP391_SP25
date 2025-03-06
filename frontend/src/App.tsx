@@ -80,7 +80,7 @@ function App() {
         <Route path="/child-detail" element={<ChildDetailPage />} />
         <Route path="/booking" element={<VaccinationRegistrationPage />} />
         <Route path="/payment" element={<TransactionPage />} />
-
+        
         {/* Doctor and Staff Routes */}
         <Route path="/doctor/service" element={<ServicePage />} />
         <Route
