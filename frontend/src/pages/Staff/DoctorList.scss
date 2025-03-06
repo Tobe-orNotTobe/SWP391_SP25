@@ -1,94 +1,92 @@
+/* Container */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #1890ff; /* Màu sắc chính */
+}
+
+/* Card */
+.doctor-card {
+  border: solid 1px 1890ff;
+  box-shadow: 0 4px 8px rgba(44, 48, 233, 0.3);
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-5px); /* Hiệu ứng hover */
+}
+
+.avatar {
+  margin-bottom: 15px;
+  border-radius: 50%;
+  border: 3px solid #f0f0f0; /* Thêm viền cho avatar */
+}
+
+.doctor-name {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.username {
+  font-size: 14px;
+  color: #888;
+}
+
+.email,
+.phone,
+.address {
+  font-size: 14px;
+  display: block;
+  margin: 5px 0;
+  white-space: nowrap;
+}
+
+.status {
+  font-size: 14px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.status.active {
+  color: #52c41a;
+}
+
+.status.inactive {
+  color: #f5222d;
+}
+
+/* Nút Phân công */
+.detail-btn {
+  font-size: 16px;
+  padding: 12px 0;
+  margin-top: 10px;
+}
+
+/* Không có bác sĩ */
+.no-doctor {
+  font-size: 18px;
+  color: #888;
+  text-align: center;
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .doctor-grid {
+    padding: 0 10px;
   }
-  
-  .title {
-    font-size: 24px;
-    font-weight: bold;
+
+  .doctor-card {
     margin-bottom: 20px;
   }
-  
-  .doctor-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-  }
-  
-  .doctor-card {
-    width: 280px;
-    background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-  }
-  
-  .doctor-name {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 5px 0;
-  }
-  
-  .username {
-    color: gray;
-    font-size: 14px;
-  }
-  
-  .email,
-  .phone,
-  .address {
-    font-size: 14px;
-    margin: 5px 0;
-  }
-  
-  .status {
-    display: inline-block;
-    padding: 5px 10px;
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-    border-radius: 5px;
-    margin-top: 10px;
-  }
-  
-  .status.active {
-    background-color: green;
-  }
-  
-  .status.inactive {
-    background-color: red;
-  }
-  
-  .detail-btn {
-    display: block;
-    width: 100%;
-    margin-top: 15px;
-    padding: 8px;
-    background-color: blue;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .detail-btn:hover {
-    background-color: darkblue;
-  }
-  
-  .no-doctor {
-    font-size: 16px;
-    color: gray;
-  }
-  
+}

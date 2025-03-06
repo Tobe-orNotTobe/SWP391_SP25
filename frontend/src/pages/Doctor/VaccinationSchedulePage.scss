@@ -1,3 +1,12 @@
+.ant-table-thead > tr > th {
+  background-color: rgb(42 56 143) !important;
+  color: white !important; /* Đổi màu chữ nếu cần */
+}
+
+.ant-table-column-sorter,
+.ant-table-filter-trigger {
+  color: white !important;
+}
 .schedule-table {
   width: 100%;
   border-collapse: collapse;
@@ -24,7 +33,6 @@
   border-radius: 5px;
   cursor: pointer;
   transition: 0.3s;
-  margin-left: 10px;
 }
 
 .detail-btn:hover {
