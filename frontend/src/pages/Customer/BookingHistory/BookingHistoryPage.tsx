@@ -235,16 +235,18 @@ const BookingHistory: React.FC = () => {
 
                                                         {booking.status === "Completed" && (
                                                             <>
-                                                                <Button
-                                                                    type="primary"
-                                                                    className="feedback-button"
-                                                                    onClick={() => {
-                                                                        setSelectedBooking(booking);
-                                                                        openFeedbackModal(false);
-                                                                    }}
-                                                                >
-                                                                    Nhập Feedback
-                                                                </Button>
+                                                                {!feedbackBookingId && (
+                                                                    <Button
+                                                                        type="primary"
+                                                                        className="feedback-button"
+                                                                        onClick={() => {
+                                                                            setSelectedBooking(booking);
+                                                                            openFeedbackModal(false);
+                                                                        }}
+                                                                    >
+                                                                        Nhập Feedback
+                                                                    </Button>
+                                                                )}
                                                                 <Button
                                                                     type="primary"
                                                                     className="vaccine-record-button"
