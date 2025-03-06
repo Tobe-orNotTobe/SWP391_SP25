@@ -249,6 +249,11 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         setFeedbackModalVisible(true);
     };
 
+    const handleTransactionPedingStatus  = async (bookingId: number) => {
+
+        console.log(bookingId);
+    }
+
     return {
         // State
         selectedDate,
@@ -279,7 +284,8 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         handleCancelBooking,
         handleSubmitFeedback,
         handleDeleteFeedback,
-        openFeedbackModal
+        openFeedbackModal,
+        handleTransactionPedingStatus
     };
 };
 

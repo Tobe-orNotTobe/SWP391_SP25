@@ -42,7 +42,8 @@ const BookingHistory: React.FC = () => {
         handleCancelBooking,
         handleSubmitFeedback,
         handleDeleteFeedback,
-        openFeedbackModal
+        openFeedbackModal,
+        handleTransactionPedingStatus,
     } = useBookingHistoryPage(bookings);
 
     const handleSelectDate = (date: Dayjs, selectInfo: SelectInfo) => {
@@ -199,8 +200,7 @@ const BookingHistory: React.FC = () => {
                                                                     type="primary"
                                                                     className="Pending-Button"
                                                                     onClick={() => {
-                                                                        setSelectedBooking(booking);
-                                                                        openFeedbackModal(false);
+                                                                        handleTransactionPedingStatus(booking.bookingId);
                                                                     }}
                                                                 >
                                                                     Thanh Toán
