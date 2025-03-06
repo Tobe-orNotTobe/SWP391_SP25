@@ -280,6 +280,7 @@ const BookingHistory: React.FC = () => {
                                             disabled
                                             value={feedbackBookingId?.rating}
                                             className="feedback-container__rating-icon"
+                                            style={{color : "#FFD700"}}
                                         />
                                     </div>
 

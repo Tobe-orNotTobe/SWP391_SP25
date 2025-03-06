@@ -46,7 +46,7 @@ const AdminDashboardPage: React.FC = () => {
             title: "Đánh giá",
             dataIndex: "rating",
             key: "rating",
-            render: (rates: number) => <Rate disabled defaultValue={rates} />,
+            render: (rates: number) => <Rate disabled defaultValue={rates} style={{color:'#FFD700'} }/>,
         },
         {
             title: "Bình luận",

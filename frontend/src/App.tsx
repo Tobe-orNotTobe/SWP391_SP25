@@ -6,7 +6,7 @@ import NotFound from "./components/NotFound/NotFound.tsx";
 // Pages
 import HomePage from "./pages/HomePage/HomePage.tsx";
 import VaccineDetailPage from "./pages/VaccinePage/VaccineDetailPage/VaccineDetailPage.tsx";
-import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail.tsx";
+import {ConfirmEmail, PaymentSuccess} from "./components/Confirm/Confirm.tsx";
 import VaccineListPage from "./pages/VaccinePage/VaccineListPage/VaccineListPage.tsx";
 import IntroductionPage from "./pages/Introduction/IntroductionPage.tsx";
 import MissionPage from "./pages/Introduction/MissionPage.tsx";
@@ -26,6 +26,7 @@ import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
+import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
 
 // Manager Pages
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
@@ -43,19 +44,20 @@ import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
 import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
 import AssignPage from "./pages/Staff/AssignPage.tsx";
 import ServicePage from "./pages/Doctor/ServicePage.tsx";
+import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
 
 // Admin Pages
 import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx";
 import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
 import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
 
-import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
-import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
+
+
 import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
 import ManagerProfile from "./pages/Manager/ManagerProfile/ManagerProfile.tsx";
-import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
-import AssignPage from "./pages/Staff/AssignPage.tsx";
-import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
+
+
+
 import AdminBlogPage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlog.tsx";
 import AdminBlogFormPage from "./pages/Admin/AdminBlog/AdminBlogForm/AdminBogForm.tsx";
 import FeedbackPage from "./pages/Customer/FeedbackPage.tsx";
@@ -88,46 +90,47 @@ function App() {
           <Route path={"/feedback"} element={<FeedbackPage/>}/>
 
         {/* Customer Routes */}
+
         <Route path="/child-register" element={<ChildRegistrationPage />} />
         <Route path="/my-childs" element={<MyChildsPage />} />
         <Route path="/child-detail" element={<ChildDetailPage />} />
         <Route path="/booking" element={<VaccinationRegistrationPage />} />
         <Route path="/payment" element={<TransactionPage />} />
+        <Route path="/user-profile" element={<CustomerProfile/>}/>
+        <Route path="/booking-history" element={<BookingHistoryPage/>}/>
 
         {/* Doctor and Staff Routes */}
-          <Route path="/doctor/service" element={<ServicePage />} />
-          <Route
-              path="/doctor/vaccination-schedule"
-              element={<VaccinationSchedulePage />}
-          />
-          <Route path="/staff/booking" element={<BookingForStaff />} />
-          <Route path="/staff/assignDoctor" element={<AssignPage />} />
+        <Route path="/doctor/service" element={<ServicePage />} />
+        <Route path="/doctor/vaccination-schedule" element={<VaccinationSchedulePage/>}/>
+
+        <Route path="/staff/booking" element={<BookingForStaff />} />
+        <Route path="/staff/assignDoctor" element={<AssignPage />} />
 
         {/* Manager Routes */}
-          <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
-          <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
-          <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
-          <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
-          <Route path="/manager/combo-vaccines" element={<VaccineComboList />} />
-          <Route path="/manager/combo-vaccines/add" element={<VaccineComboForm />} />
-          <Route path="/manager/combo-vaccines/edit/:id" element={<VaccineComboForm />} />
-          <Route path="/manager/schedule-vaccines" element={<ScheduleVaccinationList />} />
-          <Route path="/manager/schedule-vaccines/add" element={<ScheduleVaccinationForm />} />
-          <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm />} />
-          <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList />} />
-          <Route path="/manager/inventory-vaccines/add" element={<VaccineInventoryForm />} />
-          <Route path="/manager/inventory-vaccines/edit/:id" element={<VaccineInventoryForm />} />
-          <Route path="/manager/profile" element={<ManagerProfile/>}/>
+        <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
+        <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
+        <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
+        <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
+        <Route path="/manager/combo-vaccines" element={<VaccineComboList />} />
+        <Route path="/manager/combo-vaccines/add" element={<VaccineComboForm />} />
+        <Route path="/manager/combo-vaccines/edit/:id" element={<VaccineComboForm />} />
+        <Route path="/manager/schedule-vaccines" element={<ScheduleVaccinationList />} />
+        <Route path="/manager/schedule-vaccines/add" element={<ScheduleVaccinationForm />} />
+        <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm />} />
+        <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList />} />
+        <Route path="/manager/inventory-vaccines/add" element={<VaccineInventoryForm />} />
+        <Route path="/manager/inventory-vaccines/edit/:id" element={<VaccineInventoryForm />} />
+        <Route path="/manager/profile" element={<ManagerProfile/>}/>
 
           {/* Admin Routes */}
-          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-          <Route path="/admin/account" element={<AdminAccountPage />} />
-          <Route path="/admin/account/add" element={<AdminAccountFormPage />} />
-          <Route path="/admin/account/edit/:id" element={<AdminAccountFormPage />} />
-          <Route path="/admin/profile" element={<AdminProfile/>}/>
-          <Route path={"/admin/blog"} element={<AdminBlogPage/>}/>
-          <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
-          <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
+        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+        <Route path="/admin/account" element={<AdminAccountPage />} />
+        <Route path="/admin/account/add" element={<AdminAccountFormPage />} />
+        <Route path="/admin/account/edit/:id" element={<AdminAccountFormPage />} />
+        <Route path="/admin/profile" element={<AdminProfile/>}/>
+        <Route path={"/admin/blog"} element={<AdminBlogPage/>}/>
+        <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
+        <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
 
         {/* 404 Route */}
         <Route path="*" element={<NotFound />} />
