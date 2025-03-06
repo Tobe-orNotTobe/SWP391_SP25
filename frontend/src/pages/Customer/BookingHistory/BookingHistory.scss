@@ -130,10 +130,6 @@
       border-radius: 6px;
       font-weight: 600;
 
-      &:hover {
-        background-color: white;
-        color: #ff4d4f;
-      }
     }
     .vaccine-record-button{
       margin-top: 10px;
@@ -218,6 +214,22 @@
       font-size: 14px;
       margin: 0;
     }
+  }
+
+  .feedback-container__actions{
+    margin-top: 10px;
+    text-align: right;
+
+    .update-feedback-button{
+      margin-right: 10px;
+      background-color: #52c41a;
+
+      &:hover{
+        color: #52c41a;
+        background-color: white;
+      }
+    }
+
   }
 }
 

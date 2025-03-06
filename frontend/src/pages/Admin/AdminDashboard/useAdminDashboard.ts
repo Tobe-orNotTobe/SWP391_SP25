@@ -10,7 +10,7 @@ interface Revenue {
 
 interface Feedback{
     id: string;
-    rates : number;
+    rating : number;
     comment: string;// Tren revenue thi hien thi 5 chu la dc r
     userName : string;
 }
@@ -61,9 +61,9 @@ export const useFeedbackDetail = () =>{
 
             try {
                 const response = await apiDashBoardFeedBack();
-                if (response) {
-                    console.log(response);
-                    setFeedback(response);
+                if (response.isSuccess) {
+
+                    setFeedback(response.result);
                 }
             } catch (err) {
                 setError("Errrr");

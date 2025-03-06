@@ -18,3 +18,8 @@ export interface FeedbackDetailByBookingIdResponse {
     comment: string;
     dateSubmitted : string;
 }
+
+export interface UpdateFeedback {
+    comment: string;
+    rating: number;
+}

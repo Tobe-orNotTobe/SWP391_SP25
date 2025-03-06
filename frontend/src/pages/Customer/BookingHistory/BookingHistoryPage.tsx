@@ -1,103 +1,53 @@
-import React, { useState, useMemo, useEffect } from "react";
-import {Calendar, Modal, List, Button, Tag, Form, Input, Rate, Tabs} from "antd";
+import React from "react";
+import {Calendar, Modal, List, Button, Tag, Form, Input, Rate, Tabs, Popconfirm} from "antd";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { useBookingUser } from "./useBookingHistoryPage.ts";
+import { useBookingUser , STATUS_COLORS} from "./useBookingHistoryPage.ts";
+import {useBookingHistoryPage} from "./useBookingHistoryPage.ts";
 import "./BookingHistory.scss";
-import { BookingUser } from "../../../interfaces/VaccineRegistration.ts";
+import { SelectInfo } from "antd/lib/calendar/generateCalendar";
 import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
 import Footer from "../../../components/Footer/Footer.tsx";
 import { Link } from "react-router-dom";
 import FloatingButtons from "../../../components/FloatingButton/FloatingButtons.tsx";
-import { SelectInfo } from "antd/lib/calendar/generateCalendar";
-import {apiCancelBooking, apiPostFeedBack} from "../../../apis/apiBooking.ts";
-import { AxiosError } from "axios";
-import { toast } from "react-toastify";
-import {useFeedBackDetailByBookingId} from "../../../hooks/useFeedBack.ts";
-
-
-// Chỉnh màu sẵn ở đây để sử dụng cho các trạng thái cần thiết
-const STATUS_COLORS: Record<string, string> = {
-    Pending: "#faad14",
-    Confirmed: "#1890ff",
-    Completed: "#52c41a",
-    Cancelled: "#ff4d4f",
-};
-
+import {FiEdit2} from "react-icons/fi";
+import {MdDeleteOutline} from "react-icons/md";
 
 const BookingHistory: React.FC = () => {
     const { bookings } = useBookingUser();
-    const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-    const [visible, setVisible] = useState(false);
-    const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
-    const [selectedBooking, setSelectedBooking] = useState<BookingUser | null>(null);
-    const [calendarValue, setCalendarValue] = useState<Dayjs>(dayjs());
+    const {
+        // State
+        selectedDate,
+        setSelectedDate,
+        visible,
+        setVisible,
+        feedbackModalVisible,
+        setFeedbackModalVisible,
+        selectedBooking,
+        setSelectedBooking,
+        calendarValue,
+        setCalendarValue,
+        comment,
+        setComment,
+        rating,
+        setRating,
+        isEditMode,
+        feedbackBookingId,
 
-    const [comment, setComment] = useState<string>("");
-    const [rating, setRating] = useState<number>(0);
+        // Derived data
+        bookingMap,
+        statusCountByMonth,
 
-    const [latestDate, setLatestDate] = useState<string | null>(null);
-
-    const {feedbackBookingId} = useFeedBackDetailByBookingId(Number(selectedBooking?.bookingId));
-
-
-    // Lấy booking có BookingId lớn nhất
-    const latestBooking = useMemo(() => {
-        if (bookings.length === 0) return null;
-        return bookings.reduce(
-            (max, booking) => (booking.bookingId > max.bookingId ? booking : max),
-            bookings[0]
-        );
-    }, [bookings]);
-
-    // Cập nhật default cho calendar với booking gần nhất
-    useEffect(() => {
-        if (latestBooking && latestBooking.bookingDate !== latestDate) {
-            setLatestDate(latestBooking.bookingDate);
-        }
-        if (latestDate) {
-            setCalendarValue(dayjs(latestDate));
-        }
-    }, [latestBooking, latestDate]);
-
-    const defaultSelectedDate = useMemo(() => {
-        if (!latestBooking) return dayjs();
-        return dayjs(latestBooking.bookingDate);
-    }, [latestBooking]);
-
-    const selectedYear = useMemo(
-        () => (calendarValue ? calendarValue.year() : defaultSelectedDate.year()),
-        [calendarValue, defaultSelectedDate]
-    );
-
-    const sortedBookings = useMemo(() => {
-        return [...bookings].sort((a, b) => b.bookingId - a.bookingId);
-    }, [bookings]);
-
-    const bookingsByYear = useMemo(() => {
-        return sortedBookings.filter(
-            (booking) => dayjs(booking.bookingDate).year() === selectedYear
-        );
-    }, [sortedBookings, selectedYear]);
-
-    const bookingMap: Record<string, typeof bookings> = {};
-    bookingsByYear.forEach((booking) => {
-        const dateKey = dayjs(booking.bookingDate).format("YYYY-MM-DD");
-        if (!bookingMap[dateKey]) {
-            bookingMap[dateKey] = [];
-        }
-        bookingMap[dateKey].push(booking);
-    });
-
-    const bookingsByMonth: Record<string, number> = {};
-    bookingsByYear.forEach((booking) => {
-        const monthKey = dayjs(booking.bookingDate).format("YYYY-MM");
-        bookingsByMonth[monthKey] = (bookingsByMonth[monthKey] || 0) + 1;
-    });
+        // Actions
+        handleCancelBooking,
+        handleSubmitFeedback,
+        handleDeleteFeedback,
+        openFeedbackModal
+    } = useBookingHistoryPage(bookings);
 
     const handleSelectDate = (date: Dayjs, selectInfo: SelectInfo) => {
         if (selectInfo.source === "date" && bookingMap[date.format("YYYY-MM-DD")]) {
-            const selectedBooking = bookingMap[date.format("YYYY-MM-DD")][0]; // Chọn booking đầu tiên trong ngày
+            const selectedBooking = bookingMap[date.format("YYYY-MM-DD")][0]; // Select first booking of the day
             if (selectedBooking) {
                 setSelectedBooking(selectedBooking);
                 setSelectedDate(date);
@@ -132,18 +82,10 @@ const BookingHistory: React.FC = () => {
 
     const monthCellRender = (value: Dayjs) => {
         const monthKey = value.format("YYYY-MM");
+        const statusCount = statusCountByMonth[monthKey];
 
-        // Tạo thống kê số lượng đơn theo từng trạng thái trong tháng
-        const statusCount: Record<string, number> = {};
-
-        bookingsByYear.forEach((booking) => {
-            if (dayjs(booking.bookingDate).format("YYYY-MM") === monthKey) {
-                statusCount[booking.status] = (statusCount[booking.status] || 0) + 1;
-            }
-        });
-
-        // Nếu không có đơn nào trong tháng này, return null
-        if (Object.keys(statusCount).length === 0) return null;
+        // If no bookings in this month, return null
+        if (!statusCount || Object.keys(statusCount).length === 0) return null;
 
         return (
             <div className="month-summary" style={{ padding: "5px" }}>
@@ -166,61 +108,6 @@ const BookingHistory: React.FC = () => {
                 ))}
             </div>
         );
-    };
-
-    const handleCancelBooking = async (bookingId: number) => {
-        try {
-            const response = await apiCancelBooking(bookingId);
-
-            if (response.isSuccess) {
-                toast.success("Hủy lịch thành công");
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            }
-        } catch (error: unknown) {
-            console.error(error);
-            if (error instanceof AxiosError) {
-                if (error.response && error.response.data && error.response.data.errorMessages) {
-                    toast.error(`${error.response.data.errorMessages}`);
-                } else {
-                    toast.error("Lỗi không xác định");
-                }
-            } else {
-                toast.error("Lỗi không xác định");
-            }
-        }
-    };
-
-    const handleAddFeedBack = async (bookingId: number) => {
-
-        const formatedData = {
-            bookingId : bookingId,
-            rating: Number(rating),
-            comment: comment,
-        }
-
-        try{
-            const response = await apiPostFeedBack(formatedData);
-            if(response.isSuccess){
-                toast.success("Đã Thêm FeedBack Thành Công");
-            }
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-
-        } catch (error: unknown) {
-            console.error("He", error);
-            if (error instanceof AxiosError) {
-                if (error.response && error.response.data && error.response.data.errorMessages) {
-                    toast.error(`${error.response.data.errorMessages}`);
-                } else {
-                    toast.error("Lỗi không xác định");
-                }
-            } else {
-                toast.error("Lỗi không xác định");
-            }
-        }
     };
 
     return (
@@ -287,14 +174,14 @@ const BookingHistory: React.FC = () => {
                                                     <p>
                                                         <span className="label">Ngày đặt:</span>
                                                         <span className="value">
-                                            {dayjs(booking.bookingDate).format("DD/MM/YYYY")}
-                                        </span>
+                                                            {dayjs(booking.bookingDate).format("DD/MM/YYYY")}
+                                                        </span>
                                                     </p>
                                                     <p>
                                                         <span className="label">Tổng tiền:</span>
                                                         <span className="value total-price">
-                                            {booking.totalPrice.toLocaleString()} VNĐ
-                                        </span>
+                                                            {booking.totalPrice.toLocaleString()} VNĐ
+                                                        </span>
                                                     </p>
                                                     <p>
                                                         <span className="label">Ghi chú:</span>
@@ -313,7 +200,7 @@ const BookingHistory: React.FC = () => {
                                                                     className="Pending-Button"
                                                                     onClick={() => {
                                                                         setSelectedBooking(booking);
-                                                                        setFeedbackModalVisible(true);
+                                                                        openFeedbackModal(false);
                                                                     }}
                                                                 >
                                                                     Thanh Toán
@@ -338,7 +225,7 @@ const BookingHistory: React.FC = () => {
                                                                     className="Cancel-button"
                                                                     onClick={() => {
                                                                         setSelectedBooking(booking);
-                                                                        setFeedbackModalVisible(true);
+                                                                        openFeedbackModal(false);
                                                                     }}
                                                                 >
                                                                     Hủy Lịch
@@ -353,7 +240,7 @@ const BookingHistory: React.FC = () => {
                                                                     className="feedback-button"
                                                                     onClick={() => {
                                                                         setSelectedBooking(booking);
-                                                                        setFeedbackModalVisible(true);
+                                                                        openFeedbackModal(false);
                                                                     }}
                                                                 >
                                                                     Nhập Feedback
@@ -383,6 +270,9 @@ const BookingHistory: React.FC = () => {
                             children: feedbackBookingId && (
                                 <div className="feedback-container">
                                     {/* Rating Section */}
+
+                                    <p style={{textAlign : "left", fontSize : "15px", color : "#1890FF", marginBottom :"20px"}}> Mã FeedBack: {feedbackBookingId.feedbackId}</p>
+
                                     <div className="feedback-container__rating">
                                         <Rate
                                             disabled
@@ -411,30 +301,70 @@ const BookingHistory: React.FC = () => {
                                             {feedbackBookingId?.dateSubmitted || 'Chưa có ngày'}
                                         </p>
                                     </div>
+
+                                    <div className="feedback-container__actions">
+                                        <Button
+                                            type="primary"
+                                            className="update-feedback-button"
+                                            onClick={() => openFeedbackModal(true)}
+                                        >
+                                            <FiEdit2/> Chỉnh sửa
+                                        </Button>
+
+                                        <Popconfirm
+                                            title="Xóa feedback"
+                                            description="Bạn có chắc chắn muốn xóa feedback này không?"
+                                            onConfirm={() => handleDeleteFeedback(feedbackBookingId.feedbackId)}
+                                            okText="Xóa"
+                                            cancelText="Hủy"
+                                        >
+                                            <Button
+                                                type="primary"
+                                                danger
+                                                className="delete-feedback-button"
+                                            >
+                                                <MdDeleteOutline/> Xóa Feedback
+                                            </Button>
+                                        </Popconfirm>
+                                    </div>
                                 </div>
                             ),
                         },
                     ]}/>
                 </Modal>
 
-
+                {/* Shared Modal for Adding and Editing Feedback */}
                 <Modal
-                    title="Nhập Feedback"
+                    title={isEditMode ? "Chỉnh sửa Feedback" : "Nhập Feedback"}
                     open={feedbackModalVisible}
                     onCancel={() => setFeedbackModalVisible(false)}
-                    onOk={() => {
-                        handleAddFeedBack(Number(selectedBooking?.bookingId));
-                        setFeedbackModalVisible(false);
-                    }}
+                    onOk={handleSubmitFeedback}
+                    okText={isEditMode ? "Cập nhật" : "Gửi"}
                 >
-                    <Form>
-                        <Form.Item label="Comment">
-                            <Input.TextArea value={comment} onChange={(e) => setComment(e.target.value)}/>
+                    <Form layout="vertical">
+                        <Form.Item label="Mã đơn hàng">
+                            <Input
+                                value={selectedBooking?.bookingId}
+                                disabled
+                            />
                         </Form.Item>
-                        <Form.Item label="Rating">
+                        {isEditMode && feedbackBookingId && (
+                            <Form.Item label="Mã Feedback">
+                                <Input value={feedbackBookingId.feedbackId} disabled />
+                            </Form.Item>
+                        )}
+                        <Form.Item label="Bình luận">
+                            <Input.TextArea
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                placeholder="Nhập bình luận của bạn..."
+                                rows={4}
+                            />
+                        </Form.Item>
+                        <Form.Item label="Đánh giá">
                             <Rate
                                 value={rating}
-                                onChange={(e) => setRating(Number(e))}
+                                onChange={(value) => setRating(value)}
                             />
                         </Form.Item>
                     </Form>
