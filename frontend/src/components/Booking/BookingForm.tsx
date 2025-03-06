@@ -7,16 +7,20 @@ import {
   Child,
   BookingDetail,
   Booking,
+  BookingResult,
 } from "../../interfaces/VaccineRegistration.ts";
 import { apiBooking } from "../../apis/apiBooking";
 import { apiPostVNPayTransaction } from "../../apis/apiTransaction";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
 import { apiGetMyChilds } from "../../apis/apiChild.ts";
+import { UserOutlined } from "@ant-design/icons";
+import { Avatar, Space } from "antd";
 import {
   useVaccineDetail,
   useComboVaccineDetail,
 } from "../../hooks/useVaccine";
 import { toast } from "react-toastify";
+import { BookingResponse } from "../../interfaces/Booking.ts";
 
 const VaccinationRegistrationPage = () => {
   const navigate = useNavigate();
@@ -39,6 +43,7 @@ const VaccinationRegistrationPage = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [bookingDate, setBookingDate] = useState<string | null>(null);
   const [bookingDetails, setBookingDetails] = useState<BookingDetail[]>([]);
+  //const [bookingResult, setBookingResult] = useState<BookingResult>(null);
 
   // Fetch vaccine data
   const {
@@ -76,13 +81,13 @@ const VaccinationRegistrationPage = () => {
           }));
         } else {
           setFormError("Không có trẻ.");
-          toast.warning("Không có dữ liệu trẻ.") 
+          toast.warning("Không có dữ liệu trẻ.");
         }
       } catch (error) {
         const errorMessage = error || "Lỗi không xác định";
         console.error("Lỗi khi lấy thông tin phụ huynh:", error);
         setFormError(errorMessage.toString()); // Sử dụng thông báo lỗi từ API
-        toast.warning(errorMessage.toString()) 
+        toast.warning(errorMessage.toString());
       } finally {
         setFormLoading(false);
       }
@@ -107,12 +112,12 @@ const VaccinationRegistrationPage = () => {
     bookingDetails: BookingDetail[]
   ) => {
     if (!selectedChild) {
-      toast.warning("Vui lòng chọn trẻ để đặt lịch.")
+      toast.warning("Vui lòng chọn trẻ để đặt lịch.");
       return;
     }
 
     if (!parentInfo?.customerCode) {
-      toast.warning("Không tìm thấy thông tin phụ huynh.")
+      toast.warning("Không tìm thấy thông tin phụ huynh.");
       return;
     }
 
@@ -128,23 +133,26 @@ const VaccinationRegistrationPage = () => {
       };
 
       const status = await apiBooking(parentInfo.customerCode, bookingData);
+      //setBookingResult(status.result);
+      console.log(status.result);
+      navigate("/payment", { state: { bookingResult: status.result } });
 
-      const paymentResponse = await apiPostVNPayTransaction(
-        status.result?.bookingId
-      );
+      // const paymentResponse = await apiPostVNPayTransaction(
+      //   status.result?.bookingId
+      // );
 
-      console.log(paymentResponse);
-      if (paymentResponse.isSuccess) {
-        window.location.href = paymentResponse.result?.paymentUrl;
-      } else {
-        setFormError("Không lấy được đường dẫn thanh toán.");
-        toast.warning("Không lấy được đường dẫn thanh toán.") 
-      }
+      // console.log(paymentResponse);
+      // if (paymentResponse.isSuccess) {
+      //   window.location.href = paymentResponse.result?.paymentUrl;
+      // } else {
+      //   setFormError("Không lấy được đường dẫn thanh toán.");
+      //   toast.warning("Không lấy được đường dẫn thanh toán.");
+      // }
     } catch (error) {
       const errorMessage = error || "Lỗi không xác định";
       console.error("Error submitting booking:", errorMessage);
       setFormError("Có lỗi xảy ra khi gửi dữ liệu.");
-      toast.error(errorMessage.toString()) 
+      toast.error(errorMessage.toString());
     } finally {
       setFormLoading(false);
     }
@@ -175,7 +183,7 @@ const VaccinationRegistrationPage = () => {
   // Handle selecting booking date
   const handleSelectBookingDate = (date: unknown) => {
     if (!(date instanceof Date) || isNaN(date.getTime())) {
-      toast.error("Ngày không hợp lệ.")
+      toast.error("Ngày không hợp lệ.");
       return;
     }
     setBookingDate(date.toISOString());
@@ -195,17 +203,17 @@ const VaccinationRegistrationPage = () => {
     event.preventDefault();
 
     if (!selectedChild) {
-      toast.warning("Vui lòng chọn trẻ để đặt lịch.") 
+      toast.warning("Vui lòng chọn trẻ để đặt lịch.");
       return;
     }
 
     if (!bookingDate) {
-      toast.warning("Vui lòng chọn ngày đặt lịch.")
+      toast.warning("Vui lòng chọn ngày đặt lịch.");
       return;
     }
 
     if (bookingDetails.length === 0) {
-      toast.warning("Vui lòng chọn ít nhất một vaccine.")
+      toast.warning("Vui lòng chọn ít nhất một vaccine.");
       return;
     }
 
@@ -243,7 +251,14 @@ const VaccinationRegistrationPage = () => {
                     <h3>Danh sách trẻ</h3>
                     <ul>
                       {parentInfo.children.map((child) => (
-                        <li key={child.childId} className="child-card">
+                        <li
+                          key={child.childId}
+                          className={`child-card ${
+                            selectedChild?.childId === child.childId
+                              ? "selected"
+                              : ""
+                          }`}
+                        >
                           <label>
                             <input
                               type="checkbox"
@@ -257,12 +272,22 @@ const VaccinationRegistrationPage = () => {
                               }}
                             />
                             <div className="child-info">
-                              <p>
-                                <strong>Tên:</strong> {child.fullName}
-                              </p>
-                              <p>
-                                <strong>Ngày sinh:</strong> {child.dateOfBirth}
-                              </p>
+                              <div>
+                                <Avatar
+                                  size={64}
+                                  icon={<UserOutlined />}
+                                  src={selectedChild?.imageUrl}
+                                />
+                              </div>
+                              <div>
+                                <p>
+                                  <strong>Tên:</strong> {child.fullName}
+                                </p>
+                                <p>
+                                  <strong>Ngày sinh:</strong>{" "}
+                                  {child.dateOfBirth}
+                                </p>
+                              </div>
                             </div>
                           </label>
                         </li>
