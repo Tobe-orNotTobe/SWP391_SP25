@@ -85,7 +85,6 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
                     )}
                 </div>
 
-
             )}
             <h2 className="childTitle">{isUpdate ? "Cập Nhật Thông Tin Trẻ" : "Đăng Ký Trẻ"}</h2>
             <form className="childRegistrationForm" onSubmit={isUpdate ? handleUpdate : handleRegister}>
