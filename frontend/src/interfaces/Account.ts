@@ -26,6 +26,7 @@ export interface AccountDetailResponse {
     address: string;
     dateOfBirth: Date;
     isActive: boolean;
+    // imageUrl: string,
     id: string;
     userName: string;
     normalizedUserName: string;

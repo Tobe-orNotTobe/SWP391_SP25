@@ -22,7 +22,7 @@ export const apiGetMyChilds = async (userId?: string): Promise<ApiResponse<Child
     return response.data; // Trả về dữ liệu từ API nếu thành công
   } catch (error: any) {
     return {
-      statusCode: "NotFound",
+      statusCode: error.response?.data?.statusCode,
       isSuccess: false,
       errorMessages: error.response?.data?.errorMessages || ["Có lỗi xảy ra!"],
       result: null

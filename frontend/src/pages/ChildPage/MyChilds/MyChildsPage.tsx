@@ -93,8 +93,8 @@ const MyChildPage: React.FC = () => {
                 {loading && <p>Loading...</p>}
                 {error ? (
                     <div>
-                        <div>
-                            <VscEmptyWindow className={"error-icon"}/>
+                        <div className={"error-icon"}>
+                            <VscEmptyWindow />
                         </div>
                         <p className={"error-message"}>{error}</p>
                     </div>
