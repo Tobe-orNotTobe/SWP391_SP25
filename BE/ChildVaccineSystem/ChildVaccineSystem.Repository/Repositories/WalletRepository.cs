@@ -42,6 +42,22 @@ namespace ChildVaccineSystem.Repository.Repositories
 			return wallet;
 		}
 
+		public async Task<Wallet> CreateAdminWalletAsync(string userId)
+		{
+			var wallet = new Wallet
+			{
+				UserId = userId,
+				Balance = 0,
+				IsAdminWallet = true,
+				CreatedAt = DateTime.UtcNow
+			};
+
+			await _context.Wallets.AddAsync(wallet);
+			await _context.SaveChangesAsync();
+
+			return wallet;
+		}
+
 		public async Task<List<WalletTransaction>> GetWalletTransactionsAsync(int walletId, int count = 10)
 		{
 			return await _context.WalletTransactions
@@ -67,9 +83,23 @@ namespace ChildVaccineSystem.Repository.Repositories
 			wallet.Balance += amount;
 			wallet.UpdatedAt = DateTime.UtcNow;
 
-			if (amount > 0 && !wallet.IsAdminWallet)
+			_context.Wallets.Update(wallet);
+			await _context.SaveChangesAsync();
+			return true;
+		}
+
+		public async Task<bool> UpdateWalletBalanceByRefundAsync(int walletId, decimal amountRefund)
+		{
+			var wallet = await _context.Wallets.FindAsync(walletId);
+			if (wallet == null)
+				return false;
+
+			wallet.Balance += amountRefund;
+			wallet.UpdatedAt = DateTime.UtcNow;
+
+			if (!wallet.IsAdminWallet)
 			{
-				wallet.TotalRefunded += amount;
+				wallet.TotalRefunded += amountRefund;
 			}
 
 			_context.Wallets.Update(wallet);

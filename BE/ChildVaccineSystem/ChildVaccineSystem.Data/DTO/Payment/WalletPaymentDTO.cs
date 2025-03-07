@@ -2,12 +2,6 @@
 
 namespace ChildVaccineSystem.Data.DTO.Payment
 {
-	public class WalletPaymentDTO
-	{
-		[Required]
-		public int BookingId { get; set; }
-	}
-
 	public class WalletPaymentResponseDTO
 	{
 		public bool Success { get; set; }
