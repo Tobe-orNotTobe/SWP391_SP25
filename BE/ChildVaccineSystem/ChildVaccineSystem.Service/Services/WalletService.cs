@@ -40,14 +40,9 @@ namespace ChildVaccineSystem.Service.Services
 			return walletDto;
 		}
 
-		public async Task<WalletDTO> GetAdminWalletAsync()
+		private async Task<WalletDTO> GetAdminWalletAsync()
 		{
 			var adminWallet = await _unitOfWork.Wallets.GetAdminWalletAsync();
-
-			if (adminWallet == null)
-			{
-				throw new InvalidOperationException("Admin wallet is not configured. Please contact the system administrator.");
-			}
 
 			var transactions = await _unitOfWork.Wallets.GetWalletTransactionsAsync(adminWallet.WalletId, 10);
 
@@ -57,16 +52,16 @@ namespace ChildVaccineSystem.Service.Services
 			return walletDto;
 		}
 
-		public async Task<WalletDTO> CreateWalletAsync(string userId, bool isAdminWallet = false)
+		public async Task CreateWalletAsync(string userId, bool isAdminWallet = false)
 		{
-			var existingWallet = await _unitOfWork.Wallets.GetWalletByUserIdAsync(userId);
-			if (existingWallet != null)
-			{
-				throw new InvalidOperationException("Wallet already exists for this user.");
-			}
-
 			var wallet = await _unitOfWork.Wallets.CreateWalletAsync(userId, isAdminWallet);
-			return _mapper.Map<WalletDTO>(wallet);
+			return;
+		}
+
+		public async Task CreateAdminWalletAsync(string userId)
+		{	
+			var wallet = await _unitOfWork.Wallets.CreateAdminWalletAsync(userId);
+			return;
 		}
 
 		public async Task<WalletDTO> AddFundsToAdminWalletAsync(AddFundsDTO addFundsDto)
@@ -94,7 +89,7 @@ namespace ChildVaccineSystem.Service.Services
 			return await GetAdminWalletAsync();
 		}
 
-		public async Task<bool> TransferFundsAsync(string fromUserId, string toUserId, decimal amount, string description, int? refundRequestId = null, IDbContextTransaction existingTransaction = null)
+		public async Task<bool> TransferFundsAsync(string fromUserId, string toUserId, decimal amount, string description, int? refundRequestId = null, bool flag = false, IDbContextTransaction existingTransaction = null)
 		{
 			var shouldCommitTransaction = existingTransaction == null;
 			var transaction = existingTransaction ?? await _unitOfWork.BeginTransactionAsync();
@@ -140,8 +135,16 @@ namespace ChildVaccineSystem.Service.Services
 				};
 				await _unitOfWork.Wallets.AddTransactionAsync(depositTx);
 
-				await _unitOfWork.Wallets.UpdateWalletBalanceAsync(sourceWallet.WalletId, -amount);
-				await _unitOfWork.Wallets.UpdateWalletBalanceAsync(destWallet.WalletId, amount);
+				if (flag is false)
+				{
+					await _unitOfWork.Wallets.UpdateWalletBalanceAsync(sourceWallet.WalletId, -amount);
+					await _unitOfWork.Wallets.UpdateWalletBalanceAsync(destWallet.WalletId, amount);
+				}
+				else
+				{
+					await _unitOfWork.Wallets.UpdateWalletBalanceByRefundAsync(sourceWallet.WalletId, -amount);
+					await _unitOfWork.Wallets.UpdateWalletBalanceByRefundAsync(destWallet.WalletId, amount);
+				}
 
 				if (shouldCommitTransaction)
 				{
@@ -181,13 +184,15 @@ namespace ChildVaccineSystem.Service.Services
 
 			var description = $"Refund for booking #{refundRequest.BookingId}";
 
+			bool flag = true;
+
 			if (existingTransaction != null)
 			{
-				return await TransferFundsAsync(adminWallet.UserId, refundRequest.UserId, amount, description, refundRequestId, existingTransaction);
+				return await TransferFundsAsync(adminWallet.UserId, refundRequest.UserId, amount, description, refundRequestId, flag, existingTransaction);
 			}
 			else
 			{
-				return await TransferFundsAsync(adminWallet.UserId, refundRequest.UserId, amount, description, refundRequestId);
+				return await TransferFundsAsync(adminWallet.UserId, refundRequest.UserId, amount, description, refundRequestId, flag);
 			}
 		}
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using ChildVaccineSystem.Data.DTO.User;
+using ChildVaccineSystem.ServiceContract.Interfaces;
 
 namespace ChildVaccineSystem.API.Controllers
 {
@@ -18,12 +19,14 @@ namespace ChildVaccineSystem.API.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly APIResponse _response;
+		private readonly IWalletService _walletService;
+		private readonly APIResponse _response;
 
-        public AdminController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, APIResponse response)
+        public AdminController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IWalletService walletService, APIResponse response)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _walletService = walletService;
             _response = response;
         }
 
@@ -68,7 +71,10 @@ namespace ChildVaccineSystem.API.Controllers
                 return BadRequest(_response);
             }
 
-            await _userManager.AddToRoleAsync(user, model.Role);
+			if(model.Role == "Customer")
+				await _walletService.CreateWalletAsync(user.Id, isAdminWallet: false);
+
+			await _userManager.AddToRoleAsync(user, model.Role);
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
             _response.Result = $"Account created successfully with role '{model.Role}'";
