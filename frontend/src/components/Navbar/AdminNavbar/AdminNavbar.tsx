@@ -1,10 +1,8 @@
 import React from "react";
 import { Button, Modal, Avatar } from "antd";
 import {
-  LogoutOutlined,
   BellOutlined,
   UserOutlined,
-  LoginOutlined,
 } from "@ant-design/icons";
 import "./adminNavBar.scss";
 import { Link } from "react-router-dom";

@@ -39,7 +39,7 @@ interface Props {
   booking: BookingResponse; // Truyền bookingId thay vì booking
 }
 
-const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
+const VaccinationRecordForm: React.FC<Props> = ({ booking }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     birthDate: "",
@@ -110,7 +110,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
     fetchData();
   }, [booking.bookingId]);
 
-  const handleComplete = async (bookingId: string) => {
+  const handleComplete = async (bookingId: number) => {
     try {
       const response = await apiPutBookingComplete(bookingId);
       toast.success(response.status)
@@ -312,7 +312,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
         <button
           type="submit"
           className="submit-button"
-          onClick={() => handleComplete(booking.bookingId)}
+          onClick={() => handleComplete(Number(booking.bookingId))}
         >
           Hoàn thành
         </button>

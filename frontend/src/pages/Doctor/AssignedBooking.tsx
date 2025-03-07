@@ -15,8 +15,7 @@ import { Modal} from "antd";
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();
   const [bookings, setBookings] = useState([]);
-  const [selectedBooking, setSelectedBooking] =
-    useState<BookingResponse | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<BookingResponse | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -32,7 +31,6 @@ const VaccinationSchedulePage: React.FC = () => {
         }
       }
     };
-
     fetchBookings();
   }, [doctorId]);
 
@@ -198,7 +196,7 @@ const VaccinationSchedulePage: React.FC = () => {
     {
       title: "Chi Tiết",
       key: "action",
-      render: (_: any, record: BookingResponse) => (
+      render: (_: undefined, record: BookingResponse) => (
         <Space size="middle">
           <Button type="primary" onClick={() => openModal(record)}>
             Chi tiết

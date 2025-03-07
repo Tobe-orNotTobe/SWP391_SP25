@@ -81,7 +81,7 @@ export interface BookingUser {
 }
 
 export interface BookingResponse {
-  bookingId: string | number;
+  bookingId: number;
   childName: string;
   bookingDate: string;
   bookingType: string;

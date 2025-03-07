@@ -118,7 +118,7 @@ export const apiGetAllBookings = async () => {
   }
 };
 
-export const apiPutBookingComplete = async (id: string) => {
+export const apiPutBookingComplete = async (id: number) => {
   try {
     const response = await axiosInstance.put(`/api/Booking/${id}/complete`);
     return response.data || {};

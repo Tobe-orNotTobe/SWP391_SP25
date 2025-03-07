@@ -1,0 +1,301 @@
+// WalletPage.scss
+$primary-color: #2A388F;
+$secondary-color: #FFB400;
+$light-bg: #f8f9fa;
+$border-color: #e0e0e0;
+$white: #ffffff;
+$gray: #6c757d;
+$dark-gray: #343a40;
+$success: #28a745;
+$warning: #ffc107;
+$danger: #dc3545;
+$shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+.wallet-page {
+  font-family: 'Roboto', sans-serif;
+  background-color: $light-bg;
+  min-height: 70vh;
+  padding: 2rem;
+
+  .wallet-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .wallet-card {
+    background-color: $white;
+    border-radius: 10px;
+    box-shadow: $shadow;
+    padding: 2rem;
+    margin-bottom: 2rem;
+
+    .wallet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      h1 {
+        color: $primary-color;
+        margin: 0;
+        font-size: 1.8rem;
+      }
+
+      .wallet-balance {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .balance-label {
+          font-size: 1.2rem;
+          color: $gray;
+        }
+
+        .balance-amount {
+          font-size: 1.8rem;
+          font-weight: bold;
+          color: $primary-color;
+        }
+      }
+
+      .topup-btn {
+        background-color: $secondary-color;
+        color: $dark-gray;
+        border: none;
+        border-radius: 5px;
+        padding: 0.75rem 1.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: darken($secondary-color, 10%);
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  .refund-section {
+    background-color: $white;
+    border-radius: 10px;
+    box-shadow: $shadow;
+    padding: 2rem;
+
+    h2 {
+      color: $primary-color;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+
+      button {
+        padding: 0.5rem 1rem;
+        border: 1px solid $border-color;
+        background-color: $white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: $dark-gray;
+
+        &:hover {
+          border-color: $primary-color;
+          color: $primary-color;
+        }
+
+        &.active {
+          background-color: $primary-color;
+          color: $white;
+          border-color: $primary-color;
+        }
+      }
+    }
+
+    .loading, .no-data {
+      text-align: center;
+      padding: 2rem;
+      color: $gray;
+      font-style: italic;
+    }
+
+    .refund-table-container {
+      overflow-x: auto;
+
+      .refund-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th, td {
+          padding: 1rem;
+          text-align: left;
+          border-bottom: 1px solid $border-color;
+        }
+
+        th {
+          background-color: lighten($primary-color, 60%);
+          color: $primary-color;
+          font-weight: bold;
+        }
+
+        tr:hover {
+          background-color: lighten($primary-color, 65%);
+        }
+
+        .amount {
+          font-weight: bold;
+          color: $primary-color;
+        }
+
+        .note {
+          max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .status-badge {
+          display: inline-block;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.875rem;
+          font-weight: bold;
+
+          &.status-pending {
+            background-color: lighten($warning, 25%);
+            color: darken($warning, 25%);
+            border: 1px solid $warning;
+          }
+
+          &.status-approved {
+            background-color: lighten($success, 45%);
+            color: darken($success, 10%);
+            border: 1px solid $success;
+          }
+
+          &.status-rejected {
+            background-color: lighten($danger, 35%);
+            color: darken($danger, 10%);
+            border: 1px solid $danger;
+          }
+        }
+      }
+    }
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    .topup-modal {
+      background-color: $white;
+      border-radius: 10px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: $shadow;
+
+      h2 {
+        color: $primary-color;
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: bold;
+          color: $dark-gray;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid $border-color;
+          border-radius: 5px;
+          font-size: 1rem;
+
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+          }
+        }
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+
+        button {
+          padding: 0.75rem 1.5rem;
+          border-radius: 5px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &.cancel-btn {
+            background-color: $white;
+            color: $gray;
+            border: 1px solid $border-color;
+
+            &:hover {
+              background-color: $light-bg;
+            }
+          }
+
+          &.submit-btn {
+            background-color: $secondary-color;
+            color: $dark-gray;
+            border: none;
+
+            &:hover {
+              background-color: darken($secondary-color, 10%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .wallet-card {
+      padding: 1.5rem;
+
+      .wallet-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .topup-btn {
+          align-self: stretch;
+          text-align: center;
+        }
+      }
+    }
+
+    .refund-section {
+      padding: 1.5rem;
+    }
+  }
+}
