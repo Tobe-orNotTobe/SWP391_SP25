@@ -1,5 +1,6 @@
 import "./App.scss";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
+import {NoAuthRoute, ProtectedRoute, PublicRoute} from "./routes/routes.tsx";
 import PageLoader from "./components/PageLoader/PageLoader.tsx";
 import NotFound from "./components/NotFound/NotFound.tsx";
 
@@ -60,84 +61,87 @@ import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBl
 import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
 import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
 
+
 function App() {
     return (
         <BrowserRouter>
             <PageLoader />
             <Routes>
-
-
+                <Route path="/payment" element={<TransactionPage />} />
                 {/* Public Routes */}
-                <Route path="/" element={<HomePage />} />
-                <Route path="/homepage" element={<HomePage />} />
-                <Route path="/introduction" element={<IntroductionPage />} />
-                <Route path="/mission" element={<MissionPage />} />
-                <Route path="/vision" element={<VisionPage />} />
-                <Route path="/our-team" element={<OurTeamPage />} />
-                <Route path="/vaccines-list" element={<VaccineListPage />} />
-                <Route path="/vaccines-list/:id" element={<VaccineDetailPage />} />
-                <Route path="/handbook/before" element={<BeforeHandbook />} />
-                <Route path="/handbook/process" element={<VaccinationProcess />} />
-                <Route path="/handbook/after" element={<HandBookAfter />} />
-                <Route path="/vaccine-packages" element={<VaccinePackagePage/>} />
+                <Route path="/" element={<PublicRoute><HomePage/></PublicRoute>}/>
+                <Route path="/homepage" element={<PublicRoute><HomePage/></PublicRoute>} />
+                <Route path="/introduction" element={<PublicRoute><IntroductionPage/></PublicRoute>} />
+                <Route path="/mission" element={<PublicRoute><MissionPage /></PublicRoute>} />
+                <Route path="/vision" element={<PublicRoute><VisionPage /></PublicRoute>} />
+                <Route path="/our-team" element={<PublicRoute><OurTeamPage /></PublicRoute>} />
+                <Route path="/vaccines-list" element={<PublicRoute><VaccineListPage /></PublicRoute>} />
+                <Route path="/vaccines-list/:id" element={<PublicRoute><VaccineDetailPage /></PublicRoute>} />
+                <Route path="/handbook/before" element={<PublicRoute><BeforeHandbook /></PublicRoute>} />
+                <Route path="/handbook/process" element={<PublicRoute><VaccinationProcess /></PublicRoute>} />
+                <Route path="/handbook/after" element={<PublicRoute><HandBookAfter /></PublicRoute>} />
+                <Route path="/vaccine-packages" element={<PublicRoute><VaccinePackagePage/></PublicRoute>} />
 
 
                 {/* Authentication Routes */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/confirm-email" element={<ConfirmEmail />} />
-                <Route path="/payment-success" element={<PaymentSuccess />} />
-
+                <Route path="/login" element={<NoAuthRoute><Login/></NoAuthRoute>} />
+                <Route path="/register" element={<NoAuthRoute><Register /></NoAuthRoute>} />
+                <Route path="/forgot-password" element={<NoAuthRoute><ForgotPassword /></NoAuthRoute>} />
+                <Route path="/reset-password" element={<NoAuthRoute><ResetPassword /></NoAuthRoute>} />
+                <Route path="/confirm-email" element={<NoAuthRoute><ConfirmEmail /></NoAuthRoute>} />
+                <Route path="/payment-success" element={<NoAuthRoute><PaymentSuccess /></NoAuthRoute>} />
 
                 {/* Customer Routes */}
-                <Route path="/child-register" element={<ChildRegistrationPage />} />
-                <Route path="/my-childs" element={<MyChildsPage />} />
-                <Route path="/child-detail" element={<ChildDetailPage />} />
-                <Route path="/booking" element={<VaccinationRegistrationPage />} />
-                <Route path="/payment" element={<TransactionPage />} />
-                <Route path="/user-profile" element={<CustomerProfile/>}/>
-                <Route path="/booking-history" element={<BookingHistoryPage/>}/>
-                <Route path="/customer/wallet" element={<CustomerWallet/>}/>
+                <Route path="/child-register" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><ChildRegistrationPage /></ProtectedRoute>} />
+                <Route path="/my-childs" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><MyChildsPage /></ProtectedRoute>} />
+                <Route path="/child-detail" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><ChildDetailPage /></ProtectedRoute>} />
+                <Route path="/booking" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><VaccinationRegistrationPage /></ProtectedRoute>} />
+                <Route path="/payment" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><TransactionPage /></ProtectedRoute>} />
+                <Route path="/user-profile" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerProfile /></ProtectedRoute>} />
+                <Route path="/booking-history" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><BookingHistoryPage /></ProtectedRoute>} />
+                <Route path="/customer/wallet" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerWallet /></ProtectedRoute>} />
+                <Route path="/user-profile" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerProfile /></ProtectedRoute>} />
+                <Route path="/booking-history" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><BookingHistoryPage /></ProtectedRoute>} />
+                <Route path="/customer/wallet" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerWallet /></ProtectedRoute>} />
 
                 {/* Staff Routes */}
-                <Route path="/staff/service" element={<ServicePage />} />
-                <Route path="/doctor/vaccination-schedule" element={<VaccinationSchedulePage />} />
+                <Route path="/staff/service" element={<ProtectedRoute allowedRoles={["Staff"]}><ServicePage /></ProtectedRoute>} />
+                <Route path="/staff/assignDoctor" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignPage /></ProtectedRoute>} />
+                <Route path="/staff/booking" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignedBooking /></ProtectedRoute>} />
+                <Route path="/doctor/vaccination-schedule" element={<ProtectedRoute allowedRoles={["Doctor"]}><VaccinationSchedulePage /></ProtectedRoute>} />
 
-                <Route path="/staff/assignDoctor" element={<AssignPage/>}/>
-                <Route path="/staff/booking" element={<AssignedBooking/>} />
                 {/* Manager Routes */}
-                <Route path="/manager/dashboard" element={<ManagerDashBoard />} />
-                <Route path="/manager/vaccines" element={<ManagerVaccinePage />} />
-                <Route path="/manager/vaccines/add" element={<VaccineFormPage />} />
-                <Route path="/manager/vaccines/edit/:id" element={<VaccineFormPage />} />
-                <Route path="/manager/combo-vaccines" element={<VaccineComboList />} />
-                <Route path="/manager/combo-vaccines/add" element={<VaccineComboForm />} />
-                <Route path="/manager/combo-vaccines/edit/:id" element={<VaccineComboForm />} />
-                <Route path="/manager/schedule-vaccines" element={<ScheduleVaccinationList />} />
-                <Route path="/manager/schedule-vaccines/add" element={<ScheduleVaccinationForm />} />
-                <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ScheduleVaccinationForm />} />
-                <Route path="/manager/inventory-vaccines" element={<VaccineInventoryList />} />
-                <Route path="/manager/inventory-vaccines/add" element={<VaccineInventoryForm />} />
-                <Route path="/manager/inventory-vaccines/edit/:id" element={<VaccineInventoryForm />} />
-                <Route path="/manager/profile" element={<ManagerProfile/>}/>
+                <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerDashBoard /></ProtectedRoute>} />
+                <Route path="/manager/vaccines" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerVaccinePage /></ProtectedRoute>} />
+                <Route path="/manager/vaccines/add" element={<ProtectedRoute allowedRoles={["Manager"]}><VaccineFormPage /></ProtectedRoute>} />
+                <Route path="/manager/vaccines/edit/:id" element={<ProtectedRoute allowedRoles={["Manager"]}><VaccineFormPage /></ProtectedRoute>} />
+                <Route path="/manager/combo-vaccines" element={<ProtectedRoute allowedRoles={["Manager"]}><VaccineComboList /></ProtectedRoute>} />
+                <Route path="/manager/combo-vaccines/add" element={<ProtectedRoute allowedRoles={["Manager"]}><VaccineComboForm /></ProtectedRoute>} />
+                <Route path="/manager/combo-vaccines/edit/:id" element={<ProtectedRoute allowedRoles={["Manager"]}><VaccineComboForm /></ProtectedRoute>} />
+                <Route path="/manager/schedule-vaccines" element={<ProtectedRoute allowedRoles={["Manager"]}><ScheduleVaccinationList /></ProtectedRoute>} />
+                <Route path="/manager/schedule-vaccines/add" element={<ProtectedRoute allowedRoles={["Manager"]}><ScheduleVaccinationForm /></ProtectedRoute>} />
+                <Route path="/manager/schedule-vaccines/edit/:scheduleId" element={<ProtectedRoute allowedRoles={["Manager"]}><ScheduleVaccinationForm /></ProtectedRoute>} />
+                <Route path="/manager/inventory-vaccines" element={<ProtectedRoute allowedRoles={["Manager"]}><VaccineInventoryList /></ProtectedRoute>} />
+                <Route path="/manager/inventory-vaccines/add" element={<ProtectedRoute allowedRoles={["Manager"]}><VaccineInventoryForm /></ProtectedRoute>} />
+                <Route path="/manager/inventory-vaccines/edit/:id" element={<ProtectedRoute allowedRoles={["Manager"]}><VaccineInventoryForm /></ProtectedRoute>} />
+                <Route path="/manager/profile" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerProfile /></ProtectedRoute>} />
+
 
                 {/* Admin Routes */}
-                <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-                <Route path="/admin/account" element={<AdminAccountPage />} />
-                <Route path="/admin/account/add" element={<AdminAccountFormPage />} />
-                <Route path="/admin/account/edit/:id" element={<AdminAccountFormPage />} />
-                <Route path="/admin/profile" element={<AdminProfile/>}/>
-                <Route path={"/admin/blog"} element={<AdminBlogManagePage/>}/>
-                <Route path={"/admin/blog/deactive"} element={<AdminBlogDeactivePage/>}/>
-                <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
-                <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
-                <Route path={"/admin/feedback"} element={<AdminFeedbackListPage/>}/>
+                <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminDashboardPage /></ProtectedRoute>} />
+                <Route path="/admin/account" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminAccountPage /></ProtectedRoute>} />
+                <Route path="/admin/account/add" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminAccountFormPage /></ProtectedRoute>} />
+                <Route path="/admin/account/edit/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminAccountFormPage /></ProtectedRoute>} />
+                <Route path="/admin/profile" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminProfile /></ProtectedRoute>} />
+                <Route path="/admin/blog" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogManagePage /></ProtectedRoute>} />
+                <Route path="/admin/blog/deactive" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogDeactivePage /></ProtectedRoute>} />
+                <Route path="/admin/blog/add" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogFormPage /></ProtectedRoute>} />
+                <Route path="/admin/blog/edit/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogFormPage /></ProtectedRoute>} />
+                <Route path="/admin/feedback" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminFeedbackListPage /></ProtectedRoute>} />
 
 
-        {/* Trang 404 */}
-        <Route path="*" element={<NotFound />} />
+                {/* Trang 404 */}
+                <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

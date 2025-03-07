@@ -1,10 +1,5 @@
-// routes.ts
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-
-interface ProtectedRouteProps {
-    allowedRoles?: string[];
-}
+import React, { useEffect, ReactNode } from "react";
 
 const getAuth = () => {
     const token = localStorage.getItem("token");
@@ -13,7 +8,7 @@ const getAuth = () => {
 };
 
 // PublicRoute: Cho phép truy cập nếu không có token hoặc role không phải Staff, Doctor, Manager
-export const PublicRoute = () => {
+export const PublicRoute: React.FC<{ children: ReactNode }> = ({ children }) => {
     const { token, role } = getAuth();
     const navigate = useNavigate();
 
@@ -30,11 +25,11 @@ export const PublicRoute = () => {
         }
     }, [token, role, navigate]);
 
-    return ;
+    return <>{children}</>;
 };
 
 // NoAuthRoute: Không cho phép truy cập nếu đã có token
-export const NoAuthRoute = () => {
+export const NoAuthRoute: React.FC<{ children: ReactNode }> = ({ children }) => {
     const { token, role } = getAuth();
     const navigate = useNavigate();
 
@@ -53,19 +48,28 @@ export const NoAuthRoute = () => {
         }
     }, [token, role, navigate]);
 
-    return;
+    return <>{children}</>;
 };
 
 // ProtectedRoute: Chỉ cho phép truy cập nếu có token và role hợp lệ
-export const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
+interface ProtectedRouteProps {
+    allowedRoles: string[];
+    children: ReactNode;
+}
+
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children }) => {
     const { token, role } = getAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!token || (allowedRoles && !allowedRoles.includes(role || ""))) {
+        if (!token || !allowedRoles.includes(role || "")) {
             navigate("/login");
         }
     }, [token, role, allowedRoles, navigate]);
 
-    return ;
+    if (!token || !allowedRoles.includes(role || "")) {
+        return null; // Có thể thay bằng một component thông báo không có quyền
+    }
+
+    return <>{children}</>;
 };
