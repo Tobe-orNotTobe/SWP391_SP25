@@ -58,6 +58,7 @@ import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
 import VaccinePackagePage from "./pages/VaccinePage/VaccinePackagePage/VaccinePackagePage.tsx";
 import AdminBlogManagePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogManage/AdminBlogManage.tsx";
 import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogDeactive/AdminBlogDeactive.tsx";
+import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
 
 function App() {
     return (
@@ -131,6 +132,7 @@ function App() {
                 <Route path={"/admin/blog/deactive"} element={<AdminBlogDeactivePage/>}/>
                 <Route path={"/admin/blog/add"} element={<AdminBlogFormPage/>}/>
                 <Route path={"/admin/blog/edit/:id"} element={<AdminBlogFormPage/>}/>
+                <Route path={"/admin/feedback"} element={<AdminFeedbackListPage/>}/>
 
 
         {/* Trang 404 */}

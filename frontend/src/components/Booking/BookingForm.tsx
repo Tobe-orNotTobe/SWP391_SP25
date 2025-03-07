@@ -62,6 +62,7 @@ const VaccinationRegistrationPage = () => {
         const data = await apiGetMyChilds();
 
         if (data.isSuccess && data.result) {
+
           const children = data.result.map((child: Child) => ({
             childId: child.childId,
             fullName: child.fullName,
