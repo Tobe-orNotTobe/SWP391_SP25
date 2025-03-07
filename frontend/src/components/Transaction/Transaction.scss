@@ -196,7 +196,8 @@ body {
           transition: all .15s ease-in-out;
   
           &:hover {
-            background-color: var(--indigo-600);
+            background-color: #d3d9fc;
+            color: #2a388f;
           }
   
           i {

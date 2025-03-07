@@ -7,7 +7,6 @@ export const apiGetAllDoctors = async () => {
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      // Lấy danh sách lỗi từ response
       throw error.response.data.errorMessages || ["Unknown error occurred"];
     } else {
       throw ["An unexpected error occurred"];

@@ -50,32 +50,29 @@ export const apiGetDoctorBookings = async (doctorId: string) => {
       `api/Booking/doctor/${doctorId}/bookings`
     );
 
-    console.log(response);
-
     if (response.status === 200) {
       const data = response.data;
-      // Giả sử API trả về dữ liệu có isSuccess
       if (data.isSuccess) {
         return data;
       } else {
-        alert(
-          data.error?.errorMessages?.join(", ") ||
-            "Có lỗi xảy ra khi lấy dữ liệu đặt lịch."
-        );
+        // alert(
+        //   data.error?.errorMessages?.join(", ") ||
+        //     "Có lỗi xảy ra khi lấy dữ liệu đặt lịch."
+        // );
         return null;
       }
     } else {
-      alert("Có lỗi xảy ra khi lấy dữ liệu đặt lịch.");
+      // alert("Có lỗi xảy ra khi lấy dữ liệu đặt lịch.");
       return null;
     }
   } catch (error) {
     console.error("Error fetching doctor bookings:", error);
     if (axios.isAxiosError(error)) {
-      const serverError =
-        error.response?.data?.error?.errorMessages?.join(", ");
-      alert(serverError || "Có lỗi xảy ra khi gửi yêu cầu.");
+      // const serverError =
+      //   error.response?.data?.error?.errorMessages?.join(", ");
+      // // alert(serverError || "Có lỗi xảy ra khi gửi yêu cầu.");
     } else {
-      alert("Có lỗi xảy ra khi gửi yêu cầu.");
+      // alert("Có lỗi xảy ra khi gửi yêu cầu.");
     }
     return null;
   } finally {
@@ -91,15 +88,15 @@ export const apiGetBookingById = async (id: number) => {
     return response.data || {};
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const serverError =
-        error.response?.data?.error?.errorMessages?.join(", ");
-      alert(serverError || "Có lỗi xảy ra khi gửi yêu cầu.");
+      // const serverError =
+      //   error.response?.data?.error?.errorMessages?.join(", ");
+      // alert(serverError || "Có lỗi xảy ra khi gửi yêu cầu.");
     } else {
-      alert("Có lỗi xảy ra khi gửi yêu cầu.");
+      // alert("Có lỗi xảy ra khi gửi yêu cầu.");
     }
     return null;
-    console.error("API Get Booking Detail By ID Error:", error);
-    throw error;
+    // console.error("API Get Booking Detail By ID Error:", error);
+    // throw error;
   }
 };
 
@@ -109,15 +106,15 @@ export const apiGetAllBookings = async () => {
     return response.data || {};
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const serverError =
-        error.response?.data?.error?.errorMessages?.join(", ");
-      alert(serverError || "Có lỗi xảy ra khi gửi yêu cầu.");
-    } else {
-      alert("Có lỗi xảy ra khi gửi yêu cầu.");
+    //   const serverError =
+    //     error.response?.data?.error?.errorMessages?.join(", ");
+    //   alert(serverError || "Có lỗi xảy ra khi gửi yêu cầu.");
+    // } else {
+    //   alert("Có lỗi xảy ra khi gửi yêu cầu.");
     }
     return null;
-    console.error("API Get Booking Detail By ID Error:", error);
-    throw error;
+    // console.error("API Get Booking Detail By ID Error:", error);
+    // throw error;
   }
 };
 
