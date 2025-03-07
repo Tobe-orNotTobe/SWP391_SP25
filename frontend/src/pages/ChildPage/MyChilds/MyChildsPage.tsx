@@ -11,10 +11,12 @@ import { useNavigate } from "react-router-dom";
 import { ChildDetailResponse } from "../../../interfaces/Child.ts";
 import ChildForm from "../../../components/ChildForm/ChildForm.tsx"
 import {apiChildDelete} from "../../../apis/apiChild.ts";
-import {notification} from "antd";
+// import {notification} from "antd";
 import { MdOutlineMonitorWeight } from "react-icons/md";
 import { GiBodyHeight } from "react-icons/gi";
 import { LiaBirthdayCakeSolid } from "react-icons/lia";
+import { VscEmptyWindow } from "react-icons/vsc";
+import {toast} from "react-toastify";
 
 const ITEMS_PER_PAGE = 4; // Số trẻ mỗi trang
 
@@ -53,9 +55,11 @@ const MyChildPage: React.FC = () => {
 
         const reponse = await apiChildDelete(childId);
         if (reponse.isSuccess) {
-            notification.success({message: "Xóa thành công!"});
+            toast.success("Xóa thành công!");
+            // notification.success({message: "Xóa thành công!"});
         }else {
-            notification.success({message: "Xóa thất bại!"});
+            toast.error("Xóa thất bại!");
+            // notification.success({message: "Xóa thất bại!"});
         }
         closeDeletePopup();
         await refetch();
@@ -87,61 +91,79 @@ const MyChildPage: React.FC = () => {
                 <br/>
 
                 {loading && <p>Loading...</p>}
-                {error && <p className="text-red-500">{error}</p>}
-
-                <div className="childGrid">
-                    {currentChildren.map((child) => (
-                        <div key={child.childId} className="childCard"
-                             style={child.gender === "Male" ? {boxShadow: "0 0 0 15px rgb(169, 215, 255)"} : {boxShadow: "0 0 0 15px rgb(253, 210, 218)"}}
-                             onClick={(e) => {
-                                 e.stopPropagation();
-                                 openDetailPopup(child);
-                             }}>
-                            <img src={child.imageUrl} alt={child.fullName} className="childImage"/>
-                            <div style={{width: "60%", display: "grid", justifyContent: "center", paddingTop: "10px", paddingBottom: "10px"}} >
-                                <h3 className="childName">{child.fullName}</h3>
-                                {/*<p className="childItem">*/}
-                                {/*    <strong className="childItemTitle">Giới tính: </strong> {child.gender === "Male" ? ("Nam") : ("Nữ")}*/}
-                                {/*</p>*/}
-                                <p className="childItem" style={{justifyContent: "center"}}>
-                                    <LiaBirthdayCakeSolid className={"childItemIcon"}/>
-                                    {new Date(child.dateOfBirth).toLocaleDateString()}
-                                </p>
-                                <div style={{display: "flex"}}>
-                                    <p className="childItem" style={child.gender === "Male" ? {borderRight: "1px solid rgb(108, 187, 255)"} : {borderRight: "1px solid rgb(251, 147, 166)"}}><GiBodyHeight className={"childItemIcon"}/>{child.height} cm</p>
-                                    <p className="childItem"><MdOutlineMonitorWeight className={"childItemIcon"}/>{child.weight} kg</p>
-                                </div>
-
-                                {/*<p className="childItem">*/}
-                                {/*    <strong className="childItemTitle">Lịch sử y tế: </strong>{child.medicalHistory === "yes" ? ("Có") : ("Không")}*/}
-                                {/*</p>*/}
-                                {/*<p className="childItem">*/}
-                                {/*    <strong className="childItemTitle">Mối quan hệ: </strong>{child.relationToUser}*/}
-                                {/*</p>*/}
-                            </div>
-                            <div className="childButton">
-                                <button
-                                    className="childEdit"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        openEditPopup(child);
-                                    }}
-                                >
-                                    <FaEdit/>
-                                </button>
-                                <button
-                                    className="childDelete"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        openDeletePopup(child.childId);
-                                    }}
-                                >
-                                    <MdDeleteOutline/>
-                                </button>
-                            </div>
+                {error ? (
+                    <div>
+                        <div>
+                            <VscEmptyWindow className={"error-icon"}/>
                         </div>
-                    ))}
-                </div>
+                        <p className={"error-message"}>{error}</p>
+                    </div>
+
+                ) : (
+                    <div className="childGrid">
+                        {currentChildren.map((child) => (
+                            <div key={child.childId} className="childCard"
+                                 style={child.gender === "Male" ? {boxShadow: "0 0 0 15px rgb(169, 215, 255)"} : {boxShadow: "0 0 0 15px rgb(253, 210, 218)"}}
+                                 onClick={(e) => {
+                                     e.stopPropagation();
+                                     openDetailPopup(child);
+                                 }}>
+                                <img src={child.imageUrl} alt={child.fullName} className="childImage"/>
+                                <div style={{
+                                    width: "60%",
+                                    display: "grid",
+                                    justifyContent: "center",
+                                    paddingTop: "10px",
+                                    paddingBottom: "10px"
+                                }}>
+                                    <h3 className="childName">{child.fullName}</h3>
+                                    {/*<p className="childItem">*/}
+                                    {/*    <strong className="childItemTitle">Giới tính: </strong> {child.gender === "Male" ? ("Nam") : ("Nữ")}*/}
+                                    {/*</p>*/}
+                                    <p className="childItem" style={{justifyContent: "center"}}>
+                                        <LiaBirthdayCakeSolid className={"childItemIcon"}/>
+                                        {new Date(child.dateOfBirth).toLocaleDateString()}
+                                    </p>
+                                    <div style={{display: "flex"}}>
+                                        <p className="childItem"
+                                           style={child.gender === "Male" ? {borderRight: "1px solid rgb(108, 187, 255)"} : {borderRight: "1px solid rgb(251, 147, 166)"}}>
+                                            <GiBodyHeight className={"childItemIcon"}/>{child.height} cm</p>
+                                        <p className="childItem"><MdOutlineMonitorWeight
+                                            className={"childItemIcon"}/>{child.weight} kg</p>
+                                    </div>
+
+                                    {/*<p className="childItem">*/}
+                                    {/*    <strong className="childItemTitle">Lịch sử y tế: </strong>{child.medicalHistory === "yes" ? ("Có") : ("Không")}*/}
+                                    {/*</p>*/}
+                                    {/*<p className="childItem">*/}
+                                    {/*    <strong className="childItemTitle">Mối quan hệ: </strong>{child.relationToUser}*/}
+                                    {/*</p>*/}
+                                </div>
+                                <div className="childButton">
+                                    <button
+                                        className="childEdit"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openEditPopup(child);
+                                        }}
+                                    >
+                                        <FaEdit/>
+                                    </button>
+                                    <button
+                                        className="childDelete"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openDeletePopup(child.childId);
+                                        }}
+                                    >
+                                        <MdDeleteOutline/>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 {/* Hiển thị nút phân trang nếu số lượng trẻ > 6 */}
                 {totalPages > 1 && (
                     <div className="pagination">
@@ -209,7 +231,8 @@ const MyChildPage: React.FC = () => {
                                 paddingRight: "30px",
                                 borderRight: "2px solid #ddd"
                             }}>
-                                <img className={"childImage"} style={{width: "100%", borderRadius: "50%"}} src={detailChild.imageUrl} alt={"nihaoma"}/>
+                                <img className={"childImage"} style={{width: "100%", borderRadius: "50%"}}
+                                     src={detailChild.imageUrl} alt={"nihaoma"}/>
                             </div>
                             <div style={{width: "60%", paddingLeft: "20px", marginLeft: "30px", borderRadius: "10px", backgroundColor: "white"}}>
                                 <h2 style={{fontSize: "27px", display: "flex", justifyContent: "center", paddingTop: "30px", paddingBottom: "20px"}}>{detailChild.fullName}</h2>

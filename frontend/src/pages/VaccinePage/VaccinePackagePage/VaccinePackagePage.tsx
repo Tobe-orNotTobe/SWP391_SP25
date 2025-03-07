@@ -17,6 +17,7 @@ import {Link} from "react-router-dom";
 import { FaSortAlphaDown } from "react-icons/fa";
 import { FaSortAlphaUp } from "react-icons/fa";
 import {Select} from "antd";
+import DOMPurify from "dompurify";
 
 const columns = [
     {
@@ -136,7 +137,7 @@ const VaccinePackagePage: React.FC = () => {
                             placeholder="Chọn cột"
                             value={sortColumn}
                             onChange={setSortColumn}
-                            style={{width: 150}}
+                            style={{width: 150, paddingRight: "10px"}}
                         >
                             <Select.Option value="comboId">Số thứ tự</Select.Option>
                             <Select.Option value="comboName">Gói combo</Select.Option>
@@ -181,11 +182,22 @@ const VaccinePackagePage: React.FC = () => {
                     {table.getRowModel().rows.map((row) => (
                         <tr key={row.id}>
                             {row.getVisibleCells().map((cell) => (
-                                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                                <td key={cell.id}>
+                                    {cell.column.id === "description" ? (
+                                        <div
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(String(cell.getValue())),
+                                            }}
+                                        />
+                                    ) : (
+                                        flexRender(cell.column.columnDef.cell, cell.getContext())
+                                    )}
+                                </td>
                             ))}
                         </tr>
                     ))}
                     </tbody>
+
                 </table>
             </div>
 

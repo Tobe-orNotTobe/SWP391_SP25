@@ -25,6 +25,11 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
     const {handleDelete} = useDeleteBlog();
     const {handleUpdateActive} = useUpdateBlogActive();
 
+    const [searchText, setSearchText] = useState<string>("");
+    const [sortColumn, setSortColumn] = useState<string | null>(null);
+    const [sortOrder, setSortOrder] = useState<"ascend" | "descend" | null>(null);
+
+
     useEffect(() => {
         fetchAllBlog(isActive);
     }, []);
