@@ -21,6 +21,11 @@ namespace ChildVaccineSystem.API.Controllers
 			_response = response;
 		}
 
+		/// <summary>
+		/// lấy list yêu cầu refund theo status
+		/// </summary>
+		/// <param name="status"></param>
+		/// <returns></returns>
 		[HttpGet("requests")]
 		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
@@ -45,6 +50,10 @@ namespace ChildVaccineSystem.API.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Lấy yêu cầu refund của customer
+		/// </summary>
+		/// <returns></returns>
 		[HttpGet("requests/my")]
 		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
@@ -123,6 +132,11 @@ namespace ChildVaccineSystem.API.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Tạo yêu cầu refund 
+		/// </summary>
+		/// <param name="createDto"></param>
+		/// <returns></returns>
 		[HttpPost("request")]
 		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
 		[ProducesResponseType(StatusCodes.Status201Created)]
