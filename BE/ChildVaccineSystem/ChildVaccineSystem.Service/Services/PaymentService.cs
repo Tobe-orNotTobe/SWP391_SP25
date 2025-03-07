@@ -17,15 +17,15 @@ namespace ChildVaccineSystem.Service.Services
 			_walletService = walletService;
 		}
 
-		public async Task<WalletPaymentResponseDTO> ProcessWalletPaymentAsync(string userId, WalletPaymentDTO paymentDto)
+		public async Task<WalletPaymentResponseDTO> ProcessWalletPaymentAsync(string userId, int bookingId)
 		{
 			// Validate booking exists and belongs to user
-			if (!await ValidateBookingForPaymentAsync(paymentDto.BookingId, userId))
+			if (!await ValidateBookingForPaymentAsync(bookingId, userId))
 			{
 				throw new UnauthorizedAccessException("Invalid booking or you are not authorized to pay for this booking.");
 			}
 
-			var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == paymentDto.BookingId);
+			var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
 
 			var wallet = await _walletService.GetUserWalletAsync(userId);
 
@@ -43,7 +43,7 @@ namespace ChildVaccineSystem.Service.Services
 
 			try
 			{
-				bool success = await _walletService.PayFromWalletAsync(paymentDto.BookingId, userId, amountToPay);
+				bool success = await _walletService.PayFromWalletAsync(bookingId, userId, amountToPay);
 
 				if (success)
 				{

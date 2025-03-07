@@ -22,6 +22,7 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpGet("requests")]
+		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public async Task<ActionResult<APIResponse>> GetAllRefundRequests([FromQuery] string status = null)
@@ -45,6 +46,7 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpGet("requests/my")]
+		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -78,6 +80,7 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpGet("requests/{id}")]
+		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -121,7 +124,7 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpPost("request")]
-		[Authorize]
+		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
 		[ProducesResponseType(StatusCodes.Status201Created)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -189,7 +192,7 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpPut("approve/{id}")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -249,7 +252,7 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		[HttpPut("reject/{id}")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
