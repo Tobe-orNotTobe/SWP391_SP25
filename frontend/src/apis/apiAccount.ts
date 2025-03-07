@@ -201,7 +201,7 @@ export const apiUpdateProfileUser = async (data : UserProfileUpdate ) => {
 
 export const apiChangePassword = async (data : ResetPasswordUserProfile)=> {
     try {
-        const response = await  axiosInstance.put("/api/user/change-password", data);
+        const response = await  axiosInstance.post("/api/user/change-password", data);
         return response.data;
     }catch (err){
         console.log(err);

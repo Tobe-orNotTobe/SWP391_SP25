@@ -5,8 +5,9 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import "./adminNavBar.scss";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { MdLogin, MdLogout } from "react-icons/md";
+import {IsLoginSuccessFully} from "../../../validations/IsLogginSuccessfully.ts";
 
 interface AdminNavbarProps {
   username: string;
@@ -14,6 +15,10 @@ interface AdminNavbarProps {
 }
 
 const AdminNavbar: React.FC<AdminNavbarProps> = ({ username, avatarUrl }) => {
+
+  const {sub} = IsLoginSuccessFully();
+
+  const navigate = useNavigate();
   const handleLogout = () => {
     Modal.confirm({
       title: "Xác nhận đăng xuất",
@@ -23,7 +28,7 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ username, avatarUrl }) => {
       onOk() {
         console.log("User logged out"); // Thay bằng logic đăng xuất thực tế
         localStorage.clear();
-        window.location.reload();
+        navigate("/login");
       },
     });
   };
@@ -46,9 +51,11 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ username, avatarUrl }) => {
           <span className="username">{username}</span>
         </div>
         <Link to="/login">
-          <Button type="primary" className="login-btn">
-            <MdLogin size={21} /> Đăng nhập
-          </Button>
+          {!sub && (
+              <Button type="primary" className="login-btn">
+                <MdLogin size={21} /> Đăng nhập
+              </Button>
+          )}
         </Link>
 
         <Button type="primary" className="logout-btn" onClick={handleLogout}>
