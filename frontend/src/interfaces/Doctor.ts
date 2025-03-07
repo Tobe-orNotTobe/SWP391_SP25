@@ -7,4 +7,4 @@ export interface Doctor {
     phoneNumber: string;
     address: string;
     isActive: boolean;
-  }
+}

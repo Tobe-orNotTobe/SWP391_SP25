@@ -3,10 +3,10 @@ import { Modal, Button, Form, Input, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "./UserProfile.scss";
 import { useUserProfileDetail } from "./useUserProfile";
-import type { ResetPasswordUserProfile, UserProfile } from "../../interfaces/Auth.ts";
+import type { ResetPasswordUserProfile, UserProfile } from "../../interfaces/Account.ts";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
 import { uploadImageToCloudinary} from "../../utils/cloudinary.ts";
-import {apiUpdateProfileUser} from "../../apis/apiAuth.ts";
+import {apiUpdateProfileUser} from "../../apis/apiAccount.ts";
 import {toast} from "react-toastify";
 import {AxiosError} from "axios";
 

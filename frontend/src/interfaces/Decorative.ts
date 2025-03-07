@@ -1,5 +1,4 @@
 
-
 export interface ImgCarousel{
     image: string;
 }

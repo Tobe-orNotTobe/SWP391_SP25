@@ -3,7 +3,7 @@ import {Booking, Feedback} from "../interfaces/VaccineRegistration.ts";
 import axiosInstance from "../utils/axiosInstance.ts";
 
 import {decodeToken} from "../utils/decodeToken.ts";
-import {UpdateFeedback} from "../interfaces/Booking.ts";
+import {UpdateFeedback} from "../interfaces/Feedback.ts";
 
 
 export const apiBooking = async (userId: string, booking: Booking) => {

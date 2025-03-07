@@ -55,7 +55,17 @@ const HomePage: React.FC = () => {
                         <span><Link to="/vaccines-list">Xem Tất Cả</Link></span>
                     </div>
                     <hr/>
-                    <Carousel autoplay dots={false}>
+                    <Carousel
+                        autoplay
+                        dots={false}
+                        slidesToShow={4}
+                        slidesToScroll={2}
+                        responsive={[
+                            {breakpoint: 1024, settings: {slidesToShow: 3, slidesToScroll: 1}},
+                            {breakpoint: 768, settings: {slidesToShow: 2, slidesToScroll: 1}},
+                            {breakpoint: 480, settings: {slidesToShow: 1, slidesToScroll: 1}}
+                        ]}
+                    >
                         {vaccineIntro.map((item) => (
                             <Link key={item.id} to={`/vaccines-list/${item.id}`} style={{textDecoration: "none"}}>
                                 <VaccineCard id={item.id} name={item.name} image={item.image}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Transaction.scss";
 import vnpayLogo from "../../assets/Payment/vnpay-logo.png";
 import ewaletLogo from "../../assets/Payment/ewalet_logo.png";
-import {useLocation, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {
   apiGetVaccineDetailById,
   apiGetComBoVaccineById,
@@ -21,6 +21,7 @@ import {
 import { toast } from "react-toastify";
 
 import {apiGetBookingById} from "../../apis/apiBooking.ts";
+import {AxiosError} from "axios";
 
 const Payment: React.FC = () => {
   const location = useLocation();
@@ -31,6 +32,8 @@ const Payment: React.FC = () => {
   const [comboDetails, setComboDetails] = useState([]);
   const [selectedMethod, setSelectedMethod] = useState<string>("VNPay");
   const [currentBookingResult, setCurrentBookingResult] = useState<BookingResult | null>(null);
+
+  const navigate = useNavigate();
 
   const {bookingId} = useParams();
 
@@ -54,16 +57,19 @@ const Payment: React.FC = () => {
 
       console.log(paymentResponse);
 
-      if (paymentResponse.isSuccess) {
-        method === "VNPay"
-            ? (window.location.href = paymentResponse.result?.paymentUrl || "")
-            : toast.success("Thanh toán thành công qua ví!");
+      if (method === "VNPay") {
+        window.location.href = paymentResponse.result?.paymentUrl || "";
       } else {
-        toast.warning("Không lấy được đường dẫn thanh toán.");
+        toast.success("Thanh toán thành công qua ví!");
+        navigate("/booking-history");
+        console.log("Gọi API xác nhận thanh toán thành công");
       }
-    } catch (error) {
-      console.error("Lỗi khi xử lý thanh toán:", error);
-      toast.error("Đã có lỗi xảy ra. Vui lòng thử lại.");
+    } catch (error : unknown) {
+      if(error instanceof AxiosError){
+        toast.error(`${error.response?.data?.errorMessages}`);
+      }else{
+        toast.error("Đã Có Lỗi Xảy Ra");
+      }
     }
   };
 

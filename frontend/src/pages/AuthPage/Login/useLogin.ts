@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate} from "react-router-dom";
-import { LoginRequest } from "../../../interfaces/Auth";
-import { apiLogIn } from "../../../apis/apiAuth";
+import { LoginRequest } from "../../../interfaces/Account.ts";
+import { apiLogIn } from "../../../apis/apiAccount.ts";
 import {AxiosError} from "axios";
 import { toast } from "react-toastify";
 

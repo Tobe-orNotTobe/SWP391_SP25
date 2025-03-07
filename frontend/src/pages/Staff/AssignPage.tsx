@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import  { useEffect, useState, useRef } from "react";
 import { apiAssignDoctor, apiGetAllBookings } from "../../apis/apiBooking";
 import { toast } from "react-toastify";
-import { BookingResponse } from "../../interfaces/Booking";
+import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 //import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import { apiGetAllDoctors } from "../../apis/apiAdmin";

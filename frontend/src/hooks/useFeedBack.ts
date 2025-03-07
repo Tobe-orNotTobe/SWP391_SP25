@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {FeedbackDetailByBookingIdResponse} from "../interfaces/Booking.ts";
+import {FeedbackDetailByBookingIdResponse} from "../interfaces/Feedback.ts";
 import {apiGetFeebBackUserByBookingId} from "../apis/apiBooking.ts";
 
 export const useFeedBackDetailByBookingId = (bookingId: number) => {

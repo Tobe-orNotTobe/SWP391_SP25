@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ForgotPasswordRequest } from "../../../interfaces/Auth";
-import { apiForgotPassword } from "../../../apis/apiAuth";
+import { ForgotPasswordRequest } from "../../../interfaces/Account.ts";
+import { apiForgotPassword } from "../../../apis/apiAccount.ts";
 import { notification } from "antd";
 import {AxiosError} from "axios";
 import {toast} from "react-toastify";

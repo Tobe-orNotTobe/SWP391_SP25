@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {UserProfile} from "../../interfaces/Auth.ts";
-import {apiGetProfileUser} from "../../apis/apiAuth.ts";
+import {UserProfile} from "../../interfaces/Account.ts";
+import {apiGetProfileUser} from "../../apis/apiAccount.ts";
 
 
 export const useUserProfileDetail = () =>{

@@ -6,7 +6,7 @@ import {
   BookingDetail,
   Vaccine,
 } from "../../interfaces/VaccineRegistration.ts";
-import { BookingResponse } from "../../interfaces/Booking.ts";
+import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import {
   apiGetBookingById,
   apiPutBookingComplete,

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { decodeToken } from "../utils/decodeToken";
-import { apiRefreshToken } from "../apis/apiAuth";
+import { apiRefreshToken } from "../apis/apiAccount.ts";
 
 
 export const IsLoginSuccessFully = () => {

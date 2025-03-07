@@ -5,7 +5,6 @@ export interface VaccineIntro{
     image: string;
 }
 
-
 export interface VaccineDetail {
     vaccineId: number;
     name: string;
@@ -23,13 +22,6 @@ export interface VaccineDetail {
     undesirableEffects: string;
     preserve: string;
     injectionsCount: number;
-}
-
-export interface GetVaccineResponse {
-    statusCode: number;
-    isSuccess: boolean;
-    errorMessages: string[];
-    result: VaccineDetail[];
 }
 
 

@@ -3,14 +3,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
 import { apiGetDoctorBookings } from "../../apis/apiBooking.ts";
 import "./VaccinationSchedulePage.scss";
-import { BookingResponse } from "../../interfaces/Booking.ts";
+import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import { useNavigate } from "react-router-dom";
 import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
 import { Table, Button, Space, Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
-import { Modal, Card, Avatar, Typography, Row, Col } from "antd";
+import { Modal} from "antd";
 
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();

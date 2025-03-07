@@ -28,8 +28,7 @@ import MyChildsPage from "./pages/ChildPage/MyChilds/MyChildsPage.tsx";
 import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
-import ServicePage from "./pages/Staff/ServicePage.tsx";
-
+import ServicePage from "./pages/Doctor/ServicePage.tsx";
 // Manager Pages
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
 import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
@@ -51,7 +50,7 @@ import AdminBlogFormPage from "./pages/Admin/AdminBlog/AdminBlogForm/AdminBogFor
 import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
 import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
 import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
-import ManagerProfile from "./pages/Manager/ManagerProfile.tsx";
+import ManagerProfile from "./pages/Manager/ManagerProfile/ManagerProfile.tsx";
 import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
 import AssignPage from "./pages/Staff/AssignPage.tsx";
 import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
@@ -59,6 +58,7 @@ import VaccinePackagePage from "./pages/VaccinePage/VaccinePackagePage/VaccinePa
 import AdminBlogManagePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogManage/AdminBlogManage.tsx";
 import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogDeactive/AdminBlogDeactive.tsx";
 import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
+import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
 
 function App() {
     return (
@@ -99,6 +99,7 @@ function App() {
                 <Route path="/payment" element={<TransactionPage />} />
                 <Route path="/user-profile" element={<CustomerProfile/>}/>
                 <Route path="/booking-history" element={<BookingHistoryPage/>}/>
+                <Route path="/customer/wallet" element={<CustomerWallet/>}/>
 
                 {/* Staff Routes */}
                 <Route path="/staff/service" element={<ServicePage />} />
