@@ -108,8 +108,12 @@ const VaccinationSchedulePage: React.FC = () => {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
-    onFilter: (value: any, record: any) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilter: (value: string, record: Record<string, unknown>) => {
+      const recordValue = record[dataIndex];
+      return recordValue
+          ? recordValue.toString().toLowerCase().includes(value.toLowerCase())
+          : false;
+    },
     render: (text: string) =>
       searchedColumn === dataIndex ? (
         <Highlighter
@@ -158,8 +162,9 @@ const VaccinationSchedulePage: React.FC = () => {
         { text: "Loại 1", value: "Loại 1" },
         { text: "Loại 2", value: "Loại 2" },
       ], // Thêm chức năng lọc
-      onFilter: (value: any, record: BookingResponse) =>
-        record.bookingType.includes(value),
+      onFilter: (value: string | number, record: BookingResponse) =>
+          record.bookingType?.toString().toLowerCase().includes(value.toString().toLowerCase()),
+
     },
     {
       title: "Giá Tiền",
@@ -177,8 +182,8 @@ const VaccinationSchedulePage: React.FC = () => {
         { text: "Đang chờ", value: "Đang chờ" },
         { text: "Hoàn thành", value: "Hoàn thành" },
       ], // Thêm chức năng lọc
-      onFilter: (value: any, record: BookingResponse) =>
-        record.status.includes(value),
+      onFilter: (value: string | number, record: BookingResponse) =>
+          record.status?.toString().toLowerCase().includes(value.toString().toLowerCase()),
       render: (status: string) => {
         const statusStyle = status === "Hoàn thành" ? "green" : "orange";
         return (
@@ -233,7 +238,7 @@ const VaccinationSchedulePage: React.FC = () => {
       )}
 
       {/* Modal Chi Tiết */}
-      <Modal visible={modalIsOpen} onCancel={closeModal}>
+      <Modal open={modalIsOpen} onCancel={closeModal}>
         <h2>Chi Tiết Đặt Lịch</h2>
         {selectedBooking && (
           <div>

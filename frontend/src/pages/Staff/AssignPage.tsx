@@ -3,7 +3,7 @@ import { apiAssignDoctor, apiGetAllBookings } from "../../apis/apiBooking";
 import { toast } from "react-toastify";
 import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 //import Modal from "react-modal";
-import { useNavigate } from "react-router-dom";
+
 import { apiGetAllDoctors } from "../../apis/apiAdmin";
 import { Doctor } from "../../interfaces/Doctor";
 import "./DoctorList.scss";
@@ -29,11 +29,7 @@ function AssignPage() {
   const searchInput = useRef<any>(null);
 
   useEffect(() => {
-    const loadDoctors = async () => {
-      const doctorList = await apiGetAllDoctors();
-      setDoctors(doctorList.result);
-    };
-    loadDoctors();
+    apiGetAllDoctors().then(({ result }) => setDoctors(result));
   }, []);
 
   useEffect(() => {
@@ -82,7 +78,7 @@ function AssignPage() {
     setDoctorModalIsOpen(false);
   };
 
-  const navigate = useNavigate();
+
 
   // Hàm xử lý tìm kiếm
   const handleSearch = (
@@ -132,7 +128,7 @@ function AssignPage() {
             size="small"
             style={{ width: 90 }}
           >
-            Search
+            Tìm Kiếm
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
@@ -222,7 +218,7 @@ function AssignPage() {
     {
       title: "Chi Tiết",
       key: "action",
-      render: (_: any, record: BookingResponse) => (
+      render: (_: undefined, record: BookingResponse) => (
         <Space size="middle">
           <Button type="primary" className="" onClick={() => openModal(record)}>
             Chi tết
@@ -258,7 +254,7 @@ function AssignPage() {
 
       {/* Modal chi tiết */}
       <Modal
-        visible={modalIsOpen}
+        open={modalIsOpen}
         onCancel={closeModal}
         //className="modal-content"
       >
@@ -290,7 +286,7 @@ function AssignPage() {
 
       {/* Modal phân công bác sĩ */}
       <Modal
-        visible={modalDoctorIsOpen}
+        open={modalDoctorIsOpen}
         onCancel={closeDoctorModal}
         footer={null}
         width={1200}
