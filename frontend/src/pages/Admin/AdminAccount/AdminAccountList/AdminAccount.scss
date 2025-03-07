@@ -93,7 +93,7 @@
 
 }
 
-.vaccine-action-buttons{
+.account-action-buttons{
 
   .detail-button{
     color: white;
@@ -107,9 +107,15 @@
     margin-left: 10px;
   }
 
-  .delete-button{
+  .deactive-button {
     color: white;
     background-color: #dc3545;
+    margin-left: 10px;
+  }
+
+  .active-button {
+    color: white;
+    background-color: #28a745;
     margin-left: 10px;
   }
 

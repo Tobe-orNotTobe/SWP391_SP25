@@ -104,23 +104,22 @@ const AdminAccountFormPage: React.FC = () => {
                                 <Input placeholder="Address" />
                             </Form.Item>
 
-                            { !isEditMode && (
-                                <Form.Item name="role" label="Quyền:">
-                                    <Select placeholder="Chọn quyền" defaultValue="Customer">
-                                        <Select.Option value="Customer">Customer</Select.Option>
-                                        <Select.Option value="Doctor">Doctor</Select.Option>
-                                        <Select.Option value="Staff">Staff</Select.Option>
-                                        <Select.Option value="Manager">Manager</Select.Option>
-                                        <Select.Option value="Admin">Admin</Select.Option>
-                                    </Select>
-                                </Form.Item>
-                            )}
+                            <Form.Item name="role" label="Quyền:">
+                                <Select placeholder="Chọn quyền" defaultValue="Customer">
+                                    <Select.Option value="Customer">Customer</Select.Option>
+                                    <Select.Option value="Doctor">Doctor</Select.Option>
+                                    <Select.Option value="Staff">Staff</Select.Option>
+                                    <Select.Option value="Manager">Manager</Select.Option>
+                                    <Select.Option value="Admin">Admin</Select.Option>
+                                </Select>
+                            </Form.Item>
+                            
 
                         </div>
                     </div>
 
                     { isEditMode && (
-                        <div className="active-form">
+                        <div className="active-form" style={{paddingLeft: "26px"}}>
                             <Form.Item name="isActive" label="Trạng thái hoạt động" valuePropName="checked" initialValue={true}>
                                 <Switch checkedChildren="Bật" unCheckedChildren="Tắt" />
                             </Form.Item>
