@@ -4,7 +4,8 @@ import {TbListDetails} from "react-icons/tb";
 import {FiEdit2} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
 import {IoMdAdd} from "react-icons/io";
-import {useDeleteBlog, useGetAllBlog, useUpdateBlogActive} from "../useAdminBlog.ts";
+import {useDeleteBlog, useUpdateBlogActive} from "../useAdminBlog.ts";
+import {useGetAllBlog} from "../../../../hooks/useBlog.ts"
 import dayjs from "dayjs";
 import {BlogResponse} from "../../../../interfaces/Blog.ts";
 import "./AdminBlog.scss"
@@ -25,9 +26,9 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
     const {handleDelete} = useDeleteBlog();
     const {handleUpdateActive} = useUpdateBlogActive();
 
-    const [searchText, setSearchText] = useState<string>("");
-    const [sortColumn, setSortColumn] = useState<string | null>(null);
-    const [sortOrder, setSortOrder] = useState<"ascend" | "descend" | null>(null);
+    // const [searchText, setSearchText] = useState<string>("");
+    // const [sortColumn, setSortColumn] = useState<string | null>(null);
+    // const [sortOrder, setSortOrder] = useState<"ascend" | "descend" | null>(null);
 
 
     useEffect(() => {
