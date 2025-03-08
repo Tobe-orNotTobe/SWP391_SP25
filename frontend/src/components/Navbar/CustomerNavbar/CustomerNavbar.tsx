@@ -1,12 +1,10 @@
 import React from "react";
 import './CustomerNavbar.scss';
 import logo from "../../../assets/navbar/Logo_Navbar.png";
-import {MdNavigateNext} from "react-icons/md";
-
+import {MdNavigateNext, MdOutlineChangeCircle} from "react-icons/md";
 import {GiPositionMarker} from "react-icons/gi";
-
 import {MdLogin, MdLogout} from "react-icons/md";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {FaCalendarAlt, FaUserCircle} from "react-icons/fa";
 import {IsLoginSuccessFully} from "../../../validations/IsLogginSuccessfully";
 import {IoIosNotifications} from "react-icons/io";
@@ -14,14 +12,19 @@ import {Button} from "antd";
 import {TbMoodKid} from "react-icons/tb";
 import {BsCalendar2MinusFill} from "react-icons/bs";
 import { ImProfile } from "react-icons/im";
+import { FaWallet } from "react-icons/fa6";
+import {useWalletUserDetail} from "../../Wallet/useWallet.ts";
+
 
 const CustomerNavbar: React.FC = () => {
     const {username, role} = IsLoginSuccessFully();
-
+    const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.clear();
-        window.location.reload();
+        navigate("/login");
     };
+
+    const {walletData} = useWalletUserDetail();
 
     return (
         <>
@@ -68,7 +71,7 @@ const CustomerNavbar: React.FC = () => {
                         </li>
 
                         <li><Link to="/vaccines-list" className="cusNavItem">Vaccine </Link></li>
-                        <li><Link to="#" className="cusNavItem">Gói Vaccine </Link></li>
+                        <li><Link to="/vaccine-packages" className="cusNavItem">Gói Vaccine </Link></li>
 
                         <li><Link to="#" className="cusNavItem">Tin Tức</Link></li>
                         <li className="cusNavDropdown">
@@ -93,6 +96,13 @@ const CustomerNavbar: React.FC = () => {
                                         </div>
                                     </Link>
                                     <ul className="user-dropdown-menu">
+                                        {role === 'Admin' && (
+                                            <li>
+                                                <Link to="/admin/dashboard" className="user-dropdown-item">
+                                                    <MdOutlineChangeCircle size={20}/>  Chuyển sang chế độ admin
+                                                </Link>
+                                            </li>
+                                        )}
                                         <li>
                                             <Link to="/user-profile" className="user-dropdown-item">
                                                 <ImProfile size={23}/> Thông tin tài khoản
@@ -109,11 +119,15 @@ const CustomerNavbar: React.FC = () => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="/history" className="user-dropdown-item">
-                                                <BsCalendar2MinusFill  size={20}/> Lịch sử tiêm
+                                            <Link to="/booking-history" className="user-dropdown-item">
+                                                <BsCalendar2MinusFill size={20}/> Lịch sử tiêm
                                             </Link>
                                         </li>
-
+                                        <li>
+                                            <Link to="/customer/wallet" className="user-dropdown-item">
+                                                <FaWallet size={20}/> Ví Của Bạn<p  style={{color : "#6d6e70"}}> {walletData?.balance} (VND) </p>
+                                            </Link>
+                                        </li>
                                         <li>
                                             <span onClick={handleLogout} className="user-dropdown-item">
                                               <MdLogout size={23}/> Đăng Xuất

@@ -11,7 +11,7 @@ const PageLoader: React.FC = () => {
 
     useEffect(() => {
         setLoading(true);
-        const timeout = setTimeout(() => setLoading(false), 500);
+        const timeout = setTimeout(() => setLoading(false), 200);
 
         return () => clearTimeout(timeout);
     }, [location]);
@@ -20,7 +20,7 @@ const PageLoader: React.FC = () => {
         <div className="page-loader-wrapper">
             <div className="page-loader-container">
                 <DNA height="80" width="80" ariaLabel="loading" visible={true} />
-                <p className="page-loader-text">Loading.</p>
+                <p className="page-loader-text">Loading....</p>
             </div>
         </div>
     ) : null;

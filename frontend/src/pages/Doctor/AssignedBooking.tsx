@@ -3,24 +3,23 @@ import React, { useEffect, useRef, useState } from "react";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
 import { apiGetDoctorBookings } from "../../apis/apiBooking.ts";
 import "./VaccinationSchedulePage.scss";
-import { BookingResponse } from "../../interfaces/Booking.ts";
+import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import { useNavigate } from "react-router-dom";
 import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
-import { Table, Button, Space, Input } from "antd";
+import {Table, Button, Space, Input, InputRef} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
-import { Modal, Card, Avatar, Typography, Row, Col } from "antd";
+import { Modal} from "antd";
 
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();
   const [bookings, setBookings] = useState([]);
-  const [selectedBooking, setSelectedBooking] =
-    useState<BookingResponse | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<BookingResponse | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const searchInput = useRef<any>(null);
+  const searchInput = useRef<InputRef>(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -32,7 +31,6 @@ const VaccinationSchedulePage: React.FC = () => {
         }
       }
     };
-
     fetchBookings();
   }, [doctorId]);
 
@@ -110,8 +108,12 @@ const VaccinationSchedulePage: React.FC = () => {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
-    onFilter: (value: any, record: any) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilter: (value: string, record: Record<string, unknown>) => {
+      const recordValue = record[dataIndex];
+      return recordValue
+          ? recordValue.toString().toLowerCase().includes(value.toLowerCase())
+          : false;
+    },
     render: (text: string) =>
       searchedColumn === dataIndex ? (
         <Highlighter
@@ -160,8 +162,9 @@ const VaccinationSchedulePage: React.FC = () => {
         { text: "Loại 1", value: "Loại 1" },
         { text: "Loại 2", value: "Loại 2" },
       ], // Thêm chức năng lọc
-      onFilter: (value: any, record: BookingResponse) =>
-        record.bookingType.includes(value),
+      onFilter: (value: string | number, record: BookingResponse) =>
+          record.bookingType?.toString().toLowerCase().includes(value.toString().toLowerCase()),
+
     },
     {
       title: "Giá Tiền",
@@ -179,8 +182,8 @@ const VaccinationSchedulePage: React.FC = () => {
         { text: "Đang chờ", value: "Đang chờ" },
         { text: "Hoàn thành", value: "Hoàn thành" },
       ], // Thêm chức năng lọc
-      onFilter: (value: any, record: BookingResponse) =>
-        record.status.includes(value),
+      onFilter: (value: string | number, record: BookingResponse) =>
+          record.status?.toString().toLowerCase().includes(value.toString().toLowerCase()),
       render: (status: string) => {
         const statusStyle = status === "Hoàn thành" ? "green" : "orange";
         return (
@@ -198,7 +201,7 @@ const VaccinationSchedulePage: React.FC = () => {
     {
       title: "Chi Tiết",
       key: "action",
-      render: (_: any, record: BookingResponse) => (
+      render: (_: undefined, record: BookingResponse) => (
         <Space size="middle">
           <Button type="primary" onClick={() => openModal(record)}>
             Chi tiết
@@ -211,7 +214,7 @@ const VaccinationSchedulePage: React.FC = () => {
               if (record.bookingId) {
                 navigate("/doctor/service", {
                   state: bookings.find(
-                    (booking) => booking.bookingId === record.bookingId
+                    (booking : BookingResponse) => booking.bookingId === record.bookingId
                   ),
                 });
                 console.log(bookings);
@@ -235,7 +238,7 @@ const VaccinationSchedulePage: React.FC = () => {
       )}
 
       {/* Modal Chi Tiết */}
-      <Modal visible={modalIsOpen} onCancel={closeModal}>
+      <Modal open={modalIsOpen} onCancel={closeModal}>
         <h2>Chi Tiết Đặt Lịch</h2>
         {selectedBooking && (
           <div>

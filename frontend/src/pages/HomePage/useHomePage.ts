@@ -1,13 +1,18 @@
 
 import { useState, useEffect } from "react";
 import { ImgCarousel, BriefContent, VaccineService, NewsIntro } from "../../interfaces/Decorative";
-import {  apiGetBrieftContent, apiGetImgCarousel, apiGetNewsIntro, apiGetVaccineServiceIntro} from "../../apis/apiDecorative";
+import {  apiGetBrieftContent, apiGetImgCarousel, apiGetNewsIntro, apiGetVaccineServiceIntro} from "../../apis/apiBlog.ts";
+import {IsLoginSuccessFully} from "../../validations/IsLogginSuccessfully.ts";
 
 
 export const useImgCarousel = () =>{
     const[imgCarousel, setImgCarousel] = useState<ImgCarousel[]>([]);
     const[loading, setLoading] = useState<boolean>(false);
     const[error, setError] = useState<string>("");
+
+    const {sub} =IsLoginSuccessFully();
+
+    console.log(sub);
 
      useEffect(() =>{
             const fetchVaccineIntro = async () =>{
@@ -80,8 +85,7 @@ export const useVaccineServiceIntro  = () => {
     }, []);
     
     return {vaccineServiceIntro, loading, error};
-}   
-
+}
 export const useNewsIntro = () => {
     const [newsIntro, setNewsIntro] = useState<NewsIntro[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -106,4 +110,5 @@ export const useNewsIntro = () => {
 
     return {newsIntro, loading, error};
 }
+
 

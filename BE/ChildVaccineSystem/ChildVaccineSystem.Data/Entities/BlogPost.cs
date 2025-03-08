@@ -20,5 +20,10 @@ namespace ChildVaccineSystem.Data.Entities
         public string AuthorName { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        [Required]
+        public string Type { get; set; } 
+
+        public bool IsActive { get; set; } = false; 
     }
 }

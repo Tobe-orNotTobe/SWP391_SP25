@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import {TokenDecode} from "../interfaces/Auth";
+import {TokenDecode} from "../interfaces/Account.ts";
 
 export const decodeToken = (token: string | null) : TokenDecode | null => {
     if (!token) {

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ChildVaccineSystem.Service.Services
 {
@@ -37,6 +38,7 @@ namespace ChildVaccineSystem.Service.Services
 			var transaction = await CreateTransactionAsync(booking);
 
 			var tick = DateTime.Now.Ticks.ToString();
+			var txnRef = $"TXN{transaction.TransactionId}_TIME{tick}";
 
 			var vnpay = new VnPayLibrary();
 
@@ -51,7 +53,35 @@ namespace ChildVaccineSystem.Service.Services
 			vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho đơn hàng #{bookingId}");
 			vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
 			vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
-			vnpay.AddRequestData("vnp_TxnRef", transaction.TransactionId.ToString());
+			vnpay.AddRequestData("vnp_TxnRef", txnRef);
+
+			var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
+
+			return paymentUrl;
+		}
+
+		public async Task<string> CreateWalletDepositUrl(int transactionId, decimal amount, string userId, string clientIpAddress)
+		{
+			var transaction = await _unitOfWork.Transactions.GetAsync(t => t.TransactionId == transactionId);
+			if (transaction == null)
+			{
+				throw new ArgumentException($"Transaction with ID {transactionId} not found");
+			}
+
+			var vnpay = new VnPayLibrary();
+
+			vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
+			vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
+			vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
+			vnpay.AddRequestData("vnp_Amount", (Convert.ToInt64(amount) * 100).ToString());
+			vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+			vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
+			vnpay.AddRequestData("vnp_IpAddr", clientIpAddress);
+			vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
+			vnpay.AddRequestData("vnp_OrderInfo", $"Nạp tiền vào ví #{userId}");
+			vnpay.AddRequestData("vnp_OrderType", "topup");
+			vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:WalletDepositReturnUrl"]);
+			vnpay.AddRequestData("vnp_TxnRef", transactionId.ToString());
 
 			var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
 
@@ -98,10 +128,8 @@ namespace ChildVaccineSystem.Service.Services
 				return false;
 			}
 
-			if (!int.TryParse(vnpayParams["vnp_TxnRef"], out int transactionId))
-			{
-				return false;
-			}
+			var match = Regex.Match(vnpayParams["vnp_TxnRef"], @"TXN(\d+)_TIME");
+			int transactionId = int.Parse(match.Groups[1].Value);
 
 			if (!vnpayParams.TryGetValue("vnp_ResponseCode", out string responseCode) || responseCode != "00")
 			{
@@ -111,11 +139,18 @@ namespace ChildVaccineSystem.Service.Services
 
 			await UpdateTransactionStatusAsync(transactionId, "Completed", responseCode);
 
-			var transaction = await _unitOfWork.Transactions.GetAsync(t => t.TransactionId == transactionId, includeProperties: "Booking");
-			if (transaction != null && transaction.Booking != null)
+			if (vnpayParams.TryGetValue("vnp_OrderType", out string orderType) && orderType == "topup")
 			{
-				transaction.Booking.Status = BookingStatus.Confirmed;
-				await _unitOfWork.CompleteAsync();
+				return true;
+			}
+			else
+			{
+				var transaction = await _unitOfWork.Transactions.GetAsync(t => t.TransactionId == transactionId, includeProperties: "Booking");
+				if (transaction != null && transaction.Booking != null)
+				{
+					transaction.Booking.Status = BookingStatus.Confirmed;
+					await _unitOfWork.CompleteAsync();
+				}
 			}
 
 			return true;
@@ -145,6 +180,7 @@ namespace ChildVaccineSystem.Service.Services
 			if (transaction != null)
 			{
 				transaction.Status = status;
+				transaction.UpdatedAt = DateTime.UtcNow;
 				await _unitOfWork.Transactions.UpdateAsync(transaction);
 				await _unitOfWork.CompleteAsync();
 			}

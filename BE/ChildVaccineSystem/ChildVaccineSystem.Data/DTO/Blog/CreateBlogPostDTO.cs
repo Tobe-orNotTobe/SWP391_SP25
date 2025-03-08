@@ -13,6 +13,10 @@ namespace ChildVaccineSystem.Data.DTO.Blog
         public string ImageUrl { get; set; }
 
         [Required]
-        public string AuthorName { get; set; } // Added AuthorName here
+        public string AuthorName { get; set; }
+
+        [Required]
+        public string Type { get; set; } 
+
     }
 }

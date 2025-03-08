@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Menu, Button } from "antd";
-import { AppstoreOutlined, MedicineBoxOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, MedicineBoxOutlined,  LogoutOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./ManagerLayout.scss";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully.ts";
@@ -8,6 +8,8 @@ import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { GoPackage } from "react-icons/go";
 import { MdOutlineCalendarToday } from "react-icons/md";
 import { MdOutlineInventory2 } from "react-icons/md";
+import { CiUser } from "react-icons/ci";
+import {GrUserManager} from "react-icons/gr";
 
 const { Header, Sider, Content } = Layout;
 
@@ -32,8 +34,13 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
   const menuItems = [
     {
       key: 'mamaner-dashboard',
-      icon: <AppstoreOutlined />,
+      icon:<AppstoreOutlined />,
       label: <Link to="/manager/dashboard">Trang Dashboard</Link>
+    },
+    {
+      key: 'manager-profile',
+      icon:  <CiUser/>,
+      label: <Link to="/manager/profile">Thông tin cá nhân</Link>
     },
     {
       key: 'comboVaccine',
@@ -65,7 +72,7 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
           </Link>
 
           <div className="header-right">
-            <UserOutlined className="user-icon" />
+            <GrUserManager className="user-icon" />
             <span className="user-info">Xin chào {role} {username}</span>
 
             <Button

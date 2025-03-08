@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification, Spin } from "antd"; // Import Spin từ antd
+import { Spin } from "antd"; // Import Spin từ antd
 import "./BookingForm.scss";
 import {
   Parent,
   Child,
   BookingDetail,
   Booking,
-  BookingResult,
 } from "../../interfaces/VaccineRegistration.ts";
 import { apiBooking } from "../../apis/apiBooking";
-import { apiPostVNPayTransaction } from "../../apis/apiTransaction";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
 import { apiGetMyChilds } from "../../apis/apiChild.ts";
-import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Space } from "antd";
+
+import { Avatar } from "antd";
 import {
   useVaccineDetail,
   useComboVaccineDetail,
 } from "../../hooks/useVaccine";
 import { toast } from "react-toastify";
-import { BookingResponse } from "../../interfaces/Booking.ts";
+import {ChildDetailResponse} from "../../interfaces/Child.ts";
+
 
 const VaccinationRegistrationPage = () => {
   const navigate = useNavigate();
@@ -36,6 +35,8 @@ const VaccinationRegistrationPage = () => {
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+
+  console.log(formError);
 
   // State for vaccine selection
   const [vaccineType, setVaccineType] = useState<"Gói" | "Lẻ">("Gói");
@@ -67,18 +68,20 @@ const VaccinationRegistrationPage = () => {
         const data = await apiGetMyChilds();
 
         if (data.isSuccess && data.result) {
-          const children = data.result.map((child: Child) => ({
+
+          const children = data.result.map((child: ChildDetailResponse) => ({
             childId: child.childId,
             fullName: child.fullName,
-            dateOfBirth: child.dateOfBirth?.split("T")[0] || "",
+            dateOfBirth: child.dateOfBirth,
             gender: child.gender === "Female" ? "Nữ" : "Nam",
+            imageUrl: child.imageUrl,
           }));
 
-          setParentInfo((prev: any) => ({
+          setParentInfo({
             customerCode: sub,
             parentName: username,
-            children: children,
-          }));
+            children: children as Child[],
+          });
         } else {
           setFormError("Không có trẻ.");
           toast.warning("Không có dữ liệu trẻ.");
@@ -126,7 +129,7 @@ const VaccinationRegistrationPage = () => {
 
     try {
       const bookingData: Booking = {
-        childId: selectedChild.childId,
+        childId: Number(selectedChild.childId),
         bookingDate: bookingDate,
         notes: "Ghi chú đặt lịch",
         bookingDetails: bookingDetails,
@@ -275,8 +278,7 @@ const VaccinationRegistrationPage = () => {
                               <div>
                                 <Avatar
                                   size={64}
-                                  icon={<UserOutlined />}
-                                  src={selectedChild?.imageUrl}
+                                  src={child.imageUrl}
                                 />
                               </div>
                               <div>

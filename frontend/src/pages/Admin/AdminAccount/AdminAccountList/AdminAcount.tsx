@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
 import {Button, Table, Tabs} from "antd";
-import {useDeleteUser, useGetAllUser} from "../useAdminAccount.ts";
+import {useDeleteUser, useGetAllUser, useUpdateUserIsActive} from "../useAdminAccount.ts";
 import {IoMdAdd} from "react-icons/io";
 import "./AdminAccount.scss"
 import {TbListDetails} from "react-icons/tb";
@@ -15,9 +15,36 @@ const { TabPane } = Tabs;
 const AdminAccountPage: React.FC = () => {
 
     const {handleDelete} = useDeleteUser();
+    const {handleUpdateIsActive} = useUpdateUserIsActive();
     const {users, loading, error, fetchAllUser} = useGetAllUser();
 
+    useEffect(() => {
+        fetchAllUser()
+    }, []);
+
     const columns = [
+        {
+            title: "",
+            key: "action-column",
+            width: 50, // Đặt độ rộng cố định
+            render: (_: undefined, record: AccountDetailResponse) => (
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        transition: "opacity 0.1s ease-in-out",
+                        opacity: hoveredRow === record.id ? 1 : 0
+                    }}
+                >
+                    <Button
+                        type="text"
+                        danger
+                        icon={<MdDeleteOutline style={{fontSize: "24px"}}/>}
+                        onClick={() => handleDelete(record.id).then(() => fetchAllUser())}
+                    />
+                </div>
+            ),
+        },
         { title: "ID", dataIndex: "id", key: "id" },
         {
             title: "Tên đầy đủ",
@@ -57,16 +84,18 @@ const AdminAccountPage: React.FC = () => {
             title: "Hành động",
             key: "actions",
             render: (_: undefined, record: AccountDetailResponse) => (
-                <div className="vaccine-action-buttons">
+                <div className="account-action-buttons">
                     <Button onClick={() => openDetailPopup(record)} className="detail-button">
                         <TbListDetails/>Chi tiết
                     </Button>
                     <Button className="edit-button" onClick={() => navigate(`/admin/account/edit/${record.id}`)}>
                         <FiEdit2/>Chỉnh sửa
                     </Button>
-                    <Button className="delete-button" onClick={() => {handleDelete(record.id).then(() => fetchAllUser())}}>
-                        <MdDeleteOutline/> Xóa
+
+                    <Button className={record.isActive ? "deactive-button" : "active-button"} onClick={() => {handleUpdateIsActive(record.isActive, record.id).then(() => fetchAllUser())}}>
+                        <MdDeleteOutline/> {record.isActive ? "Deactive" : "Active"}
                     </Button>
+
                 </div>
             ),
         },
@@ -74,6 +103,8 @@ const AdminAccountPage: React.FC = () => {
 
     const [detailUser, setDetailUser] = useState<AccountDetailResponse | null>(null);
     const navigate = useNavigate();
+    const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+
 
     const openDetailPopup = (user: AccountDetailResponse) => {
         setDetailUser(user);
@@ -109,6 +140,10 @@ const AdminAccountPage: React.FC = () => {
                         rowKey="id"
                         pagination={{pageSize: 8, showSizeChanger: false}}
                         className="account-table"
+                        onRow={(record) => ({
+                            onMouseEnter: () => setHoveredRow(record.id),
+                            onMouseLeave: () => setHoveredRow(null),
+                        })}
                     />
 
                     {detailUser && (
@@ -133,22 +168,21 @@ const AdminAccountPage: React.FC = () => {
                                             </div>
 
                                             <div className="vaccine-detail-mananger-popups-right">
-                                                <div className="detail-section">
-                                                    <p><strong style={{paddingRight: "2px"}}>Xác thực email:</strong>
-                                                        {detailUser.emailConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
-                                                    </p>
-                                                    <p><strong style={{paddingRight: "2px"}}>Xác thực số điệm
-                                                        thoại: </strong> {detailUser.phoneNumberConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
-                                                    </p>
-                                                    <p><strong style={{paddingRight: "2px"}}>Bảo mật hai yếu
-                                                        tố: </strong> {detailUser.twoFactorEnabled ? ("Cho phép") : ("Không cho phép")}
-                                                    </p>
-                                                    <p><strong style={{paddingRight: "2px"}}>Khóa tài
-                                                        khoản: </strong> {detailUser.lockoutEnabled ? ("Cho phép") : ("Không cho phép")}
-                                                    </p>
-                                                    <p><strong style={{paddingRight: "2px"}}>Số lần nhập sai: </strong> {detailUser.accessFailedCount}
-                                                    </p>
-                                                </div>
+
+                                                <p><strong style={{paddingRight: "2px"}}>Xác thực email:</strong>
+                                                    {detailUser.emailConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
+                                                </p>
+                                                <p><strong style={{paddingRight: "2px"}}>Xác thực số điệm thoại:
+                                                    </strong> {detailUser.phoneNumberConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
+                                                </p>
+                                                <p><strong style={{paddingRight: "2px"}}>Bảo mật hai yếu tố:
+                                                    </strong> {detailUser.twoFactorEnabled ? ("Cho phép") : ("Không cho phép")}
+                                                </p>
+                                                <p><strong style={{paddingRight: "2px"}}>Khóa tài khoản:
+                                                    </strong> {detailUser.lockoutEnabled ? ("Cho phép") : ("Không cho phép")}
+                                                </p>
+                                                <p><strong style={{paddingRight: "2px"}}>Số lần nhập sai: </strong> {detailUser.accessFailedCount}
+                                                </p>
                                             </div>
                                         </div>
                                     </TabPane>

@@ -157,7 +157,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
         [HttpPost("assign-doctor")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Staff")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -182,7 +182,7 @@ namespace ChildVaccineSystem.API.Controllers
         }
 
         [HttpGet("doctor/{userId}/bookings")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Staff")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -216,7 +216,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
         [HttpPut("{bookingId}/complete")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Staff")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -251,7 +251,7 @@ namespace ChildVaccineSystem.API.Controllers
         }
         // Lấy tất cả các booking chưa được gán bác sĩ
         [HttpGet("unassigned")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Staff")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<APIResponse>> GetUnassignedBookings()

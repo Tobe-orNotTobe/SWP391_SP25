@@ -1,27 +1,35 @@
 import axiosInstance from "../utils/axiosInstance";
 import { decodeToken } from "../utils/decodeToken.ts";
-import { ChildDetailRequest } from "../interfaces/Child.ts";
-import axios, { AxiosError } from "axios";
+import {ChildDetailRequest, ChildDetailResponse} from "../interfaces/Child.ts";
+import {ApiResponse} from "../interfaces/Layout.ts";
 
-export const apiGetMyChilds = async (userId?: string) => {
+
+export const apiGetMyChilds = async (userId?: string): Promise<ApiResponse<ChildDetailResponse[]>> => {
   try {
-    // Nếu không truyền userId, lấy từ token trong localStorage
+    // Lấy userId từ token nếu không truyền vào
     const finalUserId = userId || decodeToken(localStorage.getItem("token"))?.sub;
     if (!finalUserId) {
-      throw new Error("User ID not found");
+      return {
+        statusCode: "NotFound",
+        isSuccess: false,
+        errorMessages: ["User ID not found"],
+        result: null
+      };
     }
 
-    const response = await axiosInstance.get(`/api/Children/user/${finalUserId}`);
-    return response.data;
+    // Gọi API
+    const response = await axiosInstance.get<ApiResponse<ChildDetailResponse[]>>(`/api/Children/user/${finalUserId}`);
+    return response.data; // Trả về dữ liệu từ API nếu thành công
   } catch (error: any) {
-    if (axios.isAxiosError(error) && error.response) {
-      // Lấy danh sách lỗi từ response
-      throw error.response.data.errorMessages || ["Unknown error occurred"];
-    } else {
-      throw ["An unexpected error occurred"];
-    }
+    return {
+      statusCode: error.response?.data?.statusCode,
+      isSuccess: false,
+      errorMessages: error.response?.data?.errorMessages || ["Có lỗi xảy ra!"],
+      result: null
+    };
   }
 };
+
 
 
 export const apiChildRegister = async (data: ChildDetailRequest) => {

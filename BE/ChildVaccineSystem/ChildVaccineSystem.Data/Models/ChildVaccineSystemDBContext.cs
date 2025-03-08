@@ -31,7 +31,12 @@ namespace ChildVaccineSystem.Data.Models
 		public DbSet<InjectionSchedule> InjectionSchedules { get; set; }
         public DbSet<VaccineTransactionHistory> VaccineTransactions { get; set; }
 		public DbSet<BlogPost> BlogPosts { get; set; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		public DbSet<Wallet> Wallets { get; set; }
+		public DbSet<WalletTransaction> WalletTransactions { get; set; }
+		public DbSet<RefundRequest> RefundRequests { get; set; }
+		public DbSet<WalletDeposit> WalletDeposits { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 
@@ -322,6 +327,54 @@ namespace ChildVaccineSystem.Data.Models
             .WithMany(vi => vi.TransactionHistories)
             .HasForeignKey(vth => vth.VaccineInventoryId)
             .OnDelete(DeleteBehavior.Cascade);
-        }
+
+			// Wallet
+			modelBuilder.Entity<Wallet>()
+				 .HasOne(w => w.User)
+				 .WithMany()
+				 .HasForeignKey(w => w.UserId)
+				 .OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<Wallet>()
+				.HasMany(w => w.Transactions)
+				.WithOne(t => t.Wallet)
+				.HasForeignKey(t => t.WalletId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			// RefundRequest 
+			modelBuilder.Entity<RefundRequest>()
+				.HasOne(r => r.User)
+				.WithMany()
+				.HasForeignKey(r => r.UserId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<RefundRequest>()
+				.HasOne(r => r.Booking)
+				.WithMany()
+				.HasForeignKey(r => r.BookingId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<RefundRequest>()
+				.HasOne(r => r.ProcessedBy)
+				.WithMany()
+				.HasForeignKey(r => r.ProcessedById)
+				.IsRequired(false)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			// WalletTransaction 
+			modelBuilder.Entity<WalletTransaction>()
+				.HasOne(t => t.RefundRequest)
+				.WithMany()
+				.HasForeignKey(t => t.RefundRequestId)
+				.IsRequired(false)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			//WalletDeposit
+			modelBuilder.Entity<WalletDeposit>()
+				.HasOne(wd => wd.User)
+				.WithMany()
+				.HasForeignKey(wd => wd.UserId)
+				.OnDelete(DeleteBehavior.Restrict);
+		}
 	}
 }

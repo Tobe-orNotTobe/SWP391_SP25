@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { decodeToken } from "../utils/decodeToken";
-import { apiRefreshToken } from "../apis/apiAuth";
+import { apiRefreshToken } from "../apis/apiAccount.ts";
 
 
 export const IsLoginSuccessFully = () => {
@@ -13,12 +13,13 @@ export const IsLoginSuccessFully = () => {
     const refreshUserSession = async () => {
         const token = localStorage.getItem("token");
 
-        const refreshToken = localStorage.getItem("refeshToken");
+        const refreshToken = localStorage.getItem("refreshToken");
 
         if (token) {
             try {
                 const newTokenData = await apiRefreshToken(refreshToken);
                 if (newTokenData?.isSuccess) {
+                    setShowSessionAlert(false);
                     localStorage.setItem("token", newTokenData.result.token);
                     localStorage.setItem("refeshToken", newTokenData.result.refeshToken);
 
@@ -31,10 +32,10 @@ export const IsLoginSuccessFully = () => {
                         setUsername(newUserName);
                         localStorage.setItem("role", newUserRole);
 
-                        setShowSessionAlert(false);
 
-
-                        window.location.reload();
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
 
                         return true;
                     }
