@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { apiConfirmEmail } from "../../apis/apiAccount.ts";
-import { FaTimesCircle, FaSpinner } from "react-icons/fa";
+import {FaTimesCircle, FaSpinner} from "react-icons/fa";
 import "./Confirm.scss";
 import { ConfirmEmailRequest } from "../../interfaces/Account.ts";
 import LoadingRedirect from "../Loading/LoadingRedirect.tsx";
+
 
 export const ConfirmEmail : React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -129,6 +130,65 @@ export const PaymentSuccess: React.FC = () => {
     );
 };
 
+export const DepositSuccess: React.FC = () => {
+    const [searchParams] = useSearchParams();
+    const amount = searchParams.get("amount");
 
+    const [status, setStatus] = useState<string>("Đang xác định giao dịch...");
+    const [statusType, setStatusType] = useState<"loading" | "success" | "error">("loading");
+    const hasRun = useRef(false);
+
+    useEffect(() => {
+        if (hasRun.current) return;
+        hasRun.current = true;
+
+        const processDeposit = async () => {
+            if (!amount) {
+                setStatus("Thiếu thông tin số tiền nạp.");
+                setStatusType("error");
+                return;
+            }
+
+            try {
+                // Simulate API call with delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                setStatus("Nạp tiền thành công!");
+                setStatusType("success");
+            } catch (error) {
+                console.error("Lỗi xử lý nạp tiền:", error);
+                setStatus("Nạp tiền thất bại! Vui lòng thử lại.");
+                setStatusType("error");
+            }
+        };
+
+        processDeposit();
+    }, [amount]);
+
+    if (statusType === "success") {
+        return <LoadingRedirect
+            message={`Nạp tiền thành công với số tiền ${amount} VND vào ví của bạn`}
+            delay={5000}
+            to="/customer/wallet"
+        />;
+    }
+
+    return (
+        <div className="confirm-container">
+            {statusType === "loading" && (
+                <div className="status status--loading">
+                    <FaSpinner className="status__icon status__icon--spin" />
+                    <p className="status__message">{status}</p>
+                </div>
+            )}
+            {statusType === "error" && (
+                <div className="status status--error">
+                    <FaTimesCircle className="status__icon" />
+                    <p className="status__message">{status}</p>
+                </div>
+            )}
+        </div>
+    );
+};
 
 

@@ -63,6 +63,10 @@ export const useRecentTransactions = () => {
     return { transactions, isLoading, error };
 };
 
+// export const useRefundUserDetail = () => {
+//     const [refundDetail, setRefundDetail] = useState<| null>(null);
+// }
+
 
 export const useWalletLogic = () => {
     const { walletData, isLoading: isLoadingWallet } = useWalletUserDetail();

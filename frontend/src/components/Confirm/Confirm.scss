@@ -1,38 +1,54 @@
-.confirm-password {
-    text-align: center;
-    margin-top: 300px;
-    
-    
-    .status {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 70px;
-      font-weight: bold;
-      gap: 10px;
-  
-      &--loading {
-        color: #007bff;
-      }
-  
-      &--success {
-        color: #28a745;
-      }
-  
-      &--error {
-        color: #dc3545;
-      }
-  
-      &__icon {
-        font-size: 3.5rem;
-  
-        &--spin {
-          animation: spin 1s linear infinite;
-        }
+.confirm-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 8px;
+  background-color: #fff;
+
+  .status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+
+    &__icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+
+      &--spin {
+        animation: spin 1.5s linear infinite;
       }
     }
+
+    &__message {
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.5;
+      max-width: 400px;
+    }
+
+    &--loading {
+      color: #3498db;
+    }
+
+    &--success {
+      color: #2ecc71;
+    }
+
+    &--error {
+      color: #e74c3c;
+    }
   }
-  
+
   @keyframes spin {
     0% {
       transform: rotate(0deg);
@@ -41,42 +57,5 @@
       transform: rotate(360deg);
     }
   }
-
-
-.payment-success {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-
-  .status {
-    font-size: 1.5rem;
-    padding: 20px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-
-    &--loading {
-      color: #ffa500;
-    }
-
-    &--success {
-      color: #28a745;
-    }
-
-    &--error {
-      color: #dc3545;
-    }
-  }
-
-  .status__icon {
-    font-size: 3rem;
-  }
 }
-
 
