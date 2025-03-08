@@ -22,7 +22,7 @@ const HomePage : React.FC  = () => {
     const { vaccineIntro } = useVaccineIntro();
     const { vaccineServiceIntro } = useVaccineServiceIntro();
     const { newsIntro } = useNewsIntro();
-    const { blogs, fetchAllBlog} = useGetAllBlog()
+    const { blogs, fetchAllBlog} = useGetAllBlog();
     const firstBlog = blogs.length > 0 ? blogs[0] : null;
     const secondBlog = blogs.length > 1 ? blogs[1] : null;
     const thirdBlog = blogs.length > 2 ? blogs[2] : null;
@@ -89,7 +89,8 @@ const HomePage : React.FC  = () => {
                                 ]}
                             >
                                 {vaccineIntro.map((item) => (
-                                    <Link key={item.id} to={`/vaccines-list/${item.id}`} style={{textDecoration: "none"}}>
+                                    <Link key={item.id} to={`/vaccines-list/${item.id}`}
+                                          style={{textDecoration: "none"}}>
                                         <VaccineCard id={item.id} name={item.name} image={item.image}
                                                      manufacturer={item.manufacturer}/>
                                     </Link>
@@ -113,7 +114,8 @@ const HomePage : React.FC  = () => {
                                 ]}
                             >
                                 {vaccineServiceIntro.map((service) => (
-                                    <ServiceCard key={service.id} id={service.id} name={service.name} image={service.image}/>
+                                    <ServiceCard key={service.id} id={service.id} name={service.name}
+                                                 image={service.image}/>
                                 ))}
                             </Carousel>
                         </div>
@@ -136,6 +138,35 @@ const HomePage : React.FC  = () => {
                                 {newsIntro.map((news) => (
                                     <NewsCard key={news.id} id={news.id} title={news.title} image={news.image}
                                               briefContent={news.briefContent}/>
+                                ))}
+                            </Carousel>
+                        </div>
+                        <div className="newsListContainer">
+                            <div className="titleHeader">
+                                <h2>Blog</h2>
+                                <span><Link to="/blogs">Xem Tất Cả</Link></span>
+                            </div>
+                            <hr/>
+                            <Carousel
+                                autoplay
+                                dots={false}
+                                slidesToShow={3}
+                                slidesToScroll={1}
+                                responsive={[
+                                    {breakpoint: 1024, settings: {slidesToShow: 3, slidesToScroll: 1}},
+                                    {breakpoint: 768, settings: {slidesToShow: 2, slidesToScroll: 1}},
+                                    {breakpoint: 480, settings: {slidesToShow: 1, slidesToScroll: 1}}
+                                ]}
+                            >
+                                {blogs.map((blog) => (
+                                    <Link key={blog.blogPostId} to={`/blogs/${blog.blogPostId}`} style={{textDecoration: "none"}}>
+                                        <NewsCard
+                                            id={blog.blogPostId}
+                                            title={blog.title}
+                                            image={blog.imageUrl}
+                                            briefContent=""
+                                        />
+                                    </Link>
                                 ))}
                             </Carousel>
                         </div>

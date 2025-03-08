@@ -9,19 +9,26 @@ export const useGetAllBlog = () => {
 
     const fetchAllBlog = async (isActive: boolean) => {
         setLoading(true);
+        setError("");
 
         try {
             const response = await apiGetAllBlog(isActive);
-            if (response && response.result) {
-                setBlogs(response.result);
+            if (response.result && Array.isArray(response.result)) {
+                // Lọc chỉ lấy blog có type === "Blog"
+                const filteredBlogs = response.result.filter((blog: BlogResponse) => blog.type === "Blog");
+                setBlogs(filteredBlogs);
+            } else {
+                throw new Error("Invalid response format");
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-            setError("Error Fetching All Blog Data");
+            setError(err.message || "Error Fetching All Blog Data");
         } finally {
             setLoading(false);
         }
     };
 
-    return { blogs, loading, error, fetchAllBlog};
+    return { blogs, loading, error, fetchAllBlog };
 };
+
+
