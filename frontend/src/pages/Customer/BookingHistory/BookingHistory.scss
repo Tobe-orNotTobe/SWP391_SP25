@@ -4,6 +4,17 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto; /* Centering */
+
+  .calendar-select-status {
+    display: flex;
+    justify-content: flex-end; // This will push the select to the right
+    align-items: center;
+    margin-bottom: 5px;
+
+    .ant-select {
+      width: 150px;
+    }
+  }
 }
 
 
@@ -17,12 +28,12 @@
 
     // Modal header styling
     .ant-modal-header {
-      color: #1890ff;
+      color: #2a388f;
       border-top-left-radius: 12px;
       border-top-right-radius: 12px;
 
       .ant-modal-title {
-        color: #1890ff;
+        color: #2a388f;
         font-size: 1.2rem;
         font-weight: 600;
       }
@@ -57,7 +68,7 @@
 
       .label {
         font-weight: 600;
-        color: #1890ff;
+        color: #2a388f;
         margin-right: 10px;
       }
 
@@ -69,12 +80,12 @@
       // Special styling for certain fields
       .booking-id {
         font-size: 1.1rem;
-        color: #1890ff;
+        color: #2a388f;
         font-weight: 700;
       }
 
       .total-price {
-        color: #52c41a;
+        color: #FFB400;
         font-weight: 600;
       }
     }
@@ -84,14 +95,14 @@
       margin-top: 10px;
       margin-left: 10px;
       width: 100%;
-      background-color: #1890ff;
-      border-color: #1890ff;
+      background-color: #2a388f;
+      border-color: #2a388f;
       border-radius: 6px;
       font-weight: 600;
 
       &:hover {
         background-color: white;
-        border-color: #40a9ff;
+        border-color: #2a388f;
       }
     }
 
@@ -115,14 +126,9 @@
       margin-left: 10px;
       width: 100%;
       background-color: #ff4d4f;
-      border-color: #ff4d4f;
       border-radius: 6px;
       font-weight: 600;
 
-      &:hover {
-        background-color: white;
-        color: #ff4d4f;
-      }
     }
     .vaccine-record-button{
       margin-top: 10px;
@@ -136,6 +142,90 @@
       &:hover {
         background-color: white;
         color: #52c41a;
+      }
+    }
+
+  }
+}
+
+// feedback-display.scss
+.feedback-container {
+  text-align: center;
+  background-color: #f0f2f5;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &__rating {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &-icon {
+      font-size: 40px;
+      color: #FFB400;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+  }
+
+  &__comment-label {
+    color: #2a388f;
+    font-size: 18px;
+    margin: 0;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  &__comment-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #e1e1e1;
+
+    &-text {
+      color: #333;
+      font-size: 16px;
+      margin-top: 8px;
+    }
+  }
+
+  &__date-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 12px 16px;
+
+    &-label {
+      color: #2a388f;
+      font-size: 16px;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    &-value {
+      color: #666;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+
+  .feedback-container__actions{
+    margin-top: 10px;
+    text-align: right;
+
+    .update-feedback-button{
+      margin-right: 10px;
+      background-color: #52c41a;
+
+      &:hover{
+        color: #52c41a;
+        background-color: white;
       }
     }
 

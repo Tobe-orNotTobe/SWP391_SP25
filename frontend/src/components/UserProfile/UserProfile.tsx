@@ -3,10 +3,10 @@ import { Modal, Button, Form, Input, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "./UserProfile.scss";
 import { useUserProfileDetail } from "./useUserProfile";
-import type { ResetPasswordUserProfile, UserProfile } from "../../interfaces/Auth.ts";
+import type {  UserProfile } from "../../interfaces/Account.ts";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
 import { uploadImageToCloudinary} from "../../utils/cloudinary.ts";
-import {apiUpdateProfileUser} from "../../apis/apiAuth.ts";
+import {apiChangePassword, apiUpdateProfileUser} from "../../apis/apiAccount.ts";
 import {toast} from "react-toastify";
 import {AxiosError} from "axios";
 
@@ -17,6 +17,9 @@ const UserProfile: React.FC = () => {
     const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
     const [imageUrl, setImageUrl] = useState<string>(userProfile?.imageUrl || "");
     const [loading, setLoading] = useState(false);
+
+    const [oldPassword, setOldPassword] = useState<string>("");
+    const [newPassword, setNewPassword] = useState<string>("");
 
     const handleUpdateProfile = async (values: UserProfile) => {
         const formattedValues = {
@@ -33,6 +36,9 @@ const UserProfile: React.FC = () => {
             const response = await apiUpdateProfileUser(formattedValues);
             if(response.isSuccess) {
                 toast.success("Cập nhật thông tin người dùng thành công");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
         }catch (err : unknown){
             if (err instanceof AxiosError) {
@@ -43,9 +49,28 @@ const UserProfile: React.FC = () => {
         }
     };
 
-    const handleChangePassword = (values: ResetPasswordUserProfile) => {
-        console.log("Change Password:", values);
-        setIsPasswordModalVisible(false);
+    const handleChangePassword = async () => {
+         const formattedData = {
+             oldPassword : oldPassword,
+             newPassword : newPassword,
+         }
+         try{
+             const response = await apiChangePassword(formattedData);
+             if(response.isSuccess) {
+                 toast.success("Thay Đổi Mật Khẩu Thành Công");
+             }
+             setIsPasswordModalVisible(false);
+
+             setTimeout(() => {
+                 window.location.reload();
+             }, 1000);
+         }catch (err : unknown){
+             if(err instanceof AxiosError){
+                 toast.error(`${err.response?.data?.errorMessages}`);
+             }else{
+                 toast.error("Lỗi Không Xác Định")
+             }
+         }
     };
 
     const handleImageUpload = async (file: Blob) => {
@@ -76,7 +101,6 @@ const UserProfile: React.FC = () => {
                     <div className="profile-details">
                         <div className="profile-item"><strong>Username:</strong> <span>{userProfile.userName}</span></div>
                         <div className="profile-item"><strong>Fullname:</strong> <span>{userProfile.fullName}</span></div>
-                        <div className="profile-item"><strong>Email:</strong> <span>{userProfile.email}</span></div>
                         <div className="profile-item"><strong>Phone:</strong> <span>{userProfile.phoneNumber}</span></div>
                         <div className="profile-item"><strong>Address:</strong> <span>{userProfile.address}</span></div>
                         <div className="profile-item"><strong>Date of Birth:</strong> <span>{new Date(userProfile.dateOfBirth).toLocaleDateString()}</span></div>
@@ -133,22 +157,32 @@ const UserProfile: React.FC = () => {
                 footer={null}
             >
                 <Form layout="vertical" onFinish={handleChangePassword}>
-                    <Form.Item label="Mật khẩu cũ" name="oldPassword" rules={[{ required: true, message: "Vui lòng nhập mật khẩu cũ!" }]}>
-                        <Input.Password />
+                    <Form.Item
+                        label="Mật khẩu cũ"
+                        rules={[
+                            { required: true, message: "Vui lòng nhập mật khẩu cũ!" },
+                            {
+                                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                                message: "Mật khẩu phải có ít nhất 6 ký tự, 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!",
+                            },
+                        ]}
+                    >
+                        <Input.Password value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
                     </Form.Item>
+
                     <Form.Item
                         label="Mật khẩu mới"
-                        name="newPassword"
-                        rules={[{
-                            required: true,
-                            message: "Vui lòng nhập mật khẩu mới!"
-                        }, {
-                            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-                            message: "Mật khẩu phải có ít nhất 6 ký tự, 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!"
-                        }]}
+                        rules={[
+                            { required: true, message: "Vui lòng nhập mật khẩu cũ!" },
+                            {
+                                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                                message: "Mật khẩu phải có ít nhất 6 ký tự, 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!",
+                            },
+                        ]}
                     >
-                        <Input.Password />
+                        <Input.Password value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
                     </Form.Item>
+
                     <Form.Item>
                         <Button type="primary" htmlType="submit">Đổi mật khẩu</Button>
                     </Form.Item>

@@ -25,16 +25,17 @@ const AdminDashboardPage: React.FC = () => {
         setFilteredRevenue(filteredData);
     }, [selectedYear, revenue]);
 
-    // Generate an array of years from the data (optional)
+
     const years = Array.from(new Set(revenue.map(item => new Date(item.date).getFullYear())));
 
-    // Sort feedbacks by id and take top 3 feedbacks
+
     const sortedFeedback = feedback.sort((a, b) => parseInt(b.id) - parseInt(a.id)).slice(0, 3);
 
-    // Sort vaccines by quantity (descending order) and take top 3
+
     const sortedVaccines = exportedVaccine.sort((a, b) => b.quantity - a.quantity).slice(0, 3);
 
-    // Table columns for feedback
+    console.log("Feedback data:", feedback);
+
     const feedbackColumns = [
         {
             title: "Tên người dùng",
@@ -43,9 +44,9 @@ const AdminDashboardPage: React.FC = () => {
         },
         {
             title: "Đánh giá",
-            dataIndex: "rates",
-            key: "rates",
-            render: (rates: number) => <Rate disabled defaultValue={rates} />,
+            dataIndex: "rating",
+            key: "rating",
+            render: (rates: number) => <Rate disabled defaultValue={rates} style={{color:'#FFD700'} }/>,
         },
         {
             title: "Bình luận",

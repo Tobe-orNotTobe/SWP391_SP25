@@ -6,7 +6,7 @@ import {
   BookingDetail,
   Vaccine,
 } from "../../interfaces/VaccineRegistration.ts";
-import { BookingResponse } from "../../interfaces/Booking.ts";
+import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import {
   apiGetBookingById,
   apiPutBookingComplete,
@@ -14,6 +14,8 @@ import {
 import { apiGetChildById } from "../../apis/apiChild.ts";
 import { apiGetVaccineDetailById } from "../../apis/apiVaccine.ts";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 
 const { Option } = Select;
 
@@ -37,7 +39,7 @@ interface Props {
   booking: BookingResponse; // Truyền bookingId thay vì booking
 }
 
-const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
+const VaccinationRecordForm: React.FC<Props> = ({ booking }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     birthDate: "",
@@ -57,6 +59,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
   const [childInfo, setChildInfo] = useState<any>(null);
   const [bookings, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate()
 
   // Fetch thông tin booking và vaccine từ API
   useEffect(() => {
@@ -65,7 +68,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
       console.log(bookings);
       try {
         // Lấy thông tin booking từ API
-        const bookingData = await apiGetBookingById(booking.bookingId);
+        const bookingData = await apiGetBookingById(Number(booking.bookingId));
         setBooking(bookingData.result);
         console.log(bookingData.result);
 
@@ -107,11 +110,12 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
     fetchData();
   }, [booking.bookingId]);
 
-  const handleComplete = async (bookingId: string) => {
+  const handleComplete = async (bookingId: number) => {
     try {
       const response = await apiPutBookingComplete(bookingId);
       toast.success(response.status)
       console.log(response);
+      navigate('/doctor/vaccination-schedule')
       return response;
     } catch (error) {
       console.error("Error completing booking:", error);
@@ -308,7 +312,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
         <button
           type="submit"
           className="submit-button"
-          onClick={() => handleComplete(booking.bookingId)}
+          onClick={() => handleComplete(Number(booking.bookingId))}
         >
           Hoàn thành
         </button>

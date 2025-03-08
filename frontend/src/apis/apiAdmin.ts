@@ -7,7 +7,6 @@ export const apiGetAllDoctors = async () => {
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      // Lấy danh sách lỗi từ response
       throw error.response.data.errorMessages || ["Unknown error occurred"];
     } else {
       throw ["An unexpected error occurred"];
@@ -28,8 +27,8 @@ export const apiDashBoardRevenue = async  () => {
 
 export const apiDashBoardFeedBack = async  () => {
   try{
-    // const response = await axiosInstance.get("/api/Dashboard/feedbacks");
-    const response = await axios.get("/Dashboard/Feedback.json");
+    const response = await axiosInstance.get("/api/Dashboard/feedbacks");
+    // const response = await axios.get("/Dashboard/Feedback.json");
     return response.data;
   }catch (error){
     console.error("API Dashboard Error:", error);

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { ResetPasswordRequest } from "../../../interfaces/Auth";
+import { ResetPasswordRequest } from "../../../interfaces/Account.ts";
 
-import { apiResetPassword } from "../../../apis/apiAuth";
+import { apiResetPassword } from "../../../apis/apiAccount.ts";
 import {AxiosError} from "axios";
 import {toast} from "react-toastify";
 

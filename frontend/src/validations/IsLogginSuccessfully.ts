@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { decodeToken } from "../utils/decodeToken";
-import { apiRefreshToken } from "../apis/apiAuth";
+import { apiRefreshToken } from "../apis/apiAccount.ts";
 
 
 export const IsLoginSuccessFully = () => {
@@ -33,7 +33,9 @@ export const IsLoginSuccessFully = () => {
                         localStorage.setItem("role", newUserRole);
 
 
-                        window.location.reload();
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
 
                         return true;
                     }

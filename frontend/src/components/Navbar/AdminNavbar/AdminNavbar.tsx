@@ -1,7 +1,13 @@
 import React from "react";
 import { Button, Modal, Avatar } from "antd";
-import { LogoutOutlined, BellOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  BellOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import "./adminNavBar.scss";
+import {Link, useNavigate} from "react-router-dom";
+import { MdLogin, MdLogout } from "react-icons/md";
+import {IsLoginSuccessFully} from "../../../validations/IsLogginSuccessfully.ts";
 
 interface AdminNavbarProps {
   username: string;
@@ -9,6 +15,10 @@ interface AdminNavbarProps {
 }
 
 const AdminNavbar: React.FC<AdminNavbarProps> = ({ username, avatarUrl }) => {
+
+  const {sub} = IsLoginSuccessFully();
+
+  const navigate = useNavigate();
   const handleLogout = () => {
     Modal.confirm({
       title: "Xác nhận đăng xuất",
@@ -17,6 +27,8 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ username, avatarUrl }) => {
       cancelText: "Hủy",
       onOk() {
         console.log("User logged out"); // Thay bằng logic đăng xuất thực tế
+        localStorage.clear();
+        navigate("/login");
       },
     });
   };
@@ -24,24 +36,30 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ username, avatarUrl }) => {
   return (
     <div className="wrapedStatusbar">
       <nav>
-        <a href="#" className="nav-link underline">Categories</a>
+        <a href="#" className="nav-link underline">
+          Categories
+        </a>
         <a href="#" className="notification">
           <BellOutlined className="bell-icon" />
           <span className="num">8</span>
         </a>
         <div className="profile">
-          <Avatar 
-            src={avatarUrl} 
-            icon={!avatarUrl ? <UserOutlined /> : undefined} 
+          <Avatar
+            src={avatarUrl}
+            icon={<UserOutlined />}
           />
           <span className="username">{username}</span>
         </div>
-        <Button
-          type="primary"
-          icon={<LogoutOutlined />}
-          className="logout-btn"
-          onClick={handleLogout}
-        >
+        <Link to="/login">
+          {!sub && (
+              <Button type="primary" className="login-btn">
+                <MdLogin size={21} /> Đăng nhập
+              </Button>
+          )}
+        </Link>
+
+        <Button type="primary" className="logout-btn" onClick={handleLogout}>
+          <MdLogout size={21} />
           Đăng xuất
         </Button>
       </nav>

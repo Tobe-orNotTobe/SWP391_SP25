@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { apiConfirmEmail } from "../../apis/apiAuth.ts";
+import { apiConfirmEmail } from "../../apis/apiAccount.ts";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import "./Confirm.scss";
-import { ConfirmEmailRequest } from "../../interfaces/Auth.ts";
+import { ConfirmEmailRequest } from "../../interfaces/Account.ts";
 import LoadingRedirect from "../Loading/LoadingRedirect.tsx";
-
-
 
 export const ConfirmEmail : React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -31,12 +29,10 @@ export const ConfirmEmail : React.FC = () => {
             try {
                 const response = await apiConfirmEmail(data);
 
-                if (response.isSuccess) {
+                if (!response.isSuccess) {
+                    console.log(response.result);
                     setStatus(response.result.message);
                     setStatusType("success");
-                }else if (response.error){
-                    setStatus("Xác nhận thất bại! Vui lòng thử lại.");
-                    setStatusType("error");
                 }
             } catch (error) {
                 console.error("API Error:", error);

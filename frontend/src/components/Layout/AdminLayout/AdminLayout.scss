@@ -37,11 +37,34 @@
       background-color: #FFB400;
       color: white;
       border: none;
+      align-items: center;
+      gap: 5px;
 
       &:hover {
-        background-color: #FFB400;
+        background-color: white;
+        color: #FFB400;
+      }
+      svg{
+        padding: 0;
       }
     }
+
+    .change-user-button{
+      background-color: #1890ff;
+      color: white;
+      border: none;
+      align-items: center;
+      gap: 5px;
+
+      &:hover {
+        background-color: white;
+        color: #1890ff;
+      }
+      svg{
+        padding: 0;
+      }
+    }
+
   }
 
   .content-layout {

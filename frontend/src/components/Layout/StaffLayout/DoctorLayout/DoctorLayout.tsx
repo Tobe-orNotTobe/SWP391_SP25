@@ -5,7 +5,7 @@ const groups = [
   {
     title: "Tiêm chủng",
     items: [
-      { label: "Ghi nhận tiêm chủng", path: "/doctor/service" },
+     // { label: "Ghi nhận tiêm chủng", path: "/doctor/service" },
       { label: "Lịch tiêm chủng", path: "/doctor/vaccination-schedule" },
     ],
   },
@@ -14,13 +14,6 @@ const groups = [
     items: [
       { label: "Đăng cẩm nang", path: "/post-guide" },
       { label: "Đăng tin tức", path: "/post-news" },
-    ],
-  },
-  {
-    title: "Quản lý",
-    items: [
-      { label: "Quản lý vaccine", path: "/manage-vaccine" },
-      { label: "Quản lý lịch tiêm", path: "/manage-schedule" },
     ],
   },
 ];

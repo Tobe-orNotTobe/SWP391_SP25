@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Menu, Button } from "antd";
-import { AppstoreOutlined, MedicineBoxOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, MedicineBoxOutlined,  LogoutOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./ManagerLayout.scss";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully.ts";
@@ -9,6 +9,7 @@ import { GoPackage } from "react-icons/go";
 import { MdOutlineCalendarToday } from "react-icons/md";
 import { MdOutlineInventory2 } from "react-icons/md";
 import { CiUser } from "react-icons/ci";
+import {GrUserManager} from "react-icons/gr";
 
 const { Header, Sider, Content } = Layout;
 
@@ -71,7 +72,7 @@ const ManagerLayout: React.FC<ManagerLayoutProps> = ({ children }) => {
           </Link>
 
           <div className="header-right">
-            <UserOutlined className="user-icon" />
+            <GrUserManager className="user-icon" />
             <span className="user-info">Xin chào {role} {username}</span>
 
             <Button

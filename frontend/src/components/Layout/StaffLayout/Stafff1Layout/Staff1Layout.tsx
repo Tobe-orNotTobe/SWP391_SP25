@@ -9,13 +9,13 @@ const groups = [
       { label: "Phân công bs", path: "/staff/assignDoctor" },
     ],
   },
-  // {
-  //   title: "Đăng bài",
-  //   items: [
-  //     { label: "Đăng cẩm nang", path: "/post-guide" },
-  //     { label: "Đăng tin tức", path: "/post-news" },
-  //   ],
-  // },
+  {
+    title: "Đăng bài",
+    items: [
+      { label: "Đăng cẩm nang", path: "/post-guide" },
+      { label: "Đăng tin tức", path: "/post-news" },
+    ],
+  },
   // {
   //   title: "Quản lý",
   //   items: [

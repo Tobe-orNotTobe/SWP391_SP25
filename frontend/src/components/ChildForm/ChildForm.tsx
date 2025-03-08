@@ -85,13 +85,12 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
                     )}
                 </div>
 
-
             )}
             <h2 className="childTitle">{isUpdate ? "Cập Nhật Thông Tin Trẻ" : "Đăng Ký Trẻ"}</h2>
             <form className="childRegistrationForm" onSubmit={isUpdate ? handleUpdate : handleRegister}>
                 <div className="childRegistrationFormColumn">
                     <label className="childRegistrationLabel">Ảnh của trẻ</label>
-                    <div className="imageUploadContainer"
+                    <div className="imageUploadContainer" style={{borderRadius : "50%"}}
                          onClick={() => document.getElementById("imageUpload")?.click()}>
                         {form.selectedImage ? (
                             <img src={URL.createObjectURL(form.selectedImage)} alt="Uploaded"

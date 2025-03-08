@@ -1,7 +1,7 @@
 import axiosInstance from "../utils/axiosInstance";
 import { decodeToken } from "../utils/decodeToken.ts";
 import {ChildDetailRequest, ChildDetailResponse} from "../interfaces/Child.ts";
-import {ApiResponse} from "../interfaces/BeResponse.ts";
+import {ApiResponse} from "../interfaces/Layout.ts";
 
 
 export const apiGetMyChilds = async (userId?: string): Promise<ApiResponse<ChildDetailResponse[]>> => {

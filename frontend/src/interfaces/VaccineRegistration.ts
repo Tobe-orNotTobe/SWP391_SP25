@@ -1,13 +1,13 @@
 // Kiểu dữ liệu cho thông tin trẻ
 export interface Child {
-  childId: string; 
-  fullName: string; 
-  dateOfBirth: string; 
-  gender: "Male" | "Female"; 
-  medicalHistory: string; 
-  relationToUser: string; 
+  childId: string;
+  fullName: string;
+  dateOfBirth: string;
+  gender: "Male" | "Female";
+  medicalHistory: string;
+  relationToUser: string;
   height: number;
-  weight: number; 
+  weight: number;
   imageUrl: string | null;
   userId: string;
 }
@@ -19,23 +19,6 @@ export interface Parent {
   children: Child[];
 }
 
-// Kiểu dữ liệu cho form đăng ký
-export interface FormData {
-  fullName: string;
-  birthDate: string;
-  gender: string;
-  customerCode: string;
-  province: string;
-  district: string;
-  ward: string;
-  address: string;
-  contactName: string;
-  relationship: string;
-  contactPhone: string;
-  vaccineType: string;
-  vnvcCenter: string;
-  vaccinationDate: string;
-}
 
 // Kiểu dữ liệu cho vắc xin
 export interface Vaccine {
@@ -97,8 +80,32 @@ export interface BookingUser {
   bookingDetails: BookingDetail[];
 }
 
+export interface BookingResponse {
+  bookingId: number;
+  childName: string;
+  bookingDate: string;
+  bookingType: string;
+  totalPrice: string;
+  note: string;
+  status: string;
+}
+
+
 export interface Feedback {
   bookingId: number;
   rating : number;
   comment: string;
+}
+
+export interface BookingResult {
+  bookingId: number;
+  userId: string;
+  childId: number;
+  childName: string;
+  bookingType: string;
+  bookingDate: string;
+  totalPrice: number;
+  notes: string;
+  status: string;
+  bookingDetails: BookingDetail[];
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 // import { useNavigate } from "react-router-dom";
-import { apiRegister } from "../../../apis/apiAuth";
-import { RegisterRequest } from "../../../interfaces/Auth";
+import { apiRegister } from "../../../apis/apiAccount.ts";
+import { RegisterRequest } from "../../../interfaces/Account.ts";
 
 import {AxiosError} from "axios";
 import { toast } from "react-toastify";

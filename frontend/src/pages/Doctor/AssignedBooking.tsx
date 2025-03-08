@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 //import StaffLayout from "../../components/Layout/StaffLayout/StaffLayout.tsx";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
 import { apiGetDoctorBookings } from "../../apis/apiBooking.ts";
 import "./VaccinationSchedulePage.scss";
-import Modal from "react-modal";
-import { BookingResponse } from "../../interfaces/Booking.ts";
+import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import { useNavigate } from "react-router-dom";
 import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
-
-Modal.setAppElement("#root"); // Đặt root để đảm bảo modal hoạt động tốt
+import { Table, Button, Space, Input } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import type { FilterDropdownProps } from "antd/es/table/interface";
+import Highlighter from "react-highlight-words";
+import { Modal} from "antd";
 
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();
   const [bookings, setBookings] = useState([]);
-  const [selectedBooking, setSelectedBooking] =
-    useState<BookingResponse | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<BookingResponse | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef<any>(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -27,7 +31,6 @@ const VaccinationSchedulePage: React.FC = () => {
         }
       }
     };
-
     fetchBookings();
   }, [doctorId]);
 
@@ -42,63 +45,200 @@ const VaccinationSchedulePage: React.FC = () => {
   };
 
   const navigate = useNavigate();
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: FilterDropdownProps["confirm"],
+    dataIndex: string
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  // Hàm xử lý reset tìm kiếm
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  // Hàm tạo các props cho cột có chức năng tìm kiếm
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }: FilterDropdownProps) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value: string, record: Record<string, unknown>) => {
+      const recordValue = record[dataIndex];
+      return recordValue
+          ? recordValue.toString().toLowerCase().includes(value.toLowerCase())
+          : false;
+    },
+    render: (text: string) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  // Định nghĩa các cột của bảng
+  const columns = [
+    {
+      title: "Mã đơn",
+      dataIndex: "bookingId",
+      key: "bookingId",
+      ...getColumnSearchProps("bookingId"), // Thêm chức năng tìm kiếm
+      sorter: (a: BookingResponse, b: BookingResponse) =>
+        Number(a.bookingId) - Number(b.bookingId), // Thêm chức năng sắp xếp
+    },
+    {
+      title: "Tên Trẻ",
+      dataIndex: "childName",
+      key: "childName",
+      ...getColumnSearchProps("childName"), // Thêm chức năng tìm kiếm
+      sorter: (a: BookingResponse, b: BookingResponse) =>
+        a.childName.localeCompare(b.childName), // Thêm chức năng sắp xếp
+    },
+    {
+      title: "Ngày Đặt",
+      dataIndex: "bookingDate",
+      key: "bookingDate",
+      render: (date: string) => new Date(date).toLocaleDateString(),
+      sorter: (a: BookingResponse, b: BookingResponse) =>
+        new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime(), // Thêm chức năng sắp xếp
+    },
+    {
+      title: "Loại Tiêm",
+      dataIndex: "bookingType",
+      key: "bookingType",
+      ...getColumnSearchProps("bookingType"), // Thêm chức năng tìm kiếm
+      filters: [
+        { text: "Loại 1", value: "Loại 1" },
+        { text: "Loại 2", value: "Loại 2" },
+      ], // Thêm chức năng lọc
+      onFilter: (value: string | number, record: BookingResponse) =>
+          record.bookingType?.toString().toLowerCase().includes(value.toString().toLowerCase()),
+
+    },
+    {
+      title: "Giá Tiền",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      render: (price: number) => `${price.toLocaleString()} VNĐ`,
+      sorter: (a: BookingResponse, b: BookingResponse) =>
+        Number(a.totalPrice) - Number(b.totalPrice), // Thêm chức năng sắp xếp
+    },
+    {
+      title: "Trạng Thái",
+      dataIndex: "status",
+      key: "status",
+      filters: [
+        { text: "Đang chờ", value: "Đang chờ" },
+        { text: "Hoàn thành", value: "Hoàn thành" },
+      ], // Thêm chức năng lọc
+      onFilter: (value: string | number, record: BookingResponse) =>
+          record.status?.toString().toLowerCase().includes(value.toString().toLowerCase()),
+      render: (status: string) => {
+        const statusStyle = status === "Hoàn thành" ? "green" : "orange";
+        return (
+          <span
+            style={{
+              color: statusStyle === "green" ? "#52c41a" : "#f5222d",
+              fontWeight: "bold",
+            }}
+          >
+            {status}
+          </span>
+        );
+      },
+    },
+    {
+      title: "Chi Tiết",
+      key: "action",
+      render: (_: undefined, record: BookingResponse) => (
+        <Space size="middle">
+          <Button type="primary" onClick={() => openModal(record)}>
+            Chi tiết
+          </Button>
+          <Button
+            type="primary"
+            color="green"
+            variant="solid"
+            onClick={() => {
+              if (record.bookingId) {
+                navigate("/doctor/service", {
+                  state: bookings.find(
+                    (booking) => booking.bookingId === record.bookingId
+                  ),
+                });
+                console.log(bookings);
+              }
+            }}
+          >
+            Tiến hành tiêm
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
   return (
     <DoctorLayout>
       <h1>Lịch Tiêm Chủng</h1>
       {bookings.length > 0 ? (
-        <table className="schedule-table">
-          <thead>
-            <tr>
-              <th>Mã đơn</th>
-              <th>Tên Trẻ</th>
-              <th>Ngày Đặt</th>
-              <th>Loại Tiêm</th>
-              <th>Giá Tiền</th>
-              <th>Trạng Thái</th>
-              <th>Chi Tiết</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.map((booking: BookingResponse, index) => (
-              <tr key={index}>
-                <td>{booking.bookingId}</td>
-                <td>{booking.childName}</td>
-                <td>{new Date(booking.bookingDate).toLocaleDateString()}</td>
-                <td>{booking.bookingType}</td>
-                <td>{booking.totalPrice.toLocaleString()} VNĐ</td>
-                <td>{booking.status}</td>
-                <td>
-                  <button
-                    className="detail-btn"
-                    onClick={() => openModal(booking)}
-                  >
-                    Detail
-                  </button>
-                  <button
-                    className="detail-btn"
-                    onClick={() => {
-                      navigate("/doctor/service", { state: bookings[index] });
-                      console.log(bookings);
-                    }}
-                  >
-                    Tiến hành tiêm
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table dataSource={bookings} columns={columns} rowKey="bookingId" />
       ) : (
         <p>Không có lịch tiêm chủng.</p>
       )}
 
       {/* Modal Chi Tiết */}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        className="modal-content"
-        overlayClassName="modal-overlay"
-      >
+      <Modal open={modalIsOpen} onCancel={closeModal}>
         <h2>Chi Tiết Đặt Lịch</h2>
         {selectedBooking && (
           <div>
@@ -121,9 +261,6 @@ const VaccinationSchedulePage: React.FC = () => {
             <p>
               <strong>Trạng Thái:</strong> {selectedBooking.status}
             </p>
-            <button onClick={closeModal} className="close-btn">
-              Đóng
-            </button>
           </div>
         )}
       </Modal>
