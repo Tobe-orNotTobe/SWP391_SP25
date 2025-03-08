@@ -21,7 +21,7 @@ import Login from "./pages/AuthPage/Login/Login.tsx";
 import Register from "./pages/AuthPage/Register/Register.tsx";
 import ForgotPassword from "./pages/AuthPage/ForgotPassword/ForgotPassword.tsx";
 import ResetPassword from "./pages/AuthPage/ResetPassword/ResetPassword.tsx";
-import {ConfirmEmail, PaymentSuccess} from "./components/Confirm/Confirm.tsx";
+import {ConfirmEmail, DepositSuccess, PaymentSuccess} from "./components/Confirm/Confirm.tsx";
 
 // Customer Pages
 import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistrationPage.tsx";
@@ -67,7 +67,9 @@ function App() {
         <BrowserRouter>
             <PageLoader />
             <Routes>
-                <Route path="/payment" element={<TransactionPage />} />
+                <Route path="/payment-success" element={<PaymentSuccess />}/>
+                <Route path="/wallet/deposit-success" element={<DepositSuccess/>}/>
+
                 {/* Public Routes */}
                 <Route path="/" element={<PublicRoute><HomePage/></PublicRoute>}/>
                 <Route path="/homepage" element={<PublicRoute><HomePage/></PublicRoute>} />
@@ -89,7 +91,7 @@ function App() {
                 <Route path="/forgot-password" element={<NoAuthRoute><ForgotPassword /></NoAuthRoute>} />
                 <Route path="/reset-password" element={<NoAuthRoute><ResetPassword /></NoAuthRoute>} />
                 <Route path="/confirm-email" element={<NoAuthRoute><ConfirmEmail /></NoAuthRoute>} />
-                <Route path="/payment-success" element={<NoAuthRoute><PaymentSuccess /></NoAuthRoute>} />
+                <Route path="/payment-success" element={<PaymentSuccess />}/>
 
                 {/* Customer Routes */}
                 <Route path="/child-register" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><ChildRegistrationPage /></ProtectedRoute>} />

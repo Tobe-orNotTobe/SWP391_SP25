@@ -153,6 +153,14 @@ const Wallet: React.FC = () => {
                         }}
                     />
                 </Card>
+
+                <Card className="refund-section">
+                    <Title level={4} style={{ color: '#2A388F', marginTop: 0, marginBottom: '1.5rem' }}>
+                        Lịch sử refund
+                    </Title>
+                </Card>
+
+
             </div>
 
             <Modal

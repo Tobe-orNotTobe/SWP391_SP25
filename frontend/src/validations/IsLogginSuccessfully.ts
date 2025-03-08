@@ -13,7 +13,7 @@ export const IsLoginSuccessFully = () => {
     const refreshUserSession = async () => {
         const token = localStorage.getItem("token");
 
-        const refreshToken = localStorage.getItem("refeshToken");
+        const refreshToken = localStorage.getItem("refreshToken");
 
         if (token) {
             try {
