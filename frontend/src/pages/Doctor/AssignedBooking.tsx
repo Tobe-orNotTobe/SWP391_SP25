@@ -6,7 +6,7 @@ import "./VaccinationSchedulePage.scss";
 import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import { useNavigate } from "react-router-dom";
 import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
-import { Table, Button, Space, Input } from "antd";
+import {Table, Button, Space, Input, InputRef} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
@@ -19,7 +19,7 @@ const VaccinationSchedulePage: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const searchInput = useRef<any>(null);
+  const searchInput = useRef<InputRef>(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -214,7 +214,7 @@ const VaccinationSchedulePage: React.FC = () => {
               if (record.bookingId) {
                 navigate("/doctor/service", {
                   state: bookings.find(
-                    (booking) => booking.bookingId === record.bookingId
+                    (booking : BookingResponse) => booking.bookingId === record.bookingId
                   ),
                 });
                 console.log(bookings);

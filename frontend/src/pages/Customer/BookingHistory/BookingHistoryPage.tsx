@@ -177,8 +177,20 @@ const BookingHistory: React.FC = () => {
                                                     </p>
                                                     <p>
                                                         <span className="label">Loại đặt lịch:</span>
-                                                        <span className="value">{booking.bookingType}</span>
+                                                        <span className="value">
+                                                            {booking.bookingType === "Combo"
+                                                                ? "Combo vaccine"
+                                                                : "Vaccine lẻ"}
+                                                        </span>
                                                     </p>
+                                                    {/*<p>*/}
+                                                    {/*    <span className="label">Chi tiết vaccine:</span>*/}
+                                                    {/*    <span className="value">*/}
+                                                    {/*        {booking.bookingType === "Combo"*/}
+                                                    {/*            ? `${booking. || "Combo"} - ${booking.comboPrice?.toLocaleString() || booking.totalPrice?.toLocaleString()} VNĐ`*/}
+                                                    {/*            : `${booking.vaccineName || "Vaccine"} - ${booking.vaccinePrice?.toLocaleString() || booking.totalPrice?.toLocaleString()} VNĐ`}*/}
+                                                    {/*    </span>*/}
+                                                    {/*</p>*/}
                                                     <p></p>
                                                     <p>
                                                         <span className="label">Ngày đặt:</span>
@@ -198,7 +210,8 @@ const BookingHistory: React.FC = () => {
                                                     </p>
                                                     <p>
                                                         <span className="label">Trạng thái:</span>
-                                                        <Tag color={STATUS_COLORS[booking.status]}>{booking.status}</Tag>
+                                                        <Tag
+                                                            color={STATUS_COLORS[booking.status]}>{booking.status}</Tag>
                                                     </p>
 
                                                     <div className="booking-actions">
@@ -231,9 +244,9 @@ const BookingHistory: React.FC = () => {
                                                                 <Button
                                                                     type="primary"
                                                                     className="Cancel-button"
-                                                                    onClick={() =>openRefundModal(booking.bookingId)}
+                                                                    onClick={() => openRefundModal(booking.bookingId)}
                                                                 >
-                                                                     Hủy Đơn và Yêu Cầu Hoàn Tiền
+                                                                    Hủy Đơn và Yêu Cầu Hoàn Tiền
                                                                 </Button>
                                                             </>
                                                         )}
@@ -278,7 +291,9 @@ const BookingHistory: React.FC = () => {
                                 <div className="feedback-container">
                                     {/* Rating Section */}
 
-                                    <p style={{textAlign : "left", fontSize : "15px", color : "#1890FF", marginBottom :"20px"}}> Mã FeedBack: {feedbackBookingId.feedbackId}</p>
+                                    <p style={{
+                                        textAlign: "left",
+                                        fontSize : "15px", color : "#1890FF", marginBottom :"20px"}}> Mã FeedBack: {feedbackBookingId.feedbackId}</p>
 
                                     <div className="feedback-container__rating">
                                         <Rate
