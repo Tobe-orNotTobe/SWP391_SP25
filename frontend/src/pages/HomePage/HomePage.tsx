@@ -1,14 +1,18 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "antd";
-import { useImgCarousel, useBriefContent, useNewsIntro, useVaccineServiceIntro } from "./useHomePage.ts";
+import { useImgCarousel, useBriefContent} from "./useHomePage.ts";
+import { useNewsIntro } from "./useHomePage.ts";
 import { useVaccineIntro } from "../../hooks/useVaccine";
 import { useVaccineServiceIntro } from "./useHomePage.ts";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar";
-import { ServiceCard, VaccineCard, NewsCard } from "../../components/Card/Card";
-import Footer from "../../components/Footer/Footer.tsx";
-import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
+import { ServiceCard, VaccineCard, NewsCard} from "../../components/Card/Card";
 
+import Footer from "../../components/Footer/Footer.tsx"
+import "./HomePage.scss"
+import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
+import {useGetAllBlog} from "../../hooks/useBlog.ts";
+import BlogPost from "../../components/Blog/BlogPost.tsx";
 
 const HomePage : React.FC  = () => {
 
@@ -17,14 +21,14 @@ const HomePage : React.FC  = () => {
     const { vaccineIntro } = useVaccineIntro();
     const { vaccineServiceIntro } = useVaccineServiceIntro();
     const { newsIntro } = useNewsIntro();
-    const { blogs, fetchAllBlog} = useGetAllBlog()
+    const { blogs, fetchAllBlog} = useGetAllBlog();
     const firstBlog = blogs.length > 0 ? blogs[0] : null;
     const secondBlog = blogs.length > 1 ? blogs[1] : null;
     const thirdBlog = blogs.length > 2 ? blogs[2] : null;
     const fourBlog = blogs.length > 3 ? blogs[3] : null;
 
     useEffect(() => {
-        fetchAllBlog(true);
+        fetchAllBlog(true).then();
     }, []);
 
     return(
@@ -35,14 +39,15 @@ const HomePage : React.FC  = () => {
                     <div className="carouselContainer">
                         <Carousel autoplay>
                             {imgCarousel.map((item, index) => (
-                                <img key={index} src={`../../../src/assets/homepage/${item.image}`} className="ImgSlider" alt="Introduction" />
+                                <img key={index} src={`../../../src/assets/homepage/${item.image}`}
+                                     className="ImgSlider" alt="Introduction"/>
                             ))}
                         </Carousel>
                     </div>
                 </div>
 
 
-                <div className="briefContent" style={{paddingRight:'300px', paddingLeft: "300px"}}>
+                <div className="briefContent" style={{paddingRight: '300px', paddingLeft: "300px"}}>
                     {briefContent.map((item, index) => (
                         <div key={index} className="briefSmallContent">
                             <div className="briefContentText">
@@ -88,7 +93,8 @@ const HomePage : React.FC  = () => {
                                 ]}
                             >
                                 {vaccineIntro.map((item) => (
-                                    <Link key={item.id} to={`/vaccines-list/${item.id}`} style={{textDecoration: "none"}}>
+                                    <Link key={item.id} to={`/vaccines-list/${item.id}`}
+                                          style={{textDecoration: "none"}}>
                                         <VaccineCard id={item.id} name={item.name} image={item.image}
                                                      manufacturer={item.manufacturer}/>
                                     </Link>
@@ -112,7 +118,8 @@ const HomePage : React.FC  = () => {
                                 ]}
                             >
                                 {vaccineServiceIntro.map((service) => (
-                                    <ServiceCard key={service.id} id={service.id} name={service.name} image={service.image}/>
+                                    <ServiceCard key={service.id} id={service.id} name={service.name}
+                                                 image={service.image}/>
                                 ))}
                             </Carousel>
                         </div>
@@ -147,7 +154,7 @@ const HomePage : React.FC  = () => {
                 </div>
             </div>
             <FloatingButtons/>
-            <Footer/>     
+            <Footer/>
         </>
     );
 }

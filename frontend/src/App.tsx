@@ -15,6 +15,8 @@ import VaccineDetailPage from "./pages/VaccinePage/VaccineDetailPage/VaccineDeta
 import BeforeHandbook from "./pages/Handbook/BeforeHandbook.tsx";
 import VaccinationProcess from "./pages/Handbook/VaccinationProcess.tsx";
 import HandBookAfter from "./pages/Handbook/HandBookAfter.tsx";
+import BlogPage from "./pages/Blog/BlogPage.tsx";
+import BlogDetailPage from "./pages/Blog/BlogDetailPage.tsx";
 
 // Auth Pages
 import Login from "./pages/AuthPage/Login/Login.tsx";
@@ -30,6 +32,7 @@ import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import ServicePage from "./pages/Doctor/ServicePage.tsx";
+
 // Manager Pages
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
 import ManagerVaccinePage from "./pages/Manager/ManagerVaccine/VaccineList/ManagerVaccinePage.tsx";
@@ -68,6 +71,7 @@ function App() {
             <PageLoader />
             <Routes>
                 <Route path="/payment" element={<TransactionPage />} />
+
                 {/* Public Routes */}
                 <Route path="/" element={<PublicRoute><HomePage/></PublicRoute>}/>
                 <Route path="/homepage" element={<PublicRoute><HomePage/></PublicRoute>} />
@@ -81,7 +85,8 @@ function App() {
                 <Route path="/handbook/process" element={<PublicRoute><VaccinationProcess /></PublicRoute>} />
                 <Route path="/handbook/after" element={<PublicRoute><HandBookAfter /></PublicRoute>} />
                 <Route path="/vaccine-packages" element={<PublicRoute><VaccinePackagePage/></PublicRoute>} />
-
+                <Route path="/blog" element={<PublicRoute><BlogPage/></PublicRoute>} />
+                <Route path="/blog/:id" element={<PublicRoute><BlogDetailPage/></PublicRoute>} />
 
                 {/* Authentication Routes */}
                 <Route path="/login" element={<NoAuthRoute><Login/></NoAuthRoute>} />

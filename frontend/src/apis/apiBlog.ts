@@ -1,10 +1,10 @@
 import axiosInstance from "../utils/axiosInstance.ts";
-import {BlogRequest, BlogResponse, UpdateBlogRequest} from "../interfaces/Blog.ts";
-import {ApiResponse} from "../interfaces/BeResponse.ts";
+import {BlogRequest, UpdateBlogRequest} from "../interfaces/Blog.ts";
+// import {ApiResponse} from "../interfaces/";
 
-export const apiGetAllBlog = async (onlyActive: boolean): Promise<ApiResponse<BlogResponse[]>> => {
+export const apiGetAllBlog = async (onlyActive: boolean) => {
     try {
-        const response = await axiosInstance.get<Promise<ApiResponse<BlogResponse[]>>>(`/api/Blog?onlyActive=${onlyActive}`);
+        const response = await axiosInstance.get(`/api/Blog?onlyActive=${onlyActive}`);
         return response.data;
     }catch (err: any | undefined) {
         return {
@@ -17,9 +17,9 @@ export const apiGetAllBlog = async (onlyActive: boolean): Promise<ApiResponse<Bl
 
 };
 
-export const apiGetBlogById = async (blogId: string): Promise<ApiResponse<BlogResponse>> => {
+export const apiGetBlogById = async (blogId: number) => {
     try {
-        const response = await axiosInstance.get<Promise<ApiResponse<BlogResponse>>>(`/api/Blog/${blogId}`);
+        const response = await axiosInstance.get(`/api/Blog/${blogId}`);
         return response.data;
     }catch (err: any | undefined) {
         return {
