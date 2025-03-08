@@ -33,7 +33,6 @@ const HomePage : React.FC  = () => {
         fetchAllBlog(true);
     }, []);
 
-
     return(
         <>
             <CustomerNavbar/>

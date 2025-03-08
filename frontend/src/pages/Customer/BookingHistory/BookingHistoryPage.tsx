@@ -33,6 +33,11 @@ const BookingHistory: React.FC = () => {
         setRating,
         isEditMode,
         feedbackBookingId,
+        reason,
+        setReason,
+        refundModalVisible,
+
+
 
         // Derived data
         bookingMap,
@@ -44,6 +49,9 @@ const BookingHistory: React.FC = () => {
         handleDeleteFeedback,
         openFeedbackModal,
         handleTransactionPedingStatus,
+        handleRefundRequest,
+        closeRefundModal,
+        openRefundModal,
     } = useBookingHistoryPage(bookings);
 
     const handleSelectDate = (date: Dayjs, selectInfo: SelectInfo) => {
@@ -223,12 +231,9 @@ const BookingHistory: React.FC = () => {
                                                                 <Button
                                                                     type="primary"
                                                                     className="Cancel-button"
-                                                                    onClick={() => {
-                                                                        setSelectedBooking(booking);
-                                                                        openFeedbackModal(false);
-                                                                    }}
+                                                                    onClick={() =>openRefundModal(booking.bookingId)}
                                                                 >
-                                                                    Hủy Lịch
+                                                                     Hủy Đơn và Yêu Cầu Hoàn Tiền
                                                                 </Button>
                                                             </>
                                                         )}
@@ -336,7 +341,7 @@ const BookingHistory: React.FC = () => {
                     ]}/>
                 </Modal>
 
-                {/* Shared Modal for Adding and Editing Feedback */}
+                {/* Dành cho việc sửa và thêm feedback */}
                 <Modal
                     title={isEditMode ? "Chỉnh sửa Feedback" : "Nhập Feedback"}
                     open={feedbackModalVisible}
@@ -371,6 +376,26 @@ const BookingHistory: React.FC = () => {
                             />
                         </Form.Item>
                     </Form>
+
+                </Modal
+
+                >
+
+                {/* */}
+                <Modal
+                    title="Xác Nhận Hủy Đơn"
+                    open={refundModalVisible}
+                    onCancel={closeRefundModal}
+                    onOk={handleRefundRequest}
+                    okText="Xác nhận"
+                    cancelText="Hủy"
+                >
+                    <Input.TextArea
+                        placeholder="Nhập lý do hủy để yêu cầu hoàn tiền"
+                        value={reason || ""}
+                        onChange={(e) => setReason(e.target.value)}
+                        rows={4}
+                    />
                 </Modal>
             </div>
             <FloatingButtons/>

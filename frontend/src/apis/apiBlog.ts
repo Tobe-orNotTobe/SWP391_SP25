@@ -1,6 +1,6 @@
 import axiosInstance from "../utils/axiosInstance.ts";
 import {BlogRequest, BlogResponse, UpdateBlogRequest} from "../interfaces/Blog.ts";
-import {ApiResponse} from "../interfaces/BeResponse.ts";
+import {ApiResponse} from "../interfaces/Layout.ts"
 
 export const apiGetAllBlog = async (onlyActive: boolean): Promise<ApiResponse<BlogResponse[]>> => {
     try {
