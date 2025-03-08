@@ -108,4 +108,13 @@ export const apiRefundReject = async (refundRequestId : number) => {
   }
 }
 
+export const apiDepositeUserToWallet = async (amount: number) => {
+  try {
+    const response = await axiosInstance.post(`/api/Wallet/deposit/create/`, { amount }); // Gửi dưới dạng JSON
+    return response.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
 
