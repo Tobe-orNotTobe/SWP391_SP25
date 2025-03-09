@@ -1,11 +1,16 @@
-export interface BlogResponse {
+
+export interface BlogIntro {
     blogPostId: string;
     title: string;
+    imageUrl : string;
+    type : string;
+}
+
+
+export interface BlogResponse extends BlogIntro {
     content: string;
-    imageUrl: string;
     createdAt: Date;
     authorName: string;
-    type: string;
     isActive: boolean;
 }
 

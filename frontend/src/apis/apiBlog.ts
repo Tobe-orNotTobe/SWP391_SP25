@@ -110,3 +110,13 @@ export const apiGetVaccineServiceIntro = async () => {
         return [];
     }
 };
+
+export const apiGetBlogBasic = async () => {
+    try{
+        const response = await axiosInstance.get("/api/Blog/basic");
+        return response.data;
+    }catch (err){
+        console.log(err);
+        throw err;
+    }
+}

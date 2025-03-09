@@ -14,6 +14,7 @@ export const useGetAllBlog = () => {
         try {
             const response = await apiGetAllBlog(isActive);
             if (response.result && Array.isArray(response.result)) {
+
                 // Lọc chỉ lấy blog có type === "Blog"
                 const filteredBlogs = response.result.filter((blog: BlogResponse) => blog.type === "Blog");
                 setBlogs(filteredBlogs);
@@ -30,5 +31,3 @@ export const useGetAllBlog = () => {
 
     return { blogs, loading, error, fetchAllBlog };
 };
-
-

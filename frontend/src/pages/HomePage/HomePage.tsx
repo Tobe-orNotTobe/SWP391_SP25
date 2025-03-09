@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "antd";
-import { useImgCarousel, useBriefContent} from "./useHomePage.ts";
+import {useImgCarousel, useBriefContent, useBlogIntro} from "./useHomePage.ts";
 import { useNewsIntro } from "./useHomePage.ts";
 import { useVaccineIntro } from "../../hooks/useVaccine";
 import { useVaccineServiceIntro } from "./useHomePage.ts";
@@ -23,6 +23,9 @@ const HomePage : React.FC  = () => {
     const { vaccineServiceIntro } = useVaccineServiceIntro();
     const { newsIntro } = useNewsIntro();
     const { blogs, fetchAllBlog} = useGetAllBlog();
+    const {blogs : blogsIntro} = useBlogIntro()
+
+    console.log(blogsIntro)
     const firstBlog = blogs.length > 0 ? blogs[0] : null;
     const secondBlog = blogs.length > 1 ? blogs[1] : null;
     const thirdBlog = blogs.length > 2 ? blogs[2] : null;
@@ -158,7 +161,7 @@ const HomePage : React.FC  = () => {
                                     {breakpoint: 480, settings: {slidesToShow: 1, slidesToScroll: 1}}
                                 ]}
                             >
-                                {blogs.map((blog) => (
+                                {blogsIntro.map((blog) => (
                                     <Link key={blog.blogPostId} to={`/blogs/${blog.blogPostId}`} style={{textDecoration: "none"}}>
                                         <NewsCard
                                             id={blog.blogPostId}
