@@ -1,9 +1,37 @@
 import {useEffect, useState} from "react";
-import {WalletHistoryUserDetail, WalletUser} from "../../interfaces/Account.ts";
+import {RefundListUser, WalletHistoryUserDetail, WalletUser} from "../../interfaces/Account.ts";
 import {apiGetUserWallet} from "../../apis/apiAccount.ts";
-import {apiDepositeUserToWallet} from "../../apis/apiTransaction.ts";
+import {apiDepositeUserToWallet, apiGetUserRefundList} from "../../apis/apiTransaction.ts";
 import {toast} from "react-toastify";
 import {AxiosError} from "axios";
+
+
+
+export const useRefundUserList = () => {
+    const [refundUser, setRefundUser] = useState< RefundListUser[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchRefundUserList = async () => {
+            setIsLoading(true);
+            setError(null);
+            try{
+                const data = await apiGetUserRefundList()
+                if(data.isSuccess){
+                    setRefundUser(data.result);
+                }
+            }catch (err){
+                console.log(err)
+                setError("Unknown error occurred");
+            }
+        }
+
+        fetchRefundUserList()
+    }, []);
+
+    return {refundUser, isLoading, error};
+}
 
 
 export const useWalletUserDetail = () => {
@@ -13,9 +41,9 @@ export const useWalletUserDetail = () => {
 
     useEffect(() => {
         const fetchWalletData = async () => {
+            setIsLoading(true);
+            setError(null);
             try {
-                setIsLoading(true);
-                setError(null);
                 const data = await apiGetUserWallet();
                 if(data.isSuccess){
                     setWalletData(data.result);
@@ -63,25 +91,30 @@ export const useRecentTransactions = () => {
     return { transactions, isLoading, error };
 };
 
-// export const useRefundUserDetail = () => {
-//     const [refundDetail, setRefundDetail] = useState<| null>(null);
-// }
-
 
 export const useWalletLogic = () => {
-    const { walletData, isLoading: isLoadingWallet } = useWalletUserDetail();
-    const { transactions, isLoading: isLoadingTransactions } = useRecentTransactions();
+    const { walletData, } = useWalletUserDetail();
+    const { transactions} = useRecentTransactions();
+    const { refundUser} = useRefundUserList();
 
     const [activeTransactionTab, setActiveTransactionTab] = useState("All");
+    const [activeRefundTab, setActiveRefundTab] = useState("All");
     const [showTopupModal, setShowTopupModal] = useState(false);
-    const [topupAmount, setTopupAmount] = useState< number>(0);
+    const [topupAmount, setTopupAmount] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState(1);
+    const [currentRefundPage, setCurrentRefundPage] = useState(1);
     const pageSize = 4;
+    const refundPageSize = 4;
 
     // Filter transactions based on selected tab
     const filteredTransactions = activeTransactionTab === "All"
         ? transactions
         : transactions.filter(tx => tx.transactionType === activeTransactionTab);
+
+    // Filter refunds based on selected tab
+    const filteredRefunds = activeRefundTab === "All"
+        ? refundUser
+        : refundUser.filter(refund => refund.status === activeRefundTab);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -122,13 +155,26 @@ export const useWalletLogic = () => {
         }
     };
 
+    // Function to get the refund status tag color
+    const getRefundStatusTagColor = (status: string) => {
+        switch (status) {
+            case 'Pending':
+                return 'gold';
+            case 'Approved':
+                return 'green';
+            case 'Rejected':
+                return 'red';
+            default:
+                return 'blue';
+        }
+    };
+
     const handleTopup = () => {
         setShowTopupModal(false);
         setTopupAmount(0);
     };
 
     const handleAddFundToUseWallet = async () => {
-
         try {
             const response = await apiDepositeUserToWallet(topupAmount);
             if(response.isSuccess){
@@ -136,8 +182,7 @@ export const useWalletLogic = () => {
                 setShowTopupModal(false);
                 window.location.href = response.result.paymentUrl;
             }
-
-        }catch (error) {
+        } catch (error) {
             if (error instanceof AxiosError) {
                 toast.error(`${error.response?.data?.errors?.Amount}`);
             }
@@ -146,9 +191,7 @@ export const useWalletLogic = () => {
 
     return {
         walletData,
-        isLoadingWallet,
         transactions,
-        isLoadingTransactions,
         activeTransactionTab,
         setActiveTransactionTab,
         showTopupModal,
@@ -159,6 +202,18 @@ export const useWalletLogic = () => {
         setCurrentPage,
         pageSize,
         filteredTransactions,
+
+        // Refund related
+        refundUser,
+        activeRefundTab,
+        setActiveRefundTab,
+        currentRefundPage,
+        setCurrentRefundPage,
+        refundPageSize,
+        filteredRefunds,
+        getRefundStatusTagColor,
+
+        // Common utilities
         formatDate,
         formatCurrency,
         getTransactionTagColor,

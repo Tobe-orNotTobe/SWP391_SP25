@@ -1,35 +1,41 @@
 import React from "react";
 import {Table, Modal, Button, Tag, Card, Typography, Tabs, InputNumber} from "antd";
-
 import { WalletHistoryUserDetail } from "../../interfaces/Account";
 import {useWalletLogic} from "./useWallet.ts";
-import "./Wallet.scss"
+import "./Wallet.scss";
+
 const { Title, Text } = Typography;
 
 const Wallet: React.FC = () => {
     const {
         walletData,
-        isLoadingTransactions,
         activeTransactionTab,
         setActiveTransactionTab,
+        activeRefundTab,
+        setActiveRefundTab,
         showTopupModal,
         setShowTopupModal,
         topupAmount,
         setTopupAmount,
         currentPage,
         setCurrentPage,
+        currentRefundPage,
+        setCurrentRefundPage,
         pageSize,
+        refundPageSize,
         filteredTransactions,
+        filteredRefunds,
         formatDate,
         formatCurrency,
         getTransactionTagColor,
         getTransactionTypeName,
+        getRefundStatusTagColor,
         handleTopup,
         handleAddFundToUseWallet,
     } = useWalletLogic();
 
-    // Define columns in the component file as requested
-    const columns = [
+    // Transaction columns
+    const transactionColumns = [
         {
             title: 'Mã giao dịch',
             dataIndex: 'walletTransactionId',
@@ -77,23 +83,83 @@ const Wallet: React.FC = () => {
         },
     ];
 
-    const tabItems = [
+    // Refund columns
+    const refundColumns = [
         {
-            key: "All",
-            label: "Tất cả",
+            title: 'Mã yêu cầu',
+            dataIndex: 'refundRequestId',
+            key: 'refundRequestId',
+            render: (id: number) => `#${id}`,
         },
         {
-            key: "Deposit",
-            label: "Nạp tiền",
+            title: 'Mã đặt lịch',
+            dataIndex: 'bookingId',
+            key: 'bookingId',
+            render: (id: number) => `#${id}`,
         },
         {
-            key: "Transfer",
-            label: "Chuyển tiền",
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: string) => (
+                <Tag color={getRefundStatusTagColor(status)}>
+                    {status}
+                </Tag>
+            ),
         },
         {
-            key: "Refund",
-            label: "Hoàn tiền",
+            title: 'Số tiền',
+            dataIndex: 'amount',
+            key: 'amount',
+            render: (amount: number) => (
+                <Text
+                    style={{
+                        fontWeight: 'bold',
+                        color: '#28a745'
+                    }}
+                >
+                    {formatCurrency(amount)}
+                </Text>
+            ),
         },
+        {
+            title: 'Lý do',
+            dataIndex: 'reason',
+            key: 'reason',
+            width: '20%',
+        },
+        {
+            title: 'Ghi chú Admin',
+            dataIndex: 'adminNote',
+            key: 'adminNote',
+            width: '25%',
+        },
+        {
+            title: 'Ngày yêu cầu',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (date: string) => formatDate(date),
+        },
+        {
+            title: 'Ngày xử lý',
+            dataIndex: 'processedAt',
+            key: 'processedAt',
+            render: (date: string) => date ? formatDate(date) : 'Chưa xử lý',
+        },
+    ];
+
+    const transactionTabItems = [
+        { key: "All", label: "Tất cả" },
+        { key: "Deposit", label: "Nạp tiền" },
+        { key: "Transfer", label: "Chuyển tiền" },
+        { key: "Refund", label: "Hoàn tiền" },
+    ];
+
+    const refundTabItems = [
+        { key: "All", label: "Tất cả" },
+        { key: "Pending", label: "Đang chờ" },
+        { key: "Approved", label: "Đã duyệt" },
+        { key: "Rejected", label: "Từ chối" },
     ];
 
     return (
@@ -132,14 +198,13 @@ const Wallet: React.FC = () => {
                             setActiveTransactionTab(key);
                             setCurrentPage(1);
                         }}
-                        items={tabItems}
+                        items={transactionTabItems}
                     />
 
                     <Table
                         dataSource={filteredTransactions}
-                        columns={columns}
+                        columns={transactionColumns}
                         rowKey="walletTransactionId"
-                        loading={isLoadingTransactions}
                         pagination={{
                             current: currentPage,
                             pageSize: pageSize,
@@ -156,11 +221,35 @@ const Wallet: React.FC = () => {
 
                 <Card className="refund-section">
                     <Title level={4} style={{ color: '#2A388F', marginTop: 0, marginBottom: '1.5rem' }}>
-                        Lịch sử refund
+                        Lịch sử hoàn tiền
                     </Title>
+
+                    <Tabs
+                        activeKey={activeRefundTab}
+                        onChange={(key) => {
+                            setActiveRefundTab(key);
+                            setCurrentRefundPage(1);
+                        }}
+                        items={refundTabItems}
+                    />
+
+                    <Table
+                        dataSource={filteredRefunds}
+                        columns={refundColumns}
+                        rowKey="refundRequestId"
+                        pagination={{
+                            current: currentRefundPage,
+                            pageSize: refundPageSize,
+                            total: filteredRefunds.length,
+                            onChange: (page) => setCurrentRefundPage(page),
+                            showSizeChanger: false,
+                            showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} yêu cầu hoàn tiền`,
+                        }}
+                        locale={{
+                            emptyText: 'Không có dữ liệu hoàn tiền',
+                        }}
+                    />
                 </Card>
-
-
             </div>
 
             <Modal
@@ -191,7 +280,6 @@ const Wallet: React.FC = () => {
                         style={{ marginTop: '0.5rem', marginLeft: '0.5rem' }}
                         required
                     />
-
                 </div>
             </Modal>
         </div>

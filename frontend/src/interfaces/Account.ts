@@ -133,6 +133,19 @@ export interface WalletHistoryUserDetail {
     createdAt : string;
 }
 
+export interface RefundListUser {
+    refundRequestId : number;
+    bookingId : number;
+    userId : string;
+    amount : number;
+    reason : string;
+    status : string;
+    adminNote : string;
+    processedBy : string | null;
+    createAt: string;
+    processAt: string | null;
+}
+
 
 
 
