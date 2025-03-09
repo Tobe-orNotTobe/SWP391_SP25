@@ -150,7 +150,6 @@ namespace ChildVaccineSystem.API.Controllers
         }
         //get basic
         [HttpGet("basic")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetBlogBasic()
