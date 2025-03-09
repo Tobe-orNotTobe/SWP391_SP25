@@ -17,7 +17,7 @@ const Register : React.FC  = () => {
     return (
         <>
             <CustomerNavbar/>
-            <div className="registerBackGround">
+            <div className="authBackGround">
                 <div className="authContainer">
                     <form onSubmit={register.handleRegisterSubmit} className="registerForm">
                         <h1>Trang Đăng Kí</h1>
