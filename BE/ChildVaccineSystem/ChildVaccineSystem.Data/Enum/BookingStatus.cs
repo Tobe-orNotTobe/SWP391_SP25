@@ -12,6 +12,7 @@ namespace ChildVaccineSystem.Data.Enum
         Confirmed = 2,         // Đã xác nhận
         InProgress = 3,        // Đang thực hiện
         Completed = 4,         // Đã hoàn thành
-        Cancelled = 5          // Đã hủy
+        Cancelled = 5,          // Đã hủy
+        Refund = 5,
     }
 }
