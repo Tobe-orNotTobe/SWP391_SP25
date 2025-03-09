@@ -1,5 +1,5 @@
 import React from "react";
-import {Calendar, Modal, List, Button, Tag, Form, Input, Rate, Tabs, Popconfirm} from "antd";
+import {Calendar, Modal, List, Button, Tag, Form, Input, Rate, Tabs, Popconfirm, Flex} from "antd";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useBookingUser , STATUS_COLORS} from "./useBookingHistoryPage.ts";
@@ -120,6 +120,14 @@ const BookingHistory: React.FC = () => {
         );
     };
 
+    const StatusLegend = () => (
+        <Flex gap="small" align="center">
+            {Object.entries(STATUS_COLORS).map(([status, color]) => (
+                <Tag color={color} key={status}>{status}</Tag>
+            ))}
+        </Flex>
+    );
+
     return (
         <>
             <CustomerNavbar />
@@ -136,6 +144,7 @@ const BookingHistory: React.FC = () => {
                     <h1 className="gt-title">Đơn Tiêm Chủng Của Bạn</h1>
                 </div>
 
+                <StatusLegend />
                 <Calendar
                     value={calendarValue}
                     cellRender={(current, info) => {
