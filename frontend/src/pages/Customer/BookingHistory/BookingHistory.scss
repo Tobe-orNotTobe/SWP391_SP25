@@ -117,8 +117,24 @@
 
       &:hover {
         background-color: white;
-       color: #FFB400;
+        color: #FFB400;
       }
+    }
+
+    .Refund-button{
+      margin-top: 10px;
+      margin-left: 10px;
+      width: 100%;
+      background-color: #FD7E14;
+      border-color: #FD7E14;
+      border-radius: 6px;
+      font-weight: 600;
+
+      &:hover {
+        background-color: white;
+        color: #FD7E14;
+      }
+
     }
 
     .Cancel-button{

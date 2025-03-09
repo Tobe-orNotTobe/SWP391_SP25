@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {BlogResponse} from "../interfaces/Blog.ts";
-import {apiGetAllBlog} from "../apis/apiBlog.ts";
+import {apiGetAllBlog, apiGetBlogById} from "../apis/apiBlog.ts";
 
 export const useGetAllBlog = () => {
     const [blogs, setBlogs] = useState<BlogResponse[]>([]);
@@ -9,26 +9,43 @@ export const useGetAllBlog = () => {
 
     const fetchAllBlog = async (isActive: boolean) => {
         setLoading(true);
-        setError("");
 
         try {
             const response = await apiGetAllBlog(isActive);
-            if (response.result && Array.isArray(response.result)) {
-                // Lọc chỉ lấy blog có type === "Blog"
-                const filteredBlogs = response.result.filter((blog: BlogResponse) => blog.type === "Blog");
-                setBlogs(filteredBlogs);
-            } else {
-                throw new Error("Invalid response format");
+            if (response && response.result) {
+                setBlogs(response.result);
             }
-        } catch (err: any) {
+        } catch (err) {
             console.error(err);
-            setError(err.message || "Error Fetching All Blog Data");
+            setError("Error Fetching All Blog Data");
         } finally {
             setLoading(false);
         }
     };
 
-    return { blogs, loading, error, fetchAllBlog };
+    return { blogs, loading, error, fetchAllBlog};
 };
 
+export const useGetBlogDetailById = () => {
+    const [blog, setBlog] = useState<BlogResponse | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
 
+    const fetchBlogDetail = async (blogId: number) => {
+        setLoading(true);
+
+        try {
+            const response = await apiGetBlogById(blogId);
+            if (response && response.result) {
+                setBlog(response.result);
+            }
+        } catch (err) {
+            console.error(err);
+            setError("Error Fetching All Blog Data");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { blog, loading, error, fetchBlogDetail};
+}

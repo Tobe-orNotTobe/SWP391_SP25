@@ -1,15 +1,13 @@
+using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.Data.Models;
-using ChildVaccineSystem.Common.Helper;
-using ChildVaccineSystem.Repository;
 using ChildVaccineSystem.Service;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,9 +47,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSettings"));
 
-// Add DbContext
-builder.Services.AddDbContext<ChildVaccineSystemDBContext>(options =>
-   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Add AddServices
+builder.Services.AddServices(builder.Configuration);
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -105,18 +102,11 @@ builder.Services.AddCors(options =>
 	});
 });
 
-// Add Identity services
-builder.Services.AddIdentity<User, IdentityRole>()
-	.AddEntityFrameworkStores<ChildVaccineSystemDBContext>()
-	.AddDefaultTokenProviders();
 
 // Add UserManager and SignInManager for dependency injection
 builder.Services.AddScoped<UserManager<User>>();
 builder.Services.AddScoped<SignInManager<User>>();
 
-// Add Repositories and Services to DI Container
-builder.Services.AddRepositories();
-builder.Services.AddServices();
 //child
 builder.Services
 	.AddControllers()

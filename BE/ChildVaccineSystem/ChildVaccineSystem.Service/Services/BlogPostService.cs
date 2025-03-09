@@ -83,5 +83,13 @@ namespace ChildVaccineSystem.Service.Services
 
             return true;
         }
+        public async Task<List<BlogPostBasicDTO>> GetBlogBasicAsync()
+        {
+            var blogs = await _unitOfWork.BlogPosts.GetAllAsync();
+
+            var result = _mapper.Map<List<BlogPostBasicDTO>>(blogs);
+
+            return result;
+        }
     }
 }

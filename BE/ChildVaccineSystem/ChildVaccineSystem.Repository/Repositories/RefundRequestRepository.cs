@@ -23,18 +23,13 @@ namespace ChildVaccineSystem.Repository.Repositories
 				.FirstOrDefaultAsync(r => r.RefundRequestId == id);
 		}
 
-		public async Task<List<RefundRequest>> GetAllAsync(string status = null)
+		public async Task<List<RefundRequest>> GetAllAsync()
 		{
 			var query = _context.RefundRequests
 				.Include(r => r.User)
 				.Include(r => r.Booking)
 				.Include(r => r.ProcessedBy)
 				.AsQueryable();
-
-			if (!string.IsNullOrEmpty(status))
-			{
-				query = query.Where(r => r.Status == status);
-			}
 
 			return await query.OrderByDescending(r => r.CreatedAt).ToListAsync();
 		}

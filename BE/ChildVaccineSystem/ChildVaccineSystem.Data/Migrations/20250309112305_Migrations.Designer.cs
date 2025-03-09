@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChildVaccineSystem.Data.Migrations
 {
     [DbContext(typeof(ChildVaccineSystemDBContext))]
-    [Migration("20250307071233_Migrations")]
+    [Migration("20250309112305_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />

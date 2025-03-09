@@ -215,40 +215,40 @@ namespace ChildVaccineSystem.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
-        [HttpPut("{bookingId}/complete")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Staff")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<APIResponse>> CompleteBooking(int bookingId)
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //[HttpPut("{bookingId}/complete")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Staff")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public async Task<ActionResult<APIResponse>> CompleteBooking(int bookingId)
+        //{
+        //    try
+        //    {
+        //        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                var result = await _bookingService.CompleteBookingAsync(bookingId, userId);
+        //        var result = await _bookingService.CompleteBookingAsync(bookingId, userId);
 
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.IsSuccess = true;
-                _response.Result = result;
+        //        _response.StatusCode = HttpStatusCode.OK;
+        //        _response.IsSuccess = true;
+        //        _response.Result = result;
 
-                return Ok(_response);
-            }
-            catch (ArgumentException ex)
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error completing booking: {ex.Message}");
-                return BadRequest(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.StatusCode = HttpStatusCode.InternalServerError;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error completing booking: {ex.Message}");
-                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
-            }
-        }
+        //        return Ok(_response);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        _response.StatusCode = HttpStatusCode.BadRequest;
+        //        _response.IsSuccess = false;
+        //        _response.ErrorMessages.Add($"Error completing booking: {ex.Message}");
+        //        return BadRequest(_response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _response.StatusCode = HttpStatusCode.InternalServerError;
+        //        _response.IsSuccess = false;
+        //        _response.ErrorMessages.Add($"Error completing booking: {ex.Message}");
+        //        return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+        //    }
+        //}
         // Lấy tất cả các booking chưa được gán bác sĩ
         [HttpGet("unassigned")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Staff")]

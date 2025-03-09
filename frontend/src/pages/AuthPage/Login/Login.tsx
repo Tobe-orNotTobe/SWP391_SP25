@@ -31,7 +31,7 @@ const Login : React.FC = () => {
     return (
         <>
             <CustomerNavbar/>
-            <div className="loginBackGround">
+            <div className="authBackGround">
                 <div className="authContainer">
                     <h1>Trang Đăng Nhập</h1>
                     <form onSubmit={handleLoginSubmit}>

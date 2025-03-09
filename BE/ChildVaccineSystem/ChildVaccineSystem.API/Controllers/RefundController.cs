@@ -22,19 +22,18 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		/// <summary>
-		/// lấy list yêu cầu refund theo status
+		/// lấy list yêu cầu refund 
 		/// </summary>
-		/// <param name="status"></param>
 		/// <returns></returns>
 		[HttpGet("requests")]
 		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public async Task<ActionResult<APIResponse>> GetAllRefundRequests([FromQuery] string status = null)
+		public async Task<ActionResult<APIResponse>> GetAllRefundRequests()
 		{
 			try
 			{
-				var refundRequests = await _refundService.GetAllRefundRequestsAsync(status);
+				var refundRequests = await _refundService.GetAllRefundRequestsAsync();
 
 				_response.Result = refundRequests;
 				_response.StatusCode = HttpStatusCode.OK;

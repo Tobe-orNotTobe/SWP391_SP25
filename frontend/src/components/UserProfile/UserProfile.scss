@@ -1,3 +1,14 @@
+
+.user-profile-background{
+  background-image  : url("../../assets/UserProfile/userprofilebackground.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 200vh;
+}
+
+
+
 .user-profile {
   display: flex;
   justify-content: center;
