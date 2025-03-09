@@ -10,5 +10,8 @@ namespace ChildVaccineSystem.Data.DTO.Booking.BookingDetail
     {
         public int? VaccineId { get; set; }
         public int? ComboVaccineId { get; set; }
+        public string VaccineName { get; set; }
+        public string ComboVaccineName { get; set; }
+
     }
 }

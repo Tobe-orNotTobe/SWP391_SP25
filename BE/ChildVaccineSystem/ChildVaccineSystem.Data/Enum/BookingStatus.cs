@@ -8,9 +8,10 @@ namespace ChildVaccineSystem.Data.Enum
 {
     public enum BookingStatus
     {
-        Pending = 1,
-        Confirmed = 2,
-        Completed = 3,
-        Cancelled = 4
+        Pending = 1,           // Chờ xác nhận
+        Confirmed = 2,         // Đã xác nhận
+        InProgress = 3,        // Đang thực hiện
+        Completed = 4,         // Đã hoàn thành
+        Cancelled = 5          // Đã hủy
     }
 }

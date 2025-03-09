@@ -148,6 +148,15 @@ namespace ChildVaccineSystem.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
-
+        //get basic
+        [HttpGet("basic")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetBlogBasic()
+        {
+            var blogs = await _blogPostService.GetBlogBasicAsync();
+            return Ok(blogs);
+        }
     }
 }
