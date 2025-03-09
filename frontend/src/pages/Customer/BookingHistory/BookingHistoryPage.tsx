@@ -15,6 +15,7 @@ import {MdDeleteOutline} from "react-icons/md";
 
 const BookingHistory: React.FC = () => {
     const { bookings } = useBookingUser();
+    console.log(bookings);
     const {
         // State
         selectedDate,
@@ -178,19 +179,24 @@ const BookingHistory: React.FC = () => {
                                                     <p>
                                                         <span className="label">Loại đặt lịch:</span>
                                                         <span className="value">
-                                                            {booking.bookingType === "Combo"
-                                                                ? "Combo vaccine"
-                                                                : "Vaccine lẻ"}
+                                                            {booking.bookingType === "singleVaccine"
+                                                                ? "Đặt lẻ Vaccine "
+                                                                : "Đặt Vaccine Combo"}
                                                         </span>
                                                     </p>
-                                                    {/*<p>*/}
-                                                    {/*    <span className="label">Chi tiết vaccine:</span>*/}
-                                                    {/*    <span className="value">*/}
-                                                    {/*        {booking.bookingType === "Combo"*/}
-                                                    {/*            ? `${booking. || "Combo"} - ${booking.comboPrice?.toLocaleString() || booking.totalPrice?.toLocaleString()} VNĐ`*/}
-                                                    {/*            : `${booking.vaccineName || "Vaccine"} - ${booking.vaccinePrice?.toLocaleString() || booking.totalPrice?.toLocaleString()} VNĐ`}*/}
-                                                    {/*    </span>*/}
-                                                    {/*</p>*/}
+                                                    {booking.bookingType === "singleVaccine" && (
+                                                        <p>
+                                                            <span className="label">Chi tiết thông tin vaccine: </span>
+                                                            <span className="value">
+                                                                {booking.bookingDetails.map((detail, index) => (
+                                                                    <span key={index}>
+                                                                        {detail.vaccineName ? detail.vaccineName : detail.comboVaccineName}
+                                                                        {index !== booking.bookingDetails.length - 1 && ", "}
+                                                                    </span>
+                                                                ))}
+                                                            </span>
+                                                        </p>
+                                                    )}
                                                     <p></p>
                                                     <p>
                                                         <span className="label">Ngày đặt:</span>
@@ -412,6 +418,9 @@ const BookingHistory: React.FC = () => {
                         rows={4}
                     />
                 </Modal>
+
+
+
             </div>
             <FloatingButtons/>
             <Footer/>

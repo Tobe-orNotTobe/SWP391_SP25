@@ -41,6 +41,7 @@ export const STATUS_COLORS: Record<string, string> = {
     Confirmed: "#2a388f",
     Completed: "#52c41a",
     Cancelled: "#ff4d4f",
+    InProgress: "#42A5F5",
 };
 
 export const useBookingHistoryPage = (bookings: BookingUser[]) => {
