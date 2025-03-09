@@ -64,6 +64,8 @@ export interface Booking {
 export interface BookingDetail {
   vaccineId: number | null;
   comboVaccineId: number | null;
+  vaccineName : string | null;
+  comboVaccineName : string | null;
 }
 
 
