@@ -299,30 +299,30 @@ namespace ChildVaccineSystem.Service.Services
 
             return _mapper.Map<List<BookingDTO>>(bookings);
         }
-        public async Task<BookingDTO> CompleteBookingAsync(int bookingId, string userId)
-        {
-            var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
+        //public async Task<BookingDTO> CompleteBookingAsync(int bookingId, string userId)
+        //{
+        //    var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
 
-            if (booking == null)
-                throw new ArgumentException("Booking not found.");
+        //    if (booking == null)
+        //        throw new ArgumentException("Booking not found.");
 
-            if (booking.Status != BookingStatus.InProgress)
-                throw new ArgumentException("Only in-progress bookings can be marked as completed.");
+        //    if (booking.Status != BookingStatus.InProgress)
+        //        throw new ArgumentException("Only in-progress bookings can be marked as completed.");
 
-            // ✅ Kiểm tra userId thay cho doctorId
-            var doctorSchedule = await _unitOfWork.DoctorWorkSchedules.GetAsync(
-                ds => ds.BookingId == bookingId && ds.UserId == userId);
+        //    // ✅ Kiểm tra userId thay cho doctorId
+        //    var doctorSchedule = await _unitOfWork.DoctorWorkSchedules.GetAsync(
+        //        ds => ds.BookingId == bookingId && ds.UserId == userId);
 
-            if (doctorSchedule == null)
-                throw new ArgumentException("You are not assigned to this booking.");
+        //    if (doctorSchedule == null)
+        //        throw new ArgumentException("You are not assigned to this booking.");
 
-            // ✅ Chuyển trạng thái sang Completed
-            booking.Status = BookingStatus.Completed;
+        //    // ✅ Chuyển trạng thái sang Completed
+        //    booking.Status = BookingStatus.Completed;
 
-            await _unitOfWork.CompleteAsync();
+        //    await _unitOfWork.CompleteAsync();
 
-            return _mapper.Map<BookingDTO>(booking);
-        }
+        //    return _mapper.Map<BookingDTO>(booking);
+        //}
 
         public async Task<List<BookingDTO>> GetUnassignedBookingsAsync()
         {
