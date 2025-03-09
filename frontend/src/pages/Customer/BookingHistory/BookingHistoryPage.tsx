@@ -258,7 +258,7 @@ const BookingHistory: React.FC = () => {
                                                             <>
                                                                 <Button
                                                                     type="primary"
-                                                                    className="Cancel-button"
+                                                                    className="Refund-button"
                                                                     onClick={() => openRefundModal(booking.bookingId)}
                                                                 >
                                                                     Hủy Đơn và Yêu Cầu Hoàn Tiền
