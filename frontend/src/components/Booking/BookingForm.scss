@@ -1,5 +1,4 @@
 .vaccination-container {
-  margin-top: 50px;
   padding: 0;
   width: 100%;
   max-width: 1200px;
@@ -9,8 +8,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  
   .vaccination-form {
+    margin-top: 30px;
     width: 100%;
     max-width: 600px;
     padding: 20px;
@@ -91,6 +91,8 @@
     ul {
       list-style: none;
       padding: 0;
+      display: flex;
+      flex-wrap: wrap;
 
       li {
         border: 1px solid #ccc;
@@ -320,7 +322,6 @@
 
 .child-card {
   width: calc(50% - 10px);
-  display: flex;
   align-items: center;
   background: #f1f3ff;
   border-radius: 10px;

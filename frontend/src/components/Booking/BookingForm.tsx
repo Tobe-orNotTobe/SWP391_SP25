@@ -13,13 +13,14 @@ import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
 import { apiGetMyChilds } from "../../apis/apiChild.ts";
 
 import { Avatar } from "antd";
+import { UserOutlined } from '@ant-design/icons';
+
 import {
   useVaccineDetail,
   useComboVaccineDetail,
 } from "../../hooks/useVaccine";
 import { toast } from "react-toastify";
-import {ChildDetailResponse} from "../../interfaces/Child.ts";
-
+import { ChildDetailResponse } from "../../interfaces/Child.ts";
 
 const VaccinationRegistrationPage = () => {
   const navigate = useNavigate();
@@ -68,7 +69,6 @@ const VaccinationRegistrationPage = () => {
         const data = await apiGetMyChilds();
 
         if (data.isSuccess && data.result) {
-
           const children = data.result.map((child: ChildDetailResponse) => ({
             childId: child.childId,
             fullName: child.fullName,
@@ -278,7 +278,12 @@ const VaccinationRegistrationPage = () => {
                               <div>
                                 <Avatar
                                   size={64}
-                                  src={child.imageUrl}
+                                  src={
+                                    child.imageUrl ? child.imageUrl : undefined
+                                  } 
+                                  icon={
+                                    !child.imageUrl ? <UserOutlined /> : null
+                                  } 
                                 />
                               </div>
                               <div>
@@ -287,7 +292,11 @@ const VaccinationRegistrationPage = () => {
                                 </p>
                                 <p>
                                   <strong>Ngày sinh:</strong>{" "}
-                                  {child.dateOfBirth}
+                                  {child.dateOfBirth
+                                    ? new Date(
+                                        child.dateOfBirth
+                                      ).toLocaleDateString("vi-VN")
+                                    : "Không xác định"}
                                 </p>
                               </div>
                             </div>
