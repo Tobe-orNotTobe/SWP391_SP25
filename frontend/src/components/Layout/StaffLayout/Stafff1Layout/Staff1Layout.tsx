@@ -5,8 +5,8 @@ const groups = [
   {
     title: "Tiêm chủng",
     items: [
-      { label: "Ghi nhận tiêm chủng cho kh", path: "/staff/booking" },
-      { label: "Phân công bs", path: "/staff/assignDoctor" },
+      { label: "Ghi nhận tiêm chủng cho khách hàng", path: "/staff/booking" },
+      { label: "Phân công bác sĩ", path: "/staff/assignDoctor" },
     ],
   },
   {

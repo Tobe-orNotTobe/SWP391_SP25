@@ -280,10 +280,10 @@ const VaccinationRegistrationPage = () => {
                                   size={64}
                                   src={
                                     child.imageUrl ? child.imageUrl : undefined
-                                  } // Nếu có imageUrl, hiển thị ảnh
+                                  } 
                                   icon={
                                     !child.imageUrl ? <UserOutlined /> : null
-                                  } // Nếu không có imageUrl, hiển thị icon
+                                  } 
                                 />
                               </div>
                               <div>
