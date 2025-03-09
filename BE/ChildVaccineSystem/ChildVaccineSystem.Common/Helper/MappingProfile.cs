@@ -103,7 +103,14 @@ namespace ChildVaccineSystem.Common.Helper
                     opt => opt.MapFrom(src => src.BookingDetails));
 
             CreateMap<BookingDetail, BookingDetailDTO>();
+            // BookingDetail Mapping
+            CreateMap<BookingDetail, BookingDetailDTO>()
+                .ForMember(dest => dest.VaccineName,
+                           opt => opt.MapFrom(src => src.Vaccine != null ? src.Vaccine.Name : null))
+                .ForMember(dest => dest.ComboVaccineName,
+                           opt => opt.MapFrom(src => src.ComboVaccine != null ? src.ComboVaccine.ComboName : null));
 
+            CreateMap<Booking, BookingDTO>();
             //Children
             CreateMap<Children, ChildrenDTO>().ReverseMap();
             CreateMap<CreateChildrenDTO, Children>();
@@ -166,6 +173,9 @@ namespace ChildVaccineSystem.Common.Helper
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl));
+
+            CreateMap<BlogPost, BlogPostBasicDTO>();
+
             //feedback
             CreateMap<Feedback, FeedbackDTO>();
             CreateMap<CreateFeedbackDTO, Feedback>();

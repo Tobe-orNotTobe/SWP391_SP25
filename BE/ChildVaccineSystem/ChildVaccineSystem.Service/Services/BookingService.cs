@@ -27,12 +27,34 @@ namespace ChildVaccineSystem.Service.Services
 
         public async Task<BookingDTO> GetByIdAsync(int id)
         {
-            var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == id, includeProperties: "BookingDetails.Vaccine,BookingDetails.ComboVaccine,Children,User");
+            var booking = await _unitOfWork.Bookings.GetAsync(
+                b => b.BookingId == id,
+                includeProperties: "BookingDetails.Vaccine,BookingDetails.ComboVaccine,Children,User"
+            );
+
             if (booking == null)
                 throw new ArgumentException($"Booking with ID {id} not found");
 
-            return _mapper.Map<BookingDTO>(booking);
+            var bookingDTO = _mapper.Map<BookingDTO>(booking);
+
+            // Ánh xạ tên Vaccine và tên Combo Vaccine
+            foreach (var detail in bookingDTO.BookingDetails)
+            {
+                if (detail.VaccineId.HasValue)
+                {
+                    var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == detail.VaccineId.Value);
+                    detail.VaccineName = vaccine?.Name; // ✅ Lấy tên Vaccine
+                }
+                else if (detail.ComboVaccineId.HasValue)
+                {
+                    var comboVaccine = await _unitOfWork.ComboVaccines.GetAsync(cv => cv.ComboId == detail.ComboVaccineId.Value);
+                    detail.ComboVaccineName = comboVaccine?.ComboName; // ✅ Lấy tên Combo Vaccine
+                }
+            }
+
+            return bookingDTO;
         }
+
 
         public async Task<BookingDTO> CreateAsync(string userId, CreateBookingDTO bookingDto)
         {
@@ -127,9 +149,33 @@ namespace ChildVaccineSystem.Service.Services
 
         public async Task<List<BookingDTO>> GetUserBookingsAsync(string userId)
         {
-            var bookings = await _unitOfWork.Bookings.GetAllAsync(b => b.UserId == userId, includeProperties: "BookingDetails.Vaccine,BookingDetails.ComboVaccine,Children,User");
-            return _mapper.Map<List<BookingDTO>>(bookings);
+            var bookings = await _unitOfWork.Bookings.GetAllAsync(
+                b => b.UserId == userId,
+                includeProperties: "BookingDetails.Vaccine,BookingDetails.ComboVaccine,Children,User"
+            );
+
+            var result = _mapper.Map<List<BookingDTO>>(bookings);
+
+            foreach (var booking in result)
+            {
+                foreach (var detail in booking.BookingDetails)
+                {
+                    if (detail.VaccineId.HasValue)
+                    {
+                        var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == detail.VaccineId.Value);
+                        detail.VaccineName = vaccine?.Name;
+                    }
+                    else if (detail.ComboVaccineId.HasValue)
+                    {
+                        var comboVaccine = await _unitOfWork.ComboVaccines.GetAsync(cv => cv.ComboId == detail.ComboVaccineId.Value);
+                        detail.ComboVaccineName = comboVaccine?.ComboName;
+                    }
+                }
+            }
+
+            return result;
         }
+
 
         private async Task ValidateBooking(string userId, CreateBookingDTO bookingDto)
         {
@@ -244,7 +290,7 @@ namespace ChildVaccineSystem.Service.Services
                 }
             }
 
-            booking.Status = BookingStatus.Completed;
+            booking.Status = BookingStatus.InProgress;
             await _unitOfWork.CompleteAsync();
 
             return true;
@@ -286,9 +332,13 @@ namespace ChildVaccineSystem.Service.Services
         }
         public async Task<List<BookingDTO>> GetUnassignedBookingsAsync()
         {
-            var unassignedBookings = await _unitOfWork.Bookings.GetUnassignedBookingsAsync();
+            var unassignedBookings = await _unitOfWork.Bookings
+                .GetAllAsync(b => b.Status == BookingStatus.Unassigned,
+                             includeProperties: "BookingDetails.Vaccine,BookingDetails.ComboVaccine,Children,User");
+
             return _mapper.Map<List<BookingDTO>>(unassignedBookings);
         }
+
         public async Task<List<BookingDTO>> GetAllBookingsAsync()
         {
             var bookings = await _unitOfWork.Bookings.GetAllAsync(
