@@ -19,9 +19,6 @@ import {
 import StaffLayout from "../../components/Layout/StaffLayout/StaffLayout.tsx";
 import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
 import Staff1Layout from "../../components/Layout/StaffLayout/Stafff1Layout/Staff1Layout.tsx";
-import { toast } from "react-toastify";
-import { Avatar } from "antd";
-import { UserOutlined } from '@ant-design/icons';
 
 const BookingForStaff = () => {
   const navigate = useNavigate();
@@ -63,7 +60,7 @@ const BookingForStaff = () => {
     const userId = searchInput; // Giả sử userId là cố định
 
     if (!userId) {
-      toast.warn("Vui lòng nhập mã khách hàng.");
+      alert("Vui lòng nhập mã khách hàng.");
       return;
     }
 
@@ -81,13 +78,17 @@ const BookingForStaff = () => {
           gender: child.gender === "Female" ? "Nữ" : "Nam",
         }));
 
-        setParentInfo({
+        setParentInfo((prev: any) => ({
           customerCode: sub,
           parentName: username,
-          children: children as Child[],
-        });
+          children: children,
+        }));
       } else {
-        toast.warn("Không có dữ liệu trẻ.");
+        setFormError("Không có trẻ.");
+        notification.error({
+          message: "Lỗi",
+          description: "Không có dữ liệu trẻ.",
+        });
       }
     } catch (error) {
       const errorMessage = error || "Lỗi không xác định";
@@ -323,32 +324,13 @@ const BookingForStaff = () => {
                                 }}
                               />
                               <div className="child-info">
-                                <div>
-                                  <Avatar
-                                    size={64}
-                                    src={
-                                      child.imageUrl
-                                        ? child.imageUrl
-                                        : undefined
-                                    }
-                                    icon={
-                                      !child.imageUrl ? <UserOutlined /> : null
-                                    }
-                                  />
-                                </div>
-                                <div>
-                                  <p>
-                                    <strong>Tên:</strong> {child.fullName}
-                                  </p>
-                                  <p>
-                                    <strong>Ngày sinh:</strong>{" "}
-                                    {child.dateOfBirth
-                                      ? new Date(
-                                          child.dateOfBirth
-                                        ).toLocaleDateString("vi-VN")
-                                      : "Không xác định"}
-                                  </p>
-                                </div>
+                                <p>
+                                  <strong>Tên:</strong> {child.fullName}
+                                </p>
+                                <p>
+                                  <strong>Ngày sinh:</strong>{" "}
+                                  {child.dateOfBirth}
+                                </p>
                               </div>
                             </label>
                           </li>

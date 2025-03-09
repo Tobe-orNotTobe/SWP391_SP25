@@ -209,16 +209,3 @@ export const apiUpdateFeedback = async ( bookingId : number, data : UpdateFeedba
     throw err;
   }
 }
-
-export const apiGetUnassignedBooking = async () => {
-  try {
-    const response = await axiosInstance.get("/api/Booking/unassigned");
-    return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error) && error.response) {
-      throw error.response.data.errorMessages || ["Unknown error occurred"];
-    } else {
-      throw ["An unexpected error occurred"];
-    }
-  }
-};

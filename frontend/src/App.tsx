@@ -60,7 +60,6 @@ import AdminBlogManagePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlog
 import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogDeactive/AdminBlogDeactive.tsx";
 import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
 import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
-import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
 
 
 function App() {
@@ -110,7 +109,7 @@ function App() {
                 {/* Staff Routes */}
                 <Route path="/staff/service" element={<ProtectedRoute allowedRoles={["Staff"]}><ServicePage /></ProtectedRoute>} />
                 <Route path="/staff/assignDoctor" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignPage /></ProtectedRoute>} />
-                <Route path="/staff/booking" element={<ProtectedRoute allowedRoles={["Staff"]}><BookingForStaff /></ProtectedRoute>} />
+                <Route path="/staff/booking" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignedBooking /></ProtectedRoute>} />
                 <Route path="/doctor/vaccination-schedule" element={<ProtectedRoute allowedRoles={["Doctor"]}><VaccinationSchedulePage /></ProtectedRoute>} />
 
                 {/* Manager Routes */}

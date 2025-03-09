@@ -1,7 +1,9 @@
-import { useEffect, useState, useRef } from "react";
-import { apiAssignDoctor, apiGetAllBookings, apiGetUnassignedBooking } from "../../apis/apiBooking";
+import  { useEffect, useState, useRef } from "react";
+import { apiAssignDoctor, apiGetAllBookings } from "../../apis/apiBooking";
 import { toast } from "react-toastify";
 import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
+//import Modal from "react-modal";
+
 import { apiGetAllDoctors } from "../../apis/apiAdmin";
 import { Doctor } from "../../interfaces/Doctor";
 import "./DoctorList.scss";
@@ -17,10 +19,10 @@ const { Title, Text } = Typography;
 
 function AssignPage() {
   const [bookings, setBookings] = useState<BookingResponse[]>([]);
-  const [unassignBookings, setUnassignBookings] = useState<BookingResponse[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalDoctorIsOpen, setDoctorModalIsOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<BookingResponse | null>(null);
+  const [selectedBooking, setSelectedBooking] =
+    useState<BookingResponse | null>(null);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -35,27 +37,12 @@ function AssignPage() {
       const data = await apiGetAllBookings();
       if (data?.isSuccess) {
         setBookings(data.result);
-        console.log(data)
       } else {
         toast.error(data.errorMessage);
       }
     };
 
     fetchBookings();
-  }, []);
-
-  useEffect(() => {
-    const fetchUnassingBookings = async () => {
-      const data = await apiGetUnassignedBooking();
-      if (data?.isSuccess) {
-        setUnassignBookings(data.result);
-        console.log(data)
-      } else {
-        toast.error(data.errorMessage);
-      }
-    };
-
-    fetchUnassingBookings();
   }, []);
 
   const handleAssignDoctor = async (doctorId: string, bookingId: string) => {
@@ -90,6 +77,8 @@ function AssignPage() {
     setSelectedBooking(null);
     setDoctorModalIsOpen(false);
   };
+
+
 
   // Hàm xử lý tìm kiếm
   const handleSearch = (
@@ -175,17 +164,17 @@ function AssignPage() {
       title: "Mã đơn",
       dataIndex: "bookingId",
       key: "bookingId",
-      ...getColumnSearchProps("bookingId"),
+      ...getColumnSearchProps("bookingId"), // Thêm chức năng tìm kiếm
       sorter: (a: BookingResponse, b: BookingResponse) =>
-        Number(a.bookingId) - Number(b.bookingId),
+        Number(a.bookingId) - Number(b.bookingId), // Thêm chức năng sắp xếp
     },
     {
       title: "Tên Trẻ",
       dataIndex: "childName",
       key: "childName",
-      ...getColumnSearchProps("childName"),
+      ...getColumnSearchProps("childName"), // Thêm chức năng tìm kiếm
       sorter: (a: BookingResponse, b: BookingResponse) =>
-        a.childName.localeCompare(b.childName),
+        a.childName.localeCompare(b.childName), // Thêm chức năng sắp xếp
     },
     {
       title: "Ngày Đặt",
@@ -193,17 +182,17 @@ function AssignPage() {
       key: "bookingDate",
       render: (date: string) => new Date(date).toLocaleDateString(),
       sorter: (a: BookingResponse, b: BookingResponse) =>
-        new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime(),
+        new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime(), // Thêm chức năng sắp xếp
     },
     {
       title: "Loại Tiêm",
       dataIndex: "bookingType",
       key: "bookingType",
-      ...getColumnSearchProps("bookingType"),
+      ...getColumnSearchProps("bookingType"), // Thêm chức năng tìm kiếm
       filters: [
         { text: "Loại 1", value: "Loại 1" },
         { text: "Loại 2", value: "Loại 2" },
-      ],
+      ], // Thêm chức năng lọc
       onFilter: (value: any, record: BookingResponse) =>
         record.bookingType.includes(value),
     },
@@ -213,7 +202,7 @@ function AssignPage() {
       key: "totalPrice",
       render: (price: number) => `${price.toLocaleString()} VNĐ`,
       sorter: (a: BookingResponse, b: BookingResponse) =>
-        Number(a.totalPrice) - Number(b.totalPrice),
+        Number(a.totalPrice) - Number(b.totalPrice), // Thêm chức năng sắp xếp
     },
     {
       title: "Trạng Thái",
@@ -222,45 +211,36 @@ function AssignPage() {
       filters: [
         { text: "Đang chờ", value: "Đang chờ" },
         { text: "Hoàn thành", value: "Hoàn thành" },
-      ],
+      ], // Thêm chức năng lọc
       onFilter: (value: any, record: BookingResponse) =>
         record.status.includes(value),
     },
     {
-      title: "Trạng Thái Phân Công",
-      key: "assignedStatus",
-      render: (_: undefined, record: BookingResponse) => {
-        const isAssigned = !unassignBookings.some(
-          (unassignBooking) => unassignBooking.bookingId === record.bookingId
-        );
-        return isAssigned ? "Đã phân công" : "Chưa phân công";
-      },
-    },
-    {
       title: "Chi Tiết",
       key: "action",
-      render: (_: undefined, record: BookingResponse) => {
-        const isAssigned = unassignBookings.some(
-          (unassignBooking) => unassignBooking.bookingId === record.bookingId
-        );
-        return (
-          <Space size="middle">
-            <Button type="primary" className="" onClick={() => openModal(record)}>
-              Chi tiết
-            </Button>
-            {!isAssigned && (
-              <Button
-                type="primary"
-                color="green"
-                variant="solid"
-                onClick={() => openDoctorModal(record)}
-              >
-                Phân công
-              </Button>
-            )}
-          </Space>
-        );
-      },
+      render: (_: undefined, record: BookingResponse) => (
+        <Space size="middle">
+          <Button type="primary" className="" onClick={() => openModal(record)}>
+            Chi tết
+          </Button>
+          <Button
+            type="primary"
+            color="green"
+            variant="solid"
+            onClick={() => openDoctorModal(record)}
+          >
+            Phân công
+          </Button>
+          {/* <Button
+            type="primary"
+            color="orange"
+            variant="solid"
+            onClick={() => openDoctorModal(record)}
+          >
+            Hủy phân công
+          </Button> */}
+        </Space>
+      ),
     },
   ];
 
@@ -276,6 +256,7 @@ function AssignPage() {
       <Modal
         open={modalIsOpen}
         onCancel={closeModal}
+        //className="modal-content"
       >
         <h2>Chi Tiết Đặt Lịch</h2>
         {selectedBooking && (
