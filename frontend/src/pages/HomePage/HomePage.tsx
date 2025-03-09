@@ -1,13 +1,13 @@
 import React, {useEffect} from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "antd";
-import {useImgCarousel, useBriefContent, useBlogIntro} from "./useHomePage.ts";
+import { useImgCarousel, useBriefContent} from "./useHomePage.ts";
 import { useNewsIntro } from "./useHomePage.ts";
 import { useVaccineIntro } from "../../hooks/useVaccine";
 import { useVaccineServiceIntro } from "./useHomePage.ts";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar";
 import { ServiceCard, VaccineCard, NewsCard} from "../../components/Card/Card";
-
+import {Row, Col} from "antd";
 import Footer from "../../components/Footer/Footer.tsx"
 import "./HomePage.scss"
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
@@ -36,15 +36,41 @@ const HomePage : React.FC  = () => {
         fetchAllBlog(true);
     }, []);
 
+    if (loading || briefContentLoading || vaccineIntroLoading || vaccineServiceIntroLoading || blogIntroLoading) {
+        return <p>Loading...</p>;
+    }
+
+    if (error || briefContentError || vaccineIntroError || vaccineServiceError || blogIntroError) {
+        return <p>Error: {error}</p>;
+    }
+
+
+    const chunkSize = 8;
+    const vaccineChunks = [];
+    for (let i = 0; i < vaccineIntro.length; i += chunkSize) {
+        vaccineChunks.push(vaccineIntro.slice(i, i + chunkSize));
+    }
+
+    const newsChunkSize = 3;
+    const newsChunks = [];
+    for (let i = 0; i < newsIntro.length; i += newsChunkSize) {
+        newsChunks.push(newsIntro.slice(i, i + newsChunkSize));
+    }
+
     return(
         <>
-            <CustomerNavbar/>
+        <CustomerNavbar/>
             <div>
                 <div className="homeContainer">
                     <div className="carouselContainer">
                         <Carousel autoplay>
                             {imgCarousel.map((item, index) => (
-                                <img key={index} src={`../../../src/assets/homepage/${item.image}`} className="ImgSlider" alt="Introduction" />
+                                <img
+                                    key={index}
+                                    src={`../../../src/assets/homepage/${item.image}`}
+                                    className="ImgSlider"
+                                    alt="Introduction"
+                                />
                             ))}
                         </Carousel>
                     </div>
@@ -58,11 +84,14 @@ const HomePage : React.FC  = () => {
                                 <p>{item.paragraph1}</p>
                                 <p>{item.paragraph2}</p>
                                 <div className="briefFullContent">
-                                    <Link to="/introduction">Xem Thêm</Link>
+                                    <a href="/introduction">Xem Thêm</a>
                                 </div>
                             </div>
                             <div className="briefContentImage">
-                                <img src={`../../../src/assets/homepage/${item.image}`} alt={item.title} />
+                                <img
+                                    src={`../../../src/assets/homepage/${item.image}`}
+                                    alt={item.title}
+                                />
                             </div>
                         </div>
                     ))}
