@@ -10,9 +10,8 @@ namespace ChildVaccineSystem.Data.Enum
     {
         Pending = 1,           // Chờ xác nhận
         Confirmed = 2,         // Đã xác nhận
-        Unassigned = 3,        // Chưa có bác sĩ được gán
-        InProgress = 4,        // Đang thực hiện
-        Completed = 5,         // Đã hoàn thành
-        Cancelled = 6          // Đã hủy
+        InProgress = 3,        // Đang thực hiện
+        Completed = 4,         // Đã hoàn thành
+        Cancelled = 5          // Đã hủy
     }
 }
