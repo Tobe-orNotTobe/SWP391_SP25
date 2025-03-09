@@ -110,7 +110,7 @@ namespace ChildVaccineSystem.Service.Services
 
 			await _unitOfWork.RefundRequests.CreateAsync(refundRequest);
 
-			booking.Status = BookingStatus.RquestRefund;
+			booking.Status = BookingStatus.RequestRefund;
 			await _unitOfWork.CompleteAsync();
 
 			return _mapper.Map<RefundRequestDTO>(refundRequest);

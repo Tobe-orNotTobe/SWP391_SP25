@@ -13,6 +13,6 @@ namespace ChildVaccineSystem.Data.Enum
         InProgress = 3,        // Đang thực hiện
         Completed = 4,         // Đã hoàn thành
         Cancelled = 5,          // Đã hủy
-        RquestRefund = 6       // Yêu cầu hoàn tiền
+        RequestRefund = 6       // Yêu cầu hoàn tiền
 	}
 }
