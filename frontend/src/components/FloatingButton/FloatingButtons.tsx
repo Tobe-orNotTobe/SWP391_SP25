@@ -14,14 +14,33 @@ const FloatingButtons: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    const smoothScrollToTop = () => {
+        const startPosition = window.scrollY;
+        const startTime = performance.now();
+        const duration = 800; // Thời gian cuộn (ms)
 
-  return (
+        const easeOutCubic = (t: any) => 1 - Math.pow(1 - t, 3);
+
+        const animateScroll = (currentTime: any) => {
+            const elapsedTime = currentTime - startTime;
+            const progress = Math.min(elapsedTime / duration, 1);
+
+            const easedProgress = easeOutCubic(progress);
+            window.scrollTo(0, startPosition * (1 - easedProgress));
+
+            if (progress < 1) {
+                requestAnimationFrame(animateScroll);
+            }
+        };
+
+        requestAnimationFrame(animateScroll);
+    };
+
+
+    return (
     <div className="floatingButtons">
       {showScrollButton && (
-        <button className="scrollToTop" onClick={scrollToTop} aria-label="Scroll to top">
+        <button className="scrollToTop" onClick={smoothScrollToTop} aria-label="Scroll to top">
           <FaArrowUp size={30} />
         </button>
       )}

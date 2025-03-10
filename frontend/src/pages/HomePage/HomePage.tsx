@@ -35,15 +35,25 @@ const HomePage : React.FC  = () => {
         <>
         <CustomerNavbar/>
             <div>
-                <div className="homeContainer">
-                    <div className="carouselContainer">
-                        <Carousel autoplay>
-                            {imgCarousel.map((item, index) => (
-                                <img key={index} src={`../../../src/assets/homepage/${item.image}`}
-                                     className="ImgSlider" alt="Introduction"/>
-                            ))}
-                        </Carousel>
+                <div style={{display: "flex"}}>
+                    {/*<div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>*/}
+                    {/*    <img style={{width: "300px", objectFit: "contain", height: "580px"}}*/}
+                    {/*         src={'../../../src/assets/banner/QC_01.png'} alt={"banner"}/>*/}
+                    {/*</div>*/}
+                    <div className="homeContainer">
+                        <div className="carouselContainer">
+                            <Carousel autoplay>
+                                {imgCarousel.map((item, index) => (
+                                    <img key={index} src={`../../../src/assets/homepage/${item.image}`}
+                                         className="ImgSlider" alt="Introduction"/>
+                                ))}
+                            </Carousel>
+                        </div>
                     </div>
+                    {/*<div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>*/}
+                    {/*    <img style={{width: "300px", objectFit: "contain", height: "580px"}}*/}
+                    {/*         src={'../../../src/assets/banner/QC_01.png'} alt={"banner"}/>*/}
+                    {/*</div>*/}
                 </div>
 
 
@@ -51,7 +61,7 @@ const HomePage : React.FC  = () => {
                     {briefContent.map((item, index) => (
                         <div key={index} className="briefSmallContent">
                             <div className="briefContentText">
-                                <h1>{item.title}</h1>
+                            <h1>{item.title}</h1>
                                 <p>{item.paragraph1}</p>
                                 <p>{item.paragraph2}</p>
                                 <div className="briefFullContent">
