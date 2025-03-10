@@ -157,7 +157,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
         [HttpPost("assign-doctor")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Staff")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
