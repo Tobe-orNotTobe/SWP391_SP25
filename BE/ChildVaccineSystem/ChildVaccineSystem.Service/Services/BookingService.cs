@@ -51,6 +51,15 @@ namespace ChildVaccineSystem.Service.Services
                     detail.ComboVaccineName = comboVaccine?.ComboName; // ✅ Lấy tên Combo Vaccine
                 }
             }
+            // ✅ Kiểm tra nếu Children được Include đúng
+            if (booking.Children != null)
+            {
+                bookingDTO.ChildName = booking.Children.FullName ?? "Không xác định";
+            }
+            else
+            {
+                bookingDTO.ChildName = "Không xác định";
+            }
 
             return bookingDTO;
         }

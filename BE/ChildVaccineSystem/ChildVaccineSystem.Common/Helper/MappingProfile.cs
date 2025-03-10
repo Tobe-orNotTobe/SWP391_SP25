@@ -98,7 +98,7 @@ namespace ChildVaccineSystem.Common.Helper
 
             CreateMap<Booking, BookingDTO>()
                 .ForMember(dest => dest.ChildName,
-                    opt => opt.MapFrom(src => src.Children.FullName))
+        opt => opt.MapFrom(src => src.Children != null ? src.Children.FullName : "Không xác định"))
                 .ForMember(dest => dest.BookingDetails,
                     opt => opt.MapFrom(src => src.BookingDetails));
 
