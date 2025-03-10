@@ -27,6 +27,7 @@ namespace ChildVaccineSystem.Data.Entities
         public string UndesirableEffects { get; set; }
         public string Preserve { get; set; }
         public int InjectionsCount { get; set; }
+		public decimal DoseAmount { get; set; }
 
 		public virtual ICollection<VaccineScheduleDetail> VaccineScheduleDetails { get; set; }
 

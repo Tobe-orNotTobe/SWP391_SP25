@@ -20,5 +20,9 @@ namespace ChildVaccineSystem.Data.Entities
         [ForeignKey("Vaccine")]
         public int VaccineId { get; set; }
         public Vaccine Vaccine { get; set; }
-    }
+
+		[ForeignKey("VaccineInventory")]
+		public int? VaccineInventoryId { get; set; }
+		public VaccineInventory VaccineInventory { get; set; }
+	}
 }

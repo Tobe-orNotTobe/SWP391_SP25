@@ -16,6 +16,7 @@ namespace ChildVaccineSystem.Data.Entities
         [ForeignKey("Booking")]
         public int BookingId { get; set; }
         public Booking Booking { get; set; }
+
         [ForeignKey("Vaccine")]
         public int? VaccineId { get; set; }
         public Vaccine Vaccine { get; set; }
@@ -24,7 +25,11 @@ namespace ChildVaccineSystem.Data.Entities
         public int? ComboVaccineId { get; set; }
         public ComboVaccine ComboVaccine { get; set; }
 
-        [Required]
+		[ForeignKey("VaccineInventory")]
+		public int? VaccineInventoryId { get; set; }
+		public VaccineInventory VaccineInventory { get; set; }
+
+		[Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
     }
