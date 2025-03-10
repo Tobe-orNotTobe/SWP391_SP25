@@ -33,8 +33,8 @@ export const NewsCard : React.FC<NewsIntro> = ({id, title, briefContent, image})
         <>
             <div key={id} className="newsContainer">
                 <img src={image} alt={id} className="cardNewsImg"/>
-                <h3 className="newsTitle" dangerouslySetInnerHTML={{__html: title}}></h3>
                 <hr className="newsDivider"></hr>
+                <h3 className="newsTitle" dangerouslySetInnerHTML={{__html: title}}></h3>
                 <div className="newsBriefContent">{briefContent}</div>
             </div>
         </>
