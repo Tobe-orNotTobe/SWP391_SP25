@@ -64,6 +64,7 @@ import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBl
 import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
 import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
 import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
+import AdminWallet from "./pages/Admin/AdminWallet/AdminWallet.tsx";
 
 
 function App() {
@@ -146,6 +147,7 @@ function App() {
                 <Route path="/admin/blog/add" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogFormPage /></ProtectedRoute>} />
                 <Route path="/admin/blog/edit/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogFormPage /></ProtectedRoute>} />
                 <Route path="/admin/feedback" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminFeedbackListPage /></ProtectedRoute>} />
+                <Route path="/admin/wallet" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminWallet /></ProtectedRoute>} />
 
 
                 {/* Trang 404 */}

@@ -9,6 +9,7 @@ import { GoPackage } from "react-icons/go";
 import {MdOutlineCalendarToday, MdOutlineChangeCircle} from "react-icons/md";
 import { MdOutlineInventory2 } from "react-icons/md";
 import {CiUser} from "react-icons/ci";
+import {IoWalletOutline} from "react-icons/io5";
 
 const { Header, Sider, Content } = Layout;
 
@@ -44,6 +45,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             key: 'admin-profile',
             icon:  <CiUser/>,
             label: <Link to="/admin/profile">Thông tin cá nhân</Link>
+        },
+        {
+            key: 'admin-wallet',
+            icon: <IoWalletOutline/>,
+            label: <Link to="/admin/wallet">Quản lý Ví Admin</Link>
         },
         {
             key: 'account',
