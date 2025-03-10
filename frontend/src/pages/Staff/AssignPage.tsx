@@ -1,5 +1,9 @@
 import { useEffect, useState, useRef } from "react";
-import { apiAssignDoctor, apiGetAllBookings, apiGetUnassignedBooking } from "../../apis/apiBooking";
+import {
+  apiAssignDoctor,
+  apiGetAllBookings,
+  apiGetUnassignedBooking,
+} from "../../apis/apiBooking";
 import { toast } from "react-toastify";
 import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import { apiGetAllDoctors } from "../../apis/apiAdmin";
@@ -10,17 +14,20 @@ import { Table, Button, Space, Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
-import { Modal, Card, Avatar, Typography, Row, Col } from "antd";
+import { Modal, Card, Avatar, Typography, Row, Col, Tag } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
 function AssignPage() {
   const [bookings, setBookings] = useState<BookingResponse[]>([]);
-  const [unassignBookings, setUnassignBookings] = useState<BookingResponse[]>([]);
+  const [unassignBookings, setUnassignBookings] = useState<BookingResponse[]>(
+    []
+  );
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalDoctorIsOpen, setDoctorModalIsOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<BookingResponse | null>(null);
+  const [selectedBooking, setSelectedBooking] =
+    useState<BookingResponse | null>(null);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -35,7 +42,7 @@ function AssignPage() {
       const data = await apiGetAllBookings();
       if (data?.isSuccess) {
         setBookings(data.result);
-        console.log(data)
+        console.log(data);
       } else {
         toast.error(data.errorMessage);
       }
@@ -49,7 +56,7 @@ function AssignPage() {
       const data = await apiGetUnassignedBooking();
       if (data?.isSuccess) {
         setUnassignBookings(data.result);
-        console.log(data)
+        console.log(data);
       } else {
         toast.error(data.errorMessage);
       }
@@ -63,11 +70,22 @@ function AssignPage() {
       const response = await apiAssignDoctor(doctorId, bookingId);
       toast.success(response.status);
       toast.success("Phân công thành công");
-      console.log("Phân công thành công");
-      return response;
+
+      // Cập nhật lại danh sách đặt lịch và danh sách chưa phân công
+      const updatedBookings = await apiGetAllBookings();
+      if (updatedBookings?.isSuccess) {
+        setBookings(updatedBookings.result);
+      }
+
+      const updatedUnassignedBookings = await apiGetUnassignedBooking();
+      if (updatedUnassignedBookings?.isSuccess) {
+        setUnassignBookings(updatedUnassignedBookings.result);
+      }
+
+      setDoctorModalIsOpen(false); // Đóng modal sau khi phân công
     } catch (error) {
-      console.error("Error completing assign:", error);
-      throw error;
+      console.error("Lỗi khi phân công bác sĩ:", error);
+      toast.error("Phân công thất bại");
     }
   };
 
@@ -220,22 +238,55 @@ function AssignPage() {
       dataIndex: "status",
       key: "status",
       filters: [
-        { text: "Đang chờ", value: "Đang chờ" },
-        { text: "Hoàn thành", value: "Hoàn thành" },
+        { text: "Đang chờ", value: "Pending" },
+        { text: "Đã xác nhận", value: "Confirmed" },
+        { text: "Đang thực hiện", value: "InProgress" },
+        { text: "Hoàn thành", value: "Completed" },
+        { text: "Đã hủy", value: "Cancelled" },
+        { text: "Yêu cầu hoàn tiền", value: "RequestRefund" },
       ],
       onFilter: (value: any, record: BookingResponse) =>
-        record.status.includes(value),
+        record.status === value,
+      render: (status: string) => {
+        const statusColors: { [key: string]: string } = {
+          Pending: "orange",
+          Confirmed: "darkblue",
+          InProgress: "blue",
+          Completed: "green",
+          Cancelled: "red",
+          RequestRefund: "darkorange",
+        };
+
+        return <Tag color={statusColors[status] || "default"}>{status}</Tag>;
+      },
     },
+
     {
       title: "Trạng Thái Phân Công",
       key: "assignedStatus",
+      dataIndex: "assignedStatus",
+      filters: [
+        { text: "Đã phân công", value: "Đã phân công" },
+        { text: "Chưa phân công", value: "Chưa phân công" },
+      ],
+      onFilter: (value: any, record: BookingResponse) => {
+        const isAssigned = !unassignBookings.some(
+          (unassignBooking) => unassignBooking.bookingId === record.bookingId
+        );
+        return (isAssigned ? "Đã phân công" : "Chưa phân công") === value;
+      },
       render: (_: undefined, record: BookingResponse) => {
         const isAssigned = !unassignBookings.some(
           (unassignBooking) => unassignBooking.bookingId === record.bookingId
         );
-        return isAssigned ? "Đã phân công" : "Chưa phân công";
+        return (
+          <Tag color={isAssigned ? "green" : "red"}>
+            {isAssigned ? "Đã phân công" : "Chưa phân công"}
+          </Tag>
+        );
       },
     },
+
     {
       title: "Chi Tiết",
       key: "action",
@@ -245,10 +296,14 @@ function AssignPage() {
         );
         return (
           <Space size="middle">
-            <Button type="primary" className="" onClick={() => openModal(record)}>
+            <Button
+              type="primary"
+              className=""
+              onClick={() => openModal(record)}
+            >
               Chi tiết
             </Button>
-            {!isAssigned && (
+            {isAssigned && (
               <Button
                 type="primary"
                 color="green"
@@ -273,10 +328,7 @@ function AssignPage() {
       )}
 
       {/* Modal chi tiết */}
-      <Modal
-        open={modalIsOpen}
-        onCancel={closeModal}
-      >
+      <Modal open={modalIsOpen} onCancel={closeModal}>
         <h2>Chi Tiết Đặt Lịch</h2>
         {selectedBooking && (
           <div>
@@ -311,7 +363,7 @@ function AssignPage() {
         width={1200}
         className="doctor-modal"
       >
-        <div className="container">
+        <div className="doctorList-wraper">
           <Title level={2} className="title">
             Chọn bác sĩ muốn phân công
           </Title>
@@ -330,25 +382,23 @@ function AssignPage() {
                     <Title level={4} className="doctor-name">
                       {doctor.fullName}
                     </Title>
-                    <Text type="secondary" className="username">
-                      @{doctor.userName}
-                    </Text>
-                    <Text className="email">{doctor.email}</Text>
-                    <Text className="phone">{doctor.phoneNumber}</Text>
-                    <Text className="address">{doctor.address}</Text>
-                    <div
-                      className={`status ${
-                        doctor.isActive ? "active" : "inactive"
-                      }`}
-                    >
-                      {doctor.isActive ? "Đang hoạt động" : "Đang không hoạt động"}
-                    </div>
+                    <Text type="secondary">@{doctor.userName}</Text>
+                    <Text type="secondary">{doctor.email}</Text>
+                    <Text type="secondary">{doctor.phoneNumber}</Text>
+                    <Text type="secondary">{doctor.address}</Text>
+
+                    <Tag color={doctor.isActive ? "green" : "red"}>
+                      {doctor.isActive
+                        ? "Đang hoạt động"
+                        : "Đang không hoạt động"}
+                    </Tag>
+
                     <Button
                       type="primary"
                       block
                       className="detail-btn"
                       onClick={() => {
-                        if (selectedBooking?.bookingId !== undefined) {
+                        if (selectedBooking && selectedBooking.bookingId) {
                           handleAssignDoctor(
                             doctor.id.toString(),
                             selectedBooking.bookingId.toString()

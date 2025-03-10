@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { apiGetAllDoctors } from "../../apis/apiAdmin"; // Đường dẫn đúng với file API
-import "./DoctorList.scss"; // Import CSS thuần
+import { apiGetAllDoctors } from "../../apis/apiAdmin";
+import "./DoctorList.scss";
 import { Doctor } from "../../interfaces/Doctor";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -18,8 +18,8 @@ const DoctorList = () => {
   }, []);
 
   return (
-    <div className="container">
-      <h1 className="title">Danh sách bác sĩ</h1>
+    <div className="wraper-doctorList">
+      <h1 className="doctorListtitle">Danh sách bác sĩ</h1>
       <div className="doctor-grid">
         {doctors.length > 0 ? (
           doctors.map((doctor) => (
