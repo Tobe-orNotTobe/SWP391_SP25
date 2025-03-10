@@ -6,7 +6,7 @@ import "./VaccinationSchedulePage.scss";
 import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import { useNavigate } from "react-router-dom";
 import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
-import {Table, Button, Space, Input, InputRef} from "antd";
+import {Table, Button, Space, Input, InputRef, Tag} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
@@ -179,23 +179,26 @@ const VaccinationSchedulePage: React.FC = () => {
       dataIndex: "status",
       key: "status",
       filters: [
-        { text: "Đang chờ", value: "Đang chờ" },
-        { text: "Hoàn thành", value: "Hoàn thành" },
-      ], // Thêm chức năng lọc
-      onFilter: (value: string | number, record: BookingResponse) =>
-          record.status?.toString().toLowerCase().includes(value.toString().toLowerCase()),
+        { text: "Đang chờ", value: "Pending" },
+        { text: "Đã xác nhận", value: "Confirmed" },
+        { text: "Đang thực hiện", value: "InProgress" },
+        { text: "Hoàn thành", value: "Completed" },
+        { text: "Đã hủy", value: "Cancelled" },
+        { text: "Yêu cầu hoàn tiền", value: "RequestRefund" },
+      ],
+      onFilter: (value: any, record: BookingResponse) =>
+        record.status === value,
       render: (status: string) => {
-        const statusStyle = status === "Hoàn thành" ? "green" : "orange";
-        return (
-          <span
-            style={{
-              color: statusStyle === "green" ? "#52c41a" : "#f5222d",
-              fontWeight: "bold",
-            }}
-          >
-            {status}
-          </span>
-        );
+        const statusColors: { [key: string]: string } = {
+          Pending: "orange",
+          Confirmed: "darkblue",
+          InProgress: "blue",
+          Completed: "green",
+          Cancelled: "red",
+          RequestRefund: "darkorange",
+        };
+
+        return <Tag color={statusColors[status] || "default"}>{status}</Tag>;
       },
     },
     {
