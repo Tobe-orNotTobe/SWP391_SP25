@@ -184,7 +184,8 @@ const Payment: React.FC = () => {
   };
 
   return (
-      <section className="payment-section">
+      <div className="transaction-wraper">
+        <section className="payment-section">
         <div className="container">
           <div className="center-align">
             <h1>Thanh toán</h1>
@@ -279,6 +280,7 @@ const Payment: React.FC = () => {
           </div>
         </div>
       </section>
+      </div>
   );
 };
 
