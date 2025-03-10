@@ -119,7 +119,33 @@ export interface WalletUser {
     balance : number;
     totalRefunded : number;
     isAdminWallet : false;
-    recentTransactions : string[];
+    createdAt: string;
+    updatedAt: string;
+    recentTransactions : WalletHistoryUserDetail[];
 }
+
+export interface WalletHistoryUserDetail {
+    walletTransactionId : number;
+    walletId: number;
+    amount : number;
+    transactionType : string;
+    description : string;
+    createdAt : string;
+}
+
+export interface RefundListUser {
+    refundRequestId : number;
+    bookingId : number;
+    userId : string;
+    amount : number;
+    reason : string;
+    status : string;
+    adminNote : string;
+    processedBy : string | null;
+    createAt: string;
+    processAt: string | null;
+}
+
+
 
 

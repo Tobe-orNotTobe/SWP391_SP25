@@ -20,9 +20,9 @@ namespace ChildVaccineSystem.Service.Services
 			_walletService = walletService;
 		}
 
-		public async Task<List<RefundRequestDTO>> GetAllRefundRequestsAsync(string status = null)
+		public async Task<List<RefundRequestDTO>> GetAllRefundRequestsAsync()
 		{
-			var refundRequests = await _unitOfWork.RefundRequests.GetAllAsync(status);
+			var refundRequests = await _unitOfWork.RefundRequests.GetAllAsync();
 			return _mapper.Map<List<RefundRequestDTO>>(refundRequests);
 		}
 
@@ -59,7 +59,7 @@ namespace ChildVaccineSystem.Service.Services
 			}
 
 			// Check booking status - only allow refunds for certain statuses
-			if (booking.Status != BookingStatus.Confirmed && booking.Status != BookingStatus.Completed && booking.Status != BookingStatus.Pending)
+			if (booking.Status != BookingStatus.Confirmed)
 			{
 				throw new InvalidOperationException($"Cannot request refund for booking in {booking.Status} status.");
 			}
@@ -109,6 +109,10 @@ namespace ChildVaccineSystem.Service.Services
 			};
 
 			await _unitOfWork.RefundRequests.CreateAsync(refundRequest);
+
+			booking.Status = BookingStatus.RequestRefund;
+			await _unitOfWork.CompleteAsync();
+
 			return _mapper.Map<RefundRequestDTO>(refundRequest);
 		}
 

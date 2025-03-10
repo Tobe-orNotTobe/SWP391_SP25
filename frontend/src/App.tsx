@@ -23,7 +23,7 @@ import Login from "./pages/AuthPage/Login/Login.tsx";
 import Register from "./pages/AuthPage/Register/Register.tsx";
 import ForgotPassword from "./pages/AuthPage/ForgotPassword/ForgotPassword.tsx";
 import ResetPassword from "./pages/AuthPage/ResetPassword/ResetPassword.tsx";
-import {ConfirmEmail, PaymentSuccess} from "./components/Confirm/Confirm.tsx";
+import {ConfirmEmail, DepositSuccess, PaymentSuccess} from "./components/Confirm/Confirm.tsx";
 
 // Customer Pages
 import ChildRegistrationPage from "./pages/ChildPage/ChildRegister/ChildRegistrationPage.tsx";
@@ -57,12 +57,13 @@ import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
 import ManagerProfile from "./pages/Manager/ManagerProfile/ManagerProfile.tsx";
 import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
 import AssignPage from "./pages/Staff/AssignPage.tsx";
-import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
+
 import VaccinePackagePage from "./pages/VaccinePage/VaccinePackagePage/VaccinePackagePage.tsx";
 import AdminBlogManagePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogManage/AdminBlogManage.tsx";
 import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogDeactive/AdminBlogDeactive.tsx";
 import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
 import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
+import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
 
 
 function App() {
@@ -70,7 +71,8 @@ function App() {
         <BrowserRouter>
             <PageLoader />
             <Routes>
-                <Route path="/payment" element={<TransactionPage />} />
+                <Route path="/payment-success" element={<PaymentSuccess />}/>
+                <Route path="/wallet/deposit-success" element={<DepositSuccess/>}/>
 
                 {/* Public Routes */}
                 <Route path="/" element={<PublicRoute><HomePage/></PublicRoute>}/>
@@ -94,7 +96,6 @@ function App() {
                 <Route path="/forgot-password" element={<NoAuthRoute><ForgotPassword /></NoAuthRoute>} />
                 <Route path="/reset-password" element={<NoAuthRoute><ResetPassword /></NoAuthRoute>} />
                 <Route path="/confirm-email" element={<NoAuthRoute><ConfirmEmail /></NoAuthRoute>} />
-                <Route path="/payment-success" element={<NoAuthRoute><PaymentSuccess /></NoAuthRoute>} />
 
                 {/* Customer Routes */}
                 <Route path="/child-register" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><ChildRegistrationPage /></ProtectedRoute>} />
@@ -107,12 +108,14 @@ function App() {
                 <Route path="/customer/wallet" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerWallet /></ProtectedRoute>} />
                 <Route path="/user-profile" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerProfile /></ProtectedRoute>} />
                 <Route path="/booking-history" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><BookingHistoryPage /></ProtectedRoute>} />
-                <Route path="/customer/wallet" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerWallet /></ProtectedRoute>} />
+
 
                 {/* Staff Routes */}
                 <Route path="/staff/service" element={<ProtectedRoute allowedRoles={["Staff"]}><ServicePage /></ProtectedRoute>} />
                 <Route path="/staff/assignDoctor" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignPage /></ProtectedRoute>} />
-                <Route path="/staff/booking" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignedBooking /></ProtectedRoute>} />
+                <Route path="/staff/booking" element={<ProtectedRoute allowedRoles={["Staff"]}><BookingForStaff /></ProtectedRoute>} />
+
+                {/* Doctor Routes */}
                 <Route path="/doctor/vaccination-schedule" element={<ProtectedRoute allowedRoles={["Doctor"]}><VaccinationSchedulePage /></ProtectedRoute>} />
 
                 {/* Manager Routes */}

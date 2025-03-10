@@ -10,24 +10,25 @@ const ForgotPassword : React.FC = () => {
     return(
         <>
             <CustomerNavbar/>
-            <div className="authContainer">
-                <h1>Nhập email đã đăng kí</h1>
-                <form onSubmit={handleForgotPasswordSubmit}>
-                    <label>Email đã đăng kí: </label>
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="authInput"
-                        required
-                    />
-                    {error && <p className="errorText">{error}</p>}
-                    <button type="submit" className="authButton" disabled={loading}>
-                        {loading ? "Đang gửi..." : "Gửi yêu cầu"}
-                    </button>
-                </form>
-
+            <div className="authBackGround">
+                <div className="authContainer">
+                    <h1>Nhập email đã đăng kí</h1>
+                    <form onSubmit={handleForgotPasswordSubmit}>
+                        <label>Email đã đăng kí: </label>
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="authInput"
+                            required
+                        />
+                        {error && <p className="errorText">{error}</p>}
+                        <button type="submit" className="authButton" disabled={loading}>
+                            {loading ? "Đang gửi..." : "Gửi yêu cầu"}
+                        </button>
+                    </form>
+                </div>
             </div>
         </>
     );

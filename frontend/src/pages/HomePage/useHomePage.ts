@@ -1,8 +1,15 @@
 
 import { useState, useEffect } from "react";
 import { ImgCarousel, BriefContent, VaccineService, NewsIntro } from "../../interfaces/Decorative";
-import {  apiGetBrieftContent, apiGetImgCarousel, apiGetNewsIntro, apiGetVaccineServiceIntro} from "../../apis/apiDecorative";
-import {IsLoginSuccessFully} from "../../validations/IsLogginSuccessfully.ts";
+import {
+     apiGetBlogBasic,
+    apiGetBrieftContent,
+    apiGetImgCarousel,
+    apiGetNewsIntro,
+    apiGetVaccineServiceIntro
+} from "../../apis/apiBlog.ts";
+
+import {BlogIntro} from "../../interfaces/Blog.ts";
 
 
 export const useImgCarousel = () =>{
@@ -10,9 +17,6 @@ export const useImgCarousel = () =>{
     const[loading, setLoading] = useState<boolean>(false);
     const[error, setError] = useState<string>("");
 
-    const {sub} =IsLoginSuccessFully();
-
-    console.log(sub);
 
      useEffect(() =>{
             const fetchVaccineIntro = async () =>{
@@ -85,8 +89,7 @@ export const useVaccineServiceIntro  = () => {
     }, []);
     
     return {vaccineServiceIntro, loading, error};
-}   
-
+}
 export const useNewsIntro = () => {
     const [newsIntro, setNewsIntro] = useState<NewsIntro[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -111,4 +114,38 @@ export const useNewsIntro = () => {
 
     return {newsIntro, loading, error};
 }
+
+
+export const useBlogIntro = () => {
+    const [blogs, setBlogs] = useState<BlogIntro[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchAllBlogIntro = async () => {
+
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await apiGetBlogBasic();
+                if (response && Array.isArray(response)) {
+                    // Lọc chỉ lấy blog có type === "Blog"
+                    const filteredBlogs = response.filter((blog: BlogIntro) => blog.type === "Blog");
+                    setBlogs(filteredBlogs);
+                }
+            }catch (err){
+                setError("Error Fetching Blog Intro Data");
+                console.error(err);
+            }finally{
+                setLoading(false)
+            }
+        }
+        fetchAllBlogIntro();
+    }, []);
+
+    return { blogs, loading, error };
+};
+
+
+
 

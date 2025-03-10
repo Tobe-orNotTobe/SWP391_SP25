@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
 import Footer from "../../../components/Footer/Footer.tsx";
 import FloatingButtons from "../../../components/FloatingButton/FloatingButtons.tsx";
@@ -11,13 +11,13 @@ import {
     getFilteredRowModel
 } from "@tanstack/react-table";
 import "./VaccinePackagePage.scss";
-import { GetVaccineComboDetail } from "../../../interfaces/Vaccine.ts";
+import {GetVaccineComboDetail, VaccineScheduleDetail} from "../../../interfaces/Vaccine.ts";
 import { apiGetComboVaccineDetail } from "../../../apis/apiVaccine.ts";
 import {Link} from "react-router-dom";
-import { FaSortAlphaDown } from "react-icons/fa";
-import { FaSortAlphaUp } from "react-icons/fa";
-import {Select} from "antd";
+import { FaSortAlphaDown, FaSortAlphaUp, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { Select, Button, Tooltip } from "antd";
 import DOMPurify from "dompurify";
+import { useVaccinationScheduleDetail } from "../../../hooks/useVaccine.ts";
 
 const columns = [
     {
@@ -35,7 +35,7 @@ const columns = [
     {
         header: "Tổng giá (VNĐ)",
         accessorKey: "totalPrice",
-        cell: (info: any) => new Intl.NumberFormat("vi-VN").format(info.getValue()), // Format tiền tệ
+        cell: (info: any) => new Intl.NumberFormat("vi-VN").format(info.getValue()),
     },
     {
         header: "Vaccines",
@@ -50,16 +50,31 @@ const columns = [
             </div>
         ),
     },
+];
 
+const ageColumns = [
+    { month: 0, label: 'Sơ sinh\n0 tháng' },
+    { month: 2, label: '2 tháng\n2 tháng' },
+    { month: 3, label: '3 tháng\n3 tháng' },
+    { month: 4, label: '4 tháng\n4 tháng' },
+    { month: 12, label: '12 tháng\n1 tuổi' },
+    { month: 18, label: '18 tháng\n1 tuổi' },
+    { month: 48, label: '4 tuổi\n4 tuổi' },
+    { month: 72, label: '6 tuổi\n6 tuổi' }
 ];
 
 const VaccinePackagePage: React.FC = () => {
-
     const [comboVaccines, setComboVaccines] = useState<GetVaccineComboDetail[]>([]);
     const [sorting, setSorting] = useState<SortingState>([]);
-    const [sortColumn, setSortColumn] = useState<string>("comboId"); // Lưu cột cần sắp xếp
-    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc"); // Lưu thứ tự sắp xếp
+    const [sortColumn, setSortColumn] = useState<string>("comboId");
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
     const [filtering, setFiltering] = useState("");
+    const { vaccinationSchedule } = useVaccinationScheduleDetail();
+
+    // References and state for horizontal scrolling
+    const scheduleWrapperRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
 
     useEffect(() => {
         const fetchComboVaccines = async () => {
@@ -80,64 +95,145 @@ const VaccinePackagePage: React.FC = () => {
         if (sortColumn) {
             setSorting([{ id: sortColumn, desc: sortDirection === "desc" }]);
         }
-    }, [sortColumn, sortDirection, setSorting]); // Tự động cập nhật khi có thay đổi
+    }, [sortColumn, sortDirection]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setFiltering(filtering); // Cập nhật filter
+            setFiltering(filtering);
         }, 300);
         return () => clearTimeout(timeout);
-    }, [filtering]); // Không cần `onFilter`
+    }, [filtering]);
+
+    // Check scroll capabilities when wrapper is rendered
+    useEffect(() => {
+        const checkScroll = () => {
+            if (scheduleWrapperRef.current) {
+                const { scrollLeft, scrollWidth, clientWidth } = scheduleWrapperRef.current;
+                setCanScrollLeft(scrollLeft > 0);
+                setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
+            }
+        };
+
+        // Initial check
+        checkScroll();
+
+        // Add event listener for scroll
+        const wrapperElement = scheduleWrapperRef.current;
+        if (wrapperElement) {
+            wrapperElement.addEventListener('scroll', checkScroll);
+
+            // Cleanup
+            return () => wrapperElement.removeEventListener('scroll', checkScroll);
+        }
+    }, [vaccinationSchedule]);
+
+    // Handle horizontal scrolling
+    const scrollLeft = () => {
+        if (scheduleWrapperRef.current) {
+            scheduleWrapperRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+        }
+    };
+
+    const scrollRight = () => {
+        if (scheduleWrapperRef.current) {
+            scheduleWrapperRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+        }
+    };
 
     const table = useReactTable({
         data: comboVaccines,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(), //  Thêm bộ lọc
+        getFilteredRowModel: getFilteredRowModel(),
         state: {
             sorting,
-            globalFilter: filtering, // Truyền filter vào bảng
+            globalFilter: filtering,
         },
         onSortingChange: setSorting,
         onGlobalFilterChange: setFiltering,
     });
+
+    const getAllVaccines = () => {
+        const vaccines: VaccineScheduleDetail[] = [];
+
+        vaccinationSchedule.forEach(schedule => {
+            schedule.vaccineScheduleDetails.forEach(detail => {
+                const existingVaccine = vaccines.find(v => v.vaccineId === detail.vaccineId);
+                if (!existingVaccine) {
+                    vaccines.push(detail);
+                }
+            });
+        });
+
+        return vaccines;
+    };
+
+    const allVaccines = getAllVaccines();
+
+    const findInjection = (vaccineId: number, month: number) => {
+        for (const schedule of vaccinationSchedule) {
+            const vaccineDetail = schedule.vaccineScheduleDetails.find(
+                detail => detail.vaccineId === vaccineId
+            );
+
+            if (vaccineDetail) {
+                const injection = vaccineDetail.injectionSchedules.find(
+                    inj => inj.injectionMonth === month
+                );
+
+                if (injection) {
+                    return injection;
+                }
+            }
+        }
+
+        return null;
+    };
+
+    const isVaccineRequired = (vaccineId: number): boolean => {
+        for (const schedule of vaccinationSchedule) {
+            const vaccine = schedule.vaccineScheduleDetails.find(v => v.vaccineId === vaccineId);
+            if (vaccine && vaccine.injectionSchedules.some(inj => inj.isRequired)) {
+                return true;
+            }
+        }
+        return false;
+    };
 
     return (
         <>
             <CustomerNavbar />
 
             <div className="table-container">
-                <span>
+               <span>
                     <Link style={{textDecoration: "none", color: "#2A388F"}} to="/homepage">Trang chủ</Link><span
-                    className="separator"> » </span><span
-                    className="last">Gói Vaccine</span>
-                </span>
+                   className="separator"> » </span><span
+                   className="last">Gói Vaccine</span>
+               </span>
 
                 <div style={{paddingTop: "20px"}} className="introductionTitle">
                     <h1 className="gt-title">Gói Vaccine</h1>
                 </div>
 
-                <div style={{display: "flex", alignItems: "center"}}>
-
+                {/* Search and filter controls */}
+                <div className="controls-row" style={{display: "flex", alignItems: "center", marginBottom: "20px"}}>
                     <div className="search-container">
                         <input
                             type="text"
                             placeholder="Tìm kiếm..."
                             value={filtering}
-                            onChange={(e) => setFiltering(e.target.value)} // 🆕 Xóa onFilter, chỉ cập nhật state
+                            onChange={(e) => setFiltering(e.target.value)}
                             className="search-box"
                         />
                     </div>
 
-
                     <div className="sorting-controls">
-
                         <Select
                             placeholder="Chọn cột"
                             value={sortColumn}
                             onChange={setSortColumn}
-                            style={{width: 150, paddingRight: "10px"}}
+                            style={{width: 150, marginRight: "10px"}}
                         >
                             <Select.Option value="comboId">Số thứ tự</Select.Option>
                             <Select.Option value="comboName">Gói combo</Select.Option>
@@ -145,7 +241,6 @@ const VaccinePackagePage: React.FC = () => {
                             <Select.Option value="totalPrice">Tổng giá</Select.Option>
                         </Select>
 
-                        {/* Chọn thứ tự sắp xếp */}
                         <Select
                             placeholder="Sắp xếp"
                             value={sortDirection}
@@ -158,18 +253,19 @@ const VaccinePackagePage: React.FC = () => {
                     </div>
                 </div>
 
-                <table>
+                {/* Vaccine Combo Table */}
+                <table className="combo-table">
                     <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map((header) => (
                                 <th key={header.id} onClick={header.column.getToggleSortingHandler()}>
-                                    <div className={"th-content"}>
+                                    <div className="th-content">
                                         {flexRender(header.column.columnDef.header, header.getContext())}
                                         {header.column.getIsSorted() === "asc"
-                                            ? <FaSortAlphaDown style={{paddingLeft: "5px"}}/>
+                                            ? <FaSortAlphaDown style={{marginLeft: "5px"}}/>
                                             : header.column.getIsSorted() === "desc"
-                                                ? <FaSortAlphaUp style={{paddingLeft: "5px"}}/>
+                                                ? <FaSortAlphaUp style={{marginLeft: "5px"}}/>
                                                 : ""}
                                     </div>
                                 </th>
@@ -197,8 +293,87 @@ const VaccinePackagePage: React.FC = () => {
                         </tr>
                     ))}
                     </tbody>
-
                 </table>
+
+                {/* Vaccination Schedule Section with Toolbar */}
+                <div className="vaccination-schedule">
+                    <div className="schedule-header">
+                        <div style={{paddingTop: "20px"}} className="introductionTitle">
+                            <h1 className="gt-title">Lịch tiêm chủng của vaccine</h1>
+                            <hr/>
+                        </div>
+                        <div className="schedule-toolbar">
+                            <Tooltip title="Cuộn sang trái">
+                                <Button
+                                    type="primary"
+                                    shape="circle"
+                                    icon={<FaArrowLeft/>}
+                                    onClick={scrollLeft}
+                                    disabled={!canScrollLeft}
+                                    className="scroll-button"
+                                />
+                            </Tooltip>
+                            <Tooltip title="Cuộn sang phải">
+                                <Button
+                                    type="primary"
+                                    shape="circle"
+                                    icon={<FaArrowRight/>}
+                                    onClick={scrollRight}
+                                    disabled={!canScrollRight}
+                                    className="scroll-button"
+                                />
+                            </Tooltip>
+                        </div>
+                    </div>
+
+                    <div className="schedule-wrapper" ref={scheduleWrapperRef}>
+                        <table className="schedule-table">
+                        <thead>
+                            <tr>
+                                <th className="vaccine-column">Vaccine</th>
+                                {ageColumns.map((col) => (
+                                    <th key={col.month} className="age-column">
+                                        {col.label}
+                                    </th>
+                                ))}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {allVaccines.map((vaccine) => (
+                                <tr key={vaccine.vaccineId}>
+                                    <td className="vaccine-name">
+                                        <div className="vaccine-label">
+                                            {vaccine.vaccineName}
+                                            {isVaccineRequired(vaccine.vaccineId) ? (
+                                                <span className="required-badge">
+                                                        Bắt buộc
+                                                    </span>
+                                            ) : (
+                                                <span className="optional-badge">
+                                                        Tùy chọn
+                                                    </span>
+                                            )}
+                                        </div>
+                                    </td>
+
+                                    {ageColumns.map((col) => {
+                                        const injection = findInjection(vaccine.vaccineId, col.month);
+                                        return (
+                                            <td key={`${vaccine.vaccineId}-${col.month}`} className="dose-cell">
+                                                {injection && (
+                                                    <div className="dose-number">
+                                                        {injection.doseNumber}
+                                                    </div>
+                                                )}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <Footer/>

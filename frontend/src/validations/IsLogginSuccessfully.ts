@@ -13,7 +13,7 @@ export const IsLoginSuccessFully = () => {
     const refreshUserSession = async () => {
         const token = localStorage.getItem("token");
 
-        const refreshToken = localStorage.getItem("refeshToken");
+        const refreshToken = localStorage.getItem("refreshToken");
 
         if (token) {
             try {
@@ -21,7 +21,7 @@ export const IsLoginSuccessFully = () => {
                 if (newTokenData?.isSuccess) {
                     setShowSessionAlert(false);
                     localStorage.setItem("token", newTokenData.result.token);
-                    localStorage.setItem("refeshToken", newTokenData.result.refeshToken);
+                    localStorage.setItem("refreshToken", newTokenData.result.refeshToken);
 
                     const newDecodedToken = decodeToken(newTokenData.token);
                     if (newDecodedToken) {

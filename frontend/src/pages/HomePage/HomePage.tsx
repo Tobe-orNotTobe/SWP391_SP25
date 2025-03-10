@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "antd";
-import { useImgCarousel, useBriefContent} from "./useHomePage.ts";
+import {useImgCarousel, useBriefContent, useBlogIntro} from "./useHomePage.ts";
 import { useNewsIntro } from "./useHomePage.ts";
 import { useVaccineIntro } from "../../hooks/useVaccine";
 import { useVaccineServiceIntro } from "./useHomePage.ts";
@@ -14,6 +14,7 @@ import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx
 import {useGetAllBlog} from "../../hooks/useBlog.ts";
 import BlogPost from "../../components/Blog/BlogPost.tsx";
 
+
 const HomePage : React.FC  = () => {
 
     const { imgCarousel } = useImgCarousel();
@@ -22,6 +23,9 @@ const HomePage : React.FC  = () => {
     const { vaccineServiceIntro } = useVaccineServiceIntro();
     const { newsIntro } = useNewsIntro();
     const { blogs, fetchAllBlog} = useGetAllBlog();
+    const {blogs : blogsIntro} = useBlogIntro()
+
+    console.log(blogsIntro)
     const firstBlog = blogs.length > 0 ? blogs[0] : null;
     const secondBlog = blogs.length > 1 ? blogs[1] : null;
     const thirdBlog = blogs.length > 2 ? blogs[2] : null;
@@ -34,34 +38,25 @@ const HomePage : React.FC  = () => {
     return(
         <>
         <CustomerNavbar/>
-            <div>
-                <div style={{display: "flex"}}>
-                    {/*<div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>*/}
-                    {/*    <img style={{width: "300px", objectFit: "contain", height: "580px"}}*/}
-                    {/*         src={'../../../src/assets/banner/QC_01.png'} alt={"banner"}/>*/}
-                    {/*</div>*/}
-                    <div className="homeContainer">
-                        <div className="carouselContainer">
-                            <Carousel autoplay>
-                                {imgCarousel.map((item, index) => (
-                                    <img key={index} src={`../../../src/assets/homepage/${item.image}`}
-                                         className="ImgSlider" alt="Introduction"/>
-                                ))}
-                            </Carousel>
-                        </div>
+                <div className="homeContainer">
+                    <div className="carouselContainer">
+                        <Carousel autoplay>
+                            {imgCarousel.map((item, index) => (
+                                <img
+                                    key={index}
+                                    src={`../../../src/assets/homepage/${item.image}`}
+                                    className="ImgSlider"
+                                    alt="Introduction"
+                                />
+                            ))}
+                        </Carousel>
                     </div>
-                    {/*<div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>*/}
-                    {/*    <img style={{width: "300px", objectFit: "contain", height: "580px"}}*/}
-                    {/*         src={'../../../src/assets/banner/QC_01.png'} alt={"banner"}/>*/}
-                    {/*</div>*/}
-                </div>
 
-
-                <div className="briefContent" style={{paddingRight: '300px', paddingLeft: "300px"}}>
+                <div className="briefContent" style={{paddingRight:'300px', paddingLeft: "300px"}}>
                     {briefContent.map((item, index) => (
                         <div key={index} className="briefSmallContent">
                             <div className="briefContentText">
-                            <h1>{item.title}</h1>
+                                <h1>{item.title}</h1>
                                 <p>{item.paragraph1}</p>
                                 <p>{item.paragraph2}</p>
                                 <div className="briefFullContent">
@@ -155,6 +150,35 @@ const HomePage : React.FC  = () => {
                                 ))}
                             </Carousel>
                         </div>
+                        <div className="newsListContainer">
+                            <div className="titleHeader">
+                                <h2>Blog</h2>
+                                <span><Link to="/blogs">Xem Tất Cả</Link></span>
+                            </div>
+                            <hr/>
+                            <Carousel
+                                autoplay
+                                dots={false}
+                                slidesToShow={3}
+                                slidesToScroll={1}
+                                responsive={[
+                                    {breakpoint: 1024, settings: {slidesToShow: 3, slidesToScroll: 1}},
+                                    {breakpoint: 768, settings: {slidesToShow: 2, slidesToScroll: 1}},
+                                    {breakpoint: 480, settings: {slidesToShow: 1, slidesToScroll: 1}}
+                                ]}
+                            >
+                                {blogsIntro.map((blog) => (
+                                    <Link key={blog.blogPostId} to={`/blogs/${blog.blogPostId}`} style={{textDecoration: "none"}}>
+                                        <NewsCard
+                                            id={blog.blogPostId}
+                                            title={blog.title}
+                                            image={blog.imageUrl}
+                                            briefContent=""
+                                        />
+                                    </Link>
+                                ))}
+                            </Carousel>
+                        </div>
                     </div>
 
                     <div>
@@ -162,6 +186,8 @@ const HomePage : React.FC  = () => {
                         <BlogPost key={fourBlog?.blogPostId} blog={fourBlog}/>
                     </div>
                 </div>
+
+
             </div>
             <FloatingButtons/>
             <Footer/>

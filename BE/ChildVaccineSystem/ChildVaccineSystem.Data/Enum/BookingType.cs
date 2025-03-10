@@ -8,7 +8,7 @@ namespace ChildVaccineSystem.Data.Enum
 {
     public enum BookingType
     {
-        comboVacinne,
-        singleVaccine
-    }
+		singleVaccine,
+		comboVacinne
+	}
 }

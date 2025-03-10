@@ -1,5 +1,5 @@
 import React from "react";
-import {Calendar, Modal, List, Button, Tag, Form, Input, Rate, Tabs, Popconfirm} from "antd";
+import {Calendar, Modal, List, Button, Tag, Form, Input, Rate, Tabs, Popconfirm, Flex} from "antd";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useBookingUser , STATUS_COLORS} from "./useBookingHistoryPage.ts";
@@ -15,6 +15,7 @@ import {MdDeleteOutline} from "react-icons/md";
 
 const BookingHistory: React.FC = () => {
     const { bookings } = useBookingUser();
+    console.log(bookings);
     const {
         // State
         selectedDate,
@@ -33,6 +34,11 @@ const BookingHistory: React.FC = () => {
         setRating,
         isEditMode,
         feedbackBookingId,
+        reason,
+        setReason,
+        refundModalVisible,
+
+
 
         // Derived data
         bookingMap,
@@ -44,6 +50,9 @@ const BookingHistory: React.FC = () => {
         handleDeleteFeedback,
         openFeedbackModal,
         handleTransactionPedingStatus,
+        handleRefundRequest,
+        closeRefundModal,
+        openRefundModal,
     } = useBookingHistoryPage(bookings);
 
     const handleSelectDate = (date: Dayjs, selectInfo: SelectInfo) => {
@@ -111,6 +120,14 @@ const BookingHistory: React.FC = () => {
         );
     };
 
+    const StatusLegend = () => (
+        <Flex gap="small" align="center">
+            {Object.entries(STATUS_COLORS).map(([status, color]) => (
+                <Tag color={color} key={status}>{status}</Tag>
+            ))}
+        </Flex>
+    );
+
     return (
         <>
             <CustomerNavbar />
@@ -127,6 +144,7 @@ const BookingHistory: React.FC = () => {
                     <h1 className="gt-title">Đơn Tiêm Chủng Của Bạn</h1>
                 </div>
 
+                <StatusLegend />
                 <Calendar
                     value={calendarValue}
                     cellRender={(current, info) => {
@@ -169,8 +187,25 @@ const BookingHistory: React.FC = () => {
                                                     </p>
                                                     <p>
                                                         <span className="label">Loại đặt lịch:</span>
-                                                        <span className="value">{booking.bookingType}</span>
+                                                        <span className="value">
+                                                            {booking.bookingType === "singleVaccine"
+                                                                ? "Đặt lẻ Vaccine "
+                                                                : "Đặt Vaccine Combo"}
+                                                        </span>
                                                     </p>
+                                                    {booking.bookingType === "singleVaccine" && (
+                                                        <p>
+                                                            <span className="label">Chi tiết thông tin vaccine: </span>
+                                                            <span className="value">
+                                                                {booking.bookingDetails.map((detail, index) => (
+                                                                    <span key={index}>
+                                                                        {detail.vaccineName ? detail.vaccineName : detail.comboVaccineName}
+                                                                        {index !== booking.bookingDetails.length - 1 && ", "}
+                                                                    </span>
+                                                                ))}
+                                                            </span>
+                                                        </p>
+                                                    )}
                                                     <p></p>
                                                     <p>
                                                         <span className="label">Ngày đặt:</span>
@@ -190,7 +225,8 @@ const BookingHistory: React.FC = () => {
                                                     </p>
                                                     <p>
                                                         <span className="label">Trạng thái:</span>
-                                                        <Tag color={STATUS_COLORS[booking.status]}>{booking.status}</Tag>
+                                                        <Tag
+                                                            color={STATUS_COLORS[booking.status]}>{booking.status}</Tag>
                                                     </p>
 
                                                     <div className="booking-actions">
@@ -222,13 +258,10 @@ const BookingHistory: React.FC = () => {
                                                             <>
                                                                 <Button
                                                                     type="primary"
-                                                                    className="Cancel-button"
-                                                                    onClick={() => {
-                                                                        setSelectedBooking(booking);
-                                                                        openFeedbackModal(false);
-                                                                    }}
+                                                                    className="Refund-button"
+                                                                    onClick={() => openRefundModal(booking.bookingId)}
                                                                 >
-                                                                    Hủy Lịch
+                                                                    Hủy Đơn và Yêu Cầu Hoàn Tiền
                                                                 </Button>
                                                             </>
                                                         )}
@@ -273,7 +306,9 @@ const BookingHistory: React.FC = () => {
                                 <div className="feedback-container">
                                     {/* Rating Section */}
 
-                                    <p style={{textAlign : "left", fontSize : "15px", color : "#1890FF", marginBottom :"20px"}}> Mã FeedBack: {feedbackBookingId.feedbackId}</p>
+                                    <p style={{
+                                        textAlign: "left",
+                                        fontSize : "15px", color : "#1890FF", marginBottom :"20px"}}> Mã FeedBack: {feedbackBookingId.feedbackId}</p>
 
                                     <div className="feedback-container__rating">
                                         <Rate
@@ -336,7 +371,7 @@ const BookingHistory: React.FC = () => {
                     ]}/>
                 </Modal>
 
-                {/* Shared Modal for Adding and Editing Feedback */}
+                {/* Dành cho việc sửa và thêm feedback */}
                 <Modal
                     title={isEditMode ? "Chỉnh sửa Feedback" : "Nhập Feedback"}
                     open={feedbackModalVisible}
@@ -371,7 +406,30 @@ const BookingHistory: React.FC = () => {
                             />
                         </Form.Item>
                     </Form>
+
+                </Modal
+
+                >
+
+                {/* */}
+                <Modal
+                    title="Xác Nhận Hủy Đơn"
+                    open={refundModalVisible}
+                    onCancel={closeRefundModal}
+                    onOk={handleRefundRequest}
+                    okText="Xác nhận"
+                    cancelText="Hủy"
+                >
+                    <Input.TextArea
+                        placeholder="Nhập lý do hủy để yêu cầu hoàn tiền"
+                        value={reason || ""}
+                        onChange={(e) => setReason(e.target.value)}
+                        rows={4}
+                    />
                 </Modal>
+
+
+
             </div>
             <FloatingButtons/>
             <Footer/>

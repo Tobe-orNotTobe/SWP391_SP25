@@ -8,7 +8,7 @@ export interface MyChildResponse {
 export interface ChildDetailResponse {
     childId: number;
     fullName: string;
-    dateOfBirth: Date;
+    dateOfBirth: string;
     gender: string;
     medicalHistory: string;
     relationToUser: string;

@@ -163,12 +163,7 @@ export const apiRefreshToken = async (refreshToken: string | null) => {
     try {
         const response = await axiosInstance.post(
             "/api/Auth/refresh-token",
-            { refreshToken }, // ✅ Gửi đúng dạng JSON object
-            {
-                headers: {
-                    "Content-Type": "application/json", // ✅ Đảm bảo server nhận đúng định dạng
-                },
-            }
+            { refreshToken }
         );
         return response.data;
     } catch (error) {
@@ -208,3 +203,16 @@ export const apiChangePassword = async (data : ResetPasswordUserProfile)=> {
         throw err;
     }
 }
+
+export const apiGetUserWallet = async () => {
+    try {
+        const response = await axiosInstance.get("/api/Wallet/user");
+        return response.data;
+    }catch (err){
+        console.error("API GetUserWallet Error:", err);
+        throw err;
+    }
+}
+
+
+

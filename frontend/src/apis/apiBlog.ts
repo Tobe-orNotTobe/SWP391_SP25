@@ -1,6 +1,7 @@
 import axiosInstance from "../utils/axiosInstance.ts";
 import {BlogRequest, UpdateBlogRequest} from "../interfaces/Blog.ts";
-// import {ApiResponse} from "../interfaces/";
+import axios from "axios";
+
 
 export const apiGetAllBlog = async (onlyActive: boolean) => {
     try {
@@ -71,5 +72,51 @@ export const apiDeleteBlog = async (blogId: string) => {
             errorMessages: err.response?.data?.errorMessages || ["Có lỗi xảy ra!"],
             result: null
         };
+    }
+}
+
+export const apiGetImgCarousel = async () => {
+    const response = await axios.get("Decorative/ImageCarousel.json");
+    if (response.data) {
+        return response.data;
+    } else {
+        return [];
+    }
+};
+
+export const apiGetBrieftContent = async () => {
+    const response = await axios.get("Decorative/BrieftContent.json");
+    if (response.data) {
+        return response.data;
+    } else {
+        return [];
+    }
+};
+
+export const apiGetNewsIntro = async () => {
+    const response = await axios.get("Decorative/NewsIntro.json");
+    if (response.data) {
+        return response.data;
+    } else {
+        return [];
+    }
+};
+
+export const apiGetVaccineServiceIntro = async () => {
+    const response = await axios.get("Vaccine/VaccineService.json");
+    if (response.data) {
+        return response.data;
+    } else {
+        return [];
+    }
+};
+
+export const apiGetBlogBasic = async () => {
+    try{
+        const response = await axiosInstance.get("/api/Blog/basic");
+        return response.data;
+    }catch (err){
+        console.log(err);
+        throw err;
     }
 }

@@ -9,6 +9,7 @@ import { BookingUser } from "../../../interfaces/VaccineRegistration.ts";
 import { apiCancelBooking, apiDeleteFeedBack, apiPostFeedBack, apiUpdateFeedback } from "../../../apis/apiBooking.ts";
 import { useFeedBackDetailByBookingId } from "../../../hooks/useFeedBack.ts";
 import {useNavigate} from "react-router-dom";
+import {apiPostRefundRequest} from "../../../apis/apiTransaction.ts";
 
 
 export const useBookingUser = () => {
@@ -38,8 +39,10 @@ export const useBookingUser = () => {
 export const STATUS_COLORS: Record<string, string> = {
     Pending: "#faad14",
     Confirmed: "#2a388f",
+    InProgress: "#42A5F5",
     Completed: "#52c41a",
     Cancelled: "#ff4d4f",
+    RequestRefund : "#FD7E14",
 };
 
 export const useBookingHistoryPage = (bookings: BookingUser[]) => {
@@ -49,11 +52,18 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
     const [visible, setVisible] = useState<boolean>(false);
     const [feedbackModalVisible, setFeedbackModalVisible] = useState<boolean>(false);
     const [selectedBooking, setSelectedBooking] = useState<BookingUser | null>(null);
+
     const [calendarValue, setCalendarValue] = useState<Dayjs>(dayjs());
     const [comment, setComment] = useState<string>("");
     const [rating, setRating] = useState<number>(0);
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
     const [latestDate, setLatestDate] = useState<string | null>(null);
+
+    const [bkId, setBKId] = useState<number>(0);
+
+    const [refundModalVisible, setRefundModalVisible] = useState<boolean>(false);
+
+    const [reason, setReason] = useState<string>("");
 
     const navigate = useNavigate();
 
@@ -247,7 +257,50 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         }
     };
 
+    const handleRefundRequest = async () => {
+
+        const formatedData = {
+            bookingId : bkId,
+            reason : reason,
+        }
+
+        try {
+            const response = await apiPostRefundRequest(formatedData);
+            if(response.isSuccess){
+                toast.success("Đã hủy đơn và gửi yêu cầu refund thành công");
+            }
+            setTimeout(() => {
+                navigate("/customer/wallet")
+            })
+        }catch (error: unknown) {
+            if (error instanceof AxiosError) {
+                const errors = error.response?.data?.errors?.Reason;
+                const errorMessages = error.response?.data?.errorMessages;
+
+                if (errors && errors.length > 0) {
+                    toast.error(errors.join(" "));
+                } else if (errorMessages && errorMessages.length > 0) {
+                    toast.error(errorMessages.join(" "));
+                } else {
+                    toast.error("Lỗi không xác định");
+                }
+            }
+        }
+    }
+
+    const openRefundModal = (bookingId : number) => {
+        setBKId(bookingId);
+        setRefundModalVisible(true);
+    }
+
+
+    const closeRefundModal = () => {
+        setRefundModalVisible(false);
+        setBKId(0);
+    };
+
     const openFeedbackModal = (editMode = false) => {
+
         setIsEditMode(editMode);
         setFeedbackModalVisible(true);
     };
@@ -259,6 +312,7 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
 
     return {
         // State
+        bkId,
         selectedDate,
         setSelectedDate,
         visible,
@@ -275,6 +329,11 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         setRating,
         isEditMode,
         feedbackBookingId,
+        reason,
+        setReason,
+        refundModalVisible,
+        setRefundModalVisible,
+
 
         // Derived data
         bookingMap,
@@ -283,12 +342,17 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         defaultSelectedDate,
         selectedYear,
 
+
+
         // Actions
         handleCancelBooking,
         handleSubmitFeedback,
         handleDeleteFeedback,
         openFeedbackModal,
-        handleTransactionPedingStatus
+        openRefundModal,
+        closeRefundModal,
+        handleTransactionPedingStatus,
+        handleRefundRequest
     };
 };
 
