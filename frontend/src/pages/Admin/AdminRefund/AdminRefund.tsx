@@ -3,7 +3,6 @@ import AdminLayout from "../../../components/Layout/AdminLayout/AdminLayout.tsx"
 
 const AdminRefund : React.FC = () => {
 
-
     return (
         <>
             <AdminLayout>

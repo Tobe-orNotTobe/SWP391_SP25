@@ -49,7 +49,7 @@ import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx"
 import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
 import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
 import AdminBlogFormPage from "./pages/Admin/AdminBlog/AdminBlogForm/AdminBogForm.tsx"
-import AdminRefund from "./pages/Admin/AdminWallet/AdminWallet.tsx";
+import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
 
 
 import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
