@@ -115,6 +115,8 @@ function App() {
                 <Route path="/staff/assignDoctor" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignPage /></ProtectedRoute>} />
                 <Route path="/staff/booking" element={<ProtectedRoute allowedRoles={["Staff"]}><BookingForStaff /></ProtectedRoute>} />
                 <Route path="/doctor/vaccination-schedule" element={<ProtectedRoute allowedRoles={["Doctor"]}><VaccinationSchedulePage /></ProtectedRoute>} />
+                <Route path="/doctor/service" element={<ProtectedRoute allowedRoles={["Doctor"]}><ServicePage /></ProtectedRoute>} />
+
 
                 {/* Manager Routes */}
                 <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerDashBoard /></ProtectedRoute>} />
