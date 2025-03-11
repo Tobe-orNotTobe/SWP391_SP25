@@ -48,7 +48,7 @@ namespace ChildVaccineSystem.API.Controllers
 
         // Create a new blog post
         [HttpPost]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+    //    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<APIResponse>> CreatePost([FromBody] CreateBlogPostDTO createPostDto)
@@ -103,7 +103,7 @@ namespace ChildVaccineSystem.API.Controllers
 
         // Update a blog post
         [HttpPut("{id}")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+    //    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<APIResponse>> UpdatePost(int id, [FromBody] UpdateBlogPostDTO updatePostDto)
@@ -127,7 +127,7 @@ namespace ChildVaccineSystem.API.Controllers
 
         // Delete a blog post
         [HttpDelete("{id}")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+  //      [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<APIResponse>> DeletePost(int id)
@@ -156,6 +156,38 @@ namespace ChildVaccineSystem.API.Controllers
         {
             var blogs = await _blogPostService.GetBlogBasicAsync();
             return Ok(blogs);
+        }
+
+        // ✅ Get blog theo type
+        [HttpGet("type/{type}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<APIResponse>> GetBlogsByType(string type)
+        {
+            try
+            {
+                var result = await _blogPostService.GetBlogsByTypeAsync(type);
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = result;
+
+                return Ok(_response);
+            }
+            catch (ArgumentException ex)
+            {
+                _response.StatusCode = HttpStatusCode.NotFound;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return NotFound(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
         }
     }
 }
