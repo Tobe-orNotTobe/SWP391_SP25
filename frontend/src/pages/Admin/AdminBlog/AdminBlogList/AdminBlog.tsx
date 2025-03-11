@@ -175,9 +175,9 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                                                 <p><strong style={{paddingRight: "2px"}}>Đề mục:
                                                 </strong> {detailBlog.title || "Chưa có dữ liệu"}
                                                 </p>
-                                                <p><strong style={{paddingRight: "2px"}}>Nội dung:</strong>
-                                                    {detailBlog.content || "Chưa có dữ liệu."}
-                                                </p>
+                                                {/*<p><strong style={{paddingRight: "2px"}}>Nội dung:</strong>*/}
+                                                {/*    {detailBlog.content || "Chưa có dữ liệu."}*/}
+                                                {/*</p>*/}
                                                 <p><strong style={{paddingRight: "2px"}}>Ngày đăng:
                                                 </strong> {dayjs(detailBlog.createdAt).format("DD/MM/YYYY HH:mm") || "Chưa có dữ liệu"}
                                                 </p>
