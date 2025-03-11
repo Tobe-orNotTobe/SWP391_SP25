@@ -6,16 +6,19 @@ import "./VaccinationSchedulePage.scss";
 import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import { useNavigate } from "react-router-dom";
 import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
-import {Table, Button, Space, Input, InputRef, Tag} from "antd";
+import { Table, Button, Space, Input, InputRef, Tag } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
-import { Modal} from "antd";
+import { Modal } from "antd";
+import { apiCreateVaccineRecord } from "../../apis/apiVaccineRecord.ts";
+import { toast } from "react-toastify";
 
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();
   const [bookings, setBookings] = useState([]);
-  const [selectedBooking, setSelectedBooking] = useState<BookingResponse | null>(null);
+  const [selectedBooking, setSelectedBooking] =
+    useState<BookingResponse | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -111,8 +114,8 @@ const VaccinationSchedulePage: React.FC = () => {
     onFilter: (value: string, record: Record<string, unknown>) => {
       const recordValue = record[dataIndex];
       return recordValue
-          ? recordValue.toString().toLowerCase().includes(value.toLowerCase())
-          : false;
+        ? recordValue.toString().toLowerCase().includes(value.toLowerCase())
+        : false;
     },
     render: (text: string) =>
       searchedColumn === dataIndex ? (
@@ -126,6 +129,25 @@ const VaccinationSchedulePage: React.FC = () => {
         text
       ),
   });
+
+  const handleProceedVaccination = async (booking: BookingResponse) => {
+    try {
+      if (!booking.bookingId) return;
+
+      // Gọi API tạo hồ sơ tiêm chủng
+      const response = await apiCreateVaccineRecord(booking.bookingId);
+
+      if (response?.isSuccess) {
+        console.log("Vaccine record created successfully", response);
+        navigate("/doctor/service", { state: booking });
+      } else {
+        console.error("Failed to create vaccine record", response);
+        toast.error(response.data.errorMessages)
+      }
+    } catch (error) {
+      console.error("Error creating vaccine record", error);
+    }
+  };
 
   // Định nghĩa các cột của bảng
   const columns = [
@@ -163,8 +185,10 @@ const VaccinationSchedulePage: React.FC = () => {
         { text: "Loại 2", value: "Loại 2" },
       ], // Thêm chức năng lọc
       onFilter: (value: string | number, record: BookingResponse) =>
-          record.bookingType?.toString().toLowerCase().includes(value.toString().toLowerCase()),
-
+        record.bookingType
+          ?.toString()
+          .toLowerCase()
+          .includes(value.toString().toLowerCase()),
     },
     {
       title: "Giá Tiền",
@@ -213,16 +237,7 @@ const VaccinationSchedulePage: React.FC = () => {
             type="primary"
             color="green"
             variant="solid"
-            onClick={() => {
-              if (record.bookingId) {
-                navigate("/doctor/service", {
-                  state: bookings.find(
-                    (booking : BookingResponse) => booking.bookingId === record.bookingId
-                  ),
-                });
-                console.log(bookings);
-              }
-            }}
+            onClick={() => handleProceedVaccination(record)}
           >
             Tiến hành tiêm
           </Button>

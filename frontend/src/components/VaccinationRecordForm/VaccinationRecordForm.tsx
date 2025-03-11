@@ -1,225 +1,167 @@
 import React, { useState, useEffect } from "react";
-import { Select } from "antd"; // Import Select từ Ant Design
+import { Select } from "antd";
 import "./VaccinationRecordForm.scss";
 import {
-  Booking,
-  BookingDetail,
-  Vaccine,
-} from "../../interfaces/VaccineRegistration.ts";
-import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
+  VaccineRecordResponse,
+  VaccineRecord,
+  UpdateVaccineRecordRequest,
+} from "../../interfaces/VaccineRecord.ts";
 import {
-  apiGetBookingById,
-  apiPutBookingComplete,
-} from "../../apis/apiBooking"; // Import các hàm API
-import { apiGetChildById } from "../../apis/apiChild.ts";
-import { apiGetVaccineDetailById } from "../../apis/apiVaccine.ts";
+  apiGetVaccineRecord,
+  apiUpdateVaccineRecord,
+} from "../../apis/apiVaccineRecord.ts";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import { apiPutBookingComplete } from "../../apis/apiBooking.ts";
 
 const { Option } = Select;
 
-// Định nghĩa kiểu dữ liệu cho FormData
-interface FormData {
-  fullName: string;
-  birthDate: string;
-  height: string;
-  weight: string;
-  vaccineType: string;
-  vaccineName: string;
-  vaccineDose: string;
-  vaccinePrice: string;
-  reminder: string;
-  lotNumber: string;
-  reminderDate: string;
-  notes: string;
-}
-
 interface Props {
-  booking: BookingResponse; // Truyền bookingId thay vì booking
+  bookingId: number; // Nhận bookingId thay vì toàn bộ đối tượng booking
 }
 
-const VaccinationRecordForm: React.FC<Props> = ({ booking }: Props) => {
-  const [formData, setFormData] = useState<FormData>({
-    fullName: "",
-    birthDate: "",
-    height: "",
-    weight: "",
-    vaccineType: "",
-    vaccineName: "",
-    vaccineDose: "",
-    vaccinePrice: "",
-    reminder: "",
-    lotNumber: "",
-    reminderDate: "",
-    notes: "",
-  });
-
-  const [registeredVaccines, setRegisteredVaccines] = useState<Vaccine[]>([]);
-  const [childInfo, setChildInfo] = useState<any>(null);
-  const [bookings, setBooking] = useState<Booking | null>(null);
+const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
+  const [vaccineData, setVaccineData] = useState<VaccineRecordResponse | null>(
+    null
+  );
   const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate()
+  const [vaccineRecordId, setvaccineRecordId] = useState<number>(-1);
+  const [updatedRecords, setUpdatedRecords] = useState<
+    UpdateVaccineRecordRequest[]
+  >([]);
 
-  // Fetch thông tin booking và vaccine từ API
+  const navigate = useNavigate();
+
+  // Fetch dữ liệu từ API khi component mount
   useEffect(() => {
     const fetchData = async () => {
-
-      console.log(bookings);
       try {
-        // Lấy thông tin booking từ API
-        const bookingData = await apiGetBookingById(Number(booking.bookingId));
-        setBooking(bookingData.result);
-        console.log(bookingData.result);
-
-        // Lấy thông tin trẻ từ API
-        const childData = await apiGetChildById(bookingData.result.childId);
-        setChildInfo(childData.result);
-        console.log(childData);
-
-        // Lấy thông tin vaccine từ API dựa trên bookingDetails
-        const vaccineDetails = await Promise.all(
-          bookingData.result.bookingDetails.map(
-            async (detail: BookingDetail) => {
-              const vaccineResponse = await apiGetVaccineDetailById(
-                detail.vaccineId || detail.comboVaccineId || 0
-              );
-              const vaccine = vaccineResponse.result;
-              return {
-                ...vaccine,
-                dose: "1 ml", // Giả sử liều vaccine là 1 ml
-                price: vaccine.price?.toLocaleString("vi-VN") + " VND", // Định dạng giá
-                reminder: "1 tháng", // Giả sử nhắc lại sau 1 tháng
-                reminderDate: "",
-                notes: "Không có ghi chú",
-                status: "Chờ tiêm",
-                lotNumber: "CK11212", // Giả sử số lô
-              };
-            }
-          )
-        );
-
-        setRegisteredVaccines(vaccineDetails);
+        const response = await apiGetVaccineRecord(booking.bookingId);
+        setVaccineData(response);
+        console.log(response);
+        setUpdatedRecords(response.result.vaccineRecords); // Lưu dữ liệu vào state
+        console.log(response.result.vaccineRecords)
+        setvaccineRecordId(response.result.vaccineRecords[0].vaccinationRecordId);
+        console.log(response.result.vaccineRecords[0].vaccinationRecordId)
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu từ API:", error);
+        console.error("Lỗi khi lấy dữ liệu vaccine:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [booking.bookingId]);
 
-  const handleComplete = async (bookingId: number) => {
-    try {
-      const response = await apiPutBookingComplete(bookingId);
-      toast.success(response.status)
-      console.log(response);
-      navigate('/doctor/vaccination-schedule')
-      return response;
-    } catch (error) {
-      console.error("Error completing booking:", error);
-      throw error; // Hoặc xử lý error theo cách bạn muốn
-    }
-  };
-
-  const handleReminderDateChange = (index: number, date: string) => {
-    const updatedVaccines = [...registeredVaccines];
-    updatedVaccines[index].reminderDate = date;
-    setRegisteredVaccines(updatedVaccines);
-  };
-
-  const handleStatusChange = (index: number, status: string) => {
-    const updatedVaccines = [...registeredVaccines];
-    updatedVaccines[index].status = status;
-    setRegisteredVaccines(updatedVaccines);
-  };
-
-  const handleLotNumberChange = (index: number, lotNumber: string) => {
-    const updatedVaccines = [...registeredVaccines];
-    updatedVaccines[index].lotNumber = lotNumber;
-    setRegisteredVaccines(updatedVaccines);
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  const handleUpdateRecord = (
+    index: number,
+    updatedField: Partial<VaccineRecord>
   ) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    if (!vaccineData) return;
+
+    const newRecords = [...updatedRecords];
+    newRecords[index] = { ...newRecords[index], ...updatedField };
+
+    setUpdatedRecords(newRecords);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(formData);
+  // Xử lý cập nhật trạng thái, số lô, ngày nhắc lại
+  // const handleUpdateRecord = async (index: number, updatedField: Partial<VaccineRecord>) => {
+  //   if (!vaccineData) return;
+
+  //   try {
+  //     const updatedRecords = [...vaccineData.result.vaccineRecords];
+  //     updatedRecords[index] = { ...updatedRecords[index], ...updatedField };
+
+  //     setVaccineData({
+  //       ...vaccineData,
+  //       result: { ...vaccineData.result, vaccineRecords: updatedRecords },
+  //     });
+
+  //     // Gửi request cập nhật đến API
+  //     const updateRequest: UpdateVaccineRecordRequest = {
+  //       notes: updatedRecords[index].notes,
+  //       status: updatedRecords[index].status,
+  //       nextDoseDate: updatedRecords[index].nextDoseDate || "",
+  //     };
+  //     await apiUpdateVaccineRecord(booking.bookingId, updateRequest);
+  //     toast.success("Cập nhật thành công!");
+  //   } catch (error) {
+  //     console.error("Lỗi khi cập nhật vaccine record:", error);
+  //     toast.error("Cập nhật thất bại!");
+  //   }
+  // };
+
+  // Xử lý hoàn thành booking
+  const handleComplete = async () => {
+    if (!vaccineData) return;
+
+    try {
+      for (const record of updatedRecords) {
+        const updateRequest: UpdateVaccineRecordRequest = {
+          notes: record.notes,
+          status: "Completed",
+          nextDoseDate: record.nextDoseDate || "",
+        };
+
+        await apiUpdateVaccineRecord(vaccineRecordId, updateRequest);
+
+      }
+
+      toast.success("Hồ sơ đã được cập nhật thành công!");
+      navigate("/doctor/vaccination-schedule");
+    } catch (error) {
+      console.error("Lỗi khi cập nhật vaccine record:", error);
+      toast.error("Không thể hoàn thành hồ sơ!");
+    }
   };
 
   if (loading) {
     return <div>Đang tải dữ liệu...</div>;
   }
 
+  if (!vaccineData) {
+    return <div>Không tìm thấy dữ liệu!</div>;
+  }
+
   return (
     <div className="vaccination-record-container">
-      <form onSubmit={handleSubmit}>
+      <form>
         <h1>GHI NHẬN HỒ SƠ TIÊM CHỦNG</h1>
 
         {/* Thông tin cá nhân */}
         <div className="form-section">
           <h2>Thông tin cá nhân</h2>
           <div className="form-group">
-            <label>Họ tên người tiêm *</label>
-            <input
-              type="text"
-              name="fullName"
-              value={childInfo?.fullName || ""}
-              onChange={handleChange}
-              required
-            />
+            <label>Họ tên *</label>
+            <input type="text" value={vaccineData.result.fullName} readOnly />
           </div>
           <div className="form-group">
             <label>Ngày sinh *</label>
             <input
               type="date"
-              name="birthDate"
-              value={childInfo?.dateOfBirth?.split("T")[0] || ""}
-              onChange={handleChange}
-              required
+              value={vaccineData.result.dateOfBirth.split("T")[0]}
+              readOnly
             />
           </div>
           <div className="form-group">
             <label>Chiều cao (cm) *</label>
-            <input
-              type="number"
-              name="height"
-              value={childInfo.height}
-              onChange={handleChange}
-              required
-            />
+            <input type="number" value={vaccineData.result.height} readOnly />
           </div>
           <div className="form-group">
             <label>Cân nặng (kg) *</label>
-            <input
-              type="number"
-              name="weight"
-              value={childInfo.weight}
-              onChange={handleChange}
-              required
-            />
+            <input type="number" value={vaccineData.result.weight} readOnly />
           </div>
         </div>
 
-        {/* Thông tin dịch vụ */}
+        {/* Thông tin vaccine */}
         <div className="form-section">
-          <h2>Thông tin dịch vụ</h2>
+          <h2>Thông tin vaccine</h2>
           <table className="vaccine-table">
             <thead>
               <tr>
                 <th>Tên vaccine</th>
-                <th>Liều vaccine</th>
-                <th>Giá vaccine</th>
-                <th>Nhắc lại sau</th>
+                <th>Liều lượng</th>
+                <th>Giá</th>
                 <th>Ngày nhắc lại</th>
                 <th>Số lô</th>
                 <th>Trạng thái</th>
@@ -227,69 +169,57 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }: Props) => {
               </tr>
             </thead>
             <tbody>
-              {registeredVaccines.map((vaccine, index) => (
+              {vaccineData.result.vaccineRecords.map((record, index) => (
                 <tr key={index}>
-                  {/* Tên vaccine (read-only) */}
                   <td>
-                    <input type="text" value={vaccine.name} readOnly />
+                    <input type="text" value={record.vaccineName} readOnly />
                   </td>
-
-                  {/* Liều vaccine (read-only) */}
-                  <td>
-                    <input type="text" value={vaccine.dose} readOnly />
-                  </td>
-
-                  {/* Giá vaccine (read-only) */}
-                  <td>
-                    <input type="text" value={vaccine.price} readOnly />
-                  </td>
-
-                  {/* Nhắc lại sau */}
-                  <td>
-                    <select
-                      name="reminder"
-                      value={formData.reminder}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Chọn thời gian</option>
-                      <option value="1 tháng">1 tháng</option>
-                      <option value="2 tháng">2 tháng</option>
-                      <option value="6 tháng">6 tháng</option>
-                      <option value="Tùy chọn">Tùy chọn</option>
-                    </select>
-                  </td>
-
-                  {/* Ngày nhắc lại (nhân viên nhập) */}
-                  <td>
-                    <input
-                      type="date"
-                      name="reminderDate"
-                      value={vaccine.reminderDate || ""}
-                      onChange={(e) =>
-                        handleReminderDateChange(index, e.target.value)
-                      }
-                      required
-                    />
-                  </td>
-
-                  {/* Số lô */}
                   <td>
                     <input
                       type="text"
-                      value={vaccine.lotNumber}
+                      value={record.doseAmount + " ml"}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={record.price.toLocaleString("vi-VN") + " VND"}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      // value={
+                      //   record.nextDoseDate
+                      //     ? record.nextDoseDate.split("T")[0]
+                      //     : ""
+                      // }
                       onChange={(e) =>
-                        handleLotNumberChange(index, e.target.value)
+                        handleUpdateRecord(index, {
+                          nextDoseDate: e.target.value,
+                        })
                       }
                     />
                   </td>
-
-                  {/* Trạng thái (sử dụng Antd Select) */}
+                  <td>
+                    <input
+                      readOnly
+                      type="text"
+                      value={record.batchNumber}
+                      onChange={(e) =>
+                        handleUpdateRecord(index, {
+                          batchNumber: e.target.value,
+                        })
+                      }
+                    />
+                  </td>
                   <td>
                     <Select
-                      value={vaccine.status}
-                      onChange={(value: string) =>
-                        handleStatusChange(index, value)
+                      value={record.status}
+                      onChange={(value) =>
+                        handleUpdateRecord(index, { status: value })
                       }
                       style={{ width: "100%" }}
                     >
@@ -297,10 +227,13 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }: Props) => {
                       <Option value="Đã tiêm">Đã tiêm</Option>
                     </Select>
                   </td>
-
-                  {/* Ghi chú (read-only) */}
                   <td>
-                    <textarea value={vaccine.notes} readOnly />
+                    <textarea
+                      //value={record.notes}
+                      onChange={(e) =>
+                        handleUpdateRecord(index, { notes: e.target.value })
+                      }
+                    />
                   </td>
                 </tr>
               ))}
@@ -310,9 +243,9 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }: Props) => {
 
         {/* Nút hoàn thành */}
         <button
-          type="submit"
+          type="button"
           className="submit-button"
-          onClick={() => handleComplete(Number(booking.bookingId))}
+          onClick={handleComplete}
         >
           Hoàn thành
         </button>
