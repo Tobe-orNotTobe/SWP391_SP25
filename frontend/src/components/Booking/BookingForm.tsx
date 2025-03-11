@@ -244,7 +244,7 @@ const VaccinationRegistrationPage = () => {
                   <div className="parent-info">
                     <h3>Thông tin phụ huynh</h3>
                     <p>
-                      <strong>Tên phụ huynh:</strong> {parentInfo.parentName}
+                      <strong>Tên phụ huynh:</strong> {username}
                     </p>
                   </div>
                 )}
