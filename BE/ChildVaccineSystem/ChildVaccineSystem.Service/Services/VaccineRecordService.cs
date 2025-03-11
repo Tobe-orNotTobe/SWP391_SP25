@@ -254,6 +254,7 @@ namespace ChildVaccineSystem.Service.Services
 		{
 			new VaccineRecordDetailDTO
 			{
+				VaccinationRecordId = record.VaccinationRecordId,
 				VaccineName = record.Vaccine.Name,
 				DoseAmount = record.DoseAmount,
 				BatchNumber = record.BatchNumber,
@@ -324,6 +325,7 @@ namespace ChildVaccineSystem.Service.Services
 					Weight = group.First().Child.Weight,
 					VaccineRecords = group.Select(record => new VaccineRecordDetailDTO
 					{
+						VaccinationRecordId = record.VaccinationRecordId,
 						VaccineName = record.Vaccine.Name,
 						DoseAmount = record.DoseAmount,
 						BatchNumber = record.BatchNumber,
@@ -416,6 +418,7 @@ namespace ChildVaccineSystem.Service.Services
 				Weight = records.First().Child.Weight,
 				VaccineRecords = records.Select(record => new VaccineRecordDetailDTO
 				{
+					VaccinationRecordId = record.VaccinationRecordId,
 					VaccineName = record.Vaccine.Name,
 					DoseAmount = record.DoseAmount,
 					BatchNumber = record.BatchNumber,
