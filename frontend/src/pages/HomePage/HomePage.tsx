@@ -24,7 +24,6 @@ const HomePage : React.FC  = () => {
     const { blogs, fetchAllBlog} = useGetAllBlog();
     const {blogs : blogsIntro} = useBlogIntro()
 
-    console.log(blogsIntro)
     const firstBlog = blogs.length > 0 ? blogs[0] : null;
     const secondBlog = blogs.length > 1 ? blogs[1] : null;
     const thirdBlog = blogs.length > 2 ? blogs[2] : null;

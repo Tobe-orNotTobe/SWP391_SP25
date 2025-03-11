@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AdminLayout from "../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import { Button, Table, Modal, Row, Col, Tag } from "antd";
+import {Button, Table, Modal, Row, Col, Tag, InputNumber} from "antd";
 import { IoMdAdd } from "react-icons/io";
 import "./AdminRefund.scss";
 import { useRefundUserListAdmin } from "./useAdminRefund.ts";
@@ -13,6 +13,7 @@ import {apiRefundApprove, apiRefundReject} from "../../../apis/apiTransaction.ts
 import {toast} from "react-toastify";
 import {AxiosError} from "axios";
 import TextArea from "antd/es/input/TextArea";
+import {apiAdminAddFund} from "../../../apis/apiAdmin.ts";
 
 const AdminRefund: React.FC = () => {
     const {walletData} = useWalletUserDetail()
@@ -27,11 +28,15 @@ const AdminRefund: React.FC = () => {
 
     const[refundId, setRefundId] = useState<number>(0);
 
+    const [adminAmount, setAdminAmount]= useState<number>(0);
+    const [modalAddFund, setModalAddFund] = useState<boolean>(false);
+
 
     const showDetailModal = (record: RefundUserList) => {
         setSelectedRecord(record);
         setIsModalVisible(true);
     };
+
 
 
     const handleModalClose = () => {
@@ -47,6 +52,16 @@ const AdminRefund: React.FC = () => {
     const handleCloseRefundModal = () =>{
         setIsRefundModal(false);
         setAdminNote("");
+    }
+
+    const handleOpenAddRefundModal = () => {
+        setModalAddFund(true);
+        setAdminAmount(10000);
+    }
+
+    const handleCloseAddRefund = () =>{
+        setModalAddFund(false);
+        setAdminAmount(0);
     }
 
     // Handle approve refund
@@ -80,6 +95,25 @@ const AdminRefund: React.FC = () => {
             }
         }
     };
+
+    const handelAddFundToAdminWallet = async () =>{
+        try {
+            const response = await apiAdminAddFund(adminAmount);
+            if(response.isSuccess){
+                toast.success("Thêm Tiền Vào Ví Admin Thành Công")
+                setModalAddFund(false);
+                setTimeout(() =>{
+                    window.location.reload();
+                })
+            }
+        }catch (err){
+            if(err instanceof  AxiosError){
+                toast.error(`${err.response?.data?.errorMessages}`);
+            }else{
+                toast.error("Lỗi không Xác Định")
+            }
+        }
+    }
 
     // Function to render status tag with appropriate color
     const renderStatus = (status: string) => {
@@ -176,6 +210,7 @@ const AdminRefund: React.FC = () => {
                                 type="primary"
                                 icon={<IoMdAdd/>}
                                 className="add-fund-admin"
+                                onClick={() => handleOpenAddRefundModal()}
                             >
                                 Nạp Tiền
                             </Button>
@@ -254,7 +289,7 @@ const AdminRefund: React.FC = () => {
                             </div>
                         )}
                     </Modal>
-
+                    {/* cái này là modal cho admin từ chối refund kèm lí do*/}
                     <Modal
                         title="Note"
                         open={isRefundModal}
@@ -267,6 +302,24 @@ const AdminRefund: React.FC = () => {
                             onChange={(e) => setAdminNote(e.target.value)}
                             placeholder="Nhập ghi chú..."
                         />
+                    </Modal>
+
+                    {/*Cái này là modal cho admin nạp tiền vào*/}
+                    <Modal
+                        title = "Số tiền"
+                        open={modalAddFund}
+                        onCancel={handleCloseAddRefund}
+                        onOk={handelAddFundToAdminWallet}
+                    >
+                        <InputNumber
+                            width={200}
+                            value={adminAmount}
+                            onChange={(value) => setAdminAmount(value ?? 0)}
+                            placeholder="Nhập số tiền mong muốn của bạn"
+                        />
+
+
+
                     </Modal>
                 </div>
             </AdminLayout>

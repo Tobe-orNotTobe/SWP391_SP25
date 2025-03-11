@@ -67,3 +67,14 @@ export const apiGetRefundRequestById= async (refundRequestId : number) => {
     throw err;
   }
 }
+
+
+export const apiAdminAddFund  = async (amount : number) => {
+  try {
+    const response = await axiosInstance.post(`/api/Wallet/admin/add-funds/`, { amount });
+    return response.data;
+  }catch (err){
+    console.error("API Admin Error:", err);
+    throw err;
+  }
+}
