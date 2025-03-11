@@ -5,8 +5,6 @@ import {apiDepositeUserToWallet, apiGetUserRefundList} from "../../apis/apiTrans
 import {toast} from "react-toastify";
 import {AxiosError} from "axios";
 
-
-
 export const useRefundUserList = () => {
     const [refundUser, setRefundUser] = useState< RefundListUser[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -32,7 +30,6 @@ export const useRefundUserList = () => {
 
     return {refundUser, isLoading, error};
 }
-
 
 export const useWalletUserDetail = () => {
     const [walletData, setWalletData] = useState<WalletUser | null>(null);
@@ -91,7 +88,6 @@ export const useRecentTransactions = () => {
     return { transactions, isLoading, error };
 };
 
-
 export const useWalletLogic = () => {
     const { walletData, } = useWalletUserDetail();
     const { transactions} = useRecentTransactions();
@@ -125,31 +121,23 @@ export const useWalletLogic = () => {
         return amount.toLocaleString('vi-VN') + ' VND';
     };
 
-    const getTransactionTagColor = (type: string) => {
+    const getTransactionTagColor = (type: string, amount: number) => {
         switch (type) {
             case 'Deposit':
                 return 'green';
-            case 'Withdrawal':
-                return 'red';
             case 'Transfer':
-                return 'blue';
-            case 'Refund':
-                return 'gold';
+                return amount < 0 ? 'red' : 'green';
             default:
                 return 'default';
         }
     };
 
-    const getTransactionTypeName = (type: string) => {
+    const getTransactionTypeName = (type: string, amount: number) => {
         switch (type) {
             case 'Deposit':
                 return 'Nạp tiền';
-            case 'Withdrawal':
-                return 'Rút tiền';
             case 'Transfer':
-                return 'Chuyển tiền';
-            case 'Refund':
-                return 'Hoàn tiền';
+                return amount < 0 ? 'Thanh toán' : 'Hoàn tiền';
             default:
                 return type;
         }

@@ -46,9 +46,9 @@ const Wallet: React.FC = () => {
             title: 'Loại',
             dataIndex: 'transactionType',
             key: 'transactionType',
-            render: (type: string) => (
-                <Tag color={getTransactionTagColor(type)}>
-                    {getTransactionTypeName(type)}
+            render: (type: string, record: WalletHistoryUserDetail) => (
+                <Tag color={getTransactionTagColor(type, record.amount)}>
+                    {getTransactionTypeName(type, record.amount)}
                 </Tag>
             ),
         },
@@ -57,7 +57,8 @@ const Wallet: React.FC = () => {
             dataIndex: 'amount',
             key: 'amount',
             render: (amount: number, record: WalletHistoryUserDetail) => {
-                const isPositive = record.transactionType === "Deposit" || record.transactionType === "Refund";
+                const isPositive = record.transactionType === "Deposit" ||
+                    (record.transactionType === "Transfer" && amount > 0);
                 return (
                     <Text
                         style={{
@@ -65,7 +66,7 @@ const Wallet: React.FC = () => {
                             color: isPositive ? '#28a745' : '#dc3545'
                         }}
                     >
-                        {(isPositive ? "+" : "-") + formatCurrency(amount)}
+                        {(isPositive ? "+" : "") + formatCurrency(Math.abs(amount))}
                     </Text>
                 );
             },
@@ -151,8 +152,7 @@ const Wallet: React.FC = () => {
     const transactionTabItems = [
         { key: "All", label: "Tất cả" },
         { key: "Deposit", label: "Nạp tiền" },
-        { key: "Transfer", label: "Chuyển tiền" },
-        { key: "Refund", label: "Hoàn tiền" },
+        { key: "Transfer", label: "Giao dịch" },
     ];
 
     const refundTabItems = [
