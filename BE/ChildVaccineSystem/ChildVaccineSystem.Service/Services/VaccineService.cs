@@ -91,5 +91,25 @@ namespace ChildVaccineSystem.Services
             var vaccines = await _unitOfWork.Vaccines.GetAllAsync();
             return _mapper.Map<List<VaccineBasicDTO>>(vaccines);
         }
+        public async Task<List<TopUsedVaccineDTO>> GetTopUsedVaccinesAsync()
+        {
+            var data = await _unitOfWork.BookingDetails.GetAllAsync(includeProperties: "Vaccine");
+
+            var result = data
+                .Where(d => d.VaccineId.HasValue && d.Vaccine != null) // ✅ Kiểm tra Vaccine != null
+                .GroupBy(d => d.VaccineId)
+                .Select(group => new TopUsedVaccineDTO
+                {
+                    VaccineId = group.Key.Value,
+                    VaccineName = group.FirstOrDefault()?.Vaccine?.Name ?? "Unknown", // ✅ Kiểm tra null trước khi truy cập
+                    Count = group.Count()
+                })
+                .OrderByDescending(v => v.Count)
+                .Take(5)
+                .ToList();
+
+            return result;
+        }
+
     }
 }
