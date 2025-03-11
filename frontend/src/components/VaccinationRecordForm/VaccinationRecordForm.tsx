@@ -12,7 +12,7 @@ import {
 } from "../../apis/apiVaccineRecord.ts";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { apiPutBookingComplete } from "../../apis/apiBooking.ts";
+import {AxiosError} from "axios";
 
 const { Option } = Select;
 
@@ -38,11 +38,11 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
       try {
         const response = await apiGetVaccineRecord(booking.bookingId);
         setVaccineData(response);
-        console.log(response);
+        // console.log(response);
         setUpdatedRecords(response.result.vaccineRecords); // Lưu dữ liệu vào state
-        console.log(response.result.vaccineRecords)
+        // console.log(response.result.vaccineRecords)
         setvaccineRecordId(response.result.vaccineRecords[0].vaccinationRecordId);
-        console.log(response.result.vaccineRecords[0].vaccinationRecordId)
+        // console.log(response.result.vaccineRecords[0].vaccinationRecordId)
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu vaccine:", error);
       } finally {
@@ -109,9 +109,13 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
 
       toast.success("Hồ sơ đã được cập nhật thành công!");
       navigate("/doctor/vaccination-schedule");
-    } catch (error) {
-      console.error("Lỗi khi cập nhật vaccine record:", error);
-      toast.error("Không thể hoàn thành hồ sơ!");
+    } catch (err : unknown)  {
+      if (err instanceof AxiosError) {
+        console.log(err.response)
+        toast.error(`${err.response?.data?.errorMessages}` || "Nhập đầy đủ thông tin")
+      }else {
+        toast.error("Lỗi không xác định")
+      }
     }
   };
 

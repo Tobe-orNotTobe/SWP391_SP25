@@ -135,7 +135,7 @@ const HomePage : React.FC  = () => {
                         <div className="newsListContainer">
                             <div className="titleHeader">
                                 <h2>Blog</h2>
-                                <span><Link to="/blogs">Xem Tất Cả</Link></span>
+                                <span><Link to="/blog">Xem Tất Cả</Link></span>
                             </div>
                             <hr/>
                             <Carousel
@@ -150,7 +150,7 @@ const HomePage : React.FC  = () => {
                                 ]}
                             >
                                 {blogsIntro.map((blog) => (
-                                    <Link key={blog.blogPostId} to={`/blogs/${blog.blogPostId}`} style={{textDecoration: "none"}}>
+                                    <Link key={blog.blogPostId} to={`/blog/${blog.blogPostId}`} style={{textDecoration: "none"}}>
                                         <NewsCard
                                             id={blog.blogPostId}
                                             title={blog.title}
