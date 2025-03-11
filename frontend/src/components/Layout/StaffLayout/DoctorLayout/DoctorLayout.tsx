@@ -10,12 +10,20 @@ const groups = [
     ],
   },
   {
+    title: "Thông tin cá nhân",
+    items: [
+      // { label: "Ghi nhận tiêm chủng", path: "/doctor/service" },
+      { label: "Thông tin của bác sĩ", path: "/doctor/profile" },
+    ],
+  },
+  {
     title: "Đăng bài",
     items: [
       { label: "Đăng cẩm nang", path: "/post-guide" },
       { label: "Đăng tin tức", path: "/post-news" },
     ],
   },
+
 ];
 
 interface DoctorLayoutProps {
