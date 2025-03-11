@@ -76,5 +76,10 @@ namespace ChildVaccineSystem.Repository.Repositories
             _db.Update(entity);
             return entity;
         }
-    }
+
+		public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+		{
+			return await dbSet.AnyAsync(predicate);
+		}
+	}
 }

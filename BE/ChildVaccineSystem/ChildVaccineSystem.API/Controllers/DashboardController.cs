@@ -1,6 +1,7 @@
 ﻿using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Service.Services;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using ChildVaccineSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -14,13 +15,15 @@ namespace ChildVaccineSystem.API.Controllers
         private readonly IFeedbackService _feedbackService;
         private readonly IVaccineInventoryService _vaccineInventoryService;
         private readonly APIResponse _response;
+        private readonly IVaccineService _vaccineService;
 
-        public DashboardController(ITransactionService transactionService, IFeedbackService feedbackService, IVaccineInventoryService vaccineInventoryService, APIResponse response)
+        public DashboardController(ITransactionService transactionService, IFeedbackService feedbackService, IVaccineInventoryService vaccineInventoryService, APIResponse response, IVaccineService vaccineService)
         {
             _transactionService = transactionService;
             _feedbackService = feedbackService;
             _vaccineInventoryService = vaccineInventoryService;
             _response = response;
+            _vaccineService = vaccineService;
         }
 
         [HttpGet("revenue/{date}")]
@@ -135,5 +138,30 @@ namespace ChildVaccineSystem.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
+
+        [HttpGet("top-used-vaccines")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<APIResponse>> GetTopUsedVaccines()
+        {
+            try
+            {
+                var result = await _vaccineService.GetTopUsedVaccinesAsync();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = result;
+
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Error retrieving top used vaccines: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
+
     }
 }

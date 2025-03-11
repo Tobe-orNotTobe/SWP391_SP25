@@ -91,5 +91,15 @@ namespace ChildVaccineSystem.Service.Services
 
             return result;
         }
+        // ✅ Lấy blog theo type
+        public async Task<List<BlogPostDTO>> GetBlogsByTypeAsync(string type)
+        {
+            var blogs = await _unitOfWork.BlogPosts.GetAllAsync(b => b.Type == type);
+
+            if (blogs == null || !blogs.Any())
+                throw new ArgumentException($"No blogs found with type '{type}'");
+
+            return _mapper.Map<List<BlogPostDTO>>(blogs);
+        }
     }
 }

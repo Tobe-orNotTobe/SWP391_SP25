@@ -18,6 +18,7 @@ using ChildVaccineSystem.Data.DTO.User;
 using ChildVaccineSystem.Data.DTO.VaccinationSchedule;
 using ChildVaccineSystem.Data.DTO.Vaccine;
 using ChildVaccineSystem.Data.DTO.VaccineInventory;
+using ChildVaccineSystem.Data.DTO.VaccineRecord;
 using ChildVaccineSystem.Data.DTO.VaccineScheduleDetail;
 using ChildVaccineSystem.Data.DTO.Wallet;
 using ChildVaccineSystem.Data.Entities;
@@ -98,7 +99,7 @@ namespace ChildVaccineSystem.Common.Helper
 
             CreateMap<Booking, BookingDTO>()
                 .ForMember(dest => dest.ChildName,
-                    opt => opt.MapFrom(src => src.Children.FullName))
+        opt => opt.MapFrom(src => src.Children != null ? src.Children.FullName : "Không xác định"))
                 .ForMember(dest => dest.BookingDetails,
                     opt => opt.MapFrom(src => src.BookingDetails));
 
@@ -189,6 +190,26 @@ namespace ChildVaccineSystem.Common.Helper
 			CreateMap<RefundRequest, RefundRequestDTO>()
 				.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.FullName : "Unknown"))
 				.ForMember(dest => dest.ProcessedBy, opt => opt.MapFrom(src => src.ProcessedBy != null ? src.ProcessedBy.FullName : null));
+
+			// VaccineRecord mappings
+			CreateMap<VaccinationRecord, VaccineRecordDTO>()
+				.ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.BookingDetail.BookingId))
+				.ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Child.FullName))
+				.ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.Child.DateOfBirth))
+				.ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Child.Height))
+				.ForMember(dest => dest.Weight, opt => opt.MapFrom(src => src.Child.Weight))
+				.ForMember(dest => dest.VaccineRecords, opt => opt.MapFrom(src => new List<VaccineRecordDetailDTO>()))
+				.ForMember(dest => dest.Message, opt => opt.MapFrom(src => "Vaccine record processed successfully"));
+
+			CreateMap<VaccinationRecord, VaccineRecordDetailDTO>()
+				.ForMember(dest => dest.VaccinationRecordId, opt => opt.MapFrom(src => src.VaccinationRecordId))
+				.ForMember(dest => dest.VaccineName, opt => opt.MapFrom(src => src.Vaccine.Name))
+				.ForMember(dest => dest.DoseAmount, opt => opt.MapFrom(src => src.Vaccine.DoseAmount))
+				.ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Vaccine.Price))
+				.ForMember(dest => dest.NextDoseDate, opt => opt.MapFrom(src => src.NextDoseDate))
+				.ForMember(dest => dest.BatchNumber, opt => opt.MapFrom(src => src.BatchNumber))
+				.ForMember(dest => dest.StatusEnum, opt => opt.MapFrom(src => src.Status))
+				.ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes));
 		}
     }
 };

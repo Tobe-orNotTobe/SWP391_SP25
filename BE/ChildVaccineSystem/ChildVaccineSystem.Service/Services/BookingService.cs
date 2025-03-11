@@ -51,6 +51,15 @@ namespace ChildVaccineSystem.Service.Services
                     detail.ComboVaccineName = comboVaccine?.ComboName; // ✅ Lấy tên Combo Vaccine
                 }
             }
+            // ✅ Kiểm tra nếu Children được Include đúng
+            if (booking.Children != null)
+            {
+                bookingDTO.ChildName = booking.Children.FullName ?? "Không xác định";
+            }
+            else
+            {
+                bookingDTO.ChildName = "Không xác định";
+            }
 
             return bookingDTO;
         }
@@ -103,7 +112,17 @@ namespace ChildVaccineSystem.Service.Services
                     booking.BookingType = BookingType.singleVaccine; 
                     var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == detailDto.VaccineId);
                     bookingDetail.Price = vaccine.Price;
-                }
+					// Lấy VaccineInventoryId phù hợp với VaccineId
+					var vaccineInventory = await _unitOfWork.VaccineInventories
+						.GetAsync(vi => vi.VaccineId == vaccine.VaccineId);
+
+					if (vaccineInventory == null)
+					{
+						throw new ArgumentException($"No inventory found for VaccineId {vaccine.VaccineId}");
+					}
+
+					bookingDetail.VaccineInventoryId = vaccineInventory.VaccineInventoryId;
+				}
                 else
                 {
 					booking.BookingType = BookingType.comboVacinne;

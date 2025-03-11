@@ -15,7 +15,7 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task ExportVaccineAsync(int vaccineId, int quantity);
         Task ReturnVaccineAsync(int id, int quantity);
         Task<IEnumerable<VaccineInventoryDTO>> GetExportVaccinesAsync();
-        //Task<IEnumerable<ReturnedVaccineDTO>> GetReturnedVaccinesAsync();
+        Task<IEnumerable<ReturnedVaccineDTO>> GetReturnedVaccinesAsync();
         Task<IEnumerable<VaccineInventoryDTO>> GetExpiringVaccinesAsync(int daysThreshold);
         Task<IEnumerable<VaccineInventoryDTO>> GetLowStockVaccinesAsync(int threshold);
         Task SendExpiryAlertsAsync(int daysThreshold);
@@ -23,6 +23,8 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<VaccineInventoryDTO> UpdateVaccineInventoryAsync(int id, UpdateVaccineInventoryDTO dto);
         Task<string> SoftDeleteVaccineInventoryAsync(int id);
         Task<IEnumerable<VaccineInventoryDTO>> GetVaccineInventoryByVaccineInventoryIdAsync(int vaccineInventoryId);
+        Task<int> GetAvailableInventoryForVaccineAsync(int vaccineId);
 
-    }
+
+	}
 }
