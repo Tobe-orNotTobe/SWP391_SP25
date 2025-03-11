@@ -46,6 +46,7 @@ namespace ChildVaccineSystem.Data.Entities
 		public string Notes { get; set; } = string.Empty;
 
 		public string BatchNumber { get; set; } = string.Empty;
+		public decimal Price { get; set; }
 
 
 	}
