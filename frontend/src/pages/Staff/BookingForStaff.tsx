@@ -16,8 +16,6 @@ import {
   useVaccineDetail,
   useComboVaccineDetail,
 } from "../../hooks/useVaccine";
-import StaffLayout from "../../components/Layout/StaffLayout/StaffLayout.tsx";
-import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
 import Staff1Layout from "../../components/Layout/StaffLayout/Stafff1Layout/Staff1Layout.tsx";
 import { toast } from "react-toastify";
 import { Avatar } from "antd";
