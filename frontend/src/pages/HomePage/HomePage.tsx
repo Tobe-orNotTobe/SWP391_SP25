@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "antd";
 import {useImgCarousel, useBriefContent, useBlogIntro} from "./useHomePage.ts";
@@ -11,9 +11,6 @@ import { ServiceCard, VaccineCard, NewsCard} from "../../components/Card/Card";
 import Footer from "../../components/Footer/Footer.tsx"
 import "./HomePage.scss"
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
-import {useGetAllBlog} from "../../hooks/useBlog.ts";
-import BlogPost from "../../components/Blog/BlogPost.tsx";
-
 
 const HomePage : React.FC  = () => {
 
@@ -22,18 +19,7 @@ const HomePage : React.FC  = () => {
     const { vaccineIntro } = useVaccineIntro();
     const { vaccineServiceIntro } = useVaccineServiceIntro();
     const { newsIntro } = useNewsIntro();
-    const { blogs, fetchAllBlog} = useGetAllBlog();
     const {blogs : blogsIntro} = useBlogIntro()
-
-    console.log(blogsIntro)
-    const firstBlog = blogs.length > 0 ? blogs[0] : null;
-    const secondBlog = blogs.length > 1 ? blogs[1] : null;
-    const thirdBlog = blogs.length > 2 ? blogs[2] : null;
-    const fourBlog = blogs.length > 3 ? blogs[3] : null;
-
-    useEffect(() => {
-        fetchAllBlog(true).then();
-    }, []);
 
     return(
         <>
@@ -51,6 +37,7 @@ const HomePage : React.FC  = () => {
                             ))}
                         </Carousel>
                     </div>
+                </div>
 
                 <div className="briefContent" style={{paddingRight:'300px', paddingLeft: "300px"}}>
                     {briefContent.map((item, index) => (
@@ -73,12 +60,7 @@ const HomePage : React.FC  = () => {
                     ))}
                 </div>
 
-
                 <div style={{display: "flex", paddingLeft: "40px", paddingRight: "40px", width: "100%"}}>
-                    <div>
-                        <BlogPost key={firstBlog?.blogPostId} blog={firstBlog}/>
-                        <BlogPost key={thirdBlog?.blogPostId} blog={thirdBlog}/>
-                    </div>
                     <div className="homeContainer">
                         <div className="vaccineListContainer">
                             <div className="titleHeader">
@@ -180,15 +162,8 @@ const HomePage : React.FC  = () => {
                             </Carousel>
                         </div>
                     </div>
-
-                    <div>
-                        <BlogPost key={secondBlog?.blogPostId} blog={secondBlog}/>
-                        <BlogPost key={fourBlog?.blogPostId} blog={fourBlog}/>
-                    </div>
                 </div>
 
-
-            </div>
             <FloatingButtons/>
             <Footer/>
         </>

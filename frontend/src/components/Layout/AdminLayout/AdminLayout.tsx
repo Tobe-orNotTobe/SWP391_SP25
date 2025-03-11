@@ -68,7 +68,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         {
             key: 'vaccine-schedule',
             icon: <MdOutlineCalendarToday/>,
-            label: <Link to="/admin/schedule-vaccines">Quản lý Lịch Tiêm Cho Vaccine</Link>
+            label: <Link to="/admin/booking">Quản lý Lịch Tiêm</Link>
         },
         {
             key: 'feedback',

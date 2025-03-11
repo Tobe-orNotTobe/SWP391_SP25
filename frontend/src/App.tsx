@@ -64,6 +64,8 @@ import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBl
 import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
 import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
 import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
+import AdminBookingPage from "./pages/Admin/AdminBooking/AdminBookingList/AdminBookingList.tsx";
+import AdminBookingFormPage from "./pages/Admin/AdminBooking/AdminBookingForm/AdminBookingForm.tsx";
 
 
 function App() {
@@ -146,6 +148,9 @@ function App() {
                 <Route path="/admin/blog/add" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogFormPage /></ProtectedRoute>} />
                 <Route path="/admin/blog/edit/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogFormPage /></ProtectedRoute>} />
                 <Route path="/admin/feedback" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminFeedbackListPage /></ProtectedRoute>} />
+                <Route path="/admin/booking" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBookingPage/></ProtectedRoute>} />
+                {/*<Route path="/admin/booking/add" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBookingFormPage/></ProtectedRoute>} />*/}
+                {/*<Route path="/admin/booking/edit/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBookingFormPage/></ProtectedRoute>} />*/}
 
 
 
