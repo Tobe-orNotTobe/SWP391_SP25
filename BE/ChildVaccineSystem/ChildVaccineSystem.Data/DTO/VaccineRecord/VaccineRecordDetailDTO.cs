@@ -10,7 +10,8 @@ namespace ChildVaccineSystem.Data.DTO.VaccineRecord
 {
     public class VaccineRecordDetailDTO
     {
-        public string VaccineName { get; set; }
+		public int VaccinationRecordId { get; set; }
+		public string VaccineName { get; set; }
         public decimal DoseAmount { get; set; }
         public decimal Price { get; set; }
         public DateTime? NextDoseDate { get; set; }
