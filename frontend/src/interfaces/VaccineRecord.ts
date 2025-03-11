@@ -29,4 +29,25 @@ export interface VaccineRecord {
     status: string;
     nextDoseDate: string;
   }
-  
+
+
+export interface VaccineRecordUser {
+    vaccinationRecordId: number;
+    vaccineName: string;
+    doseAmount: number;
+    price: number;
+    nextDoseDate: string;
+    batchNumber: string;
+    status: string;
+    notes: string;
+}
+
+export interface BookingInfo {
+    bookingId: number;
+    fullName: string;
+    dateOfBirth: string;
+    height: number;
+    weight: number;
+    vaccineRecords: VaccineRecord[];
+    message: string;
+}

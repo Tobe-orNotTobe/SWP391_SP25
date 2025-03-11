@@ -222,3 +222,13 @@ export const apiGetUnassignedBooking = async () => {
     }
   }
 };
+
+export const apiGetVaccineRecordByBookingId = async (bookingId : number)=> {
+  try{
+    const response = await axiosInstance.get(`/api/VaccineRecord/booking/${bookingId}`);
+    return response.data
+  }catch (err){
+    console.log(err);
+    throw err;
+  }
+}
