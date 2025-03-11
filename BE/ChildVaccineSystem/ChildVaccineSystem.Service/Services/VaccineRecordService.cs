@@ -109,16 +109,14 @@ namespace ChildVaccineSystem.Service.Services
 								Status = VaccineRecordStatus.Completed,
 								Notes = "Tiêm chủng hoàn tất",
 								BatchNumber = vaccineInventory.BatchNumber,
-								NextDoseDate = nextDoseDate
+								NextDoseDate = nextDoseDate,
+								Price = vaccine.Price
 							};
 
 							await _vaccineRecordRepository.AddAsync(vaccinationRecord);
-							await _unitOfWork.CompleteAsync();
-
 
 							vaccineRecords.Add(new VaccineRecordDetailDTO
 							{
-								VaccinationRecordId = vaccinationRecord.VaccinationRecordId,
 								VaccineName = vaccine.Name,
 								DoseAmount = vaccine.DoseAmount,
 								Price = vaccine.Price,
@@ -133,8 +131,8 @@ namespace ChildVaccineSystem.Service.Services
 				}
 
 				// Cập nhật trạng thái booking thành COMPLETED
-				//booking.Status = BookingStatus.Completed;
-				//_unitOfWork.Bookings.UpdateAsync(booking);
+				booking.Status = BookingStatus.Completed;
+				_unitOfWork.Bookings.UpdateAsync(booking);
 
 				await _unitOfWork.CompleteAsync();
 
@@ -256,10 +254,10 @@ namespace ChildVaccineSystem.Service.Services
 		{
 			new VaccineRecordDetailDTO
 			{
-				VaccinationRecordId = record.VaccinationRecordId,
 				VaccineName = record.Vaccine.Name,
 				DoseAmount = record.DoseAmount,
 				BatchNumber = record.BatchNumber,
+				Price = Convert.ToDecimal(record.Price),
 				StatusEnum = record.Status,
 				NextDoseDate = record.NextDoseDate,
 				Notes = record.Notes
@@ -326,10 +324,10 @@ namespace ChildVaccineSystem.Service.Services
 					Weight = group.First().Child.Weight,
 					VaccineRecords = group.Select(record => new VaccineRecordDetailDTO
 					{
-						VaccinationRecordId = record.VaccinationRecordId,
 						VaccineName = record.Vaccine.Name,
 						DoseAmount = record.DoseAmount,
 						BatchNumber = record.BatchNumber,
+						Price = Convert.ToDecimal(record.Price),
 						StatusEnum = record.Status,
 						NextDoseDate = record.NextDoseDate,
 						Notes = record.Notes
@@ -421,6 +419,7 @@ namespace ChildVaccineSystem.Service.Services
 					VaccineName = record.Vaccine.Name,
 					DoseAmount = record.DoseAmount,
 					BatchNumber = record.BatchNumber,
+					Price = Convert.ToDecimal(record.Price),
 					StatusEnum = record.Status,
 					NextDoseDate = record.NextDoseDate,
 					Notes = record.Notes
