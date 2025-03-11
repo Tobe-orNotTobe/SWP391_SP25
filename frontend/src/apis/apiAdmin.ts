@@ -45,3 +45,25 @@ export const apiExportedVaccines = async  () => {
     throw error;
   }
 }
+
+export const apiGetRefundList = async () => {
+  // Cái này dùng cho admin nhe
+  try {
+    const response = await axiosInstance.get(`/api/Refund/requests`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching refund list:", error);
+    throw error;
+  }
+};
+
+export const apiGetRefundRequestById= async (refundRequestId : number) => {
+  //Cái này dùng cho admin nè, lấy thông tin dựa trên Id của request
+  try{
+    const response = await axiosInstance.get(`/api/Refund/requests/${refundRequestId}`);
+    return response.data;
+  }catch (err){
+    console.error("API Refund Error:", err);
+    throw err;
+  }
+}

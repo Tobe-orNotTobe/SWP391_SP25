@@ -1,0 +1,71 @@
+.admin-refund-page-container{
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Đẩy tiêu đề sang trái, nút sang phải */
+    padding-right: 20px;
+    padding-bottom: 15px; /* Căn nút gần rìa phải */
+
+    .admin-wallet {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+
+      .wallet-amount {
+        background-color: #f0f0f0;
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+    }
+
+    .add-fund-admin {
+      background-color: #FFB400 !important;
+      border-radius: 0 !important; // Bỏ bo góc
+      border: none !important;
+      color: white !important;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        background-color: #e6a500 !important;
+        transform: scale(1.05);
+      }
+
+      &:active {
+        background-color: #cc9200 !important;
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+.refund-action-buttons{
+
+  .detail-button{
+    color: white;
+    background-color: #007bff;
+    margin-left: 10px;
+  }
+  .approve-button{
+    color: white;
+    background-color: #52c41a;
+    margin-left: 10px;
+  }
+  .reject-button{
+    color: white;
+    background-color: #ff4d4f;
+    margin-left: 10px;
+  }
+}
