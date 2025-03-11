@@ -715,7 +715,8 @@ namespace ChildVaccineSystem.Data.Migrations
                     NextDoseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BatchNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    BatchNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {

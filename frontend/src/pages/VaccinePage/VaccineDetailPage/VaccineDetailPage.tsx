@@ -38,7 +38,7 @@ const VaccineDetailPage: React.FC = () => {
             <div className="vaccineDetailLeft">
               <Card className="vaccine-left-card">
                 <img
-                    src={`/images/${vaccineDetail?.image}`}
+                    src={`${vaccineDetail?.image}`}
                     alt={vaccineDetail?.name}
                     className="vaccineImage"
                 />

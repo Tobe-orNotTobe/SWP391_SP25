@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChildVaccineSystem.Data.Migrations
 {
     [DbContext(typeof(ChildVaccineSystemDBContext))]
-    [Migration("20250311130011_Migrations")]
+    [Migration("20250311163721_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />
@@ -624,6 +624,9 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Sequence")
                         .HasColumnType("int");

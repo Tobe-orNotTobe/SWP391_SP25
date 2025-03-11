@@ -233,14 +233,17 @@ const VaccinationSchedulePage: React.FC = () => {
           <Button type="primary" onClick={() => openModal(record)}>
             Chi tiết
           </Button>
-          <Button
-            type="primary"
-            color="green"
-            variant="solid"
-            onClick={() => handleProceedVaccination(record)}
-          >
-            Tiến hành tiêm
-          </Button>
+
+          {record.status !== "Completed" && (
+              <Button
+                  type="primary"
+                  color="green"
+                  variant="solid"
+                  onClick={() => handleProceedVaccination(record)}
+              >
+                Tiến hành tiêm
+              </Button>
+              )}
         </Space>
       ),
     },
