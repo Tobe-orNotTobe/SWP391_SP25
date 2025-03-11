@@ -64,6 +64,7 @@ import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBl
 import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
 import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
 import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
+import StaffBlogPost from "./pages/Staff/StaffBlogPost.tsx";
 
 
 function App() {
@@ -114,6 +115,7 @@ function App() {
                 <Route path="/staff/service" element={<ProtectedRoute allowedRoles={["Staff"]}><ServicePage /></ProtectedRoute>} />
                 <Route path="/staff/assignDoctor" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignPage /></ProtectedRoute>} />
                 <Route path="/staff/booking" element={<ProtectedRoute allowedRoles={["Staff"]}><BookingForStaff /></ProtectedRoute>} />
+                <Route path="/staff/blogPost" element={<ProtectedRoute allowedRoles={["Doctor"]}><StaffBlogPost /></ProtectedRoute>} />
                 <Route path="/doctor/vaccination-schedule" element={<ProtectedRoute allowedRoles={["Doctor"]}><VaccinationSchedulePage /></ProtectedRoute>} />
                 <Route path="/doctor/service" element={<ProtectedRoute allowedRoles={["Doctor"]}><ServicePage /></ProtectedRoute>} />
 
