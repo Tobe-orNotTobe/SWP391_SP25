@@ -133,8 +133,8 @@ namespace ChildVaccineSystem.Service.Services
 				}
 
 				// Cập nhật trạng thái booking thành COMPLETED
-				booking.Status = BookingStatus.Completed;
-				_unitOfWork.Bookings.UpdateAsync(booking);
+				//booking.Status = BookingStatus.Completed;
+				//_unitOfWork.Bookings.UpdateAsync(booking);
 
 				await _unitOfWork.CompleteAsync();
 
