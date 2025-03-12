@@ -114,9 +114,11 @@ namespace ChildVaccineSystem.Service.Services
 							};
 
 							await _vaccineRecordRepository.AddAsync(vaccinationRecord);
+							await _unitOfWork.CompleteAsync();
 
 							vaccineRecords.Add(new VaccineRecordDetailDTO
 							{
+								VaccinationRecordId = vaccinationRecord.VaccinationRecordId,
 								VaccineName = vaccine.Name,
 								DoseAmount = vaccine.DoseAmount,
 								Price = vaccine.Price,
@@ -131,8 +133,8 @@ namespace ChildVaccineSystem.Service.Services
 				}
 
 				// Cập nhật trạng thái booking thành COMPLETED
-				booking.Status = BookingStatus.Completed;
-				_unitOfWork.Bookings.UpdateAsync(booking);
+				//booking.Status = BookingStatus.Completed;
+				//_unitOfWork.Bookings.UpdateAsync(booking);
 
 				await _unitOfWork.CompleteAsync();
 
