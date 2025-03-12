@@ -4,7 +4,7 @@ import Footer from "../../components/Footer/Footer.tsx";
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
 import {useGetBlogDetailById} from "../../hooks/useBlog.ts";
 import {useParams} from "react-router-dom";
-import "./Blog.scss"
+import "./News.scss"
 
 const NewsDetailPage :React.FC = () => {
 

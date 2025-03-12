@@ -65,6 +65,8 @@ import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList
 import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
 import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
 import StaffBlogPost from "./pages/Staff/StaffBlogPost.tsx";
+import NewsPage from "./pages/News/NewsPage.tsx";
+import NewsDetailPage from "./pages/News/NewsDetailPage.tsx";
 
 
 function App() {
@@ -89,6 +91,8 @@ function App() {
                 <Route path="/handbook/after" element={<PublicRoute><HandBookAfter /></PublicRoute>} />
                 <Route path="/vaccine-packages" element={<PublicRoute><VaccinePackagePage/></PublicRoute>} />
                 <Route path="/blog" element={<PublicRoute><BlogPage/></PublicRoute>} />
+                <Route path="/news" element={<PublicRoute><NewsPage/></PublicRoute>} />
+                <Route path="/news/:id" element={<PublicRoute><NewsDetailPage/></PublicRoute>} />
                 <Route path="/blog/:id" element={<PublicRoute><BlogDetailPage/></PublicRoute>} />
 
                 {/* Authentication Routes */}
