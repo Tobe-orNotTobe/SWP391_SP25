@@ -57,7 +57,7 @@ import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
 import ManagerProfile from "./pages/Manager/ManagerProfile/ManagerProfile.tsx";
 import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
 import AssignPage from "./pages/Staff/AssignPage.tsx";
-
+import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
 import VaccinePackagePage from "./pages/VaccinePage/VaccinePackagePage/VaccinePackagePage.tsx";
 import AdminBlogManagePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogManage/AdminBlogManage.tsx";
 import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogDeactive/AdminBlogDeactive.tsx";
@@ -69,6 +69,8 @@ import AdminBookingPage from "./pages/Admin/AdminBooking/AdminBookingList/AdminB
 import DoctorProfile from "./pages/Doctor/DoctorProfile/DoctorProfile.tsx";
 import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
 
+import NewsPage from "./pages/News/NewsPage.tsx";
+import NewsDetailPage from "./pages/News/NewsDetailPage.tsx";
 
 
 function App() {

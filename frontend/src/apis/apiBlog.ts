@@ -17,7 +17,22 @@ export const apiGetAllBlog = async (onlyActive: boolean) => {
     }
 
 };
-export const apiGetAllNews = async (onlyActive: boolean) => {
+export const apiGetAllNews = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/Blog/type/news`);
+        console.log(response.data)
+        return response.data;
+    }catch (err: any | undefined) {
+        return {
+            statusCode: err.response?.data?.statusCode,
+            isSuccess: false,
+            errorMessages: err.response?.data?.errorMessages || ["Có lỗi xảy ra!"],
+            result: null
+        };
+    }
+
+};
+export const apiGetNewsById = async (onlyActive: boolean) => {
     try {
         const response = await axiosInstance.get(`/api/News?onlyActive=${onlyActive}`);
         return response.data;
