@@ -191,6 +191,15 @@ namespace ChildVaccineSystem.Service.Services
                     }
                 }
             }
+            foreach (var booking in result)
+            {
+                // ✅ Kiểm tra nếu Children được Include đúng
+                if (booking.ChildId != null)
+                {
+                    var child = await _unitOfWork.Children.GetAsync(c => c.ChildId == booking.ChildId);
+                    booking.ChildName = child?.FullName ?? "Không xác định";
+                }
+            }
 
             return result;
         }
