@@ -181,7 +181,8 @@ namespace ChildVaccineSystem.Service.Services
                 Status = VaccineRecordStatus.Completed,
                 Notes = "Tiêm chủng hoàn tất",
                 BatchNumber = vaccineInventory.BatchNumber,
-                NextDoseDate = nextDoseDate
+                NextDoseDate = nextDoseDate,
+				Price = detail.Vaccine.Price,
             };
 
             await _vaccineRecordRepository.AddAsync(vaccinationRecord);
