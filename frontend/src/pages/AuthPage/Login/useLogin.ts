@@ -5,6 +5,8 @@ import { apiLogIn } from "../../../apis/apiAccount.ts";
 import {AxiosError} from "axios";
 import { toast } from "react-toastify";
 import {decodeToken} from "../../../utils/decodeToken.ts";
+import { auth, provider, signInWithPopup, signOut } from "../../../utils/firebase.ts";
+import {User} from "firebase/auth"
 
 export const useLogin = () => {
     const [username, setUsername] = useState<string>("");
@@ -114,13 +116,28 @@ export const useLogin = () => {
     };
 };
 
-export const useLoginGoogle = () => {
+export const useAuthGoogle = () => {
 
-    const handleGoogleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-    }
+    const [user, setUser] = useState<User | null>(null);
 
-    return {handleGoogleLogin}
+    // Hàm đăng nhập
+    const handleLoginGoogle = async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            setUser(result.user);
+            console.log(user);
+        } catch (error) {
+            console.error("Lỗi đăng nhập:", error);
+        }
 
+    };
+
+    // Hàm đăng xuất
+    const handleLogoutGoogle = async () => {
+        await signOut(auth);
+        setUser(null);
+    };
+
+    return {handleLoginGoogle, handleLogoutGoogle, user}
 
 }
