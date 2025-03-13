@@ -3,10 +3,10 @@ name: Frontend CI
 on:
   push:
     branches:
-      - Giabao
+      - GiaBao
   pull_request:
     branches:
-      - Giabao
+      - GiaBao
 
 jobs:
   build:
