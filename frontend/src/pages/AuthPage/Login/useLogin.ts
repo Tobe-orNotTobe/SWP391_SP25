@@ -43,7 +43,6 @@ export const useLogin = () => {
                 // Cảnh báo: Lưu refreshToken vào localStorage không an toàn, cần thảo luận với BE
                 localStorage.setItem("refreshToken", response.result.refeshToken);
 
-                console.log("Login Successful", response);
                 toast.success("Đăng nhập thành công!");
 
                 setIsLoading(false);

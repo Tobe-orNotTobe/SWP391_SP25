@@ -112,7 +112,7 @@ const ManagerDashBoard: React.FC = () => {
                 }
             }
         },
-        barPercentage: 0.6, // Điều chỉnh độ rộng của cột (0-1)
+        barPercentage: 2, // Điều chỉnh độ rộng của cột (0-1)
         categoryPercentage: 0.2, // Điều chỉnh khoảng cách giữa các nhóm cột (0-1)
     };
 
