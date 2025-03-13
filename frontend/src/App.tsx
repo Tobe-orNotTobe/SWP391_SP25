@@ -57,7 +57,7 @@ import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
 import ManagerProfile from "./pages/Manager/ManagerProfile/ManagerProfile.tsx";
 import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
 import AssignPage from "./pages/Staff/AssignPage.tsx";
-import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
+
 import VaccinePackagePage from "./pages/VaccinePage/VaccinePackagePage/VaccinePackagePage.tsx";
 import AdminBlogManagePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogManage/AdminBlogManage.tsx";
 import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogDeactive/AdminBlogDeactive.tsx";
@@ -68,9 +68,10 @@ import StaffBlogPost from "./pages/Staff/StaffBlogPost.tsx";
 import AdminBookingPage from "./pages/Admin/AdminBooking/AdminBookingList/AdminBookingList.tsx";
 import DoctorProfile from "./pages/Doctor/DoctorProfile/DoctorProfile.tsx";
 import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
-
 import NewsPage from "./pages/News/NewsPage.tsx";
 import NewsDetailPage from "./pages/News/NewsDetailPage.tsx";
+
+
 
 
 function App() {
@@ -96,7 +97,8 @@ function App() {
                 <Route path="/vaccine-packages" element={<PublicRoute><VaccinePackagePage/></PublicRoute>} />
                 <Route path="/blog" element={<PublicRoute><BlogPage/></PublicRoute>} />
                 <Route path="/blog/:id" element={<PublicRoute><BlogDetailPage/></PublicRoute>} />
-
+                <Route path="/news" element={<PublicRoute><NewsPage/></PublicRoute>} />
+                <Route path="/news/:id" element={<PublicRoute><NewsDetailPage/></PublicRoute>} />
                 {/* Authentication Routes */}
                 <Route path="/login" element={<NoAuthRoute><Login/></NoAuthRoute>} />
                 <Route path="/register" element={<NoAuthRoute><Register /></NoAuthRoute>} />

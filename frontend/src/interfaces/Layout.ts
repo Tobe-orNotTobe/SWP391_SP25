@@ -17,3 +17,8 @@ export interface ApiResponse<T> {
     result: T | null;               // Dữ liệu trả về (nếu có)
 }
 
+export interface LoadingRedirectProps {
+    message: string;
+    delay: number;
+    to: string;
+}

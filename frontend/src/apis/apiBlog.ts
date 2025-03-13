@@ -17,9 +17,9 @@ export const apiGetAllBlog = async (onlyActive: boolean) => {
     }
 
 };
-export const apiGetAllNews = async () => {
+export const apiGetAllNews = async (onlyActive: boolean) => {
     try {
-        const response = await axiosInstance.get(`/api/Blog/type/news`);
+        const response = await axiosInstance.get(`/api/Blog/type/news?onlyActive=${onlyActive}`);
         console.log(response.data)
         return response.data;
     }catch (err: any | undefined) {
@@ -122,14 +122,14 @@ export const apiGetBrieftContent = async () => {
     }
 };
 
-export const apiGetNewsIntro = async () => {
-    const response = await axios.get("Decorative/NewsIntro.json");
-    if (response.data) {
-        return response.data;
-    } else {
-        return [];
-    }
-};
+// export const apiGetNewsIntro = async () => {
+//     const response = await axios.get("Decorative/NewsIntro.json");
+//     if (response.data) {
+//         return response.data;
+//     } else {
+//         return [];
+//     }
+// };
 
 export const apiGetVaccineServiceIntro = async () => {
     const response = await axios.get("Vaccine/VaccineService.json");

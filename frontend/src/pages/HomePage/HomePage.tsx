@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "antd";
-import {useImgCarousel, useBriefContent, useBlogIntro} from "./useHomePage.ts";
-import { useNewsIntro } from "./useHomePage.ts";
+import {useImgCarousel, useBriefContent, useBlogIntro, useNewIntro} from "./useHomePage.ts";
+
 import { useVaccineIntro } from "../../hooks/useVaccine";
 import { useVaccineServiceIntro } from "./useHomePage.ts";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar";
@@ -12,13 +12,16 @@ import Footer from "../../components/Footer/Footer.tsx"
 import "./HomePage.scss"
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
 
+
 const HomePage : React.FC  = () => {
 
     const { imgCarousel } = useImgCarousel();
     const { briefContent } = useBriefContent();
     const { vaccineIntro } = useVaccineIntro();
     const { vaccineServiceIntro } = useVaccineServiceIntro();
-    const { newsIntro } = useNewsIntro();
+    const { news } = useNewIntro();
+
+
     const {blogs : blogsIntro} = useBlogIntro()
 
     return(
@@ -113,7 +116,7 @@ const HomePage : React.FC  = () => {
                         <div className="newsListContainer">
                             <div className="titleHeader">
                                 <h2>Tin Tức</h2>
-                                <span><Link to="/vaccines-list">Xem Tất Cả</Link></span>
+                                <span><Link to="/news">Xem Tất Cả</Link></span>
                             </div>
                             <hr style={{borderColor: "black"}}></hr>
                             <Carousel
@@ -127,9 +130,19 @@ const HomePage : React.FC  = () => {
                                     {breakpoint: 480, settings: {slidesToShow: 1, slidesToScroll: 1}}
                                 ]}
                             >
-                                {newsIntro.map((news) => (
-                                    <NewsCard key={news.id} id={news.id} title={news.title} image={news.image}
-                                              briefContent={news.briefContent}/>
+                                {news.map((newsItem) => (
+                                    <Link
+                                        key={newsItem.blogPostId}
+                                        to={`/blog/${newsItem.blogPostId}`}
+                                        style={{ textDecoration: "none" }}
+                                    >
+                                       <NewsCard
+                                           blogPostId={newsItem.blogPostId}
+                                           title={newsItem.title}
+                                           imageUrl={newsItem.imageUrl}
+                                           type={newsItem.type}
+                                       />
+                                    </Link>
                                 ))}
                             </Carousel>
                         </div>
@@ -154,10 +167,10 @@ const HomePage : React.FC  = () => {
                                     <Link key={blog.blogPostId} to={`/blog/${blog.blogPostId}`}
                                           style={{textDecoration: "none"}}>
                                         <NewsCard
-                                            id={blog.blogPostId}
+                                            blogPostId={blog.blogPostId}
                                             title={blog.title}
-                                            image={blog.imageUrl}
-                                            briefContent=""
+                                            imageUrl={blog.imageUrl}
+                                            type={blog.type}
                                         />
                                     </Link>
                                 ))}

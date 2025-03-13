@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoadingRedirectProps } from "../../interfaces/Decorative";
+import {LoadingRedirectProps} from "../../interfaces/Layout.ts";
 
 import "./LoadingRedirect.scss";
 import {Hourglass} from "react-loader-spinner";
