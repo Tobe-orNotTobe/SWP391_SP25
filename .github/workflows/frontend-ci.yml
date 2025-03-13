@@ -1,0 +1,37 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+      - Giabao
+  pull_request:
+    branches:
+      - Giabao
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run TypeScript check
+        run: npm run type-check
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build project
+        run: npm run build
