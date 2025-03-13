@@ -201,7 +201,7 @@ const BookingHistory: React.FC = () => {
                                                         <span className="value">
                                                             {booking.bookingType === "singleVaccine"
                                                                 ? "Đặt lẻ Vaccine "
-                                                                : "Đặt Vaccine Combo"}
+                                                                : `Đặt ${booking.bookingDetails[0].comboVaccineName}`}
                                                         </span>
                                                     </p>
                                                     {booking.bookingType === "singleVaccine" && (

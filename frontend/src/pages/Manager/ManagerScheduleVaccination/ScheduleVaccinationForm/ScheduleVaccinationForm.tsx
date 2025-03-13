@@ -28,7 +28,7 @@ const ScheduleVaccinationForm: React.FC = () => {
                         <div className="schedule-form__age-range">
                             <Form.Item
                                 name="ageRangeStart"
-                                label="Độ tuổi từ (months)"
+                                label="Độ tuổi từ (tuổi)"
                                 rules={[{required: true, message: 'Please enter start age!'}]}
                                 className="schedule-form__age-item"
                             >
@@ -37,7 +37,7 @@ const ScheduleVaccinationForm: React.FC = () => {
 
                             <Form.Item
                                 name="ageRangeEnd"
-                                label="Đến (months)"
+                                label="Đến (tuổi)"
                                 rules={[{required: true, message: 'Please enter end age!'}]}
                                 className="schedule-form__age-item"
                             >

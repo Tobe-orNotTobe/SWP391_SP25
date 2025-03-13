@@ -154,6 +154,8 @@ const VaccinePackagePage: React.FC = () => {
         onGlobalFilterChange: setFiltering,
     });
 
+
+    // Cái hàm này dùng để lấy danh sách vaccine dựa trên vaccinationschedule để không bị trùng lặp
     const getAllVaccines = () => {
         const vaccines: VaccineScheduleDetail[] = [];
 
@@ -169,8 +171,10 @@ const VaccinePackagePage: React.FC = () => {
         return vaccines;
     };
 
+    //Gọi 1 biến để sử dụng hàm ở trên
     const allVaccines = getAllVaccines();
 
+    //hàm này sử dụng để tìm thông tin mũi tiêm ở 1 độ tuổi cụ thể
     const findInjection = (vaccineId: number, month: number) => {
         for (const schedule of vaccinationSchedule) {
             const vaccineDetail = schedule.vaccineScheduleDetails.find(
@@ -191,6 +195,8 @@ const VaccinePackagePage: React.FC = () => {
         return null;
     };
 
+
+    //Cái này kiểm tra xem vaccine nó có bắt buộc hay khong để hiển thị trên cột
     const isVaccineRequired = (vaccineId: number): boolean => {
         for (const schedule of vaccinationSchedule) {
             const vaccine = schedule.vaccineScheduleDetails.find(v => v.vaccineId === vaccineId);
@@ -337,7 +343,7 @@ const VaccinePackagePage: React.FC = () => {
                                     </th>
                                 ))}
                             </tr>
-                            </thead>
+                        </thead>
                             <tbody>
                             {allVaccines.map((vaccine) => (
                                 <tr key={vaccine.vaccineId}>

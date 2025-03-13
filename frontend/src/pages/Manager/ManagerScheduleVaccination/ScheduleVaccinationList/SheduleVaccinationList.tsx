@@ -37,7 +37,7 @@ const ScheduleVaccinationList: React.FC = () => {
         {
             title: "Độ tuổi (Từ - Đến)",
             key: "ageRange",
-            render: (record: VaccinationSchedule) => `${record.ageRangeStart} - ${record.ageRangeEnd} tháng`,
+            render: (record: VaccinationSchedule) => `${record.ageRangeStart} - ${record.ageRangeEnd} tuổi`,
             sorter: (a :VaccinationSchedule, b : VaccinationSchedule) => a.ageRangeStart - b.ageRangeStart,
         },
         {
