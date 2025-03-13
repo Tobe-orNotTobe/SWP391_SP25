@@ -41,7 +41,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving posts: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi truy xuất bài viết: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -65,7 +65,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error creating post: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi tạo bài viết: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -83,7 +83,7 @@ namespace ChildVaccineSystem.API.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("Post not found.");
+                    _response.ErrorMessages.Add("Không tìm thấy bài đăng.");
                     return NotFound(_response);
                 }
 
@@ -96,7 +96,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving post: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi truy xuất bài đăng: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -120,7 +120,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error updating post: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi cập nhật bài viết: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -144,7 +144,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error deleting post: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi xóa bài viết: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }

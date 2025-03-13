@@ -56,7 +56,7 @@ namespace ChildVaccineSystem.Service.Services
             var blogPost = await _unitOfWork.BlogPosts.GetPostByIdAsync(id);
             if (blogPost == null)
             {
-                throw new ArgumentException("Blog post not found");
+                throw new ArgumentException("Không tìm thấy bài đăng trên blog\r\n");
             }
 
             blogPost.Title = updatePostDto.Title;
@@ -75,7 +75,7 @@ namespace ChildVaccineSystem.Service.Services
             var blogPost = await _unitOfWork.BlogPosts.GetPostByIdAsync(id);
             if (blogPost == null)
             {
-                throw new ArgumentException("Blog post not found");
+                throw new ArgumentException("Không tìm thấy bài đăng trên blog");
             }
 
             _unitOfWork.BlogPosts.DeleteAsync(blogPost);
@@ -97,7 +97,7 @@ namespace ChildVaccineSystem.Service.Services
             var blogs = await _unitOfWork.BlogPosts.GetAllAsync(b => b.Type == type);
 
             if (blogs == null || !blogs.Any())
-                throw new ArgumentException($"No blogs found with type '{type}'");
+                throw new ArgumentException($"Không tìm thấy blog nào có loại '{type}'");
 
             return _mapper.Map<List<BlogPostDTO>>(blogs);
         }
