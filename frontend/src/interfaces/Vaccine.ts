@@ -109,3 +109,9 @@ export interface ExportedVaccine {
     totalQuantity : number
     status: boolean;
 }
+
+export interface TopUseVaccine {
+    vaccineId: number;
+    vaccineName: string;
+    count :number;
+}

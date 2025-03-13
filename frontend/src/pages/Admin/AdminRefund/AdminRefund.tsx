@@ -160,7 +160,7 @@ const AdminRefund: React.FC = () => {
             title: "Amount",
             dataIndex: "amount",
             key: "amount",
-            render: (value: number) => `$${value.toFixed(2)}`,
+            render: (value: number) => `${value.toFixed(2)} VND`,
         },
         {
             title: "Status",
