@@ -211,14 +211,25 @@ namespace ChildVaccineSystem.Service.Services
             if (bookingDto.BookingDate < DateTime.Now)
                 throw new ArgumentException("Booking date cannot be in the past");
 
-            // Check for conflicting bookings
-            if (await _unitOfWork.Bookings.HasConflictingBookingAsync(userId, bookingDto.BookingDate))
-                throw new ArgumentException("User already has a booking for this date");
+            // ✅ Kiểm tra nếu cùng một đứa trẻ đã có booking trong cùng ngày
+            var existingBooking = await _unitOfWork.Bookings.GetAsync(
+                b => b.UserId == userId &&
+                     b.BookingDate.Date == bookingDto.BookingDate.Date &&
+                     b.ChildId == bookingDto.ChildId
+            );
+
+            if (existingBooking != null)
+            {
+                throw new ArgumentException("This child already has a booking on this date.");
+            }
+
+            // ✅ Không cần kiểm tra xung đột theo `userId` nữa vì đã kiểm tra theo `childId`
+            // (Loại bỏ kiểm tra theo HasConflictingBookingAsync)
 
             // Validate child exists and belongs to the current user
             var child = await _unitOfWork.Children.GetAsync(c => c.ChildId == bookingDto.ChildId);
-            if (child == null)
-                throw new ArgumentException("Child not found");
+            if (child == null || child.UserId != userId)
+                throw new ArgumentException("Child not found or does not belong to the user");
 
             // Validate booking details exist
             if (!bookingDto.BookingDetails.Any())
@@ -251,6 +262,7 @@ namespace ChildVaccineSystem.Service.Services
                 }
             }
         }
+
         public async Task<BookingDTO> CancelBookingAsync(int bookingId, string userId)
         {
             var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
