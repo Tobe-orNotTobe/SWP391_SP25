@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {apiDashBoardFeedBack, apiDashBoardRevenue, apiExportedVaccines} from "../../../apis/apiAdmin.ts";
+import {apiDashBoardFeedBack, apiDashBoardRevenue} from "../../../apis/apiAdmin.ts";
 
 
 interface Revenue {
@@ -15,10 +15,6 @@ interface Feedback{
     userName : string;
 }
 
-interface ExportedVaccines {
-    name: string;
-    quantity: number;
-}
 export const useRevenueDetail = () =>{
     const [revenue, setRevenue] = useState<Revenue[]>([])
     const[loading, setLoading] = useState<boolean>(false);
@@ -78,29 +74,3 @@ export const useFeedbackDetail = () =>{
     return {feedback, loading, error};
 }
 
-export const useExportedVaccines = () => {
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
-    const [exportedVaccine, setExportedVaccine] = useState<ExportedVaccines[]>([]);
-
-    useEffect(() => {
-        const fetchVaccine = async () => {
-            setLoading(true);
-            setError(null);
-
-            try{
-                const response = await apiExportedVaccines();
-                setExportedVaccine(response);
-            }catch (err) {
-                setError("ERRRRRRR");
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchVaccine();
-    }, []);
-
-    return{exportedVaccine, loading, error};
-}

@@ -35,17 +35,6 @@ export const apiDashBoardFeedBack = async  () => {
   }
 }
 
-export const apiExportedVaccines = async  () => {
-  try {
-    // const response = await axiosInstance.get("/api/Dashboard/exported-vaccines");
-    const response = await axios.get("/Dashboard/ExportedVaccine.json");
-    return response.data;
-  }catch(error){
-    console.error("API Dashboard Error:", error);
-    throw error;
-  }
-}
-
 export const apiGetRefundList = async () => {
   // Cái này dùng cho admin nhe
   try {
