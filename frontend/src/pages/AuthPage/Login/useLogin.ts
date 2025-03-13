@@ -87,7 +87,7 @@ export const useLogin = () => {
                 setTimeout(() => {
                     setIsRedirecting(false);
                     navigate(redirectPath);
-                }, 5000);
+                }, 2000);
             }
 
         } catch (error : unknown) {

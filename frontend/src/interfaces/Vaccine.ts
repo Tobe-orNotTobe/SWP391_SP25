@@ -95,15 +95,17 @@ export interface  VaccineInventory {
     supplier: string;
 }
   
-export interface ComboDetailOfBoookingDetails {
-    id: string;
+export interface ExportedVaccine {
+    vaccineId: number;
     name: string;
-    totalPrice: number;
-  };
-
-export interface VaccineDetailOfBoookingDetails {
-    id: string;
-    name: string;
-    price: number;
-  };
-  
+    manufacturer: string;
+    batchNumber: string;
+    manufacturingDate : string;
+    expiryDate : string;
+    supplier: string;
+    initialQuantity: number;
+    quantityInStock : number;
+    returnedQuantity : number;
+    totalQuantity : number
+    status: boolean;
+}

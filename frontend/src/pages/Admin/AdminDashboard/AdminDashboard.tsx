@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Select, Table, Rate } from "antd";
 import AdminLayout from "../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import { useFeedbackDetail, useRevenueDetail, useExportedVaccines } from "./useAdminDashboard.ts";
+import { useFeedbackDetail, useRevenueDetail } from "./useAdminDashboard.ts";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import './AdminDashboard.scss';
+import {useExportedVaccines} from "../../Manager/ManagerDashboard/useManagerDashboard.ts";
 
 const AdminDashboardPage: React.FC = () => {
     const { revenue } = useRevenueDetail();
     const { feedback } = useFeedbackDetail();
-    const { exportedVaccine } = useExportedVaccines(); // Dữ liệu vaccine
+    const { exportVaccine } = useExportedVaccines(); // Dữ liệu vaccine
 
     // State to hold the selected year
     const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
@@ -32,7 +33,7 @@ const AdminDashboardPage: React.FC = () => {
     const sortedFeedback = feedback.sort((a, b) => parseInt(b.id) - parseInt(a.id)).slice(0, 3);
 
 
-    const sortedVaccines = exportedVaccine.sort((a, b) => b.quantity - a.quantity).slice(0, 3);
+    const sortedVaccines = exportVaccine.sort((a, b) => b.quantityInStock - a.quantityInStock).slice(0, 3);
 
     console.log("Feedback data:", feedback);
 

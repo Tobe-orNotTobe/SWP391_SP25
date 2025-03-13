@@ -25,7 +25,7 @@ const Login : React.FC = () => {
     const {handleLoginGoogle} = useAuthGoogle();
 
     if (isRedirecting) {
-        return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng..." delay={5000} to="/homepage" />;
+        return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng..." delay={2000} to="/homepage" />;
     }
 
     return (

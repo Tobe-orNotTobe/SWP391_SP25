@@ -36,34 +36,35 @@ const VaccineComboList: React.FC = () => {
             title: "ComboId",
             dataIndex: "comboId",
             key: "comboId",
+            sorter: (a: GetVaccineComboDetail, b: GetVaccineComboDetail) => a.comboId - b.comboId,
         },
         {
             title: "Tên Combo",
             dataIndex: "comboName",
             key: "comboName",
+            sorter: (a: GetVaccineComboDetail, b: GetVaccineComboDetail) => a.comboName.localeCompare(b.comboName),
         },
         {
             title: "Mô tả",
             dataIndex: "description",
             key: "description",
-            render: (description: string) => {
-                // Create a truncated version for the table (strip HTML and limit length)
-                const tempDiv = document.createElement("div");
-                tempDiv.innerHTML = description;
-                const textContent = tempDiv.textContent || tempDiv.innerText || "";
-                return textContent.length > 50 ? textContent.substring(0, 50) + "..." : textContent;
-            }
+            sorter: (a: GetVaccineComboDetail, b: GetVaccineComboDetail) => a.description.localeCompare(b.description),
         },
         {
             title: "Tổng giá",
             dataIndex: "totalPrice",
             key: "totalPrice",
-            render: (price: number) => `${price.toLocaleString()} VND`,
+            sorter: (a: GetVaccineComboDetail, b: GetVaccineComboDetail) => a.totalPrice - b.totalPrice,
         },
         {
             title: "Trạng thái",
             dataIndex: "isActive",
             key: "isActive",
+            filters: [
+                { text: "Đang hoạt động", value: true },
+                { text: "Ngừng hoạt động", value: false },
+            ],
+            onFilter: (value: boolean | React.Key, record: GetVaccineComboDetail) => record.isActive === value,
             render: (isActive: boolean) => (isActive ? "Đang hoạt động" : "Ngừng hoạt động"),
         },
         {

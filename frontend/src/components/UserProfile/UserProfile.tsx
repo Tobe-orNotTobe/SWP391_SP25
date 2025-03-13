@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Form, Input, Upload, message } from "antd";
+import { Modal, Button, Form, Input, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "./UserProfile.scss";
 import { useUserProfileDetail } from "./useUserProfile";
@@ -78,7 +78,7 @@ const UserProfile: React.FC = () => {
         try {
             const url = await uploadImageToCloudinary(file);
             setImageUrl(url);
-            message.success("Tải ảnh lên thành công!");
+            toast.success("Tải ảnh lên thành công!");
         } catch (error) {
           console.log(error);
         } finally {

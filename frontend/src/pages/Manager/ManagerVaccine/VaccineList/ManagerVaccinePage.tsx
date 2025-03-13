@@ -70,7 +70,12 @@ const ManagerVaccinePage: React.FC = () => {
 
 
     const columns = [
-        { title: "ID", dataIndex: "vaccineId", key: "id" },
+        {
+            title: "ID",
+            dataIndex: "vaccineId",
+            key: "id",
+            sorter: (a : VaccineDetail, b: VaccineDetail) => a.vaccineId - b.vaccineId
+        },
         {
             title: "Hình ảnh",
             dataIndex: "image",
@@ -81,28 +86,36 @@ const ManagerVaccinePage: React.FC = () => {
             title: "Tên Vaccine",
             dataIndex: "name",
             key: "name",
+            sorter: (a :VaccineDetail, b :VaccineDetail) => a.name.localeCompare(b.name),
             render: (name: string) => name.length > 20 ? `${name.slice(0, 20)}...` : name
         },
         {
             title: "Nhà sản xuất",
             dataIndex: "manufacturer",
             key: "manufacturer",
+            sorter: (a : VaccineDetail, b : VaccineDetail) => a.manufacturer.localeCompare(b.manufacturer),
             render: (manufacturer: string) => manufacturer.length > 15 ? `${manufacturer.slice(0, 15)}...` : manufacturer
         },
         {
             title: "Giá (VNĐ)",
             dataIndex: "price",
             key: "price",
+            sorter: (a :VaccineDetail, b : VaccineDetail) => a.price - b.price,
             render: (price: number) => price.toLocaleString() + " VNĐ"
         },
         {
             title: "Trạng thái",
             dataIndex: "status",
             key: "status",
+            filters: [
+                { text: "Có sẵn", value: true },
+                { text: "Hết hàng", value: false }
+            ],
+            onFilter: (value : boolean | React.Key, record : VaccineDetail) => record.status === value,
             render: (status: boolean) => (
                 <span className={`status-badge ${status ? 'available' : 'unavailable'}`}>
-                    {status ? "Có sẵn" : "Hết hàng"}
-                </span>
+                {status ? "Có sẵn" : "Hết hàng"}
+            </span>
             )
         },
         {

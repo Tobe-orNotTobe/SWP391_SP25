@@ -26,17 +26,19 @@ const ScheduleVaccinationList: React.FC = () => {
         handleModalClose,
     } = useVaccinationSchedule();
 
-    
+
     const columns = [
         {
             title: "Mã Lịch",
             dataIndex: "scheduleId",
             key: "scheduleId",
+            sorter: (a :VaccinationSchedule, b :VaccinationSchedule) => a.scheduleId - b.scheduleId,
         },
         {
             title: "Độ tuổi (Từ - Đến)",
-            render: (record: VaccinationSchedule) => `${record.ageRangeStart} - ${record.ageRangeEnd} tháng`,
             key: "ageRange",
+            render: (record: VaccinationSchedule) => `${record.ageRangeStart} - ${record.ageRangeEnd} tuổi`,
+            sorter: (a :VaccinationSchedule, b : VaccinationSchedule) => a.ageRangeStart - b.ageRangeStart,
         },
         {
             title: "Ghi chú",
@@ -54,9 +56,9 @@ const ScheduleVaccinationList: React.FC = () => {
                     <Button onClick={() => handleEdit(record.scheduleId)} className="edit-button">
                         <FiEdit2 /> Chỉnh sửa
                     </Button>
-                    <Button 
-                        loading={deletingId === record.scheduleId} 
-                        onClick={() => handleDelete(record.scheduleId)} 
+                    <Button
+                        loading={deletingId === record.scheduleId}
+                        onClick={() => handleDelete(record.scheduleId)}
                         className="delete-button"
                         danger
                     >

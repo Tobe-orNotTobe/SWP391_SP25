@@ -2,72 +2,71 @@ import React, { useEffect, useState } from "react";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
 import Footer from "../../components/Footer/Footer.tsx";
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
-import { useGetAllBlog } from "../../hooks/useBlog.ts";
-import { BlogResponse } from "../../interfaces/Blog.ts";
-import BlogPost from "../../components/Blog/BlogPost.tsx";
-import "./Blog.scss";
-import { FaArrowLeftLong } from "react-icons/fa6";
-import { FaArrowRightLong } from "react-icons/fa6";
-import {Link, useNavigate} from "react-router-dom";
+import { useGetAllNews } from "../../hooks/useBlog.ts";
+import { NewsResponse } from "../../interfaces/Blog.ts";
+import NewsPost from "../../components/News/NewsPost.tsx";
+import "./News.scss";
+import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
+import { Link, useNavigate } from "react-router-dom";
 
-const BlogPage: React.FC = () => {
-    const { blogs, fetchAllBlog } = useGetAllBlog();
+const NewsPage: React.FC = () => {
+    const { news, fetchAllNews } = useGetAllNews();
     const [currentPage, setCurrentPage] = useState(1);
-    const blogsPerPage = 9;
+    const newsPerPage = 9;
 
     useEffect(() => {
-        fetchAllBlog(true).then();
+        fetchAllNews(true);
+        console.log(news)
     }, []);
 
-
-    const mainBlog = blogs.length > 0 ? blogs[0] : null;
-    const startIndex = (currentPage - 1) * (blogsPerPage - 1) + 1;
-    const endIndex = startIndex + (blogsPerPage - 1);
-    const paginatedBlogs = blogs.slice(startIndex, endIndex);
-    const totalPages = Math.ceil((blogs.length - 1) / (blogsPerPage - 1));
+    const mainNews = news.length > 0 ? news[0] : null;
+    const startIndex = (currentPage - 1) * (newsPerPage - 1) + 1;
+    const endIndex = startIndex + (newsPerPage - 1);
+    const paginatedNews = news.slice(startIndex, endIndex);
+    const totalPages = Math.ceil((news.length - 1) / (newsPerPage - 1));
     const navigate = useNavigate();
 
     return (
         <>
             <CustomerNavbar />
-            <div style={{display: "grid", justifyContent: "center"}}>
-                <span style={{paddingTop: "30px"}}>
-                    <Link style={{textDecoration: "none", color: "#2A388F"}}
-                          to="/homepage">Trang chủ</Link>
+            <div style={{ display: "grid", justifyContent: "center" }}>
+                <span style={{ paddingTop: "30px" }}>
+                    <Link style={{ textDecoration: "none", color: "#2A388F" }} to="/homepage">
+                        Trang chủ
+                    </Link>
                     <span className="separator"> » </span>
-                    <span className="last">Blog</span>
+                    <span className="last">Tin tức</span>
                 </span>
 
-                <div style={{paddingTop: "20px"}} className="introductionTitle">
-                    <h1 className="gt-title">Blog</h1>
+                <div style={{ paddingTop: "20px" }} className="introductionTitle">
+                    <h1 className="gt-title">Tin tức</h1>
                 </div>
 
-                <div className={"main-blog"} onClick={() => navigate(`/blog/${mainBlog?.blogPostId}`)}>
-                    {mainBlog && currentPage === 1 && (
-                        <div className={"main-blog-container"}>
-                            <img src={mainBlog.imageUrl} alt={mainBlog.title} className="blog-image"/>
-                            <div className="blog-content">
-                                <div className="blog-text" dangerouslySetInnerHTML={{__html: mainBlog.content}}></div>
-                                <p className="blog-meta">
-                                    By {mainBlog.authorName} - {new Date(mainBlog.createdAt).toLocaleDateString()}
+                <div className="main-news" onClick={() => navigate(`/news/${mainNews?.blogPostId}`)}>
+                    {mainNews && currentPage === 1 && (
+                        <div className="main-news-container">
+                            <img src={mainNews.imageUrl} alt={mainNews.title} className="news-image" />
+                            <div className="news-content">
+                                <div className="news-text" dangerouslySetInnerHTML={{ __html: mainNews.content }}></div>
+                                <p className="news-meta">
+                                    By {mainNews.authorName} - {new Date(mainNews.createdAt).toLocaleDateString()}
                                 </p>
                                 <div>
-                                    <button className="blog-button">Xem thêm</button>
+                                    <button className="news-button">Xem thêm</button>
                                 </div>
                             </div>
                         </div>
                     )}
                 </div>
 
-                {/* Danh sách blog phụ */}
-                <div className="blog-grid-container">
-                    {paginatedBlogs.map((blog: BlogResponse) => (
-                        <div key={blog.blogPostId} className="blog-card-wrapper">
-                            <BlogPost blog={blog}/>
+                {/* Danh sách news phụ */}
+                <div className="news-grid-container">
+                    {paginatedNews.map((item: NewsResponse) => (
+                        <div key={item.blogPostId} className="news-card-wrapper">
+                            <NewsPost news={item} />
                         </div>
                     ))}
                 </div>
-
 
                 <div className="pagination-container">
                     <button
@@ -75,10 +74,10 @@ const BlogPage: React.FC = () => {
                         disabled={currentPage === 1}
                         onClick={() => setCurrentPage(currentPage - 1)}
                     >
-                        <FaArrowLeftLong/>
+                        <FaArrowLeftLong />
                     </button>
 
-                    {Array.from({length: totalPages}, (_, index) => index + 1)
+                    {Array.from({ length: totalPages }, (_, index) => index + 1)
                         .filter(page => page >= currentPage - 1 && page <= currentPage + 1) // Hiển thị 3 trang xung quanh trang hiện tại
                         .map(page => (
                             <button
@@ -95,14 +94,14 @@ const BlogPage: React.FC = () => {
                         disabled={currentPage === totalPages}
                         onClick={() => setCurrentPage(currentPage + 1)}
                     >
-                        <FaArrowRightLong/>
+                        <FaArrowRightLong />
                     </button>
                 </div>
             </div>
-            <Footer/>
-            <FloatingButtons/>
+            <Footer />
+            <FloatingButtons />
         </>
     );
 };
 
-export default BlogPage;
+export default NewsPage;
