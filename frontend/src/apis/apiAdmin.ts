@@ -78,3 +78,14 @@ export const apiAdminAddFund  = async (amount : number) => {
     throw err;
   }
 }
+
+export const apiAdminExportedVaccine = async () => {
+  try {
+    const response = await axiosInstance.get("/api/Dashboard/exported-vaccines");
+    return response.data;
+  }catch (err){
+    console.log(err);
+    throw err;
+  }
+}
+
