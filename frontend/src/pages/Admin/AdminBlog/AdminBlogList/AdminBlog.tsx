@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Table, Tabs} from "antd";
+import {Button, Input, Table, Tabs} from "antd";
 import {TbListDetails} from "react-icons/tb";
 import {FiEdit2} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
@@ -11,6 +11,7 @@ import {BlogResponse} from "../../../../interfaces/Blog.ts";
 import "./AdminBlog.scss"
 import {useNavigate} from "react-router-dom";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
+import {ColumnsType} from "antd/es/table";
 
 const { TabPane } = Tabs;
 
@@ -26,28 +27,59 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
     const {handleDelete} = useDeleteBlog();
     const {handleUpdateActive} = useUpdateBlogActive();
 
-    // const [searchText, setSearchText] = useState<string>("");
-    // const [sortColumn, setSortColumn] = useState<string | null>(null);
-    // const [sortOrder, setSortOrder] = useState<"ascend" | "descend" | null>(null);
-
-
     useEffect(() => {
         fetchAllBlog(isActive);
     }, []);
 
-    const columns = [
-        { title: "ID", dataIndex: "id", key: "id" },
+    const [searchText, setSearchText] = useState("");
+    const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+
+    const filteredBlog = blogs.filter((blog) =>
+        Object.values(blog).some(
+            (value) =>
+                typeof value === "string" &&
+                value.toLowerCase().includes(searchText.trim().toLowerCase())
+        )
+    );
+
+    const columns: ColumnsType<BlogResponse> = [
+        {
+            title: "",
+            key: "action-column",
+            width: 50,
+            render: (_: undefined, record: BlogResponse) => (
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        transition: "opacity 0.1s ease-in-out",
+                        opacity: hoveredRow === record.blogPostId ? 1 : 0
+                    }}
+                >
+                    {isActive && (
+                        <Button
+                            type="text"
+                            danger
+                            icon={<MdDeleteOutline style={{fontSize: "24px"}}/>}
+                            onClick={() => handleDelete(record.blogPostId).then(() => fetchAllBlog(isActive))}
+                        />
+                    )}
+
+                </div>
+            ),
+        },
+        {
+            title: "ID",
+            dataIndex: "id",
+            key: "id",
+            sorter: (a, b) => a.blogPostId.localeCompare(b.blogPostId),
+        },
         {
             title: "Đề mục",
             dataIndex: "title",
             key: "title",
+            sorter: (a, b) => a.title.localeCompare(b.title),
             render: (title: string) => title.length > 10 ? `${title.slice(0, 15)}...` : title
-        },
-        {
-            title: "Nội dung",
-            dataIndex: "content",
-            key: "content",
-            render: (content: string) => content.length > 20 ? `${content.slice(0, 20)}...` : content
         },
         {
             title: "Hình minh họa",
@@ -67,12 +99,15 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
             title: "Ngày tạo",
             dataIndex: "createdAt",
             key: "createdAt",
-            render: (date: any) => date ? dayjs(date).format("DD/MM/YYYY HH:mm") : "Chưa có dữ liệu"
+            render: (date: string | null) =>
+                date ? dayjs(date).format("DD/MM/YYYY HH:mm") : "Chưa có dữ liệu",
+            sorter: (a, b) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf(),
         },
         {
             title: "Tác giả",
             dataIndex: "authorName",
             key: "authorName",
+            sorter: (a, b) => a.authorName.localeCompare(b.authorName),
             render: (authorName: string) => authorName.length > 10 ? `${authorName.slice(0, 15)}...` : authorName
         },
         {
@@ -88,21 +123,10 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                             <FiEdit2/>Duyệt
                         </Button>
                     ): (
-                        <div>
-                            <Button className="edit-button" onClick={() => navigate(`/admin/blog/edit/${record.blogPostId}`)}>
-                                <FiEdit2/>Chỉnh sửa
-                            </Button>
-
-                            <Button className="delete-button" onClick={() =>
-                                handleDelete(record.blogPostId).then(() => fetchAllBlog(isActive))
-                            }>
-                                <MdDeleteOutline/> Xóa
-                            </Button>
-
-                        </div>
+                        <Button className="edit-button" onClick={() => navigate(`/admin/blog/edit/${record.blogPostId}`)}>
+                            <FiEdit2/>Chỉnh sửa
+                        </Button>
                     )}
-
-
                 </div>
             ),
         },
@@ -129,33 +153,30 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                     {error && ("Lỗi tải danh sách blog.")}
                     {loading && ("Loading...")}
 
-                    {/*<Select*/}
-                    {/*    placeholder="Chọn cột"*/}
-                    {/*    // value={sortColumn}*/}
-                    {/*    // onChange={setSortColumn}*/}
-                    {/*    style={{width: 150}}*/}
-                    {/*>*/}
-                    {/*    <Select.Option value="comboId">Số thứ tự</Select.Option>*/}
-                    {/*    <Select.Option value="comboName">Gói combo</Select.Option>*/}
-                    {/*    <Select.Option value="description">Giới thiệu</Select.Option>*/}
-                    {/*    <Select.Option value="totalPrice">Tổng giá</Select.Option>*/}
-                    {/*</Select>*/}
-
+                    <Input
+                        placeholder="🔍 Tìm kiếm..."
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        style={{ marginBottom: 16, width: 300 }}
+                    />
 
                     <Table
                         columns={columns}
-                        dataSource={Array.isArray(blogs) ? blogs.map(blog => ({
+                        dataSource={filteredBlog.map((blog => ({
                             ...blog,
                             id: blog.blogPostId || Math.random().toString(), // Đảm bảo có `id`
                             title: blog.title || "Chưa có dữ liệu",
-                            content: blog.content || "Chưa có dữ liệu",
                             imageUrl: blog.imageUrl || "Chưa có dữ liệu",
                             createdAt: blog.createdAt || "",
                             authorName: blog.authorName || "Chưa có dữ liệu"
-                        })) : []}
+                        })))}
                         rowKey="id"
                         pagination={{pageSize: 8, showSizeChanger: false}}
                         className="account-table"
+                        onRow={(record) => ({
+                            onMouseEnter: () => setHoveredRow(record.blogPostId),
+                            onMouseLeave: () => setHoveredRow(null),
+                        })}
                     />
 
                     {detailBlog && (
@@ -175,9 +196,6 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                                                 <p><strong style={{paddingRight: "2px"}}>Đề mục:
                                                 </strong> {detailBlog.title || "Chưa có dữ liệu"}
                                                 </p>
-                                                {/*<p><strong style={{paddingRight: "2px"}}>Nội dung:</strong>*/}
-                                                {/*    {detailBlog.content || "Chưa có dữ liệu."}*/}
-                                                {/*</p>*/}
                                                 <p><strong style={{paddingRight: "2px"}}>Ngày đăng:
                                                 </strong> {dayjs(detailBlog.createdAt).format("DD/MM/YYYY HH:mm") || "Chưa có dữ liệu"}
                                                 </p>
