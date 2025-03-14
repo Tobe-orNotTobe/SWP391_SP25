@@ -211,7 +211,7 @@ namespace ChildVaccineSystem.Service.Services
                 return null;
 
             // Tìm mũi tiêm tiếp theo (doseNumber = sequence + 1)
-            var nextInjection = injectionSchedule.FirstOrDefault(schedule => schedule.DoseNumber == sequence + 1);
+            var nextInjection = injectionSchedule.FirstOrDefault(schedule => schedule.InjectionNumber == sequence + 1);
 
             return nextInjection != null ? DateTime.Now.AddMonths(nextInjection.InjectionMonth) : null;
         }

@@ -19,7 +19,7 @@ namespace ChildVaccineSystem.Data.Entities
 
 		[Required]
 		[Range(1, int.MaxValue)]
-		public int DoseNumber { get; set; }
+		public int InjectionNumber { get; set; }
 
 		[Required]
 		[Range(0, int.MaxValue)]

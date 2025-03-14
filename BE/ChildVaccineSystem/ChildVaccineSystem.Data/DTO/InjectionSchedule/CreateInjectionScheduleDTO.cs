@@ -11,13 +11,13 @@ namespace ChildVaccineSystem.Data.DTO.InjectionSchedule
 	{
 		[Required]
 		[Range(1, int.MaxValue)]
-		public int DoseNumber { get; set; }
+		public int InjectionNumber { get; set; }
 
 		[Required]
 		[Range(0, int.MaxValue)]
 		public int InjectionMonth { get; set; }
 		[Required]
-		public bool IsRequired { get; set; } = false;
+		public bool IsRequired { get; set; } = true;
 		public string? Notes { get; set; }
 	}
 }
