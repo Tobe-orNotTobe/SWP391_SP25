@@ -368,7 +368,7 @@ const VaccinePackagePage: React.FC = () => {
                                             <td key={`${vaccine.vaccineId}-${col.month}`} className="dose-cell">
                                                 {injection && (
                                                     <div className="dose-number">
-                                                        {injection.doseNumber}
+                                                        {injection.injectionNumber}
                                                     </div>
                                                 )}
                                             </td>

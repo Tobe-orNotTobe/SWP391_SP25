@@ -44,7 +44,7 @@ export interface PostVaccineComboDetail {
 
 
 export interface InjectionSchedule {
-    doseNumber: number;
+    injectionNumber: number;
     injectionMonth: number;
     isRequired: boolean;
     notes: string;

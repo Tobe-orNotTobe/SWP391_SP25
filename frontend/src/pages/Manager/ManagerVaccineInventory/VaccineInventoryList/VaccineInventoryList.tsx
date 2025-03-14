@@ -119,11 +119,13 @@ const VaccineInventoryList: React.FC = () => {
             title: "Số lượng ban đầu",
             dataIndex: "initialQuantity",
             key: "initialQuantity",
+            render: (initialQuantity: number) => initialQuantity.toLocaleString("vi-VN")
         },
         {
             title: "Số hàng trong kho",
             dataIndex: "quantityInStock",
             key: "quantityInStock",
+            render: (quantityInStock: number) => quantityInStock.toLocaleString("vi-VN")
         },
         {
             title: "Thao Tác",
