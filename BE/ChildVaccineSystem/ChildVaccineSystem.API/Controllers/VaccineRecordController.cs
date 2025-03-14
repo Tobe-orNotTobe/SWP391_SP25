@@ -83,16 +83,20 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 
-		/// <summary>
-		/// Lấy danh sách hồ sơ tiêm chủng theo BookingId.
-		/// </summary>
-		[HttpGet("booking/{bookingId}")]
+        /// <summary>
+        /// Lấy danh sách hồ sơ tiêm chủng theo BookingId.
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Customer, Staff, Admin")]
+        [HttpGet("booking/{bookingId}")]
 		public async Task<ActionResult<APIResponse>> GetVaccineRecordsByBookingId(int bookingId)
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var record = await _vaccineRecordService.GetVaccineRecordsByBookingIdAsync(bookingId, doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+
+                var record = await _vaccineRecordService.GetVaccineRecordsByBookingIdAsync(bookingId, userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
