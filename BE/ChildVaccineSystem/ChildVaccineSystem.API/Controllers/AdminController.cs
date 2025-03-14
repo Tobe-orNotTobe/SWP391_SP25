@@ -85,11 +85,39 @@ namespace ChildVaccineSystem.API.Controllers
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            _response.Result = _userManager.Users.ToList();
-            return Ok(_response);
+            var users = _userManager.Users.ToList();
+
+            var userWithRoles = new List<object>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                userWithRoles.Add(new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.FullName,
+                    user.Email,
+                    user.Address,
+                    user.DateOfBirth,
+                    user.IsActive,
+                    user.PhoneNumber,
+                    Roles = roles
+                });
+            }
+
+            var response = new
+            {
+                StatusCode = HttpStatusCode.OK,
+                IsSuccess = true,
+                ErrorMessages = new List<string>(),
+                Result = userWithRoles
+            };
+
+            return Ok(response);
         }
+
 
         [HttpGet("admin/GetUserById/{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
