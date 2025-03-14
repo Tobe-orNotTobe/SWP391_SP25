@@ -22,14 +22,16 @@ namespace ChildVaccineSystem.API.Controllers
 		private readonly APIResponse _response;
 		private readonly UserManager<User> _userManager;
 		private readonly IWalletService _walletService;
+        private readonly ILoginGoogleService _loginGoogleService;
 
-		public AuthController(IAuthService authService, APIResponse response, UserManager<User> userManager, IWalletService walletService)
+        public AuthController(IAuthService authService, APIResponse response, UserManager<User> userManager, IWalletService walletService, ILoginGoogleService loginGoogleService)
 		{
 			_authService = authService;
 			_response = response;
 			_userManager = userManager;
 			_walletService = walletService;
-		}
+            _loginGoogleService = loginGoogleService;
+        }
 
 		[AllowAnonymous]
 		[HttpPost("register")]
@@ -214,5 +216,28 @@ namespace ChildVaccineSystem.API.Controllers
 				return BadRequest(_response);
 			}
 		}
-	}
+
+        [AllowAnonymous]
+        [HttpPost("login-google")]
+        public async Task<IActionResult> LoginWithGoogle([FromBody] GoogleLoginDTO model)
+        {
+            var result = await _loginGoogleService.LoginWithGoogleAsync(model.IdToken);
+
+            if (!result.Success)
+            {
+                return BadRequest(new { Message = result.Message });
+            }
+
+            return Ok(new
+            {
+                Token = result.Token,
+                User = new
+                {
+                    result.User.Id,
+                    result.User.Email,
+                    result.User.FullName
+                }
+            });
+        }
+    }
 }

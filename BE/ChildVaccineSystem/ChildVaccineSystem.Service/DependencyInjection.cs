@@ -33,8 +33,9 @@ namespace ChildVaccineSystem.Service
 			services.AddTransient<IPaymentService, PaymentService>();
 			services.AddTransient<IWalletDepositService, WalletDepositService>();
 			services.AddTransient<IVaccineRecordService, VaccineRecordService>();
+            services.AddTransient<ILoginGoogleService, LoginGoogleService>();
 
-			return services;
+            return services;
         }
     }
 }

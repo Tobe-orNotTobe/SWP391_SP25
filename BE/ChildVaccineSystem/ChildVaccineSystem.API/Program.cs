@@ -3,6 +3,8 @@ using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.Data.Models;
 using ChildVaccineSystem.Service;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -79,6 +81,10 @@ builder.Services.AddAuthentication(options =>
 		ValidAudience = builder.Configuration["JWT:ValidAudience"],
 		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
 	};
+}).AddScheme<JwtBearerOptions, FirebaseAuthHandler>("firebase", options =>
+{
+    // This is where we configure Firebase Authentication handler
+    options.RequireHttpsMetadata = false;
 });
 
 builder.Services.AddAuthorization(options =>
@@ -116,6 +122,12 @@ builder.Services
 	});
 
 var app = builder.Build();
+
+// Initialize Firebase Admin SDK
+var firebaseApp = FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.FromFile("D:\\FPTU\\Schedule\\2025\\Spring25\\SWP391\\SWP391_TeamProject\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\Config\\childvaccinesystem-bfc1e-firebase-adminsdk-fbsvc-c4ad224e52.json")
+});
 
 // Create default roles and admin user
 using (var scope = app.Services.CreateScope())
