@@ -1,10 +1,11 @@
 ﻿using ChildVaccineSystem.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChildVaccineSystem.Data.Models
 {
-	public class ChildVaccineSystemDBContext : IdentityDbContext<User>
+	public class ChildVaccineSystemDBContext : IdentityDbContext<User, IdentityRole, string>
 	{
 		public ChildVaccineSystemDBContext(DbContextOptions<ChildVaccineSystemDBContext> options) : base(options)
 		{
@@ -39,6 +40,11 @@ namespace ChildVaccineSystem.Data.Models
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable(null as string);
+			modelBuilder.Entity<IdentityUserToken<string>>().ToTable(null as string);
+			modelBuilder.Entity<IdentityUserLogin<string>>().ToTable(null as string);
+			modelBuilder.Entity<IdentityUserClaim<string>>().ToTable(null as string);
 
 			// User Relationships
 			modelBuilder.Entity<User>()

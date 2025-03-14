@@ -40,7 +40,7 @@ namespace ChildVaccineSystem.API.Controllers
 				var user = await _authService.RegisterAsync(dto);
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
-				_response.Result = new { Message = "Registration successful. Please confirm your email." };
+				_response.Result = new { Message = "Đăng ký thành công. Vui lòng xác nhận email của bạn." };
 				return Ok(_response);
 			}
 			catch (Exception ex)
@@ -65,7 +65,7 @@ namespace ChildVaccineSystem.API.Controllers
 				{
 					_response.StatusCode = HttpStatusCode.BadRequest;
 					_response.IsSuccess = false;
-					_response.ErrorMessages.Add("Invalid or expired token.");
+					_response.ErrorMessages.Add("Token không hợp lệ hoặc đã hết hạn.");
 					return BadRequest(_response);
 				}
 				var user = await _userManager.FindByEmailAsync(model.Email);
@@ -73,17 +73,17 @@ namespace ChildVaccineSystem.API.Controllers
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
-				_response.Result = new { Message = "Email confirmed successfully." };
+				_response.Result = new { Message = "Email đã được xác nhận thành công." };
 				return Ok(_response);
 			}
 			catch (Exception ex)
 			{
 				// Handling exception for already confirmed email
-				if (ex.Message == "Email has already been confirmed.")
+				if (ex.Message == "Email đã được xác nhận.")
 				{
 					_response.StatusCode = HttpStatusCode.OK;
 					_response.IsSuccess = false;
-					_response.Result = new { Message = "Email has already been confirmed." };
+					_response.Result = new { Message = "Email đã được xác nhận." };
 					return Ok(_response);
 				}
 
@@ -125,7 +125,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.StatusCode = HttpStatusCode.BadRequest;
 				_response.IsSuccess = false;
-				_response.ErrorMessages.Add("Refresh token is required.");
+				_response.ErrorMessages.Add("Cần phải có Refresh token làm mới.");
 				return BadRequest(_response);
 			}
 
@@ -156,7 +156,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.StatusCode = HttpStatusCode.BadRequest;
 				_response.IsSuccess = false;
-				_response.ErrorMessages.Add("Email is required.");
+				_response.ErrorMessages.Add("Cần phải có Email.");
 				return BadRequest(_response);
 			}
 
@@ -165,7 +165,7 @@ namespace ChildVaccineSystem.API.Controllers
 				await _authService.ForgetPasswordAsync(model.Email);
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
-				_response.Result = new { Message = "Password reset link sent." };
+				_response.Result = new { Message = "Đã gửi liên kết đặt lại mật khẩu." };
 				return Ok(_response);
 			}
 			catch (Exception ex)
@@ -187,7 +187,7 @@ namespace ChildVaccineSystem.API.Controllers
 				{
 					_response.StatusCode = HttpStatusCode.BadRequest;
 					_response.IsSuccess = false;
-					_response.ErrorMessages.Add("Email, Token, and New Password are required.");
+					_response.ErrorMessages.Add("Cần phải nhập Email, Token và Mật khẩu mới.");
 					return BadRequest(_response);
 				}
 
@@ -210,7 +210,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.StatusCode = HttpStatusCode.BadRequest;
 				_response.IsSuccess = false;
-				_response.ErrorMessages.Add($"System Error: {ex.Message}");
+				_response.ErrorMessages.Add($"Lỗi hệ thống {ex.Message}");
 				return BadRequest(_response);
 			}
 		}
