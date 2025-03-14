@@ -22,7 +22,7 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		/// <summary>
-		/// Gets a transaction by ID
+		/// Lấy ID giao dịch
 		/// </summary>
 		/// <param name="id">Transaction ID</param>
 		/// <returns>Transaction details</returns>
@@ -39,7 +39,7 @@ namespace ChildVaccineSystem.API.Controllers
 				{
 					_response.StatusCode = HttpStatusCode.NotFound;
 					_response.IsSuccess = false;
-					_response.ErrorMessages.Add("Transaction not found");
+					_response.ErrorMessages.Add("Không tìm thấy giao dịch!");
 					return NotFound(_response);
 				}
 
@@ -52,13 +52,13 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.StatusCode = HttpStatusCode.InternalServerError;
 				_response.IsSuccess = false;
-				_response.ErrorMessages.Add($"Error retrieving transaction: {ex.Message}");
+				_response.ErrorMessages.Add($"Lỗi khi truy xuất giao dịch: {ex.Message}");
 				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
 		}
 
 		/// <summary>
-		/// Gets all transactions for the current user
+		/// Lấy tất cả các giao dịch cho người dùng hiện tại
 		/// </summary>
 		/// <returns>List of transactions</returns>
 		[HttpGet("my-transactions")]
@@ -73,7 +73,7 @@ namespace ChildVaccineSystem.API.Controllers
 				{
 					_response.StatusCode = HttpStatusCode.Unauthorized;
 					_response.IsSuccess = false;
-					_response.ErrorMessages.Add("User ID not found in token");
+					_response.ErrorMessages.Add("Không tìm thấy người dùng!");
 					return Unauthorized(_response);
 				}
 
@@ -88,7 +88,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.StatusCode = HttpStatusCode.InternalServerError;
 				_response.IsSuccess = false;
-				_response.ErrorMessages.Add($"Error retrieving transactions: {ex.Message}");
+				_response.ErrorMessages.Add($"Lỗi khi truy xuất giao dịch: {ex.Message}");
 				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
 		}
@@ -130,7 +130,7 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 		/// <summary>
-		/// Creates a new transaction manually
+		/// Tạo giao dịch mới theo cách thủ công
 		/// </summary>
 		/// <param name="createTransactionDto">Transaction details</param>
 		/// <returns>Created transaction</returns>
@@ -164,13 +164,13 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.StatusCode = HttpStatusCode.InternalServerError;
 				_response.IsSuccess = false;
-				_response.ErrorMessages.Add($"Error creating transaction: {ex.Message}");
+				_response.ErrorMessages.Add($"Lỗi khi truy xuất giao dịch: {ex.Message}");
 				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
 		}
 
 		/// <summary>
-		/// Updates the status of a transaction
+		/// Cập nhật trạng thái của giao dịch
 		/// </summary>
 		/// <param name="id">Transaction ID</param>
 		/// <param name="status">New status</param>
@@ -202,7 +202,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.StatusCode = HttpStatusCode.InternalServerError;
 				_response.IsSuccess = false;
-				_response.ErrorMessages.Add($"Error updating transaction status: {ex.Message}");
+				_response.ErrorMessages.Add($"Lỗi khi truy xuất giao dịch: {ex.Message}");
 				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
 		}

@@ -20,6 +20,11 @@ namespace ChildVaccineSystem.API.Controllers
 			_response = response;
 		}
 
+		/// <summary>
+		/// Tạo link thanh toán
+		/// </summary>
+		/// <param name="bookingId"></param>
+		/// <returns></returns>
 		[HttpPost("create-payment/{bookingId}")]
 		public async Task<ActionResult<APIResponse>> CreatePaymentUrlVnpay(int bookingId)
 		{
@@ -32,31 +37,51 @@ namespace ChildVaccineSystem.API.Controllers
 				_response.Result = new { PaymentUrl = paymentUrl };
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
+
 				return Ok(_response);
 			}
+
 			catch (ArgumentException ex)
 			{
 				_response.StatusCode = HttpStatusCode.BadRequest;
 				_response.IsSuccess = false;
 				_response.ErrorMessages.Add(ex.Message);
+
 				return BadRequest(_response);
 			}
+
+			catch (KeyNotFoundException ex)
+			{
+				_response.StatusCode = HttpStatusCode.NotFound;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add(ex.Message);
+
+				return BadRequest(_response);
+			}
+
 			catch (InvalidOperationException ex)
 			{
 				_response.StatusCode = HttpStatusCode.BadRequest;
 				_response.IsSuccess = false;
 				_response.ErrorMessages.Add(ex.Message);
+
 				return BadRequest(_response);
 			}
+
 			catch (Exception ex)
 			{
 				_response.StatusCode = HttpStatusCode.InternalServerError;
 				_response.IsSuccess = false;
 				_response.ErrorMessages.Add($"Error creating payment: {ex.Message}");
+
 				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
 		}
 
+		/// <summary>
+		/// bắt link trả về từ VnPay
+		/// </summary>
+		/// <returns></returns>
 		[HttpGet("payment-return")]
 		public async Task<IActionResult> PaymentReturn()
 		{

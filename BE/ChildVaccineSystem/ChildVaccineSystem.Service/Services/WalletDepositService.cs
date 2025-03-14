@@ -35,7 +35,7 @@ namespace ChildVaccineSystem.Service.Services
 			{
 				UserId = userId,
 				Amount = depositDto.Amount,
-				Status = "Pending",
+				Status = "Đang chờ xử lý",
 				PaymentMethod = "VnPay",
 				CreatedAt = DateTime.UtcNow
 			};
@@ -50,7 +50,7 @@ namespace ChildVaccineSystem.Service.Services
 				return new WalletDepositResponseDTO
 				{
 					Success = true,
-					Message = "Payment URL created successfully",
+					Message = "Tạo thành công",
 					PaymentUrl = paymentUrl
 				};
 			}
@@ -59,7 +59,7 @@ namespace ChildVaccineSystem.Service.Services
 				return new WalletDepositResponseDTO
 				{
 					Success = false,
-					Message = $"Failed to create payment URL: {ex.Message}"
+					Message = $"Tạo thất bại: {ex.Message}"
 				};
 			}
 		}
@@ -74,15 +74,15 @@ namespace ChildVaccineSystem.Service.Services
 
 			if (responseCode == "00")
 			{
-				await _unitOfWork.WalletDeposits.UpdateStatusAsync(depositId, "Completed", responseCode);
+				await _unitOfWork.WalletDeposits.UpdateStatusAsync(depositId, "Hoàn thành", responseCode);
 
-				await _walletService.AddFundsToUserWalletAsync(deposit.UserId, deposit.Amount, $"Deposit via VnPay (Ref: {deposit.DepositId})");
+				await _walletService.AddFundsToUserWalletAsync(deposit.UserId, deposit.Amount, $"Nạp tiền qua VnPay (Ref: {deposit.DepositId})");
 
 				return true;
 			}
 			else
 			{
-				await _unitOfWork.WalletDeposits.UpdateStatusAsync(depositId, "Failed", responseCode);
+				await _unitOfWork.WalletDeposits.UpdateStatusAsync(depositId, "Thất bại", responseCode);
 
 				return false;
 			}

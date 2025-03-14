@@ -22,7 +22,7 @@ namespace ChildVaccineSystem.Service.Services
 			// Validate booking exists and belongs to user
 			if (!await ValidateBookingForPaymentAsync(bookingId, userId))
 			{
-				throw new UnauthorizedAccessException("Invalid booking or you are not authorized to pay for this booking.");
+				throw new UnauthorizedAccessException("Đặt li không hợp lệ hoặc bạn không được phép thanh toán cho đặt chỗ này!");
 			}
 
 			var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
@@ -31,14 +31,14 @@ namespace ChildVaccineSystem.Service.Services
 
 			if (wallet.Balance <= 0)
 			{
-				throw new InvalidOperationException("Your wallet balance is empty. Please add funds to your wallet.");
+				throw new InvalidOperationException("Số dư ví của bạn đang trống. Vui lòng thêm nạp tiền vào ví!");
 			}
 
 			decimal amountToPay = booking.TotalPrice;
 
 			if (wallet.Balance < amountToPay)
 			{
-				throw new InvalidOperationException($"Insufficient wallet balance. Available: {wallet.Balance:C}, Required: {amountToPay:C}");
+				throw new InvalidOperationException($"Số dư ví không đủ. Hiện có: {wallet.Balance:C}, cần trả: {amountToPay:C}!");
 			}
 
 			try
@@ -55,8 +55,8 @@ namespace ChildVaccineSystem.Service.Services
 						BookingId = booking.BookingId,
 						UserId = userId,
 						CreatedAt = DateTime.UtcNow,
-						PaymentMethod = "Wallet",
-						Status = "Completed",
+						PaymentMethod = "Ví",
+						Status = "Hoàn thành",
 						Amount = amountToPay
 					};
 
@@ -69,7 +69,7 @@ namespace ChildVaccineSystem.Service.Services
 					return new WalletPaymentResponseDTO
 					{
 						Success = true,
-						Message = "Payment processed successfully",
+						Message = "Thanh toán đã được xử lý thành công",
 						BookingId = booking.BookingId,
 						AmountPaid = amountToPay,
 						RemainingWalletBalance = updatedWallet.Balance,
@@ -82,7 +82,7 @@ namespace ChildVaccineSystem.Service.Services
 					return new WalletPaymentResponseDTO
 					{
 						Success = false,
-						Message = "Payment processing failed",
+						Message = "Thanh toán thất bại",
 						BookingId = booking.BookingId,
 						AmountPaid = 0
 					};

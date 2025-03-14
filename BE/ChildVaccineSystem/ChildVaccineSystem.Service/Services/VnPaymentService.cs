@@ -25,14 +25,15 @@ namespace ChildVaccineSystem.Service.Services
 		public async Task<string> CreatePaymentUrl(int bookingId, string clientIpAddress)
 		{
 			var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
+
 			if (booking == null)
 			{
-				throw new ArgumentException($"Booking with ID {bookingId} not found");
+				throw new KeyNotFoundException($"Không tìm thấy lịch hẹn!");
 			}
 
 			if (booking.Status != BookingStatus.Pending)
 			{
-				throw new InvalidOperationException($"Payment can only be processed for bookings with 'Pending' status. Current status: {booking.Status}");
+				throw new InvalidOperationException($"Thanh toán chỉ có thể được xử lý đối với các lịch hẹn có trạng thái 'Đang chờ xử lý'. Trạng thái hiện tại: {booking.Status}");
 			}
 
 			var transaction = await CreateTransactionAsync(booking);
@@ -65,7 +66,7 @@ namespace ChildVaccineSystem.Service.Services
 			var transaction = await _unitOfWork.Transactions.GetAsync(t => t.TransactionId == transactionId);
 			if (transaction == null)
 			{
-				throw new ArgumentException($"Transaction with ID {transactionId} not found");
+				throw new ArgumentException($"Không tìm thấy giao dịch!");
 			}
 
 			var vnpay = new VnPayLibrary();
@@ -94,7 +95,7 @@ namespace ChildVaccineSystem.Service.Services
 
 			if (string.IsNullOrEmpty(vnpHashSecret))
 			{
-				throw new Exception("VNPay settings are not properly configured");
+				throw new Exception("Cài đặt VNPay không được cấu hình đúng!");
 			}
 
 			string vnpSecureHash = vnpayParams["vnp_SecureHash"];
@@ -137,7 +138,7 @@ namespace ChildVaccineSystem.Service.Services
 				return false;
 			}
 
-			await UpdateTransactionStatusAsync(transactionId, "Completed", responseCode);
+			await UpdateTransactionStatusAsync(transactionId, "Hoàn thành", responseCode);
 
 			if (vnpayParams.TryGetValue("vnp_OrderType", out string orderType) && orderType == "topup")
 			{
@@ -163,8 +164,8 @@ namespace ChildVaccineSystem.Service.Services
 				BookingId = booking.BookingId,
 				UserId = booking.UserId,
 				CreatedAt = DateTime.UtcNow,
-				PaymentMethod = "VNPay",
-				Status = "Pending",
+				PaymentMethod = "VnPay",
+				Status = "Đang chờ xử lý",
 				Amount = booking.TotalPrice
 			};
 
