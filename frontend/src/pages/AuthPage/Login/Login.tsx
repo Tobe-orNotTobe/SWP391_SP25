@@ -3,7 +3,7 @@ import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNa
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
-import { useLogin, useLoginGoogle } from "./useLogin";
+import {useAuthGoogle, useLogin} from "./useLogin";
 import "../Auth.scss"
 import LoadingRedirect from "../../../components/Loading/LoadingRedirect";
 
@@ -22,7 +22,7 @@ const Login : React.FC = () => {
         isRedirecting
     } = useLogin();
 
-    const {handleGoogleLogin} = useLoginGoogle();
+    const {handleLoginGoogle} = useAuthGoogle();
 
     if (isRedirecting) {
         return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng..." delay={2000} to="/homepage" />;
@@ -71,7 +71,7 @@ const Login : React.FC = () => {
                     </div>
 
                     <div className="authSocialContainer">
-                        <button type="button" className="googleButton" onClick={handleGoogleLogin}>
+                        <button type="button" className="googleButton" onClick={handleLoginGoogle}>
                             <FcGoogle className="googleIcon" />
                             Đăng nhập với Google
                         </button>

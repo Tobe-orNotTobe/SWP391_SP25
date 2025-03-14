@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import {Button, Table, Tabs} from "antd";
+import {Button, Input, Table, Tabs} from "antd";
 import {useDeleteUser, useGetAllUser, useUpdateUserIsActive} from "../useAdminAccount.ts";
 import {IoMdAdd} from "react-icons/io";
 import "./AdminAccount.scss"
@@ -9,6 +9,7 @@ import {FiEdit2} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
 import {AccountDetailResponse} from "../../../../interfaces/Account.ts";
 import {useNavigate} from "react-router-dom";
+import {ColumnsType} from "antd/es/table";
 
 const { TabPane } = Tabs;
 
@@ -17,12 +18,25 @@ const AdminAccountPage: React.FC = () => {
     const {handleDelete} = useDeleteUser();
     const {handleUpdateIsActive} = useUpdateUserIsActive();
     const {users, loading, error, fetchAllUser} = useGetAllUser();
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchAllUser()
     }, []);
 
-    const columns = [
+    const [searchText, setSearchText] = useState("");
+    const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+
+    // Lọc dữ liệu trước khi truyền vào Table
+    const filteredUsers = users.filter((user) =>
+        Object.values(user).some(
+            (value) =>
+                typeof value === "string" &&
+                value.toLowerCase().includes(searchText.trim().toLowerCase())
+        )
+    );
+
+    const columns: ColumnsType<AccountDetailResponse> = [
         {
             title: "",
             key: "action-column",
@@ -45,40 +59,53 @@ const AdminAccountPage: React.FC = () => {
                 </div>
             ),
         },
-        { title: "ID", dataIndex: "id", key: "id" },
+        {
+            title: "ID",
+            dataIndex: "id",
+            key: "id",
+            sorter: (a, b) => a.id.localeCompare(b.id),
+        },
         {
             title: "Tên đầy đủ",
             dataIndex: "fullName",
             key: "fullName",
-            render: (fullName: string) => fullName.length > 10 ? `${fullName.slice(0, 15)}...` : fullName
+            sorter: (a, b) => a.fullName.localeCompare(b.fullName),
+            render: (fullName) => (fullName.length > 10 ? `${fullName.slice(0, 15)}...` : fullName),
         },
         {
             title: "Tên đăng nhập",
             dataIndex: "userName",
             key: "userName",
-            render: (userName: string) => userName.length > 20 ? `${userName.slice(0, 20)}...` : userName
+            sorter: (a, b) => a.userName.localeCompare(b.userName),
+            render: (userName) => (userName.length > 20 ? `${userName.slice(0, 20)}...` : userName),
         },
         {
             title: "Email",
             dataIndex: "email",
             key: "email",
-            render: (email: string) => email.length > 20 ? `${email.slice(0, 20)}...` : email
+            render: (email) => (email.length > 20 ? `${email.slice(0, 20)}...` : email),
         },
         {
             title: "Số điện thoại",
             dataIndex: "phoneNumber",
             key: "phoneNumber",
-            render: (phoneNumber: string) => phoneNumber.length > 20 ? `${phoneNumber.slice(0, 20)}...` : phoneNumber
+            sorter: (a, b) => a.phoneNumber.localeCompare(b.phoneNumber),
+            render: (phoneNumber) => (phoneNumber.length > 20 ? `${phoneNumber.slice(0, 20)}...` : phoneNumber),
         },
         {
             title: "Trạng thái",
             dataIndex: "isActive",
             key: "isActive",
-            render: (status: boolean) => (
-                <span className={`status-badge ${status ? 'active' : 'deactive'}`}>
-                    {status ? "Đang hoạt động" : "Dừng hoạt động"}
-                </span>
-            )
+            filters: [
+                { text: "Đang hoạt động", value: true },
+                { text: "Dừng hoạt động", value: false },
+            ],
+            onFilter: (value, record) => record.isActive === value,
+            render: (status) => (
+                <span className={`status-badge ${status ? "active" : "deactive"}`}>
+          {status ? "Đang hoạt động" : "Dừng hoạt động"}
+        </span>
+            ),
         },
         {
             title: "Hành động",
@@ -91,20 +118,15 @@ const AdminAccountPage: React.FC = () => {
                     <Button className="edit-button" onClick={() => navigate(`/admin/account/edit/${record.id}`)}>
                         <FiEdit2/>Chỉnh sửa
                     </Button>
-
                     <Button className={record.isActive ? "deactive-button" : "active-button"} onClick={() => {handleUpdateIsActive(record.isActive, record.id).then(() => fetchAllUser())}}>
                         <MdDeleteOutline/> {record.isActive ? "Deactive" : "Active"}
                     </Button>
-
                 </div>
             ),
         },
     ];
 
     const [detailUser, setDetailUser] = useState<AccountDetailResponse | null>(null);
-    const navigate = useNavigate();
-    const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-
 
     const openDetailPopup = (user: AccountDetailResponse) => {
         setDetailUser(user);
@@ -126,19 +148,25 @@ const AdminAccountPage: React.FC = () => {
                     </div>
                     {error && ("Lỗi tải danh sách user.")}
                     {loading && ("Loading...")}
+                    <Input
+                        placeholder="🔍 Tìm kiếm..."
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        style={{ marginBottom: 16, width: 300 }}
+                    />
                     <Table
                         columns={columns}
-                        dataSource={Array.isArray(users) ? users.map(user => ({
+                        dataSource={filteredUsers.map((user) => ({
                             ...user,
-                            id: user.id || Math.random().toString(), // Đảm bảo có `id`
+                            id: user.id || Math.random().toString(),
                             fullName: user.fullName || "Chưa có dữ liệu",
                             userName: user.userName || "Chưa có dữ liệu",
                             email: user.email || "Chưa có dữ liệu",
                             phoneNumber: user.phoneNumber || "Chưa có dữ liệu",
-                            isActive: user.isActive ?? false // Mặc định là `false`
-                        })) : []}
+                            isActive: user.isActive ?? false,
+                        }))}
                         rowKey="id"
-                        pagination={{pageSize: 8, showSizeChanger: false}}
+                        pagination={{ pageSize: 8, showSizeChanger: false }}
                         className="account-table"
                         onRow={(record) => ({
                             onMouseEnter: () => setHoveredRow(record.id),

@@ -10,12 +10,12 @@ export const useDeleteBlog = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleDelete = async (blogId: string) => {
+    const handleDelete = async (blogId: number) => {
         try {
             setError(null);
             setIsLoading(true);
             const response = await apiDeleteBlog(blogId);
-            if (!response.isSuccess) throw new Error(response.errorMessages || "Lỗi xảy ra, vui lòng thử lại.");
+            if (!response.isSuccess) return new Error(response.errorMessages || "Lỗi xảy ra, vui lòng thử lại.");
             notification.success({ message: "Xóa thành công!" });
 
         }catch (err: any) {
@@ -47,7 +47,7 @@ export const useUpdateBlogActive = () => {
             setError(null);
             setIsLoading(true);
             const response = await apiUpdateBlog(blog.blogPostId, updateActiveData);
-            if (!response.isSuccess) throw new Error(response.errorMessages || "Lỗi xảy ra, vui lòng thử lại.");
+            if (!response.isSuccess) return new Error(response.errorMessages || "Lỗi xảy ra, vui lòng thử lại.");
             notification.success({ message: "Duyệt thành công!" });
 
         }catch (err: any) {
@@ -73,7 +73,7 @@ export const useBlogForm = () => {
     useEffect(() => {
         if (isEditMode) {
             setLoading(true);
-            apiGetBlogById(id)
+            apiGetBlogById(Number(id))
                 .then((response) => {
                     if (response?.result) {
                         form.setFieldsValue({
@@ -99,8 +99,8 @@ export const useBlogForm = () => {
                 const updateBlogData: UpdateBlogRequest = {
                     ...values,
                 };
-                const response = await apiUpdateBlog(id, updateBlogData);
-                if (!response.isSuccess) throw new Error(response.errorMessages || "Lỗi cập nhật blog");
+                const response = await apiUpdateBlog(Number(id), updateBlogData);
+                if (!response.isSuccess) return new Error(response.errorMessages || "Lỗi cập nhật blog");
                 notification.success({ message: "Cập nhật thành công!" });
             } else {
                 const newBlogData: BlogRequest = {
@@ -109,7 +109,7 @@ export const useBlogForm = () => {
                    ["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]
                 };
                 const response = await apiCreateBlog(newBlogData);
-                if (!response.isSuccess) throw new Error(response.errorMessages || "Lỗi tạo blog");
+                if (!response.isSuccess) return new Error(response.errorMessages || "Lỗi tạo blog");
                 notification.success({ message: "Tạo blog thành công!" });
             }
             navigate("/admin/blog");

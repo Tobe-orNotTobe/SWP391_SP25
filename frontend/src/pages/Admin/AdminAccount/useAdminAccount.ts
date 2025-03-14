@@ -130,6 +130,7 @@ export const useAdminAccountForm = () => {
     const isEditMode = !!id;
     const [loading, setLoading] = useState(false);
     const [dateOfBirth, setDateOfBirth] = useState<string | undefined>(undefined);
+    const [imageUrl, setImageUrl] = useState("");
 
     useEffect(() => {
         if (isEditMode) {
@@ -144,6 +145,9 @@ export const useAdminAccountForm = () => {
                                 ? dayjs(response.result.dateOfBirth).format("YYYY-MM-DD")
                                 : undefined,
                         });
+                        if (response.result.imageUrl) {
+                            setImageUrl(response.result.imageUrl);
+                        }
                     }
                 })
                 .catch(() => {
@@ -159,7 +163,9 @@ export const useAdminAccountForm = () => {
             const updateAccountData: UpdateAccountRequest = {
                 id,
                 ...values,
-                isActive: values.isActive ?? true // Nếu thiếu thì mặc định là true
+                isActive: values.isActive ?? true, // Nếu thiếu thì mặc định là true
+                imageUrl: values.imageUrl ?? "cocainit",
+                role: values.role,
             };
             const response = await apiUpdateAccount(updateAccountData);
             if (!response.isSuccess) {
@@ -187,5 +193,5 @@ export const useAdminAccountForm = () => {
         setLoading(false);
 
     };
-    return { form, dateOfBirth, setDateOfBirth, isEditMode, handleSubmit, loading };
+    return { form, imageUrl, dateOfBirth, setDateOfBirth, isEditMode, handleSubmit, loading };
 };
