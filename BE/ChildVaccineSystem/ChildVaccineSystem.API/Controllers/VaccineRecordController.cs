@@ -1,5 +1,6 @@
 ﻿using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.DTO.VaccineRecord;
+using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -52,16 +53,20 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
-		/// <summary>
-		/// Lấy chi tiết một hồ sơ tiêm chủng.
-		/// </summary>
-		[HttpGet("{vaccineRecordId}")]
+        /// <summary>
+        /// Lấy chi tiết một hồ sơ tiêm chủng.
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Customer, Staff, Admin")]
+        [HttpGet("{vaccineRecordId}")]
 		public async Task<ActionResult<APIResponse>> GetVaccineRecordById(int vaccineRecordId)
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var record = await _vaccineRecordService.GetVaccineRecordByIdAsync(vaccineRecordId, doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+
+                var record = await _vaccineRecordService.GetVaccineRecordByIdAsync(vaccineRecordId, userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;

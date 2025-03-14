@@ -226,52 +226,66 @@ namespace ChildVaccineSystem.Service.Services
         }
 
 
-		public async Task<VaccineRecordDTO> GetVaccineRecordByIdAsync(int vaccineRecordId, string doctorId)
-		{
-			if (vaccineRecordId <= 0)
-				throw new ArgumentException("VaccineRecord ID không hợp lệ.");
+        public async Task<VaccineRecordDTO> GetVaccineRecordByIdAsync(int vaccineRecordId, string userId, bool isAdmin, bool isStaff)
+        {
+            if (vaccineRecordId <= 0)
+                throw new ArgumentException("VaccineRecord ID không hợp lệ.");
 
-			var record = await _vaccineRecordRepository.GetByIdAsync(
-				vaccineRecordId,
-				includeProperties: "Vaccine,BookingDetail.Booking,Child"
-			);
+            var record = await _vaccineRecordRepository.GetByIdAsync(
+            vaccineRecordId,
+            includeProperties: "Vaccine,BookingDetail.Booking,Child"
+);
 
-			if (record == null)
-				throw new KeyNotFoundException("Không tìm thấy hồ sơ tiêm chủng.");
+            if (record == null)
+                throw new KeyNotFoundException("Không tìm thấy hồ sơ tiêm chủng.");
 
-			// ✅ Kiểm tra trong bảng DoctorWorkSchedules xem bác sĩ có được gán cho BookingId này không
-			var isDoctorAssigned = await _unitOfWork.DoctorWorkSchedules
-				.AnyAsync(dws => dws.BookingId == record.BookingDetail.BookingId && dws.UserId == doctorId);
-
-			if (!isDoctorAssigned)
-				throw new UnauthorizedAccessException("Bạn không có quyền truy cập hồ sơ này.");
-
-			return new VaccineRecordDTO
-			{
-				BookingId = record.BookingDetail.BookingId,
-				FullName = record.Child.FullName,
-				DateOfBirth = record.Child.DateOfBirth,
-				Height = record.Child.Height,
-				Weight = record.Child.Weight,
-				VaccineRecords = new List<VaccineRecordDetailDTO>
-		{
-			new VaccineRecordDetailDTO
-			{
-				VaccinationRecordId = record.VaccinationRecordId,
-				VaccineName = record.Vaccine.Name,
-				DoseAmount = record.DoseAmount,
-				BatchNumber = record.BatchNumber,
-				Price = Convert.ToDecimal(record.Price),
-				StatusEnum = record.Status,
-				NextDoseDate = record.NextDoseDate,
-				Notes = record.Notes
-			}
-		}
-			};
-		}
+            if (record.Status == VaccineRecordStatus.Deleted)
+                throw new InvalidOperationException("Hồ sơ này đã bị xóa.");
 
 
-		public async Task<bool> SoftDeleteVaccineRecordAsync(int vaccineRecordId, string doctorId)
+            // Lấy UserId từ BookingDetail (customer của booking)
+            var customerId = record.BookingDetail.Booking.UserId;
+
+            // Kiểm tra trong bảng DoctorWorkSchedules xem bác sĩ có được gán cho BookingId này không
+            var isDoctorAssigned = await _unitOfWork.DoctorWorkSchedules
+                .AnyAsync(dws => dws.BookingId == record.BookingDetail.BookingId && dws.UserId == userId);
+
+            // Kiểm tra nếu user hiện tại là Customer của Booking
+            bool isCustomer = customerId == userId;
+
+            // Nếu không phải Admin, không phải Staff, không phải Doctor được chỉ định, cũng không phải Customer (chủ hồ sơ), thì không cho truy cập.
+            // Kiểm tra điều kiện đúng nhất (Admin hoặc Staff luôn có quyền truy cập)
+            if (!(isAdmin || isStaff || isDoctorAssigned || isCustomer))
+            {
+                throw new UnauthorizedAccessException("Bạn không có quyền truy cập hồ sơ này.");
+            }
+
+            return new VaccineRecordDTO
+            {
+                BookingId = record.BookingDetail.BookingId,
+                FullName = record.Child.FullName,
+                DateOfBirth = record.Child.DateOfBirth,
+                Height = record.Child.Height,
+                Weight = record.Child.Weight,
+                VaccineRecords = new List<VaccineRecordDetailDTO>
+        {
+            new VaccineRecordDetailDTO
+            {
+                VaccinationRecordId = record.VaccinationRecordId,
+                VaccineName = record.Vaccine.Name,
+                DoseAmount = record.DoseAmount,
+                BatchNumber = record.BatchNumber,
+                Price = Convert.ToDecimal(record.Price),
+                StatusEnum = record.Status,
+                NextDoseDate = record.NextDoseDate,
+                Notes = record.Notes
+            }
+        }
+            };
+        }
+
+
+        public async Task<bool> SoftDeleteVaccineRecordAsync(int vaccineRecordId, string doctorId)
 		{
 			if (vaccineRecordId <= 0)
 				throw new ArgumentException("VaccineRecord ID không hợp lệ.");
