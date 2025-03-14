@@ -45,7 +45,7 @@ namespace ChildVaccineSystem.Service.Services
 
 			var conflictSchedule = _unitOfWork.VaccinationSchedules.GetAsync(vs =>
 				vs.AgeRangeStart == scheduleDto.AgeRangeStart || vs.AgeRangeEnd == scheduleDto.AgeRangeEnd);
-			if (conflictSchedule != null ) 
+			if (conflictSchedule != null)
 			{
 				throw new InvalidOperationException("Đã có lịch tiêm chủng này trong hệ thống!");
 			}
@@ -200,19 +200,11 @@ namespace ChildVaccineSystem.Service.Services
 				throw new KeyNotFoundException($"IDs vắc-xin không tìm thấy: {string.Join(", ", invalidVaccineIds)}");
 			}
 
-			foreach (var detail in scheduleDto.VaccineScheduleDetails)
-			{
-				var vaccine = existingVaccines.First(v => v.VaccineId == detail.VaccineId);
-				if (detail.InjectionSchedules.Count != vaccine.InjectionsCount)
-				{
-					throw new ArgumentException(
-						$"Tổng số mũi của vắc xin ID {vaccine.VaccineId} gửi đi ({detail.InjectionSchedules.Count}) " +
-						$"không đúng với số mũi hiện tại ({vaccine.InjectionsCount})");
-				}
-			}
+
 
 			foreach (var detail in scheduleDto.VaccineScheduleDetails)
 			{
+
 				var injectionMonths = detail.InjectionSchedules.Select(x => x.InjectionNumber).ToList();
 				if (injectionMonths.Distinct().Count() != injectionMonths.Count)
 				{
@@ -222,7 +214,7 @@ namespace ChildVaccineSystem.Service.Services
 				foreach (var injection in detail.InjectionSchedules)
 				{
 					if (injection.InjectionMonth < scheduleDto.AgeRangeStart * 12 ||
-					    injection.InjectionMonth > scheduleDto.AgeRangeEnd * 12)
+						injection.InjectionMonth > scheduleDto.AgeRangeEnd * 12)
 					{
 						var vaccine = existingVaccines.First(v => v.VaccineId == detail.VaccineId);
 						throw new ArgumentException(
@@ -350,7 +342,7 @@ namespace ChildVaccineSystem.Service.Services
 			);
 
 			if (schedules == null)
-				throw new KeyNotFoundException($"Not found schedule for this chilren");
+				throw new KeyNotFoundException($"Không tìm thấy lịch phù hợp cho trẻ này!");
 
 			var schedule = schedules.FirstOrDefault();
 

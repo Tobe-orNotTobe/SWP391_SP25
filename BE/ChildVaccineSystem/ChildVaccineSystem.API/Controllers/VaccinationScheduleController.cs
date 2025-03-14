@@ -18,6 +18,7 @@ namespace ChildVaccineSystem.API.Controllers
 			_scheduleService = scheduleService;
 			_response = response;
 		}
+
 		/// <summary>
 		/// Xem lịch tiêm chủng
 		/// </summary>
@@ -34,7 +35,8 @@ namespace ChildVaccineSystem.API.Controllers
 				if (!result.Any())
 				{
 					_response.IsSuccess = false;
-					_response.StatusCode = HttpStatusCode.BadRequest;
+					_response.StatusCode = HttpStatusCode.NotFound;
+					_response.ErrorMessages.Add("Không tìm thấy lịch");
 
 					return BadRequest(_response);
 				}
@@ -50,7 +52,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.InternalServerError;
-				_response.ErrorMessages.Add($"Error retrieving schedules: {ex.Message}");
+				_response.ErrorMessages.Add($"Lỗi khi lấy lịch: {ex.Message}");
 
 				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
@@ -72,7 +74,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.NotFound;
-				_response.ErrorMessages.Add("Schedule not found");
+				_response.ErrorMessages.Add("Không tìm thấy lịch");
 
 				return NotFound(_response);
 			}
@@ -190,7 +192,7 @@ namespace ChildVaccineSystem.API.Controllers
 				{
 					_response.IsSuccess = false;
 					_response.StatusCode = HttpStatusCode.NotFound;
-					_response.ErrorMessages.Add("Schedule not found");
+					_response.ErrorMessages.Add("Không tìm lấy lịch");
 					return NotFound(_response);
 				}
 
@@ -231,7 +233,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.StatusCode = HttpStatusCode.InternalServerError;
 				_response.IsSuccess = false;
-				_response.ErrorMessages.Add($"Error updating schedule: {ex.Message}");
+				_response.ErrorMessages.Add($"Lỗi cập nhật lịch: {ex.Message}");
 
 				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
@@ -251,7 +253,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.NotFound;
-				_response.ErrorMessages.Add("Schedule not found");
+				_response.ErrorMessages.Add("Không tìm thấy lịch");
 
 				return NotFound(_response);
 			}
