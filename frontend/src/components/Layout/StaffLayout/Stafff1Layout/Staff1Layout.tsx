@@ -1,35 +1,46 @@
 import React from "react";
 import StaffLayout from "../StaffLayout";
+import {
+  FaSyringe,
+  FaUserMd,
+  FaClipboardList,
+  FaNewspaper,
+} from "react-icons/fa";
 
 const groups = [
   {
     title: "Tiêm chủng",
     items: [
-      { label: "Ghi nhận tiêm chủng cho khách hàng", path: "/staff/booking" },
-      { label: "Phân công bác sĩ", path: "/staff/assignDoctor" },
+      {
+        label: "Ghi nhận tiêm chủng cho khách hàng",
+        path: "/staff/booking",
+        icon: <FaSyringe />,
+      },
+      {
+        label: "Phân công bác sĩ",
+        path: "/staff/assignDoctor",
+        icon: <FaUserMd />,
+      },
     ],
   },
   {
-    title: "Đăng bài",
+    title: "Bài đăng",
     items: [
-      { label: "Đăng cẩm nang", path: "/post-guide" },
-      { label: "Đăng tin tức", path: "/post-news" },
+      { label: "Đăng bài", path: "/staff/blogPost", icon: <FaClipboardList /> },
+      {
+        label: "Quản lý bài đăng",
+        path: "/staff/blogManager",
+        icon: <FaNewspaper />,
+      },
     ],
   },
-  // {
-  //   title: "Quản lý",
-  //   items: [
-  //     { label: "Quản lý vaccine", path: "/manage-vaccine" },
-  //     { label: "Quản lý lịch tiêm", path: "/manage-schedule" },
-  //   ],
-  // },
 ];
 
-interface DoctorLayoutProps {
+interface Staff1LayoutProps {
   children: React.ReactNode;
 }
 
-const Staff1Layout: React.FC<DoctorLayoutProps> = ({ children }) => {
+const Staff1Layout: React.FC<Staff1LayoutProps> = ({ children }) => {
   return <StaffLayout groups={groups}>{children}</StaffLayout>;
 };
 
