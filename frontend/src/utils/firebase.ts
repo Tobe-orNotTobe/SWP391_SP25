@@ -9,7 +9,6 @@ import {
 
 
 const firebaseConfig = {
-
     apiKey: VITE_FireBase_API_KEY,
     authDomain: VITE_FireBase_Auth_Domain,
     projectId: VITE_FireBase_Project_Id,
