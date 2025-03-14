@@ -167,6 +167,17 @@ export const apiGetVaccinationScheduleById = async (scheduleId: number) => {
     }
 };
 
+export const apiGetVaccinationScheduleByChildrenId = async (childrenId: number) => {
+    try {
+        const response = await axiosInstance.get(`/api/VaccinationSchedule/by-children/${childrenId}`);
+        console.log(response.data);
+        return response.data || {};
+    } catch (error) {
+        console.error("API Get Vaccination Schedule By ChildrenId Error:", error);
+        throw error;
+    }
+};
+
 export const apiGetVaccineInventoryStock = async () => {
     try {
         const response = await axiosInstance.get("/api/VaccineInventory/stock");
