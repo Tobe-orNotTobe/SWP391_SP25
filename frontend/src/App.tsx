@@ -67,6 +67,10 @@ import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
 import StaffBlogPost from "./pages/Staff/StaffBlogPost.tsx";
 import NewsPage from "./pages/News/NewsPage.tsx";
 import NewsDetailPage from "./pages/News/NewsDetailPage.tsx";
+import StaffBlogManagePage from "./pages/Staff/Blog/StaffBlogManage/StaffBlogManage.tsx";
+import StaffBlogPostPage from "./pages/Staff/StaffBlogPost.tsx";
+import DoctorBlogPostPage from "./pages/Doctor/DoctorBlogPost.tsx";
+import DoctorBlogManagePage from "./pages/Doctor/Blog/DoctorBlogManage/DoctorBlogManage.tsx";
 
 
 function App() {
@@ -119,9 +123,14 @@ function App() {
                 <Route path="/staff/service" element={<ProtectedRoute allowedRoles={["Staff"]}><ServicePage /></ProtectedRoute>} />
                 <Route path="/staff/assignDoctor" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignPage /></ProtectedRoute>} />
                 <Route path="/staff/booking" element={<ProtectedRoute allowedRoles={["Staff"]}><BookingForStaff /></ProtectedRoute>} />
-                <Route path="/staff/blogPost" element={<ProtectedRoute allowedRoles={["Doctor"]}><StaffBlogPost /></ProtectedRoute>} />
+                <Route path="/staff/blogPost" element={<ProtectedRoute allowedRoles={["Staff"]}><StaffBlogPostPage /></ProtectedRoute>} />
+                <Route path="/staff/blogManager" element={<ProtectedRoute allowedRoles={["Staff"]}><StaffBlogManagePage /></ProtectedRoute>} />
+
+                {/* Doctor Routes */}
                 <Route path="/doctor/vaccination-schedule" element={<ProtectedRoute allowedRoles={["Doctor"]}><VaccinationSchedulePage /></ProtectedRoute>} />
                 <Route path="/doctor/service" element={<ProtectedRoute allowedRoles={["Doctor"]}><ServicePage /></ProtectedRoute>} />
+                <Route path="/doctor/blogPost" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorBlogPostPage /></ProtectedRoute>} />
+                <Route path="/doctor/blogManager" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorBlogManagePage /></ProtectedRoute>} />
 
 
                 {/* Manager Routes */}
