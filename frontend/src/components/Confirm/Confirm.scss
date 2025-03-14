@@ -1,3 +1,4 @@
+.confirm-email,
 .confirm-container {
   display: flex;
   flex-direction: column;
@@ -29,6 +30,8 @@
       }
     }
 
+    // Make all text look the same for loading, error and success
+    span,
     &__message {
       font-size: 1.25rem;
       font-weight: 500;
@@ -49,6 +52,22 @@
     }
   }
 
+  // Add refresh suggestion for error state
+  .status--error {
+    span,
+    .status__message {
+      margin-bottom: 1rem;
+    }
+
+    &:after {
+      content: "Nhấn F5 để thử lại";
+      display: block;
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #7f8c8d;
+    }
+  }
+
   @keyframes spin {
     0% {
       transform: rotate(0deg);
@@ -58,4 +77,3 @@
     }
   }
 }
-

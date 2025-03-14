@@ -128,7 +128,12 @@ const CustomerNavbar: React.FC = () => {
                                         </li>
                                         <li>
                                             <Link to="/customer/wallet" className="user-dropdown-item">
-                                                <FaWallet size={20}/> Ví Của Bạn<p  style={{color : "#6d6e70"}}> {walletData?.balance} (VND) </p>
+                                                <FaWallet size={20}/> Ví Của Bạn
+                                                <p style={{ color: "#6d6e70" }}>
+                                                    {walletData?.balance
+                                                        ? new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(walletData.balance)
+                                                        : "0 VND"}
+                                                </p>
                                             </Link>
                                         </li>
                                         <li>

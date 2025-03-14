@@ -160,7 +160,7 @@ const AdminRefund: React.FC = () => {
             title: "Amount",
             dataIndex: "amount",
             key: "amount",
-            render: (value: number) => `${value.toFixed(2)} VND`,
+            render: (value: number) => new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value)
         },
         {
             title: "Status",
@@ -205,7 +205,11 @@ const AdminRefund: React.FC = () => {
                         <h1>Quản lý Đơn Refund</h1>
                         <div className="admin-wallet">
                             <span>Ví của Admin:</span>
-                            <span className="wallet-amount">{walletData?.balance} VNĐ</span>
+                            <span className="wallet-amount">
+                              {walletData?.balance
+                                  ? new Intl.NumberFormat("vi-VN", {style: "currency", currency: "VND"}).format(walletData.balance)
+                                  : "0 ₫"}
+                            </span>
                             <Button
                                 type="primary"
                                 icon={<IoMdAdd/>}

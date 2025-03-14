@@ -227,7 +227,7 @@ const BookingHistory: React.FC = () => {
                                                     <p>
                                                         <span className="label">Tổng tiền:</span>
                                                         <span className="value total-price">
-                                                            {booking.totalPrice.toLocaleString()} VNĐ
+                                                           {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(booking.totalPrice)} VNĐ
                                                         </span>
                                                     </p>
                                                     <p>

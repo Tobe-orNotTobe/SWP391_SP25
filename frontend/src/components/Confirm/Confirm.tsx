@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { apiConfirmEmail } from "../../apis/apiAccount.ts";
-import {FaTimesCircle, FaSpinner} from "react-icons/fa";
+import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import "./Confirm.scss";
 import { ConfirmEmailRequest } from "../../interfaces/Account.ts";
 import LoadingRedirect from "../Loading/LoadingRedirect.tsx";
 
-
-export const ConfirmEmail : React.FC = () => {
+export const ConfirmEmail: React.FC = () => {
     const [searchParams] = useSearchParams();
     const email = searchParams.get("email");
     const token = searchParams.get("token");
@@ -17,6 +16,7 @@ export const ConfirmEmail : React.FC = () => {
 
     useEffect(() => {
         if (hasRun.current) return;
+        hasRun.current = true;
 
         const confirmEmail = async () => {
             if (!email || !token) {
@@ -43,24 +43,24 @@ export const ConfirmEmail : React.FC = () => {
         };
 
         confirmEmail();
-    }, []);
+    }, [email, token]);
 
     if (statusType === "success") {
-        return <LoadingRedirect message={status} delay={5000} to="/login" />;
+        return <LoadingRedirect message={status} delay={3000} to="/login" />;
     }
 
     return (
-        <div className="confirm-email">
+        <div className="confirm-container">
             {statusType === "loading" && (
                 <div className="status status--loading">
                     <FaSpinner className="status__icon status__icon--spin" />
-                    <span>{status}</span>
+                    <p className="status__message">{status}</p>
                 </div>
             )}
             {statusType === "error" && (
                 <div className="status status--error">
                     <FaTimesCircle className="status__icon" />
-                    <span>{status}</span>
+                    <p className="status__message">{status}</p>
                 </div>
             )}
         </div>
@@ -92,8 +92,6 @@ export const PaymentSuccess: React.FC = () => {
 
                 setStatus("Thanh toán thành công!");
                 setStatusType("success");
-
-
             } catch (error) {
                 console.error("Lỗi xử lý thanh toán:", error);
                 setStatus("Thanh toán thất bại! Vui lòng thử lại.");
@@ -106,24 +104,24 @@ export const PaymentSuccess: React.FC = () => {
 
     if (statusType === "success") {
         return <LoadingRedirect
-            message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${amount}`}
-            delay={5000}
+            message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${(Number(amount)).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`}
+            delay={3000}
             to="/booking-history"
         />;
     }
 
     return (
-        <div className="confirm-email">
+        <div className="confirm-container">
             {statusType === "loading" && (
                 <div className="status status--loading">
                     <FaSpinner className="status__icon status__icon--spin" />
-                    <span>{status}</span>
+                    <p className="status__message">{status}</p>
                 </div>
             )}
             {statusType === "error" && (
                 <div className="status status--error">
                     <FaTimesCircle className="status__icon" />
-                    <span>{status}</span>
+                    <p className="status__message">{status}</p>
                 </div>
             )}
         </div>
@@ -167,7 +165,7 @@ export const DepositSuccess: React.FC = () => {
 
     if (statusType === "success") {
         return <LoadingRedirect
-            message={`Nạp tiền thành công với số tiền ${amount} VND vào ví của bạn`}
+            message={`Nạp tiền thành công với số tiền ${Number(amount).toLocaleString('vi-VN')} VND vào ví của bạn`}
             delay={5000}
             to="/customer/wallet"
         />;
@@ -190,5 +188,3 @@ export const DepositSuccess: React.FC = () => {
         </div>
     );
 };
-
-
