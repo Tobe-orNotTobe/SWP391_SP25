@@ -75,7 +75,7 @@ export const apiCreateBlog = async (data: BlogRequest) => {
     }
 }
 
-export const apiUpdateBlog = async (blogId: string, data: UpdateBlogRequest) => {
+export const apiUpdateBlog = async (blogId: number, data: UpdateBlogRequest) => {
     try {
         const response = await axiosInstance.put(`/api/Blog/${blogId}`, data);
         return response.data;
@@ -90,7 +90,7 @@ export const apiUpdateBlog = async (blogId: string, data: UpdateBlogRequest) => 
 
 }
 
-export const apiDeleteBlog = async (blogId: string) => {
+export const apiDeleteBlog = async (blogId: number) => {
     try {
         const response = await axiosInstance.delete(`/api/Blog/${blogId}`);
         return response.data;

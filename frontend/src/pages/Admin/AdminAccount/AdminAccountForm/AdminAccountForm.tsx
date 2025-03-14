@@ -1,18 +1,37 @@
 import React, { useState } from "react";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import { Button, Form, Input, Select, Switch } from "antd";
+import {Button, Form, Input, notification, Select, Switch, Upload} from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import "./AdminAccountForm.scss";
 import { useNavigate } from "react-router-dom";
 import { useAdminAccountForm } from "../useAdminAccount.ts";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {uploadImageToCloudinary} from "../../../../utils/cloudinary.ts";
 
 const AdminAccountFormPage: React.FC = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
-    const { form, dateOfBirth, setDateOfBirth, isEditMode, handleSubmit } = useAdminAccountForm();
+    const { form, imageUrl, dateOfBirth, setDateOfBirth, isEditMode, handleSubmit } = useAdminAccountForm();
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     const handleShowPassword = () => setShowPassword(!showPassword);
+
+    const onFinish = async (values: any) => {
+
+        let imageUrl = values.imageUrl;
+        if (imageFile) {
+            try {
+                imageUrl = await uploadImageToCloudinary(imageFile);
+            } catch (error) {
+                notification.error({ message: "Lỗi", description: "Tải ảnh thất bại." });
+                return;
+            }
+        }
+
+        const formData = { ...values, imageUrl };
+        await handleSubmit(formData);
+    };
 
     return (
         <AdminLayout>
@@ -31,7 +50,7 @@ const AdminAccountFormPage: React.FC = () => {
                 <Form
                     form={form}
                     layout="vertical"
-                    onFinish={handleSubmit}
+                    onFinish={onFinish}
                     className="account-form"
                 >
                     <div className="formGroup">
@@ -60,7 +79,7 @@ const AdminAccountFormPage: React.FC = () => {
                                 <Input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
                             </Form.Item>
 
-                            {!isEditMode && (
+                            {!isEditMode ? (
                                 <Form.Item
                                     name="password"
                                     label="Mật khẩu:"
@@ -76,6 +95,11 @@ const AdminAccountFormPage: React.FC = () => {
                                         }
                                     />
                                 </Form.Item>
+                            ) : (
+                                <Form.Item name="isActive" label="Trạng thái hoạt động" valuePropName="checked"
+                                               initialValue={true}>
+                                    <Switch checkedChildren="Bật" unCheckedChildren="Tắt"/>
+                                </Form.Item>
                             )}
                         </div>
 
@@ -83,7 +107,7 @@ const AdminAccountFormPage: React.FC = () => {
                             <Form.Item
                                 name="fullName"
                                 label="Họ và tên:"
-                                rules={[{ required: true, message: "Vui lòng nhập họ và tên." }]}
+                                rules={[{required: true, message: "Vui lòng nhập họ và tên."}]}
                             >
                                 <Input placeholder="Fullname" />
                             </Form.Item>
@@ -116,15 +140,31 @@ const AdminAccountFormPage: React.FC = () => {
                             
 
                         </div>
-                    </div>
 
-                    { isEditMode && (
-                        <div className="active-form" style={{paddingLeft: "26px"}}>
-                            <Form.Item name="isActive" label="Trạng thái hoạt động" valuePropName="checked" initialValue={true}>
-                                <Switch checkedChildren="Bật" unCheckedChildren="Tắt" />
-                            </Form.Item>
+                        <div style={{paddingTop: "26px"}}>
+                            {isEditMode && (
+                                <Form.Item name="imageUrl" label="Ảnh minh họa:">
+                                    <Upload
+                                        listType="picture-card"
+                                        showUploadList={false}
+                                        beforeUpload={(file) => {
+                                            setImageFile(file);
+                                            setPreviewUrl(URL.createObjectURL(file));
+                                            return false;
+                                        }}
+                                    >
+                                        {previewUrl ? (
+                                            <img src={previewUrl} alt="Xem trước" style={{ width: "100%" }} />
+                                        ) : isEditMode ? (
+                                            <img src={imageUrl} alt="Xem trước" style={{ width: "100%" }} />
+                                        ) : (
+                                            "+ Upload"
+                                        )}
+                                    </Upload>
+                                </Form.Item>
+                            )}
                         </div>
-                    )}
+                    </div>
 
                     <div style={{display: "flex", justifyContent: "end"}}>
                         <Button type="primary" htmlType="submit" className="button-input">

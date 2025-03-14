@@ -28,7 +28,7 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
     const {handleUpdateActive} = useUpdateBlogActive();
 
     useEffect(() => {
-        fetchAllBlog(isActive);
+        fetchAllBlog(isActive).then();
     }, []);
 
     const [searchText, setSearchText] = useState("");
@@ -53,7 +53,7 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                         display: "flex",
                         justifyContent: "center",
                         transition: "opacity 0.1s ease-in-out",
-                        opacity: hoveredRow === record.blogPostId ? 1 : 0
+                        opacity: hoveredRow === record.blogPostId.toString() ? 1 : 0
                     }}
                 >
                     {isActive && (
@@ -72,7 +72,7 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
             title: "ID",
             dataIndex: "id",
             key: "id",
-            sorter: (a, b) => a.blogPostId.localeCompare(b.blogPostId),
+            sorter: (a, b) => a.blogPostId.toString().localeCompare(b.blogPostId.toString()),
         },
         {
             title: "Đề mục",
@@ -174,7 +174,7 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                         pagination={{pageSize: 8, showSizeChanger: false}}
                         className="account-table"
                         onRow={(record) => ({
-                            onMouseEnter: () => setHoveredRow(record.blogPostId),
+                            onMouseEnter: () => setHoveredRow(record.blogPostId.toString()),
                             onMouseLeave: () => setHoveredRow(null),
                         })}
                     />

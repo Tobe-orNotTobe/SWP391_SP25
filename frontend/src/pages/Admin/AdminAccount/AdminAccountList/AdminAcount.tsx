@@ -18,6 +18,7 @@ const AdminAccountPage: React.FC = () => {
     const {handleDelete} = useDeleteUser();
     const {handleUpdateIsActive} = useUpdateUserIsActive();
     const {users, loading, error, fetchAllUser} = useGetAllUser();
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchAllUser()
@@ -114,7 +115,7 @@ const AdminAccountPage: React.FC = () => {
                     <Button onClick={() => openDetailPopup(record)} className="detail-button">
                         <TbListDetails/>Chi tiết
                     </Button>
-                    <Button className="edit-button" onClick={() => navigate("/admin/account/edit/${record.id}")}>
+                    <Button className="edit-button" onClick={() => navigate(`/admin/account/edit/${record.id}`)}>
                         <FiEdit2/>Chỉnh sửa
                     </Button>
                     <Button className={record.isActive ? "deactive-button" : "active-button"} onClick={() => {handleUpdateIsActive(record.isActive, record.id).then(() => fetchAllUser())}}>
@@ -126,7 +127,6 @@ const AdminAccountPage: React.FC = () => {
     ];
 
     const [detailUser, setDetailUser] = useState<AccountDetailResponse | null>(null);
-    const navigate = useNavigate();
 
     const openDetailPopup = (user: AccountDetailResponse) => {
         setDetailUser(user);
