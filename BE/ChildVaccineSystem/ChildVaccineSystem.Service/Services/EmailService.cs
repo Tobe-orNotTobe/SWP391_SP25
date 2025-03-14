@@ -38,7 +38,7 @@ namespace ChildVaccineSystem.Service.Services
         {
             if (string.IsNullOrEmpty(email) || !email.Contains("@"))
             {
-                throw new Exception("Invalid email address: " + email);
+                throw new Exception("Địa chỉ email không hợp lệ: " + email);
             }
 
             EmailRequestDTO request = new EmailRequestDTO
@@ -55,14 +55,14 @@ namespace ChildVaccineSystem.Service.Services
         {
             if (string.IsNullOrEmpty(email) || !email.Contains("@"))
             {
-                throw new Exception("Invalid email address: " + email);
+                throw new Exception("Địa chỉ email không hợp lệ: " + email);
             }
 
             var request = new EmailRequestDTO
             {
-                Subject = "Reset Your Password",
+                Subject = "Đặt lại mật khẩu của bạn",
                 toEmail = email,
-                Body = $"<p>Click <a href='{resetLink}'>here</a> to reset your password.</p>"
+                Body = $"<p>Nhấp chuột <a href='{resetLink}'>tại đây</a> để đặt lại mật khẩu của bạn.</p>"
             };
 
             _emailRepository.SendEmailForgotPassword(request, resetLink);
@@ -71,7 +71,7 @@ namespace ChildVaccineSystem.Service.Services
         {
             if (string.IsNullOrEmpty(adminEmail) || !adminEmail.Contains("@"))
             {
-                throw new Exception("Invalid admin email address: " + adminEmail);
+                throw new Exception("Địa chỉ email admin không hợp lệ: " + adminEmail);
             }
 
             if (expiringVaccines == null || !expiringVaccines.Any())
@@ -79,9 +79,9 @@ namespace ChildVaccineSystem.Service.Services
                 return; 
             }
 
-            string subject = "Expired Vaccine Warning!";
+            string subject = "Cảnh báo vắc-xin hết hạn!";
             StringBuilder bodyBuilder = new StringBuilder();
-            bodyBuilder.Append("<h3>Warning: The following vaccines are nearing expiration.</h3><ul>");
+            bodyBuilder.Append("<h3>Cảnh báo: Các loại vắc-xin sau đây sắp hết hạn.</h3><ul>");
 
             foreach (var vaccineInfo in expiringVaccines)
             {
@@ -89,7 +89,7 @@ namespace ChildVaccineSystem.Service.Services
             }
 
             bodyBuilder.Append("</ul>");
-            bodyBuilder.Append("<p>Please check and handle promptly.</p>");
+            bodyBuilder.Append("<p>Vui lòng kiểm tra và xử lý kịp thời.</p>");
 
             EmailRequestDTO request = new EmailRequestDTO
             {
