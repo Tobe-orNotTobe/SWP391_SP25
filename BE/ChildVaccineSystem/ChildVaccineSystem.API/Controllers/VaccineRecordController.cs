@@ -14,7 +14,7 @@ namespace ChildVaccineSystem.API.Controllers
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
+   
     public class VaccineRecordController : ControllerBase
     {
         private readonly IVaccineRecordService _vaccineRecordService;
@@ -29,6 +29,7 @@ namespace ChildVaccineSystem.API.Controllers
         /// <summary>
         /// Bác sĩ tạo hồ sơ tiêm chủng cho lịch hẹn.
         /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
         [HttpPost("{bookingId}/create")]
         public async Task<ActionResult<APIResponse>> CreateVaccineRecord(int bookingId)
         {
