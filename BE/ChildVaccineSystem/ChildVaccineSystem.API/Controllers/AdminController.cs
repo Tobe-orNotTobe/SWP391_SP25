@@ -38,7 +38,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Invalid user data.");
+                _response.ErrorMessages.Add("Dữ liệu người dùng không hợp lệ.");
                 return BadRequest(_response);
             }
 
@@ -46,7 +46,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Role '{model.Role}' does not exist.");
+                _response.ErrorMessages.Add($"Vai trò '{model.Role}' không tồn tại.");
                 return BadRequest(_response);
             }
 
@@ -77,7 +77,7 @@ namespace ChildVaccineSystem.API.Controllers
 			await _userManager.AddToRoleAsync(user, model.Role);
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = $"Account created successfully with role '{model.Role}'";
+            _response.Result = $"Tài khoản đã được tạo thành công với vai trò '{model.Role}'";
             return Ok(_response);
         }
 
@@ -100,7 +100,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
+                _response.ErrorMessages.Add("Không tìm thấy người dùng");
                 return NotFound(_response);
             }
 
@@ -119,7 +119,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
+                _response.ErrorMessages.Add("Không tìm thấy người dùng");
                 return NotFound(_response);
             }
 
@@ -128,13 +128,13 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Failed to delete user");
+                _response.ErrorMessages.Add("Không thể xóa người dùng");
                 return BadRequest(_response);
             }
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = "User deleted successfully";
+            _response.Result = "Người dùng đã được xóa thành công";
             return Ok(_response);
         }
         [HttpPut("UpdateUser")]
@@ -146,7 +146,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
+                _response.ErrorMessages.Add("Không tìm thấy người dùng");
                 return NotFound(_response);
             }
 
@@ -159,13 +159,13 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Failed to update user");
+                _response.ErrorMessages.Add("Không thể cập nhật người dùng");
                 return BadRequest(_response);
             }
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = "User updated successfully";
+            _response.Result = "Người dùng đã cập nhật thành công";
             return Ok(_response);
         }
 
@@ -178,7 +178,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
+                _response.ErrorMessages.Add("Không tìm thấy người dùng");
                 return NotFound(_response);
             }
 
@@ -187,7 +187,7 @@ namespace ChildVaccineSystem.API.Controllers
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = "User activated successfully";
+            _response.Result = "Người dùng đã được kích hoạt thành công";
             return Ok(_response);
         }
 
@@ -200,7 +200,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
+                _response.ErrorMessages.Add("Không tìm thấy người dùng");
                 return NotFound(_response);
             }
 
@@ -209,7 +209,7 @@ namespace ChildVaccineSystem.API.Controllers
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = "User deactivated successfully";
+            _response.Result = "Người dùng đã bị vô hiệu hóa thành công";
             return Ok(_response);
         }
         [HttpGet("getAllDoctors")]
@@ -223,7 +223,7 @@ namespace ChildVaccineSystem.API.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("Role 'Doctor' does not exist.");
+                    _response.ErrorMessages.Add("Không tồn tại vai trò 'Bác sĩ'.");
                     return NotFound(_response);
                 }
 
@@ -251,7 +251,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving doctors: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi khi tìm kiếm bác sĩ: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -277,7 +277,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving roles: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi khi truy xuất vai trò: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
