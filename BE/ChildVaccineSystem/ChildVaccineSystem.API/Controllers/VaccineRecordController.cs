@@ -172,16 +172,20 @@ namespace ChildVaccineSystem.API.Controllers
 			}
 		}
 
-		/// <summary>
-		/// Xóa mềm một hồ sơ tiêm chủng (Soft Delete).
-		/// </summary>
-		[HttpDelete("{vaccineRecordId}/delete")]
+        /// <summary>
+        /// Xóa mềm một hồ sơ tiêm chủng (Soft Delete).
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Staff, Admin")]
+        [HttpDelete("{vaccineRecordId}/delete")]
 		public async Task<ActionResult<APIResponse>> SoftDeleteVaccineRecord(int vaccineRecordId)
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var result = await _vaccineRecordService.SoftDeleteVaccineRecordAsync(vaccineRecordId, doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+
+                var result = await _vaccineRecordService.SoftDeleteVaccineRecordAsync(vaccineRecordId, userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = result;

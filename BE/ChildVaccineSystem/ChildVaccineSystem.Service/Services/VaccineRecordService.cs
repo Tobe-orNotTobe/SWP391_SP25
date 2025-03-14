@@ -285,35 +285,36 @@ namespace ChildVaccineSystem.Service.Services
         }
 
 
-        public async Task<bool> SoftDeleteVaccineRecordAsync(int vaccineRecordId, string doctorId)
-		{
-			if (vaccineRecordId <= 0)
-				throw new ArgumentException("VaccineRecord ID không hợp lệ.");
+        public async Task<bool> SoftDeleteVaccineRecordAsync(int vaccineRecordId, string userId, bool isAdmin, bool isStaff)
+        {
+            if (vaccineRecordId <= 0)
+                throw new ArgumentException("VaccineRecord ID không hợp lệ.");
 
-			var record = await _vaccineRecordRepository.GetByIdAsync(
-				vaccineRecordId,
-				includeProperties: "BookingDetail.Booking"
-			);
+            var record = await _vaccineRecordRepository.GetByIdAsync(
+                vaccineRecordId,
+                includeProperties: "BookingDetail.Booking"
+            );
 
-			if (record == null)
-				throw new KeyNotFoundException("Không tìm thấy hồ sơ tiêm chủng.");
+            if (record == null)
+                throw new KeyNotFoundException("Không tìm thấy hồ sơ tiêm chủng.");
 
-			// ✅ Kiểm tra quyền bác sĩ dựa trên `DoctorWorkSchedules`
-			var isDoctorAssigned = await _unitOfWork.DoctorWorkSchedules
-				.AnyAsync(dws => dws.BookingId == record.BookingDetail.BookingId && dws.UserId == doctorId);
+            // Kiểm tra quyền bác sĩ dựa trên `DoctorWorkSchedules`
+            var isDoctorAssigned = await _unitOfWork.DoctorWorkSchedules
+                .AnyAsync(dws => dws.BookingId == record.BookingDetail.BookingId && dws.UserId == userId);
 
-			if (!isDoctorAssigned)
-				throw new UnauthorizedAccessException("Bạn không có quyền xóa hồ sơ này.");
+            // Chỉ Admin, Staff và Doctor được chỉ định mới có quyền xóa
+            if (!(isAdmin || isStaff || isDoctorAssigned))
+                throw new UnauthorizedAccessException("Bạn không có quyền xóa hồ sơ này.");
 
-			if (record.Status == VaccineRecordStatus.Deleted)
-				throw new InvalidOperationException("Hồ sơ này đã bị xóa trước đó.");
+            if (record.Status == VaccineRecordStatus.Deleted)
+                throw new InvalidOperationException("Hồ sơ này đã bị xóa trước đó.");
 
-			record.Status = VaccineRecordStatus.Deleted;
-			_vaccineRecordRepository.Update(record);
-			await _unitOfWork.CompleteAsync();
+            record.Status = VaccineRecordStatus.Deleted;
+            _vaccineRecordRepository.Update(record);
+            await _unitOfWork.CompleteAsync();
 
-			return true;
-		}
+            return true;
+        }
 
 
         public async Task<IEnumerable<VaccineRecordDTO>> GetAllVaccineRecordsAsync(string userId, bool isAdmin, bool isStaff)
