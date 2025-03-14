@@ -76,6 +76,7 @@ import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
 
 import StaffBlogPostPage from "./pages/Staff/StaffBlogPost.tsx";
 import StaffBlogManagePage from "./pages/Staff/Blog/StaffBlogManage/StaffBlogManage.tsx";
+import DoctorProfile from "./pages/Doctor/DoctorProfile/DoctorProfile.tsx";
 
 
 function App() {
@@ -139,8 +140,7 @@ function App() {
                 <Route path="/doctor/service" element={<ProtectedRoute allowedRoles={["Doctor"]}><ServicePage /></ProtectedRoute>} />
                 <Route path="/doctor/blogPost" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorBlogPostPage /></ProtectedRoute>} />
                 <Route path="/doctor/blogManager" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorBlogManagePage /></ProtectedRoute>} />
-
-
+                <Route path="/doctor/profile" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorProfile /></ProtectedRoute>}/>
                 {/* Manager Routes */}
                 <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerDashBoard /></ProtectedRoute>} />
                 <Route path="/manager/vaccines" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerVaccinePage /></ProtectedRoute>} />
