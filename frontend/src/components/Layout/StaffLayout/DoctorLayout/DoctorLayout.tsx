@@ -1,6 +1,6 @@
 import React from "react";
 import StaffLayout from "../StaffLayout";
-import {FaNewspaper} from "react-icons/fa";
+import {FaClipboardList, FaNewspaper} from "react-icons/fa";
 
 const groups = [
   {
