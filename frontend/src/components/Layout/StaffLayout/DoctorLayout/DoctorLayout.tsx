@@ -1,19 +1,27 @@
 import React from "react";
 import StaffLayout from "../StaffLayout";
+import { FaCalendarAlt, FaNewspaper, FaClipboardList } from "react-icons/fa";
 
 const groups = [
   {
     title: "Tiêm chủng",
     items: [
-     // { label: "Ghi nhận tiêm chủng", path: "/doctor/service" },
-      { label: "Lịch tiêm chủng", path: "/doctor/vaccination-schedule" },
+      {
+        label: "Lịch tiêm chủng",
+        path: "/doctor/vaccination-schedule",
+        icon: <FaCalendarAlt />,
+      },
     ],
   },
   {
-    title: "Đăng bài",
+    title: "Bài đăng",
     items: [
-      { label: "Đăng cẩm nang", path: "/post-guide" },
-      { label: "Đăng tin tức", path: "/post-news" },
+      { label: "Đăng bài", path: "/doctor/blogPost", icon: <FaClipboardList /> },
+      {
+        label: "Quản lý bài đăng",
+        path: "/doctor/blogManager",
+        icon: <FaNewspaper />,
+      },
     ],
   },
 ];
@@ -27,3 +35,4 @@ const DoctorLayout: React.FC<DoctorLayoutProps> = ({ children }) => {
 };
 
 export default DoctorLayout;
+

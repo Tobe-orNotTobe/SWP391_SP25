@@ -3,11 +3,28 @@ import {BlogRequest, UpdateBlogRequest} from "../interfaces/Blog.ts";
 import axios from "axios";
 
 
-export const apiGetAllBlog = async (onlyActive: boolean) => {
+export const apiGetAllBlog = async (onlyActive?: boolean) => {
     try {
-        const response = await axiosInstance.get(`/api/Blog?onlyActive=${onlyActive}`);
-        return response.data;
-    }catch (err: any | undefined) {
+        if (onlyActive !== undefined) {
+            // Nếu onlyActive được truyền, gọi API bình thường
+            const response = await axiosInstance.get(`/api/Blog?onlyActive=${onlyActive}`);
+            return response.data;
+        } else {
+            // Nếu onlyActive không được truyền, gọi API 2 lần để lấy cả true và false
+            const [activeBlogs, inactiveBlogs] = await Promise.all([
+                axiosInstance.get(`/api/Blog?onlyActive=true`),
+                axiosInstance.get(`/api/Blog?onlyActive=false`)
+            ]);
+
+            // Gộp kết quả từ cả hai yêu cầu
+            return {
+                statusCode: 200,
+                isSuccess: true,
+                errorMessages: [],
+                result: [...(activeBlogs.data.result || []), ...(inactiveBlogs.data.result || [])]
+            };
+        }
+    } catch (err: any | undefined) {
         return {
             statusCode: err.response?.data?.statusCode,
             isSuccess: false,
@@ -15,8 +32,9 @@ export const apiGetAllBlog = async (onlyActive: boolean) => {
             result: null
         };
     }
-
 };
+
+
 export const apiGetAllNews = async () => {
     try {
         const response = await axiosInstance.get(`/api/Blog/type/news`);
