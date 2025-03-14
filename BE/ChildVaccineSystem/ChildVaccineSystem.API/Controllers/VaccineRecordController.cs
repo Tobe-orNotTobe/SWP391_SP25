@@ -143,16 +143,20 @@ namespace ChildVaccineSystem.API.Controllers
 
 
 
-		/// <summary>
-		/// Cập nhật hồ sơ tiêm chủng (trạng thái, ghi chú, ngày tiêm tiếp theo).
-		/// </summary>
-		[HttpPut("{vaccineRecordId}/update")]
+        /// <summary>
+        /// Cập nhật hồ sơ tiêm chủng (trạng thái, ghi chú, ngày tiêm tiếp theo).
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Staff, Admin")]
+        [HttpPut("{vaccineRecordId}/update")]
 		public async Task<ActionResult<APIResponse>> UpdateVaccineRecord(int vaccineRecordId, [FromBody] UpdateVaccineRecordDTO updateDto)
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var result = await _vaccineRecordService.UpdateVaccineRecordAsync(vaccineRecordId, updateDto, doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+
+                var result = await _vaccineRecordService.UpdateVaccineRecordAsync(vaccineRecordId, updateDto, userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = result;
