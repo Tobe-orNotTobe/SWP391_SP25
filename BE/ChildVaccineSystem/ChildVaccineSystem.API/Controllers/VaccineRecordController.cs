@@ -113,16 +113,19 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 
-		/// <summary>
-		/// Lấy danh sách tất cả hồ sơ tiêm chủng (Doctor/Staff).
-		/// </summary>
-		[HttpGet("all")]
+        /// <summary>
+        /// Lấy danh sách tất cả hồ sơ tiêm chủng (Doctor/Staff).
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Customer, Staff, Admin")]
+        [HttpGet("all")]
 		public async Task<ActionResult<APIResponse>> GetAllVaccineRecords()
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var records = await _vaccineRecordService.GetAllVaccineRecordsAsync(doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+                var records = await _vaccineRecordService.GetAllVaccineRecordsAsync(userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
