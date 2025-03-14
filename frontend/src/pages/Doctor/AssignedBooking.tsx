@@ -111,10 +111,13 @@ const VaccinationSchedulePage: React.FC = () => {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
-    onFilter: (value: string, record: Record<string, unknown>) => {
-      const recordValue = record[dataIndex];
+    onFilter: (value: string | number | boolean, record: BookingResponse) => {
+      const recordValue = record[dataIndex as keyof BookingResponse];
       return recordValue
-        ? recordValue.toString().toLowerCase().includes(value.toLowerCase())
+        ? recordValue
+            .toString()
+            .toLowerCase()
+            .includes(value.toString().toLowerCase())
         : false;
     },
     render: (text: string) =>
@@ -142,7 +145,7 @@ const VaccinationSchedulePage: React.FC = () => {
         navigate("/doctor/service", { state: booking });
       } else {
         console.error("Failed to create vaccine record", response);
-        toast.error(response.data.errorMessages)
+        toast.error(response.data.errorMessages);
       }
     } catch (error) {
       console.error("Error creating vaccine record", error);
@@ -150,7 +153,7 @@ const VaccinationSchedulePage: React.FC = () => {
   };
 
   // Định nghĩa các cột của bảng
-  const columns = [
+  const columns  = [
     {
       title: "Mã đơn",
       dataIndex: "bookingId",

@@ -99,7 +99,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
       for (const record of updatedRecords) {
         const updateRequest: UpdateVaccineRecordRequest = {
           notes: record.notes,
-          status: "Completed",
+          status: record.status,
           nextDoseDate: record.nextDoseDate || "",
         };
 
