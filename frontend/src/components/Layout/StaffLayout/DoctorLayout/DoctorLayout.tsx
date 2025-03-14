@@ -1,5 +1,6 @@
 import React from "react";
 import StaffLayout from "../StaffLayout";
+import {FaNewspaper} from "react-icons/fa";
 
 const groups = [
   {
@@ -9,8 +10,16 @@ const groups = [
       { label: "Lịch tiêm chủng", path: "/doctor/vaccination-schedule" },
     ],
   },
+
+    {
+        title: "Thông tin cá nhân",
+        items: [
+            // { label: "Ghi nhận tiêm chủng", path: "/doctor/service" },
+            { label: "Thông tin của bác sĩ", path: "/doctor/profile" },
+        ],
+    },
   {
-    title: "Thông tin cá nhân",
+    title: "Bài đăng",
     items: [
       // { label: "Ghi nhận tiêm chủng", path: "/doctor/service" },
       { label: "Thông tin của bác sĩ", path: "/doctor/profile" },
@@ -19,11 +28,14 @@ const groups = [
   {
     title: "Đăng bài",
     items: [
-      { label: "Đăng cẩm nang", path: "/post-guide" },
-      { label: "Đăng tin tức", path: "/post-news" },
+      { label: "Đăng bài", path: "/doctor/blogPost", icon: <FaClipboardList /> },
+      {
+        label: "Quản lý bài đăng",
+        path: "/doctor/blogManager",
+        icon: <FaNewspaper />,
+      },
     ],
   },
-
 ];
 
 interface DoctorLayoutProps {

@@ -5,7 +5,6 @@
   font-family: "Arial", sans-serif;
   background-color: #f8f9fa;
 
-  // Sidebar Design
   .sidebar {
     width: 250px;
     background-color: #2a388f;
@@ -82,12 +81,18 @@
             transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
 
             a {
-              display: block;
-              padding: 10px 25px; // Thụt lề để phân cấp
+              display: flex;
+              align-items: center;
+              padding: 10px 25px;
               color: white;
               text-decoration: none;
               font-size: 14px;
               transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+
+              .nav-item-icon {
+                margin-right: 8px;
+                font-size: 16px;
+              }
 
               &:hover {
                 background: rgba(255, 255, 255, 0.88);
@@ -95,7 +100,6 @@
               }
             }
 
-            // Hiệu ứng active tab
             &.active {
               background: rgba(255, 255, 255, 0.88);
               font-weight: bold;
@@ -110,7 +114,6 @@
     }
   }
 
-  // Content Area
   .main {
     display: flex;
     flex-direction: column;

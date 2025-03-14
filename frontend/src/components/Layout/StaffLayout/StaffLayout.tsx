@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import "./StaffLayout.scss";
 import AdminNavBar from "../../Navbar/AdminNavbar/AdminNavbar";
 import logo from "../../../assets/navbar/Logo_Navbar.png";
@@ -9,24 +9,31 @@ import { Group } from "../../../interfaces/Layout";
 
 interface CustomLayoutProps {
   children: React.ReactNode;
-  groups: Group[]; // Thêm prop groups
+  groups: Group[];
 }
 
 interface OpenGroupsState {
-  [key: string]: boolean; // Sử dụng key động để quản lý trạng thái mở/đóng của các nhóm
+  [key: string]: boolean;
 }
 
 const StaffLayout: React.FC<CustomLayoutProps> = ({ children, groups }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { username } = IsLoginSuccessFully();
-  const [activeTab, setActiveTab] = useState<string>("/post-guide");
-  //const [openGroups, setOpenGroups] = useState<OpenGroupsState>({});
 
-  // Khởi tạo trạng thái mở/đóng cho các nhóm
+  // Cập nhật trạng thái active tab theo URL
+  const [activeTab, setActiveTab] = useState<string>(location.pathname);
+
+  useEffect(() => {
+    setActiveTab(location.pathname);
+  }, [location.pathname]);
+
   const initializeOpenGroups = () => {
     const initialState: OpenGroupsState = {};
     groups.forEach((group, index) => {
-      initialState[`group${index}`] = index === 0; // Mặc định mở nhóm đầu tiên
+      initialState[`group${index}`] = group.items.some(
+        (item) => item.path === location.pathname
+      );
     });
     return initialState;
   };
@@ -34,6 +41,10 @@ const StaffLayout: React.FC<CustomLayoutProps> = ({ children, groups }) => {
   const [openGroups, setOpenGroups] = useState<OpenGroupsState>(
     initializeOpenGroups()
   );
+
+  useEffect(() => {
+    setOpenGroups(initializeOpenGroups());
+  }, [location.pathname]);
 
   const toggleGroup = (groupKey: string) => {
     setOpenGroups((prev) => ({
@@ -43,7 +54,6 @@ const StaffLayout: React.FC<CustomLayoutProps> = ({ children, groups }) => {
   };
 
   const handleNavigation = (path: string) => {
-    setActiveTab(path);
     navigate(path);
   };
 
@@ -51,7 +61,12 @@ const StaffLayout: React.FC<CustomLayoutProps> = ({ children, groups }) => {
     <div className="admin-layout">
       <aside className="sidebar">
         <div className="sidebarlogo">
-          <img src={logo} alt="Logo" />
+          <img
+            src={logo}
+            alt="Logo"
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer" }}
+          />
         </div>
         <div className="nav">
           {groups.map((group, index) => (
@@ -72,9 +87,14 @@ const StaffLayout: React.FC<CustomLayoutProps> = ({ children, groups }) => {
                   {group.items.map((item) => (
                     <li
                       key={item.path}
-                      className={activeTab === item.path ? "active" : ""}
+                      className={
+                        location.pathname === item.path ? "active" : ""
+                      }
                     >
                       <a onClick={() => handleNavigation(item.path)}>
+                        {item.icon && (
+                          <span className="nav-item-icon">{item.icon}</span>
+                        )}
                         {item.label}
                       </a>
                     </li>

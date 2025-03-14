@@ -8,7 +8,36 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
+
+  .vaccine-category,
+  .vaccine-card {
+    position: relative; /* Để badge định vị tuyệt đối bên trong */
+  }
+
+  .recommendation-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #28a745; /* Màu xanh lá cây, bạn có thể thay đổi */
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .vaccine-category .category-header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vaccine-card .recommendation-badge {
+    top: 5px;
+    right: 5px;
+  }
+
   .vaccination-form {
     margin-top: 30px;
     width: 100%;
@@ -259,7 +288,7 @@
     border-radius: 10px;
     box-shadow: 0px 0px 5px rgba(125, 127, 129, 0.5);
     padding: 10px;
-    width: calc((100% / 3) - 10px);
+    width: calc((100% / 2) - 10px);
     cursor: pointer;
 
     .vaccine-info {
@@ -334,7 +363,6 @@
   border: 1px solid #2a388f !important; /* Màu viền đậm khi được chọn */
   box-shadow: 0px 0px 10px rgba(42, 56, 143, 0.8) !important; /* Hiệu ứng đổ bóng nhẹ */
 }
-
 
 .child-card label {
   display: flex;

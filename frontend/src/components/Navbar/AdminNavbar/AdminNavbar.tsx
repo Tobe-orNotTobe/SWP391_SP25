@@ -48,7 +48,7 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ username, avatarUrl }) => {
             src={avatarUrl}
             icon={<UserOutlined />}
           />
-          <span className="username">{username}</span>
+          <span className="username"> {username}</span>
         </div>
         <Link to="/login">
           {!sub && (

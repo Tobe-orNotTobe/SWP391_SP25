@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Spin } from "antd"; // Import Spin từ antd
+import { Spin } from "antd";
 import "./BookingForm.scss";
 import {
   Parent,
@@ -11,18 +11,17 @@ import {
 import { apiBooking } from "../../apis/apiBooking";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
 import { apiGetMyChilds } from "../../apis/apiChild.ts";
-
 import { Avatar } from "antd";
-import { UserOutlined } from '@ant-design/icons';
-
+import { UserOutlined } from "@ant-design/icons";
 import {
   useVaccineDetail,
   useComboVaccineDetail,
 } from "../../hooks/useVaccine";
 import { toast } from "react-toastify";
 import { ChildDetailResponse } from "../../interfaces/Child.ts";
+import { apiGetVaccinationScheduleByChildrenId } from "../../apis/apiVaccine.ts";
 
-const VaccinationRegistrationPage = () => {
+const BookingForm = () => {
   const navigate = useNavigate();
   const { username, sub } = IsLoginSuccessFully();
 
@@ -37,29 +36,24 @@ const VaccinationRegistrationPage = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  console.log(formError);
-
   // State for vaccine selection
   const [vaccineType, setVaccineType] = useState<"Gói" | "Lẻ">("Gói");
   const [selectedVaccines, setSelectedVaccines] = useState<string[]>([]);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [bookingDate, setBookingDate] = useState<string | null>(null);
   const [bookingDetails, setBookingDetails] = useState<BookingDetail[]>([]);
-  //const [bookingResult, setBookingResult] = useState<BookingResult>(null);
+
+  // State for suggested vaccines and combos
+  const [suggestedVaccines, setSuggestedVaccines] = useState<string[]>([]);
+  const [suggestedCombos, setSuggestedCombos] = useState<string[]>([]);
 
   // Fetch vaccine data
-  const {
-    vaccineDetail: singleVaccines,
-    loading: vaccineLoading,
-    //error: vaccineError,
-  } = useVaccineDetail();
+  const { vaccineDetail: singleVaccines, loading: vaccineLoading } =
+    useVaccineDetail();
+  const { comboVaccineDetail: vaccinePackages, loading: comboLoading } =
+    useComboVaccineDetail();
 
-  const {
-    comboVaccineDetail: vaccinePackages,
-    loading: comboLoading,
-    //error: comboError,
-  } = useComboVaccineDetail();
-
+  // Fetch parent and children info
   useEffect(() => {
     const fetchParentAndChildrenInfo = async () => {
       setFormLoading(true);
@@ -89,7 +83,7 @@ const VaccinationRegistrationPage = () => {
       } catch (error) {
         const errorMessage = error || "Lỗi không xác định";
         console.error("Lỗi khi lấy thông tin phụ huynh:", error);
-        setFormError(errorMessage.toString()); // Sử dụng thông báo lỗi từ API
+        setFormError(errorMessage.toString());
         toast.warning(errorMessage.toString());
       } finally {
         setFormLoading(false);
@@ -98,6 +92,41 @@ const VaccinationRegistrationPage = () => {
 
     fetchParentAndChildrenInfo();
   }, [sub, username]);
+
+  // Fetch vaccination schedule for selected child
+  useEffect(() => {
+    if (selectedChild) {
+      const fetchVaccinationSchedule = async () => {
+        try {
+          const response = await apiGetVaccinationScheduleByChildrenId(
+            selectedChild.childId
+          );
+
+          if (response.statusCode === "OK" && response.isSuccess) {
+            const vaccineIds = response.result.vaccines.map(
+              (vaccine) => vaccine.vaccineId
+            );
+            const comboIds = response.result.comboVaccines.map(
+              (combo) => combo.comboId
+            );
+
+            console.log("Vaccine IDs:", vaccineIds);
+            console.log("Combo IDs:", comboIds);
+
+            setSuggestedVaccines(vaccineIds);
+            setSuggestedCombos(comboIds);
+          } else {
+            console.error("Error: Invalid response structure", response);
+          }
+        } catch (error) {
+          console.error("Error fetching vaccination schedule:", error);
+        }
+      };
+
+      fetchVaccinationSchedule();
+    }
+  }, [selectedChild]);
+
   // Handle selecting a child
   const handleSelectChild = (child: Child | null) => {
     setSelectedChild(child);
@@ -136,21 +165,8 @@ const VaccinationRegistrationPage = () => {
       };
 
       const status = await apiBooking(parentInfo.customerCode, bookingData);
-      //setBookingResult(status.result);
       console.log(status.result);
       navigate("/payment", { state: { bookingResult: status.result } });
-
-      // const paymentResponse = await apiPostVNPayTransaction(
-      //   status.result?.bookingId
-      // );
-
-      // console.log(paymentResponse);
-      // if (paymentResponse.isSuccess) {
-      //   window.location.href = paymentResponse.result?.paymentUrl;
-      // } else {
-      //   setFormError("Không lấy được đường dẫn thanh toán.");
-      //   toast.warning("Không lấy được đường dẫn thanh toán.");
-      // }
     } catch (error) {
       const errorMessage = error || "Lỗi không xác định";
       console.error("Error submitting booking:", errorMessage);
@@ -236,10 +252,6 @@ const VaccinationRegistrationPage = () => {
           <div className="split-form">
             <div className="splited-part">
               <div className="form-section">
-                <div className="form-group">
-                  {/* Search input and button can be added here */}
-                </div>
-
                 {parentInfo && (
                   <div className="parent-info">
                     <h3>Thông tin phụ huynh</h3>
@@ -280,10 +292,10 @@ const VaccinationRegistrationPage = () => {
                                   size={64}
                                   src={
                                     child.imageUrl ? child.imageUrl : undefined
-                                  } 
+                                  }
                                   icon={
                                     !child.imageUrl ? <UserOutlined /> : null
-                                  } 
+                                  }
                                 />
                               </div>
                               <div>
@@ -330,128 +342,138 @@ const VaccinationRegistrationPage = () => {
             <div className="splited-part">
               {selectedChild && (
                 <div className="form-section">
-                  <div className="form-section">
-                    <h3>Thông tin dịch vụ</h3>
+                  <h3>Thông tin dịch vụ</h3>
 
-                    <div className="form-group">
-                      <label>Ngày muốn đặt lịch tiêm *</label>
-                      <input
-                        required
-                        type="date"
-                        name="bookingDate"
-                        value={bookingDate ? bookingDate.split("T")[0] : ""}
-                        onChange={(e) =>
-                          handleSelectBookingDate(new Date(e.target.value))
-                        }
-                      />
+                  <div className="form-group">
+                    <label>Ngày muốn đặt lịch tiêm *</label>
+                    <input
+                      required
+                      type="date"
+                      name="bookingDate"
+                      value={bookingDate ? bookingDate.split("T")[0] : ""}
+                      onChange={(e) =>
+                        handleSelectBookingDate(new Date(e.target.value))
+                      }
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>* Loại vắc xin muốn đăng ký</label>
+                    <div className="vaccine-selection">
+                      <button
+                        type="button"
+                        className={vaccineType === "Gói" ? "active" : ""}
+                        onClick={() => handleVaccineTypeChange("Gói")}
+                      >
+                        Vắc xin gói
+                      </button>
+                      <button
+                        type="button"
+                        className={vaccineType === "Lẻ" ? "active" : ""}
+                        onClick={() => handleVaccineTypeChange("Lẻ")}
+                      >
+                        Vắc xin lẻ
+                      </button>
                     </div>
+                  </div>
 
-                    <div className="form-group">
-                      <label>* Loại vắc xin muốn đăng ký</label>
-                      <div className="vaccine-selection">
-                        <button
-                          type="button"
-                          className={vaccineType === "Gói" ? "active" : ""}
-                          onClick={() => handleVaccineTypeChange("Gói")}
+                  <div className="vaccine-list">
+                    <label>* Chọn vắc xin</label>
+                    {vaccineType === "Gói" ? (
+                      vaccinePackages.map((vaccinePackage) => (
+                        <div
+                          key={vaccinePackage.comboId}
+                          className="vaccine-category"
                         >
-                          Vắc xin gói
-                        </button>
-                        <button
-                          type="button"
-                          className={vaccineType === "Lẻ" ? "active" : ""}
-                          onClick={() => handleVaccineTypeChange("Lẻ")}
-                        >
-                          Vắc xin lẻ
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="vaccine-list">
-                      <label>* Chọn vắc xin</label>
-                      {vaccineType === "Gói" ? (
-                        vaccinePackages.map((vaccinePackage) => (
                           <div
-                            key={vaccinePackage.comboId}
-                            className="vaccine-category"
+                            className="category-header"
+                            onClick={() => {
+                              toggleCategory(vaccinePackage.comboName);
+                              if (
+                                expandedCategory !== vaccinePackage.comboName
+                              ) {
+                                handleSelectVaccine(
+                                  vaccinePackage.comboId.toString()
+                                );
+                              }
+                            }}
                           >
-                            <div
-                              className="category-header"
-                              onClick={() => {
-                                toggleCategory(vaccinePackage.comboName);
-                                if (
-                                  expandedCategory !== vaccinePackage.comboName
-                                ) {
-                                  handleSelectVaccine(
-                                    vaccinePackage.comboId.toString()
-                                  );
-                                }
-                              }}
-                            >
-                              <h3>{vaccinePackage.comboName}</h3>
-                              <span>
-                                {expandedCategory === vaccinePackage.comboName
-                                  ? "▲"
-                                  : "▼"}
+                            <h3>{vaccinePackage.comboName}</h3>
+                            {suggestedCombos.includes(
+                              vaccinePackage.comboId
+                            ) && (
+                              <span className="recommendation-badge">
+                                Đề xuất
                               </span>
-                            </div>
-                            {expandedCategory === vaccinePackage.comboName && (
-                              <div className="vaccine-grid">
-                                {vaccinePackage.vaccines.map((vaccine) => (
-                                  <label
-                                    key={vaccine.vaccineId}
-                                    className="vaccine-card"
-                                  >
-                                    <input
-                                      disabled
-                                      type="checkbox"
-                                      value={vaccine.vaccineId}
-                                      checked={true}
-                                    />
-                                    <div className="vaccine-info">
-                                      <h4>{vaccine.name}</h4>
-                                      <p className="price">
-                                        Giá:{" "}
-                                        {vaccine.price?.toLocaleString("vi-VN")}{" "}
-                                        vnđ
-                                      </p>
-                                    </div>
-                                  </label>
-                                ))}
-                              </div>
                             )}
+                            <span>
+                              {expandedCategory === vaccinePackage.comboName
+                                ? "▲"
+                                : "▼"}
+                            </span>
                           </div>
-                        ))
-                      ) : (
-                        <div className="vaccine-grid">
-                          {singleVaccines.map((vaccine) => (
-                            <label
-                              key={vaccine.vaccineId}
-                              className="vaccine-card"
-                            >
-                              <input
-                                type="checkbox"
-                                value={vaccine.vaccineId}
-                                checked={selectedVaccines.includes(
-                                  vaccine.vaccineId.toString()
-                                )}
-                                onChange={() =>
-                                  handleSelectVaccine(
-                                    vaccine.vaccineId.toString()
-                                  )
-                                }
-                              />
-                              <div className="vaccine-info">
-                                <h4>{vaccine.name}</h4>
-                                <p className="price">
-                                  Giá: {vaccine.price?.toLocaleString("vi-VN")}{" "}
-                                  vnđ
-                                </p>
-                              </div>
-                            </label>
-                          ))}
+                          {expandedCategory === vaccinePackage.comboName && (
+                            <div className="vaccine-grid">
+                              {vaccinePackage.vaccines.map((vaccine) => (
+                                <label
+                                  key={vaccine.vaccineId}
+                                  className="vaccine-card"
+                                >
+                                  <input
+                                    disabled
+                                    type="checkbox"
+                                    value={vaccine.vaccineId}
+                                    checked={true}
+                                  />
+                                  <div className="vaccine-info">
+                                    <h4>{vaccine.name}</h4>
+                                    <p className="price">
+                                      Giá:{" "}
+                                      {vaccine.price?.toLocaleString("vi-VN")}{" "}
+                                      vnđ
+                                    </p>
+                                  </div>
+                                </label>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
+                      ))
+                    ) : (
+                      <div className="vaccine-grid">
+                        {singleVaccines.map((vaccine) => (
+                          <label
+                            key={vaccine.vaccineId}
+                            className="vaccine-card"
+                          >
+                            <input
+                              type="checkbox"
+                              value={vaccine.vaccineId}
+                              checked={selectedVaccines.includes(
+                                vaccine.vaccineId.toString()
+                              )}
+                              onChange={() =>
+                                handleSelectVaccine(
+                                  vaccine.vaccineId.toString()
+                                )
+                              }
+                            />
+                            <div className="vaccine-info">
+                              <h4>{vaccine.name}</h4>
+                              <p className="price">
+                                Giá: {vaccine.price?.toLocaleString("vi-VN")}{" "}
+                                vnđ
+                              </p>
+                            </div>
+                            {suggestedVaccines.includes(vaccine.vaccineId) && (
+                              <span className="recommendation-badge">
+                                Đề xuất
+                              </span>
+                            )}
+                          </label>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -469,4 +491,4 @@ const VaccinationRegistrationPage = () => {
   );
 };
 
-export default VaccinationRegistrationPage;
+export default BookingForm;
