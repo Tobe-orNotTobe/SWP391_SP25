@@ -55,6 +55,7 @@ const VaccineComboList: React.FC = () => {
             dataIndex: "totalPrice",
             key: "totalPrice",
             sorter: (a: GetVaccineComboDetail, b: GetVaccineComboDetail) => a.totalPrice - b.totalPrice,
+            render: (value: number) => `${new Intl.NumberFormat('vi-VN').format(value)} VNĐ`
         },
         {
             title: "Trạng thái",
@@ -138,7 +139,7 @@ const VaccineComboList: React.FC = () => {
 
                             <div className="combo-vaccine-info-item">
                                 <div className="combo-vaccine-info-label">Tổng giá</div>
-                                <div className="combo-vaccine-info-value">{selectedCombo.totalPrice.toLocaleString()} VND</div>
+                                <div className="combo-vaccine-info-value">{new Intl.NumberFormat("vi-VN").format(selectedCombo.totalPrice)} VNĐ</div>
                             </div>
 
                             <div className="combo-vaccine-info-item">
@@ -159,7 +160,7 @@ const VaccineComboList: React.FC = () => {
                                             <img src={vaccine.image} alt={vaccine.name} />
                                         </div>
                                         <div className="combo-vaccine-item-price">
-                                            {vaccine.price.toLocaleString()} VND
+                                            {new Intl.NumberFormat("vi-VN").format(vaccine.price)} VNĐ
                                         </div>
                                     </div>
                                 ))}

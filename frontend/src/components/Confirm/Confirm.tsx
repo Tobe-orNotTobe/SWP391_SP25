@@ -165,7 +165,7 @@ export const DepositSuccess: React.FC = () => {
 
     if (statusType === "success") {
         return <LoadingRedirect
-            message={`Nạp tiền thành công với số tiền ${Number(amount).toLocaleString('vi-VN')} VND vào ví của bạn`}
+            message={`Nạp tiền thành công với số tiền ${amount} VND vào ví của bạn`}
             delay={5000}
             to="/customer/wallet"
         />;

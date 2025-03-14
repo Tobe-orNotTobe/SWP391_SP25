@@ -119,13 +119,13 @@ const AdminRefund: React.FC = () => {
     const renderStatus = (status: string) => {
         let color = "";
         switch (status) {
-            case "Pending":
+            case "Đang chờ xử lý":
                 color = "#faad14";
                 break;
-            case "Approved":
+            case "Đã chấp nhận":
                 color = "#52c41a";
                 break;
-            case "Rejected":
+            case "Bị từ chối":
                 color = "#ff4d4f";
                 break;
             default:
@@ -160,7 +160,7 @@ const AdminRefund: React.FC = () => {
             title: "Amount",
             dataIndex: "amount",
             key: "amount",
-            render: (value: number) => new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value)
+            render: (value: number) => new Intl.NumberFormat("vi-VN").format(value) + " VNĐ"
         },
         {
             title: "Status",
@@ -182,7 +182,7 @@ const AdminRefund: React.FC = () => {
                     <Button className="detail-button" onClick={() => showDetailModal(record)}>
                         <TbListDetails /> Chi tiết
                     </Button>
-                    {record.status === "Pending" && (
+                    {record.status === "Đang chờ xử lý" && (
                         <>
                             <Button className="approve-button" onClick={() => handleApproveRefund(record.refundRequestId)}>
                                 <FaRegCircleCheck /> Chấp Nhận
@@ -206,9 +206,9 @@ const AdminRefund: React.FC = () => {
                         <div className="admin-wallet">
                             <span>Ví của Admin:</span>
                             <span className="wallet-amount">
-                              {walletData?.balance
-                                  ? new Intl.NumberFormat("vi-VN", {style: "currency", currency: "VND"}).format(walletData.balance)
-                                  : "0 ₫"}
+                                {walletData?.balance
+                                    ? new Intl.NumberFormat("vi-VN").format(walletData.balance) + " VNĐ"
+                                    : "0 VNĐ"}
                             </span>
                             <Button
                                 type="primary"

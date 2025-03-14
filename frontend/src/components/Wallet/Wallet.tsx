@@ -56,8 +56,8 @@ const Wallet: React.FC = () => {
             dataIndex: 'amount',
             key: 'amount',
             render: (amount: number, record: WalletHistoryUserDetail) => {
-                const isPositive = record.transactionType === "Deposit" ||
-                    (record.transactionType === "Transfer" && amount > 0);
+                const isPositive = record.transactionType === "Nạp tiền" ||
+                    (record.transactionType === "Chuyển khoản" && amount > 0);
                 return (
                     <Text
                         style={{
@@ -150,13 +150,13 @@ const Wallet: React.FC = () => {
 
     const transactionTabItems = [
         { key: "All", label: "Tất cả" },
-        { key: "Deposit", label: "Nạp tiền" },
+        { key: "Nạp tiền", label: "Nạp tiền" },
         { key: "Transfer", label: "Giao dịch" },
     ];
 
     const refundTabItems = [
         { key: "All", label: "Tất cả" },
-        { key: "Pending", label: "Đang chờ" },
+        { key: "Đang chờ xử lý", label: "Đang chờ" },
         { key: "Approved", label: "Đã duyệt" },
         { key: "Rejected", label: "Từ chối" },
     ];
@@ -174,7 +174,7 @@ const Wallet: React.FC = () => {
                                 Số dư:
                             </Text>
                             <Text strong className="balance-amount" style={{ color: '#2A388F', fontSize: '1.8rem' }}>
-                                {walletData ? formatCurrency(walletData.balance) : '0 VND'}
+                                {walletData ? new Intl.NumberFormat("vi-VN").format(walletData.balance) + " VNĐ" : "0 VNĐ"}
                             </Text>
                         </div>
                         <Button

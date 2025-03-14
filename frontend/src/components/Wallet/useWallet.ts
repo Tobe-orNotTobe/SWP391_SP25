@@ -123,9 +123,9 @@ export const useWalletLogic = () => {
 
     const getTransactionTagColor = (type: string, amount: number) => {
         switch (type) {
-            case 'Deposit':
+            case 'Nạp tiền':
                 return 'green';
-            case 'Transfer':
+            case 'Chuyển khoản':
                 return amount < 0 ? 'red' : 'green';
             default:
                 return 'default';
@@ -134,9 +134,9 @@ export const useWalletLogic = () => {
 
     const getTransactionTypeName = (type: string, amount: number) => {
         switch (type) {
-            case 'Deposit':
+            case 'Nạp tiền':
                 return 'Nạp tiền';
-            case 'Transfer':
+            case 'Chuyển khoản':
                 return amount < 0 ? 'Thanh toán' : 'Hoàn tiền';
             default:
                 return type;
@@ -146,11 +146,11 @@ export const useWalletLogic = () => {
     // Function to get the refund status tag color
     const getRefundStatusTagColor = (status: string) => {
         switch (status) {
-            case 'Pending':
+            case 'Đang chờ xử lý':
                 return 'gold';
-            case 'Approved':
+            case 'Đã chấp nhận':
                 return 'green';
-            case 'Rejected':
+            case 'Bị từ chối':
                 return 'red';
             default:
                 return 'blue';

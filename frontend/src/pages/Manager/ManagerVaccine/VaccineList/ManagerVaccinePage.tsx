@@ -100,8 +100,8 @@ const ManagerVaccinePage: React.FC = () => {
             title: "Giá (VNĐ)",
             dataIndex: "price",
             key: "price",
-            sorter: (a :VaccineDetail, b : VaccineDetail) => a.price - b.price,
-            render: (price: number) => price.toLocaleString() + " VNĐ"
+            sorter: (a: VaccineDetail, b: VaccineDetail) => a.price - b.price,
+            render: (price: number) => new Intl.NumberFormat("vi-VN").format(price) + " VNĐ"
         },
         {
             title: "Trạng thái",
@@ -164,11 +164,13 @@ const ManagerVaccinePage: React.FC = () => {
             title: "Số lượng ban đầu",
             dataIndex: "initialQuantity",
             key: "initialQuantity",
+            render: (value: number) => value.toLocaleString("vi-VN")
         },
         {
             title: "Số hàng trong kho",
             dataIndex: "quantityInStock",
             key: "quantityInStock",
+            render: (value: number) => value.toLocaleString("vi-VN")
         },
     ];
 
@@ -283,16 +285,16 @@ const ManagerVaccinePage: React.FC = () => {
                                                             <>
                                                                 <h4>Lịch tiêm:</h4>
                                                                 <List
-                                                                    dataSource={vaccineDetails.injectionSchedules.sort((a, b) => a.doseNumber - b.doseNumber)}
+                                                                    dataSource={vaccineDetails.injectionSchedules.sort((a, b) => a.injectionNumber - b.injectionNumber)}
                                                                     renderItem={injection => (
                                                                         <List.Item>
                                                                             <div className="injection-item">
                                                                                 <div>
                                                                                     <Badge
                                                                                         status={injection.isRequired ? "success" : "default"}
-                                                                                        text={`Mũi ${injection.doseNumber}`}
+                                                                                        text={`Tổng Số Mũi ${injection.injectionNumber}`}
                                                                                     />
-                                                                                    <span className="injection-month">{injection.injectionMonth} tháng tuổi</span>
+                                                                                    <span className="injection-month">{injection.injectionMonth}</span>
                                                                                 </div>
                                                                                 {injection.isRequired && (
                                                                                     <span className="required-badge">Bắt buộc</span>

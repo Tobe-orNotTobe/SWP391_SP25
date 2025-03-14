@@ -70,6 +70,7 @@ import DoctorProfile from "./pages/Doctor/DoctorProfile/DoctorProfile.tsx";
 import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
 import NewsPage from "./pages/News/NewsPage.tsx";
 import NewsDetailPage from "./pages/News/NewsDetailPage.tsx";
+import Failure from "./components/Failure/Failure.tsx";
 
 
 
@@ -79,8 +80,11 @@ function App() {
         <BrowserRouter>
             <PageLoader />
             <Routes>
+                <Route path="/payment" element={<TransactionPage />} />
+                <Route path="/payment/:bookingId" element={<TransactionPage/>} />
                 <Route path="/payment-success" element={<PaymentSuccess />}/>
                 <Route path="/wallet/deposit-success" element={<DepositSuccess/>}/>
+                <Route path="/wallet/deposit-failure" element={<Failure/>}/>
 
                 {/* Public Routes */}
                 <Route path="/" element={<PublicRoute><HomePage/></PublicRoute>}/>
@@ -111,7 +115,7 @@ function App() {
                 <Route path="/my-childs" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><MyChildsPage /></ProtectedRoute>} />
                 <Route path="/child-detail" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><ChildDetailPage /></ProtectedRoute>} />
                 <Route path="/booking" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><VaccinationRegistrationPage /></ProtectedRoute>} />
-                <Route path="/payment" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><TransactionPage /></ProtectedRoute>} />
+
                 <Route path="/user-profile" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerProfile /></ProtectedRoute>} />
                 <Route path="/booking-history" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><BookingHistoryPage /></ProtectedRoute>} />
                 <Route path="/customer/wallet" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerWallet /></ProtectedRoute>} />
