@@ -103,11 +103,13 @@ export const PaymentSuccess: React.FC = () => {
     }, [orderId, amount]);
 
     if (statusType === "success") {
-        return <LoadingRedirect
-            message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${(Number(amount)).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`}
-            delay={3000}
-            to="/booking-history"
-        />;
+        return (
+            <LoadingRedirect
+                message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${(Number(amount) / 100).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`}
+                delay={3000}
+                to="/booking-history"
+            />
+        );
     }
 
     return (

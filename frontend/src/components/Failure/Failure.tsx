@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
 import LoadingRedirect from "../Loading/LoadingRedirect.tsx";
