@@ -293,5 +293,24 @@ namespace ChildVaccineSystem.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
+
+        [HttpPost("{bookingId}/unassign-doctor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UnassignDoctor(int bookingId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var result = await _bookingService.UnassignDoctorFromBookingAsync(bookingId, userId);
+
+            if (result)
+                return Ok(new { Message = "Hủy phân công thành công." });
+
+            return BadRequest("Hủy phân công thất bại.");
+        }
+
     }
 }
