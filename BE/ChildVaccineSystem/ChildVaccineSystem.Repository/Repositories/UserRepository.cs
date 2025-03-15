@@ -129,6 +129,12 @@ namespace ChildVaccineSystem.Repository.Repositories
                 return false;
             }
         }
+        public async Task<User> GetUserByPhoneOrEmailAsync(string keyword)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == keyword.ToLower() ||
+                                          u.PhoneNumber.ToLower() == keyword.ToLower());
+        }
 
     }
 }

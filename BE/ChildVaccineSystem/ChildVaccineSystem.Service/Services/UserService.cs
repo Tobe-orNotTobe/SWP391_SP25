@@ -122,5 +122,28 @@ namespace ChildVaccineSystem.Service.Services
             return await _userRepository.ChangePasswordAsync(userId, oldPassword, newPassword); // Gọi repository để thay đổi mật khẩu
         }
 
+        public async Task<UserDTO> GetUserByPhoneOrEmailAsync(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+                throw new ArgumentException("Keyword không được để trống");
+
+            var user = await _unitOfWork.Users.GetAsync(u =>
+                u.Email.ToLower() == keyword.ToLower() ||
+                u.PhoneNumber.ToLower() == keyword.ToLower());
+
+            if (user == null)
+                throw new ArgumentException("Không tìm thấy khách hàng với thông tin này");
+
+            return new UserDTO
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                DateOfBirth = user.DateOfBirth,
+                Address = user.Address
+            };
+        }
+
     }
 }
