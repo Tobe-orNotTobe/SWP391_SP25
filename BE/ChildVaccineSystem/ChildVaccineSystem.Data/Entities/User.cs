@@ -15,5 +15,10 @@ namespace ChildVaccineSystem.Data.Entities
         public ICollection<Children> Children { get; set; }
 
         public ICollection<Booking> Bookings { get; set; }
-    }
+
+        public ICollection<Notification> Notifications { get; set; }
+        public ICollection<VaccinationRecord> VaccinationRecords { get; set; }
+        public ICollection<RefundRequest> RefundRequests { get; set; }
+
+	}
 }

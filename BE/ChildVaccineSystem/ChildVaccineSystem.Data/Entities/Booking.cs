@@ -40,6 +40,7 @@ namespace ChildVaccineSystem.Data.Entities
         public ICollection<BookingDetail> BookingDetails { get; set; }
         public ICollection<DoctorWorkSchedule> DoctorWorkSchedules { get; set; }
 
-
-    }
+        public Feedback Feedback { get; set; }
+        public RefundRequest RefundRequest { get; set; }
+	}
 }

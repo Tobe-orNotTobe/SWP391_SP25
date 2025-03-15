@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChildVaccineSystem.Data.Enum;
 
 namespace ChildVaccineSystem.Data.Entities
 {
@@ -17,7 +18,10 @@ namespace ChildVaccineSystem.Data.Entities
         public int BookingId { get; set; }
         public Booking Booking { get; set; }
 
-        [ForeignKey("Vaccine")]
+        [Required]
+        public BookingType BookingType { get; set; }
+
+		[ForeignKey("Vaccine")]
         public int? VaccineId { get; set; }
         public Vaccine Vaccine { get; set; }
 
@@ -32,5 +36,7 @@ namespace ChildVaccineSystem.Data.Entities
 		[Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
-    }
+        public VaccinationRecord VaccinationRecord { get; set; }
+
+	}
 }
