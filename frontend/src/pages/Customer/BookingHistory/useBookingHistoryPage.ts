@@ -1,5 +1,5 @@
-3
-import {apiGetBookingUser} from "../../../apis/apiBooking.ts";
+import { VaccineRecordUser} from "../../../interfaces/VaccineRecord.ts";
+import {apiGetBookingUser, apiGetVaccineRecordByBookingId} from "../../../apis/apiBooking.ts";
 import { useState, useMemo, useEffect } from "react";//Dùng useMemo() giúp tránh tính toán lại khi các thông tin  không thay đổi.
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
@@ -10,6 +10,7 @@ import { apiCancelBooking, apiDeleteFeedBack, apiPostFeedBack, apiUpdateFeedback
 import { useFeedBackDetailByBookingId } from "../../../hooks/useFeedBack.ts";
 import {useNavigate} from "react-router-dom";
 import {apiPostRefundRequest} from "../../../apis/apiTransaction.ts";
+
 
 
 export const useBookingUser = () => {
@@ -360,6 +361,30 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
     };
 };
 
+
+export const useVaccineRecordByBookingId  = (bookingId : number)=> {
+    const [vaccineRecord, setVaccineRecord] = useState<VaccineRecordUser | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchVaccineRecord = async () => {
+            try {
+                const data = await apiGetVaccineRecordByBookingId(bookingId);
+                if (data.isSuccess) {
+                    setVaccineRecord(data.result);
+                }
+            }catch (err){
+                setError("err")
+            }finally {
+                setLoading(false)
+            }
+        };
+        fetchVaccineRecord();
+    },[bookingId])
+
+    return {vaccineRecord, loading, error}
+}
 
 
 
