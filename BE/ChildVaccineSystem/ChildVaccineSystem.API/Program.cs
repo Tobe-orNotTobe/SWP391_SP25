@@ -1,3 +1,4 @@
+﻿using ChildVaccineSystem.Common.Config;
 using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.Data.Models;
@@ -12,6 +13,18 @@ using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load cấu hình Firebase từ appsettings.json
+var firebaseSettings = builder.Configuration.GetSection("Firebase").Get<FirebaseSettings>();
+
+// Khởi tạo Firebase Admin SDK nếu chưa có
+if (FirebaseApp.DefaultInstance == null)
+{
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.FromFile(firebaseSettings.ServiceAccountPath)
+    });
+}
 
 // Add services to the container
 builder.Services.AddControllers();
@@ -81,11 +94,21 @@ builder.Services.AddAuthentication(options =>
 		ValidAudience = builder.Configuration["JWT:ValidAudience"],
 		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
 	};
-}).AddScheme<JwtBearerOptions, FirebaseAuthHandler>("firebase", options =>
-{
-    // This is where we configure Firebase Authentication handler
-    options.RequireHttpsMetadata = false;
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer("Firebase", options =>
+    {
+        options.Authority = $"https://securetoken.google.com/{firebaseSettings.ProjectId}";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = $"https://securetoken.google.com/{firebaseSettings.ProjectId}",
+            ValidateAudience = true,
+            ValidAudience = firebaseSettings.ProjectId,
+            ValidateLifetime = true
+        };
+    });
 
 builder.Services.AddAuthorization(options =>
 {
@@ -122,12 +145,6 @@ builder.Services
 	});
 
 var app = builder.Build();
-
-// Initialize Firebase Admin SDK
-var firebaseApp = FirebaseApp.Create(new AppOptions()
-{
-    Credential = GoogleCredential.FromFile("D:\\FPTU\\Schedule\\2025\\Spring25\\SWP391\\SWP391_TeamProject\\SWP391_SP25\\BE\\ChildVaccineSystem\\ChildVaccineSystem.API\\Config\\childvaccinesystem-bfc1e-firebase-adminsdk-fbsvc-c4ad224e52.json")
-});
 
 // Create default roles and admin user
 using (var scope = app.Services.CreateScope())

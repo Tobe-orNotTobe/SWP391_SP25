@@ -4,6 +4,7 @@ using ChildVaccineSystem.Data.DTO.Category;
 using ChildVaccineSystem.Data.DTO.Email;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -217,27 +218,53 @@ namespace ChildVaccineSystem.API.Controllers
 			}
 		}
 
-        [AllowAnonymous]
         [HttpPost("login-google")]
+        [AllowAnonymous]
         public async Task<IActionResult> LoginWithGoogle([FromBody] GoogleLoginDTO model)
         {
-            var result = await _loginGoogleService.LoginWithGoogleAsync(model.IdToken);
-
-            if (!result.Success)
+            try
             {
-                return BadRequest(new { Message = result.Message });
-            }
+                // Xác thực ID Token từ Firebase
+                var decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(model.IdToken);
+                var uid = decodedToken.Uid;
 
-            return Ok(new
-            {
-                Token = result.Token,
-                User = new
+                // Kiểm tra xem người dùng đã có trong hệ thống chưa
+                var user = await _userManager.FindByIdAsync(uid);
+                if (user == null)
                 {
-                    result.User.Id,
-                    result.User.Email,
-                    result.User.FullName
+                    // Nếu chưa có, tạo user mới
+                    user = new User
+                    {
+                        Id = uid,
+                        UserName = decodedToken.Claims["email"].ToString(),
+                        Email = decodedToken.Claims["email"].ToString(),
+                        EmailConfirmed = true
+                    };
+
+                    await _userManager.CreateAsync(user);
                 }
-            });
+
+                // Tạo JWT Token
+                var token = _authService.GenerateJwtToken(user);
+
+                return Ok(new
+                {
+                    Message = "Đăng nhập Google thành công!",
+                    Token = token,
+                    User = new
+                    {
+                        user.Id,
+                        user.Email,
+                        user.UserName
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new { Message = "Invalid token", Error = ex.Message });
+            }
         }
+
     }
 }
+

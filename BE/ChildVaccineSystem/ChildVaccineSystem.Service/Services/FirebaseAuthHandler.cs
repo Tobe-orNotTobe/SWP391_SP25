@@ -1,14 +1,12 @@
 ﻿using FirebaseAdmin.Auth;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Text;
-using System.Threading.Tasks;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Logging;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 public class FirebaseAuthHandler : JwtBearerHandler
 {
@@ -39,7 +37,6 @@ public class FirebaseAuthHandler : JwtBearerHandler
 
             var identity = new ClaimsIdentity(claims, "Firebase");
             var principal = new ClaimsPrincipal(identity);
-
             var ticket = new AuthenticationTicket(principal, "Firebase");
 
             return AuthenticateResult.Success(ticket);
