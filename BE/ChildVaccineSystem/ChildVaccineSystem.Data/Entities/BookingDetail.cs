@@ -18,9 +18,6 @@ namespace ChildVaccineSystem.Data.Entities
         public int BookingId { get; set; }
         public Booking Booking { get; set; }
 
-        [Required]
-        public BookingType BookingType { get; set; }
-
 		[ForeignKey("Vaccine")]
         public int? VaccineId { get; set; }
         public Vaccine Vaccine { get; set; }
