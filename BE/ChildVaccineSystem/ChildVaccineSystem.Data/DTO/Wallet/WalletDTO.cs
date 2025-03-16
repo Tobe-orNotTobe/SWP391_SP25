@@ -21,6 +21,7 @@ namespace ChildVaccineSystem.Data.DTO.Wallet
 		public decimal Amount { get; set; }
 		public string TransactionType { get; set; }
 		public string Description { get; set; }
+		public string Status { get; set; }
 		public DateTime CreatedAt { get; set; }
 	}
 

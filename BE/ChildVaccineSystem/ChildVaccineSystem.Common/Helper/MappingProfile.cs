@@ -29,17 +29,20 @@ namespace ChildVaccineSystem.Common.Helper
     {
         public MappingProfile()
         {
-            // Vaccine Mapping
+            //vaccine
             CreateMap<Vaccine, VaccineDTO>().ReverseMap();
 
-            CreateMap<CreateVaccineDTO, Vaccine>();
+            CreateMap<CreateVaccineDTO, Vaccine>()
+                .ForMember(dest => dest.ParentVaccine, opt => opt.Ignore()) // ✅ Xử lý riêng trong service
+                .ForMember(dest => dest.IsIncompatibility, opt => opt.MapFrom(src => src.IsIncompatibility));
 
             CreateMap<UpdateVaccineDTO, Vaccine>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
+                .ForMember(dest => dest.ParentVaccine, opt => opt.Ignore()) // ✅ Xử lý riêng trong service
+                .ForMember(dest => dest.IsIncompatibility, opt => opt.MapFrom(src => src.IsIncompatibility))
+                                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+          
             CreateMap<Vaccine, VaccineBasicDTO>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.VaccineId));
-
+.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.VaccineId));
             // ComboVaccine Mapping
             CreateMap<ComboVaccine, ComboVaccineDTO>()
                 .ForMember(dest => dest.Vaccines,
@@ -188,9 +191,9 @@ namespace ChildVaccineSystem.Common.Helper
 
 			// Refund request mappings
 			CreateMap<RefundRequest, RefundRequestDTO>()
-				.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.FullName : "Unknown"))
-				.ForMember(dest => dest.ProcessedBy, opt => opt.MapFrom(src => src.ProcessedBy != null ? src.ProcessedBy.FullName : null));
-
+				.ForMember(dest => dest.UserName,
+					opt => opt.MapFrom(src => src.User != null ? src.User.FullName : "Unknown"));
+;
 			// VaccineRecord mappings
 			CreateMap<VaccinationRecord, VaccineRecordDTO>()
 				.ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.BookingDetail.BookingId))

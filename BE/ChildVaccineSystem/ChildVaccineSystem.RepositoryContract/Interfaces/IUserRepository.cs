@@ -26,6 +26,7 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         Task<User> GetAsync(Expression<Func<User, bool>> filter);
         Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
         Task<bool> UpdateUserProfileAsync(User user);
+        Task<User> GetUserByPhoneOrEmailAsync(string keyword);
         Task SaveChangesAsync();
     }
 }

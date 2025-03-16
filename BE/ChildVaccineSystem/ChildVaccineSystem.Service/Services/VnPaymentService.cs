@@ -61,13 +61,16 @@ namespace ChildVaccineSystem.Service.Services
 			return paymentUrl;
 		}
 
-		public async Task<string> CreateWalletDepositUrl(int transactionId, decimal amount, string userId, string clientIpAddress)
+		public async Task<string> CreateWalletDepositUrl(int walletTransactionId, decimal amount, string userId, string clientIpAddress)
 		{
-			var transaction = await _unitOfWork.Transactions.GetAsync(t => t.TransactionId == transactionId);
-			if (transaction == null)
+			var walletTransaction = await _unitOfWork.WalletTransactions.GetAsync(t => t.WalletTransactionId == walletTransactionId);
+			if (walletTransaction == null)
 			{
 				throw new ArgumentException($"Không tìm thấy giao dịch!");
 			}
+
+			var tick = DateTime.Now.Ticks.ToString();
+			var txnRef = $"TXN{walletTransaction.WalletTransactionId}_TIME{tick}";
 
 			var vnpay = new VnPayLibrary();
 
@@ -82,7 +85,7 @@ namespace ChildVaccineSystem.Service.Services
 			vnpay.AddRequestData("vnp_OrderInfo", $"Nạp tiền vào ví #{userId}");
 			vnpay.AddRequestData("vnp_OrderType", "topup");
 			vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:WalletDepositReturnUrl"]);
-			vnpay.AddRequestData("vnp_TxnRef", transactionId.ToString());
+			vnpay.AddRequestData("vnp_TxnRef", txnRef);
 
 			var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
 
