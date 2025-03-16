@@ -48,5 +48,14 @@ namespace ChildVaccineSystem.Repository.Repositories
                 .ToListAsync();
         }
 
+        public async Task<bool> IsDoctorAssignedToBookingAsync(int bookingId, string doctorId)
+        {
+            return await (from b in _context.Bookings
+                          join dws in _context.DoctorWorkSchedules
+                          on b.DoctorWorkScheduleId equals dws.DoctorWorkScheduleId
+                          where b.BookingId == bookingId && dws.UserId == doctorId
+                          select b).AnyAsync();
+        }
+
     }
 }

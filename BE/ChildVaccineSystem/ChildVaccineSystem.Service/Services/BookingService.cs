@@ -374,8 +374,27 @@ namespace ChildVaccineSystem.Service.Services
             await _unitOfWork.DoctorWorkSchedules.AddAsync(doctorSchedule);
             await _unitOfWork.CompleteAsync();
 
+
+            // Trừ vaccine khỏi kho khi lịch tiêm được gán thành công
+            foreach (var detail in booking.BookingDetails)
+            {
+                if (detail.VaccineId.HasValue)
+                {
+                    await _inventoryService.ExportVaccineAsync(detail.VaccineId.Value, 1);
+                }
+                else if (detail.ComboVaccineId.HasValue)
+                {
+                    var comboDetails = await _unitOfWork.ComboDetails.GetAllAsync(cd => cd.ComboId == detail.ComboVaccineId);
+                    foreach (var comboDetail in comboDetails)
+                    {
+                        await _inventoryService.ExportVaccineAsync(comboDetail.VaccineId, 1);
+                    }
+                }
+            }
+
             // ✅ Gán lịch làm việc vào booking
             booking.DoctorWorkScheduleId = doctorSchedule.DoctorWorkScheduleId;
+
             booking.Status = BookingStatus.InProgress;
 
             await _unitOfWork.CompleteAsync();

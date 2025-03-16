@@ -1,229 +1,228 @@
-﻿//using AutoMapper;
-//using ChildVaccineSystem.Data.DTO.VaccineRecord;
-//using ChildVaccineSystem.Data.Entities;
-//using ChildVaccineSystem.Data.Enum;
-//using ChildVaccineSystem.RepositoryContract.Interfaces;
-//using ChildVaccineSystem.ServiceContract.Interfaces;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using AutoMapper;
+using ChildVaccineSystem.Data.DTO.VaccineRecord;
+using ChildVaccineSystem.Data.Entities;
+using ChildVaccineSystem.Data.Enum;
+using ChildVaccineSystem.RepositoryContract.Interfaces;
+using ChildVaccineSystem.ServiceContract.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace ChildVaccineSystem.Service.Services
-//{
-//    public class VaccineRecordService : IVaccineRecordService
-//    {
-//        private readonly IVaccineRecordRepository _vaccineRecordRepository;
-//        private readonly IUnitOfWork _unitOfWork;
-//        private readonly IMapper _mapper;
+namespace ChildVaccineSystem.Service.Services
+{
+    public class VaccineRecordService : IVaccineRecordService
+    {
+        private readonly IVaccineRecordRepository _vaccineRecordRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-//        public VaccineRecordService(IVaccineRecordRepository vaccineRecordRepository, IUnitOfWork unitOfWork, IMapper mapper)
-//        {
-//            _vaccineRecordRepository = vaccineRecordRepository;
-//            _unitOfWork = unitOfWork;
-//            _mapper = mapper;
-//        }
+        public VaccineRecordService(IVaccineRecordRepository vaccineRecordRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _vaccineRecordRepository = vaccineRecordRepository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
 
-//		public async Task<VaccineRecordDTO> CreateVaccinationRecordAsync(int bookingId, string doctorId)
-//		{
-//			if (bookingId <= 0)
-//				throw new ArgumentException("Mã đặt lịch không hợp lệ.");
+        public async Task<VaccineRecordDTO> CreateVaccinationRecordAsync(int bookingId, string doctorId)
+        {
+            if (bookingId <= 0)
+                throw new ArgumentException("Mã đặt lịch không hợp lệ.");
 
-//			// Kiểm tra xem bác sĩ có được gán cho Booking này không
-//			bool isDoctorAssigned = await _unitOfWork.DoctorWorkSchedules
-//				.AnyAsync(dws => dws.BookingId == bookingId && dws.UserId == doctorId);
+            // Kiểm tra xem bác sĩ có được gán cho Booking này không
+            bool isDoctorAssigned = await _unitOfWork.Bookings.IsDoctorAssignedToBookingAsync(bookingId, doctorId);
 
-//			if (!isDoctorAssigned)
-//				throw new UnauthorizedAccessException("Bạn không có quyền tạo hồ sơ cho lịch này.");
+            if (!isDoctorAssigned)
+                throw new UnauthorizedAccessException("Bạn không có quyền tạo hồ sơ cho lịch này.");
 
-//			var booking = await _unitOfWork.Bookings.GetAsync(
-//				b => b.BookingId == bookingId,
-//				includeProperties: "BookingDetails.Vaccine,Children"
-//			);
+            var booking = await _unitOfWork.Bookings.GetAsync(
+                b => b.BookingId == bookingId,
+                includeProperties: "BookingDetails.Vaccine,Children" 
+            );
 
-//			if (booking == null)
-//				throw new Exception("Không tìm thấy lịch tiêm.");
+            if (booking == null)
+                throw new Exception("Không tìm thấy lịch tiêm.");
 
-//			if (booking.Status != BookingStatus.InProgress)
-//				throw new Exception("Chỉ có thể tạo hồ sơ tiêm chủng khi lịch tiêm đang được tiến hành.");
+            if (booking.Status != BookingStatus.InProgress)
+                throw new Exception("Chỉ có thể tạo hồ sơ tiêm chủng khi lịch tiêm đang được tiến hành.");
 
-//			if (booking.BookingDetails == null || !booking.BookingDetails.Any())
-//				throw new Exception("Không có chi tiết lịch tiêm hợp lệ.");
+            if (booking.BookingDetails == null || !booking.BookingDetails.Any())
+                throw new Exception("Không có chi tiết lịch tiêm hợp lệ.");
 
-//			if (booking.Children == null)
-//				throw new Exception("Không tìm thấy thông tin trẻ em.");
+            if (booking.Children == null)
+                throw new Exception("Không tìm thấy thông tin trẻ em.");
 
-//			// Kiểm tra nếu VaccineRecord đã tồn tại
-//			var existingRecords = await _unitOfWork.VaccineRecords.GetAllAsync(vr => vr.BookingDetail.BookingId == bookingId);
-//			if (existingRecords.Any())
-//				throw new Exception("Hồ sơ tiêm chủng cho lịch này đã được tạo.");
+            // Kiểm tra nếu VaccineRecord đã tồn tại
+            var existingRecords = await _unitOfWork.VaccineRecords.GetAllAsync(vr => vr.BookingDetail.BookingId == bookingId);
+            if (existingRecords.Any())
+                throw new Exception("Hồ sơ tiêm chủng cho lịch này đã được tạo.");
 
-//			var vaccineRecords = new List<VaccineRecordDetailDTO>();
+            var vaccineRecords = new List<VaccineRecordDetailDTO>();
 
-//			try
-//			{
-//				foreach (var detail in booking.BookingDetails)
-//				{
-//					if (detail.VaccineId.HasValue)
-//					{
-//						await ProcessVaccineRecord(detail, booking, vaccineRecords);
-//					}
-//					else if (detail.ComboVaccineId.HasValue)
-//					{
-//						var comboVaccineDetails = await _unitOfWork.ComboDetails.GetAllAsync(cv => cv.ComboId == detail.ComboVaccineId);
+            try
+            {
+                foreach (var detail in booking.BookingDetails)
+                {
+                    if (detail.VaccineId.HasValue)
+                    {
+                        await ProcessVaccineRecord(detail, booking, vaccineRecords);
+                    }
+                    else if (detail.ComboVaccineId.HasValue)
+                    {
+                        var comboVaccineDetails = await _unitOfWork.ComboDetails.GetAllAsync(cv => cv.ComboId == detail.ComboVaccineId);
 
-//						if (!comboVaccineDetails.Any())
-//							throw new Exception($"Không tìm thấy danh sách vaccine cho combo ID: {detail.ComboVaccineId}");
+                        if (!comboVaccineDetails.Any())
+                            throw new Exception($"Không tìm thấy danh sách vaccine cho combo ID: {detail.ComboVaccineId}");
 
-//						foreach (var comboVaccineDetail in comboVaccineDetails)
-//						{
-//							var vaccine = await _unitOfWork.Vaccines.GetByIdAsync(comboVaccineDetail.VaccineId);
-//							if (vaccine == null)
-//								throw new Exception($"Không tìm thấy Vaccine với ID: {comboVaccineDetail.VaccineId}");
+                        foreach (var comboVaccineDetail in comboVaccineDetails)
+                        {
+                            var vaccine = await _unitOfWork.Vaccines.GetByIdAsync(comboVaccineDetail.VaccineId);
+                            if (vaccine == null)
+                                throw new Exception($"Không tìm thấy Vaccine với ID: {comboVaccineDetail.VaccineId}");
 
-//							var vaccineInventory = await _unitOfWork.VaccineInventories
-//								.GetAsync(vi => vi.VaccineInventoryId == comboVaccineDetail.VaccineInventoryId
-//											 || vi.VaccineId == comboVaccineDetail.VaccineId);
+                            var vaccineInventory = await _unitOfWork.VaccineInventories
+                                .GetAsync(vi => vi.VaccineInventoryId == comboVaccineDetail.VaccineInventoryId
+                                             || vi.VaccineId == comboVaccineDetail.VaccineId);
 
-//							if (vaccineInventory == null || vaccineInventory.QuantityInStock <= 0)
-//								throw new Exception($"Vaccine Inventory không có sẵn cho VaccineId: {comboVaccineDetail.VaccineId}");
+                            if (vaccineInventory == null || vaccineInventory.QuantityInStock <= 0)
+                                throw new Exception($"Vaccine Inventory không có sẵn cho VaccineId: {comboVaccineDetail.VaccineId}");
 
-//							// 🔹 Kiểm tra nếu vaccine đã tồn tại trong danh sách
-//							if (vaccineRecords.Any(vr => vr.VaccineName == vaccine.Name))
-//								continue; // Bỏ qua nếu đã tồn tại
+                            // 🔹 Kiểm tra nếu vaccine đã tồn tại trong danh sách
+                            if (vaccineRecords.Any(vr => vr.VaccineName == vaccine.Name))
+                                continue; // Bỏ qua nếu đã tồn tại
 
-//							var sequence = await GetCurrentVaccineSequenceAsync(booking.Children.ChildId, comboVaccineDetail.VaccineId);
-//							var nextDoseDate = await CalculateNextDoseDateAsync(comboVaccineDetail.VaccineId, sequence);
+                            var sequence = await GetCurrentVaccineSequenceAsync(booking.Children.ChildId, comboVaccineDetail.VaccineId);
+                            var nextDoseDate = await CalculateNextDoseDateAsync(comboVaccineDetail.VaccineId, sequence);
 
-//							var vaccinationRecord = new VaccinationRecord
-//							{
-//								BookingDetailId = detail.BookingDetailId,
-//								UserId = booking.UserId,
-//								ChildId = booking.Children.ChildId,
-//								VaccineId = comboVaccineDetail.VaccineId,
-//								VaccineInventoryId = vaccineInventory.VaccineInventoryId,
-//								VaccinationDate = DateTime.Now,
-//								DoseAmount = vaccine.DoseAmount,
-//								Sequence = sequence,
-//								Status = VaccineRecordStatus.Completed,
-//								Notes = "Tiêm chủng hoàn tất",
-//								BatchNumber = vaccineInventory.BatchNumber,
-//								NextDoseDate = nextDoseDate,
-//								Price = vaccine.Price
-//							};
+                            var vaccinationRecord = new VaccinationRecord
+                            {
+                                BookingDetailId = detail.BookingDetailId,
+                                UserId = booking.UserId,
+                                ChildId = booking.Children.ChildId,
+                                VaccineId = comboVaccineDetail.VaccineId,
+                                VaccineInventoryId = vaccineInventory.VaccineInventoryId,
+                                VaccinationDate = DateTime.Now,
+                                DoseAmount = vaccine.DoseAmount,
+                                Sequence = sequence,
+                                Status = VaccineRecordStatus.Completed,
+                                Notes = "Tiêm chủng hoàn tất",
+                                BatchNumber = vaccineInventory.BatchNumber,
+                                NextDoseDate = nextDoseDate,
+                                Price = vaccine.Price
+                            };
 
-//							await _vaccineRecordRepository.AddAsync(vaccinationRecord);
-//							await _unitOfWork.CompleteAsync();
+                            await _vaccineRecordRepository.AddAsync(vaccinationRecord);
+                            await _unitOfWork.CompleteAsync();
 
-//							vaccineRecords.Add(new VaccineRecordDetailDTO
-//							{
-//								VaccinationRecordId = vaccinationRecord.VaccinationRecordId,
-//								VaccineName = vaccine.Name,
-//								DoseAmount = vaccine.DoseAmount,
-//								Price = vaccine.Price,
-//								NextDoseDate = nextDoseDate,
-//								BatchNumber = vaccinationRecord.BatchNumber,
-//								StatusEnum = VaccineRecordStatus.Completed,
-//								Notes = "Tiêm chủng hoàn tất"
-//							});
-//						}
+                            vaccineRecords.Add(new VaccineRecordDetailDTO
+                            {
+                                VaccinationRecordId = vaccinationRecord.VaccinationRecordId,
+                                VaccineName = vaccine.Name,
+                                DoseAmount = vaccine.DoseAmount,
+                                Price = vaccine.Price,
+                                NextDoseDate = nextDoseDate,
+                                BatchNumber = vaccinationRecord.BatchNumber,
+                                StatusEnum = VaccineRecordStatus.Completed,
+                                Notes = "Tiêm chủng hoàn tất"
+                            });
+                        }
 
-//					}
-//				}
+                    }
+                }
 
-//				// Cập nhật trạng thái booking thành COMPLETED
-//				booking.Status = BookingStatus.Completed;
-//				_unitOfWork.Bookings.UpdateAsync(booking);
+                // Cập nhật trạng thái booking thành COMPLETED
+                booking.Status = BookingStatus.Completed;
+                _unitOfWork.Bookings.UpdateAsync(booking);
 
-//				await _unitOfWork.CompleteAsync();
+                await _unitOfWork.CompleteAsync();
 
-//				return new VaccineRecordDTO
-//				{
-//					BookingId = bookingId,
-//					FullName = booking.Children.FullName,
-//					DateOfBirth = booking.Children.DateOfBirth,
-//					Height = booking.Children.Height,
-//					Weight = booking.Children.Weight,
-//					VaccineRecords = vaccineRecords,
-//					Message = "Vaccine record confirmed successfully"
-//				};
-//			}
-//			catch (Exception ex)
-//			{
-//				throw new Exception($"Lỗi khi lưu database: {ex.InnerException?.Message ?? ex.Message}", ex);
-//			}
-//		}
+                return new VaccineRecordDTO
+                {
+                    BookingId = bookingId,
+                    FullName = booking.Children.FullName,
+                    DateOfBirth = booking.Children.DateOfBirth,
+                    Height = booking.Children.Height,
+                    Weight = booking.Children.Weight,
+                    VaccineRecords = vaccineRecords,
+                    Message = "Vaccine record confirmed successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi lưu database: {ex.InnerException?.Message ?? ex.Message}", ex);
+            }
+        }
 
 
-//		public async Task ProcessVaccineRecord(BookingDetail detail, Booking booking, List<VaccineRecordDetailDTO> vaccineRecords)
-//        {
-//            var vaccineInventory = await _unitOfWork.VaccineInventories
-//                .GetAsync(vi => vi.VaccineInventoryId == detail.VaccineInventoryId);
+        public async Task ProcessVaccineRecord(BookingDetail detail, Booking booking, List<VaccineRecordDetailDTO> vaccineRecords)
+        {
+            var vaccineInventory = await _unitOfWork.VaccineInventories
+                .GetAsync(vi => vi.VaccineInventoryId == detail.VaccineInventoryId);
 
-//            if (vaccineInventory == null)
-//                throw new Exception("Không tìm thấy VaccineInventory.");
+            if (vaccineInventory == null)
+                throw new Exception("Không tìm thấy VaccineInventory.");
 
-//            // Lấy số thứ tự mũi tiêm (sequence)
-//            var sequence = await GetCurrentVaccineSequenceAsync(booking.Children.ChildId, detail.VaccineId.Value);
+            // Lấy số thứ tự mũi tiêm (sequence)
+            var sequence = await GetCurrentVaccineSequenceAsync(booking.Children.ChildId, detail.VaccineId.Value);
 
-//            // Lấy ngày tiêm tiếp theo
-//            var nextDoseDate = await CalculateNextDoseDateAsync(detail.VaccineId.Value, sequence);
+            // Lấy ngày tiêm tiếp theo
+            var nextDoseDate = await CalculateNextDoseDateAsync(detail.VaccineId.Value, sequence);
 
-//            var vaccinationRecord = new VaccinationRecord
-//            {
-//                BookingDetailId = detail.BookingDetailId,
-//                UserId = booking.UserId,
-//                ChildId = booking.Children.ChildId,
-//                VaccineId = detail.VaccineId.Value,
-//                VaccineInventoryId = vaccineInventory.VaccineInventoryId,
-//                VaccinationDate = DateTime.Now,
-//                DoseAmount = detail.Vaccine.DoseAmount,
-//                Sequence = sequence,
-//                Status = VaccineRecordStatus.Completed,
-//                Notes = "Tiêm chủng hoàn tất",
-//                BatchNumber = vaccineInventory.BatchNumber,
-//                NextDoseDate = nextDoseDate,
-//				Price = detail.Vaccine.Price,
-//            };
+            var vaccinationRecord = new VaccinationRecord
+            {
+                BookingDetailId = detail.BookingDetailId,
+                UserId = booking.UserId,
+                ChildId = booking.Children.ChildId,
+                VaccineId = detail.VaccineId.Value,
+                VaccineInventoryId = vaccineInventory.VaccineInventoryId,
+                VaccinationDate = DateTime.Now,
+                DoseAmount = detail.Vaccine.DoseAmount,
+                Sequence = sequence,
+                Status = VaccineRecordStatus.Completed,
+                Notes = "Tiêm chủng hoàn tất",
+                BatchNumber = vaccineInventory.BatchNumber,
+                NextDoseDate = nextDoseDate,
+                Price = detail.Vaccine.Price,
+            };
 
-//            await _vaccineRecordRepository.AddAsync(vaccinationRecord);
+            await _vaccineRecordRepository.AddAsync(vaccinationRecord);
 
-//            vaccineRecords.Add(new VaccineRecordDetailDTO
-//            {
-//                VaccineName = detail.Vaccine.Name,
-//                DoseAmount = detail.Vaccine.DoseAmount,
-//                Price = detail.Vaccine.Price,
-//                NextDoseDate = nextDoseDate,
-//                BatchNumber = vaccinationRecord.BatchNumber,
-//                StatusEnum = VaccineRecordStatus.Completed,
-//                Notes = "Đã tiêm chủng"
-//            });
-//        }
+            vaccineRecords.Add(new VaccineRecordDetailDTO
+            {
+                VaccineName = detail.Vaccine.Name,
+                DoseAmount = detail.Vaccine.DoseAmount,
+                Price = detail.Vaccine.Price,
+                NextDoseDate = nextDoseDate,
+                BatchNumber = vaccinationRecord.BatchNumber,
+                StatusEnum = VaccineRecordStatus.Completed,
+                Notes = "Đã tiêm chủng"
+            });
+        }
 
-//        public async Task<DateTime?> CalculateNextDoseDateAsync(int vaccineId, int sequence)
-//        {
-//            var injectionSchedule = await _unitOfWork.InjectionSchedules
-//                .GetAllAsync(schedule => schedule.VaccineScheduleDetail.VaccineId == vaccineId);
+        public async Task<DateTime?> CalculateNextDoseDateAsync(int vaccineId, int sequence)
+        {
+            var injectionSchedule = await _unitOfWork.InjectionSchedules
+                .GetAllAsync(schedule => schedule.VaccineScheduleDetail.VaccineId == vaccineId);
 
-//            // Kiểm tra nếu không có lịch tiêm nào
-//            if (injectionSchedule == null || !injectionSchedule.Any())
-//                return null;
+            // Kiểm tra nếu không có lịch tiêm nào
+            if (injectionSchedule == null || !injectionSchedule.Any())
+                return null;
 
-//            // Tìm mũi tiêm tiếp theo (doseNumber = sequence + 1)
-//            var nextInjection = injectionSchedule.FirstOrDefault(schedule => schedule.InjectionNumber == sequence + 1);
+            // Tìm mũi tiêm tiếp theo (doseNumber = sequence + 1)
+            var nextInjection = injectionSchedule.FirstOrDefault(schedule => schedule.InjectionNumber == sequence + 1);
 
-//            return nextInjection != null ? DateTime.Now.AddMonths(nextInjection.InjectionMonth) : null;
-//        }
+            return nextInjection != null ? DateTime.Now.AddMonths(nextInjection.InjectionMonth) : null;
+        }
 
-//        public async Task<int> GetCurrentVaccineSequenceAsync(int childId, int vaccineId)
-//        {
-//            var previousRecords = await _vaccineRecordRepository.GetAllAsync(
-//                vr => vr.ChildId == childId && vr.VaccineId == vaccineId
-//            );
+        public async Task<int> GetCurrentVaccineSequenceAsync(int childId, int vaccineId)
+        {
+            var previousRecords = await _vaccineRecordRepository.GetAllAsync(
+                vr => vr.ChildId == childId && vr.VaccineId == vaccineId
+            );
 
-//            return previousRecords.Count() + 1; // Mũi tiêm tiếp theo
-//        }
+            return previousRecords.Count() + 1; // Mũi tiêm tiếp theo
+        }
 
 
 //        public async Task<VaccineRecordDTO> GetVaccineRecordByIdAsync(int vaccineRecordId, string userId, bool isAdmin, bool isStaff)
@@ -462,5 +461,5 @@
 //            };
 //        }
 
-//    }
-//}
+    }
+}
