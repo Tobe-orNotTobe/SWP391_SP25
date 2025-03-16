@@ -31,5 +31,6 @@ namespace ChildVaccineSystem.Data.Entities
 
 		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 		public DateTime? ProcessedAt { get; set; }
+
 	}
 }

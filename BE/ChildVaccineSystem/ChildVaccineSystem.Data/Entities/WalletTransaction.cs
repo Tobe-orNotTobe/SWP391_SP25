@@ -22,6 +22,7 @@ namespace ChildVaccineSystem.Data.Entities
 		[ForeignKey("RefundRequest")]
 		public int? RefundRequestId { get; set; }
 		public RefundRequest RefundRequest { get; set; }
+		public string Status { get; set; }
 
 		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 	}

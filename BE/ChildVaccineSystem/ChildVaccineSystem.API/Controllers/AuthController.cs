@@ -4,6 +4,7 @@ using ChildVaccineSystem.Data.DTO.Category;
 using ChildVaccineSystem.Data.DTO.Email;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,14 +23,16 @@ namespace ChildVaccineSystem.API.Controllers
 		private readonly APIResponse _response;
 		private readonly UserManager<User> _userManager;
 		private readonly IWalletService _walletService;
+        private readonly ILoginGoogleService _loginGoogleService;
 
-		public AuthController(IAuthService authService, APIResponse response, UserManager<User> userManager, IWalletService walletService)
+        public AuthController(IAuthService authService, APIResponse response, UserManager<User> userManager, IWalletService walletService, ILoginGoogleService loginGoogleService)
 		{
 			_authService = authService;
 			_response = response;
 			_userManager = userManager;
 			_walletService = walletService;
-		}
+            _loginGoogleService = loginGoogleService;
+        }
 
 		[AllowAnonymous]
 		[HttpPost("register")]
@@ -214,5 +217,54 @@ namespace ChildVaccineSystem.API.Controllers
 				return BadRequest(_response);
 			}
 		}
-	}
+
+        [HttpPost("login-google")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginWithGoogle([FromBody] GoogleLoginDTO model)
+        {
+            try
+            {
+                // Xác thực ID Token từ Firebase
+                var decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(model.IdToken);
+                var uid = decodedToken.Uid;
+
+                // Kiểm tra xem người dùng đã có trong hệ thống chưa
+                var user = await _userManager.FindByIdAsync(uid);
+                if (user == null)
+                {
+                    // Nếu chưa có, tạo user mới
+                    user = new User
+                    {
+                        Id = uid,
+                        UserName = decodedToken.Claims["email"].ToString(),
+                        Email = decodedToken.Claims["email"].ToString(),
+                        EmailConfirmed = true
+                    };
+
+                    await _userManager.CreateAsync(user);
+                }
+
+                // Tạo JWT Token
+                var token = _authService.GenerateJwtToken(user);
+
+                return Ok(new
+                {
+                    Message = "Đăng nhập Google thành công!",
+                    Token = token,
+                    User = new
+                    {
+                        user.Id,
+                        user.Email,
+                        user.UserName
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new { Message = "Invalid token", Error = ex.Message });
+            }
+        }
+
+    }
 }
+

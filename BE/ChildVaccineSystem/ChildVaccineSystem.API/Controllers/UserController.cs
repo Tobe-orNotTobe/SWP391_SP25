@@ -144,4 +144,19 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpGet("search")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> SearchUser(string keyword)
+    {
+        if (string.IsNullOrEmpty(keyword))
+            return BadRequest("Keyword không được để trống");
+
+        var user = await _userService.GetUserByPhoneOrEmailAsync(keyword);
+
+        if (user == null)
+            return NotFound("Không tìm thấy khách hàng");
+
+        return Ok(user);
+    }
+
 }
