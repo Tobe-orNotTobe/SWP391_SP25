@@ -124,8 +124,23 @@ export const useAuthGoogle = () => {
     const handleLoginGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, provider);
+            console.log("Vai ca lon: " + result.operationType);
+
             setUser(result.user);
-            console.log(user);
+            const idTokenResult = await result.user.getIdTokenResult();
+            const expTimestamp = Date.parse(idTokenResult.expirationTime) / 1000; // Convert to UNIX timestamp
+
+            const LoginGoogleResquest = {
+                "sub": user?.uid,
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress": user?.email,
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": user?.displayName?.replace(" ", ""),
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": "Customer",
+                "exp": expTimestamp,
+                "iss": "ChildVaccineSystem",
+                "aud": "ChildVaccineSystemClients"
+            }
+
+            console.log(LoginGoogleResquest);
         } catch (error) {
             console.error("Lỗi đăng nhập:", error);
         }
