@@ -39,9 +39,8 @@ namespace ChildVaccineSystem.Data.Entities
 
         public ICollection<BookingDetail> BookingDetails { get; set; }
 
-        [Required]
         [ForeignKey("DoctorWorkSchedule")]
-        public int DoctorWorkScheduleId { get; set; }
+        public int? DoctorWorkScheduleId { get; set; }
         public DoctorWorkSchedule DoctorWorkSchedule { get; set; }
 
 		public Feedback Feedback { get; set; }
