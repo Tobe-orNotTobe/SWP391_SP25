@@ -12,6 +12,7 @@ using ChildVaccineSystem.Data.DTO.ComboVaccine;
 using ChildVaccineSystem.Data.DTO.DoctorWorkSchedule;
 using ChildVaccineSystem.Data.DTO.Feedback;
 using ChildVaccineSystem.Data.DTO.InjectionSchedule;
+using ChildVaccineSystem.Data.DTO.Notification;
 using ChildVaccineSystem.Data.DTO.Refund;
 using ChildVaccineSystem.Data.DTO.Transaction;
 using ChildVaccineSystem.Data.DTO.User;
@@ -213,8 +214,11 @@ namespace ChildVaccineSystem.Common.Helper
 				.ForMember(dest => dest.BatchNumber, opt => opt.MapFrom(src => src.BatchNumber))
 				.ForMember(dest => dest.StatusEnum, opt => opt.MapFrom(src => src.Status))
 				.ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes));
-		}
-    }
+
+			CreateMap<Notification, NotificationDTO>();
+
+        }
+	}
 };
 
 

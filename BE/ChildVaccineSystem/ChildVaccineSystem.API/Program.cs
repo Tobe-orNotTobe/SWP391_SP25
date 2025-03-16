@@ -11,8 +11,27 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using ChildVaccineSystem.API.Jobs;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddQuartz(q =>
+{
+	// Register the job
+	q.AddJob<AppointmentReminderJob>(opts => opts.WithIdentity("AppointmentReminderJob"));
+
+	// Create a trigger for the job that runs daily at 8:00 AM
+	q.AddTrigger(opts => opts
+		.ForJob("AppointmentReminderJob")
+		.WithIdentity("AppointmentReminderTrigger")
+		.WithCronSchedule("0 50 14 * * ?"));  // Daily at 8:00 AM
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+builder.Services.AddSignalR();
 
 // Load cấu hình Firebase từ appsettings.json
 var firebaseSettings = builder.Configuration.GetSection("Firebase").Get<FirebaseSettings>();
@@ -201,9 +220,15 @@ else
 }
 
 app.UseHttpsRedirection();
+
 app.UseCors("AllowFrontend"); // Enable CORS Policy
+
 app.UseAuthentication(); // Ensure Authentication
+
 app.UseAuthorization();  // Ensure Authorization
+
 app.MapControllers();
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

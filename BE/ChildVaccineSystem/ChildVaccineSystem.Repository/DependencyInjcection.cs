@@ -34,6 +34,8 @@ namespace ChildVaccineSystem.Repository
 			services.AddTransient<IRefundRequestRepository, RefundRequestRepository>();
 			services.AddTransient<IVaccineRecordRepository, VaccineRecordRepository>();
 			services.AddTransient<IWalletTransactionRepository, WalletTransactionRepository>();
+			services.AddTransient<INotificationRepository, NotificationRepository>();
+			services.AddTransient<IVaccinationReminderRepository, VaccinationReminderRepository>();
 
 			//DI Unit of Work
 			services.AddTransient<IUnitOfWork, UnitOfWork>();
