@@ -64,6 +64,35 @@ namespace ChildVaccineSystem.Service.Services
             return bookingDTO;
         }
 
+		public async Task<List<string>> CheckParentVaccinesInBookingAsync(List<int> VaccineIds)
+		{
+			var warningMessages = new Dictionary<int, (string ParentName, List<string> ChildrenNames)>();
+
+			foreach (var vaccineId in VaccineIds)
+			{
+				var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == vaccineId); 
+
+				if (vaccine?.IsParentId != null) 
+				{
+					var parentVaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == vaccine.IsParentId.Value);
+
+					if (parentVaccine != null)
+					{
+						if (!warningMessages.ContainsKey(parentVaccine.VaccineId))
+						{
+							warningMessages[parentVaccine.VaccineId] = (parentVaccine.Name, new List<string>());
+						}
+
+						warningMessages[parentVaccine.VaccineId].ChildrenNames.Add(vaccine.Name);
+					}
+				}
+			}
+
+			return warningMessages.Select(kv =>
+					$"Tiêm vaccine {kv.Value.ParentName} trước khi tiêm {string.Join(", ", kv.Value.ChildrenNames)}. Bạn đã tiêm vaccine {kv.Value.ParentName} cho trẻ chưa?")
+				.ToList();
+		}
+
 
         public async Task<BookingDTO> CreateAsync(string userId, CreateBookingDTO bookingDto)
         {
@@ -101,6 +130,22 @@ namespace ChildVaccineSystem.Service.Services
             {
                 booking.PricingPolicyId = null; // Ensure PricingPolicyId is null if no valid pricing policy
             }
+
+			var vaccineIds = bookingDto.BookingDetails
+				.Where(d => d.VaccineId.HasValue)
+				.Select(d => d.VaccineId.Value)
+				.ToList() ?? new List<int>();
+
+			if (vaccineIds.Count > 1)
+			{
+				var incompatibleVaccine = await _unitOfWork.Vaccines
+					.GetAsync(v => vaccineIds.Contains(v.VaccineId) && v.IsIncompatibility);
+
+				if (incompatibleVaccine != null)
+				{
+					throw new ArgumentException($"Không thể tiêm vaccine {incompatibleVaccine.Name} với vaccine sống khác");
+				}
+			}
 
             // Calculate total price for booking details
             foreach (var detailDto in bookingDto.BookingDetails)
