@@ -156,101 +156,89 @@ namespace ChildVaccineSystem.API.Controllers
 				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
 		}
-		[HttpPost("assign-doctor")]
-		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Staff")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> AssignDoctorToBooking(int bookingId, string userId)
-		{
-			try
-			{
-				var result = await _bookingService.AssignDoctorToBooking(bookingId, userId);
 
-				_response.StatusCode = HttpStatusCode.OK;
-				_response.IsSuccess = true;
-				_response.Result = new { Success = result, Message = "Bác sĩ chỉ định đặt phòng thành công." };
-				return Ok(_response);
-			}
-			catch (Exception ex)
-			{
-				_response.StatusCode = HttpStatusCode.BadRequest;
-				_response.IsSuccess = false;
-				_response.ErrorMessages.Add(ex.Message);
-				return BadRequest(_response);
-			}
-		}
+        [HttpPost("assign-doctor")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Staff")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AssignDoctorToBooking(int bookingId, string userId)
+        {
+            try
+            {
+                var result = await _bookingService.AssignDoctorToBooking(bookingId, userId);
 
-		[HttpGet("doctor/{userId}/bookings")]
-		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Staff")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetDoctorBookings(string userId)
-		{
-			try
-			{
-				var bookings = await _bookingService.GetDoctorBookingsAsync(userId);
+                if (result)
+                {
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.IsSuccess = true;
+                    _response.Result = new { Success = result, Message = "Phân công bác sĩ thành công." };
+                    return Ok(_response);
+                }
+                else
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages.Add("Phân công bác sĩ thất bại.");
+                    return BadRequest(_response);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
 
-				if (bookings.Any())
-				{
-					_response.StatusCode = HttpStatusCode.OK;
-					_response.IsSuccess = true;
-					_response.Result = bookings;
-					return Ok(_response);
-				}
-				else
-				{
-					_response.StatusCode = HttpStatusCode.NotFound;
-					_response.IsSuccess = false;
-					_response.ErrorMessages.Add("Không tìm thấy đặt chỗ nào cho bác sĩ này.");
-					return NotFound(_response);
-				}
-			}
-			catch (Exception ex)
-			{
-				_response.StatusCode = HttpStatusCode.InternalServerError;
-				_response.IsSuccess = false;
-				_response.ErrorMessages.Add($"Lỗi khi truy xuất thông tin đặt chỗ của bác sĩ: {ex.Message}");
-				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
-			}
-		}
-		//[HttpPut("{bookingId}/complete")]
-		//[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Staff")]
-		//[ProducesResponseType(StatusCodes.Status200OK)]
-		//[ProducesResponseType(StatusCodes.Status404NotFound)]
-		//[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		//public async Task<ActionResult<APIResponse>> CompleteBooking(int bookingId)
-		//{
-		//    try
-		//    {
-		//        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		//        var result = await _bookingService.CompleteBookingAsync(bookingId, userId);
 
-		//        _response.StatusCode = HttpStatusCode.OK;
-		//        _response.IsSuccess = true;
-		//        _response.Result = result;
+        [HttpGet("doctor/{userId}/bookings")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Staff")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDoctorBookings(string userId)
+        {
+            try
+            {
+                var bookings = await _bookingService.GetDoctorBookingsAsync(userId);
 
-		//        return Ok(_response);
-		//    }
-		//    catch (ArgumentException ex)
-		//    {
-		//        _response.StatusCode = HttpStatusCode.BadRequest;
-		//        _response.IsSuccess = false;
-		//        _response.ErrorMessages.Add($"Error completing booking: {ex.Message}");
-		//        return BadRequest(_response);
-		//    }
-		//    catch (Exception ex)
-		//    {
-		//        _response.StatusCode = HttpStatusCode.InternalServerError;
-		//        _response.IsSuccess = false;
-		//        _response.ErrorMessages.Add($"Error completing booking: {ex.Message}");
-		//        return StatusCode((int)HttpStatusCode.InternalServerError, _response);
-		//    }
-		//}
-		// Lấy tất cả các booking chưa được gán bác sĩ
-		[HttpGet("unassigned")]
+                if (bookings.Any())
+                {
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.IsSuccess = true;
+                    _response.Result = bookings;
+                    return Ok(_response);
+                }
+                else
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages.Add("Không tìm thấy đặt chỗ nào cho bác sĩ này.");
+                    return NotFound(_response);
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Lỗi khi truy xuất thông tin đặt chỗ của bác sĩ: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
+
+
+        // Lấy tất cả các booking chưa được gán bác sĩ
+        [HttpGet("unassigned")]
 		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Staff")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -294,30 +282,42 @@ namespace ChildVaccineSystem.API.Controllers
 			}
 		}
 
-		[HttpPost("{bookingId}/unassign-doctor")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> UnassignDoctor(int bookingId)
-		{
-			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        [HttpPost("{bookingId}/unassign-doctor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UnassignDoctor(int bookingId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (string.IsNullOrEmpty(userId))
-				return Unauthorized();
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
 
-			var result = await _bookingService.UnassignDoctorFromBookingAsync(bookingId, userId);
+            try
+            {
+                var result = await _bookingService.UnassignDoctorFromBookingAsync(bookingId, userId);
 
-			if (result)
-				return Ok(new { Message = "Hủy phân công thành công." });
+                if (result)
+                    return Ok(new { Message = "Hủy phân công thành công." });
 
-			return BadRequest("Hủy phân công thất bại.");
-		}
+                return BadRequest("Hủy phân công thất bại.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = $"Lỗi hủy phân công: {ex.Message}" });
+            }
+        }
 
-		/// <summary>
-		/// Kiểm tra yêu cầu vaccine cha cho Vaccines
-		/// </summary>
-		/// <param name="VaccineIds">Danh sách vaccine ID cần kiểm tra</param>
-		/// <returns>Danh sách thông báo cảnh báo</returns>
-		[HttpPost("check-parent-vaccine")]
+
+        /// <summary>
+        /// Kiểm tra yêu cầu vaccine cha cho Vaccines
+        /// </summary>
+        /// <param name="VaccineIds">Danh sách vaccine ID cần kiểm tra</param>
+        /// <returns>Danh sách thông báo cảnh báo</returns>
+        [HttpPost("check-parent-vaccine")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<IActionResult> CheckParenVaccine([FromForm] List<int> VaccineIds)
 		{

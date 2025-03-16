@@ -350,85 +350,58 @@ namespace ChildVaccineSystem.Service.Services
 
 			return _mapper.Map<BookingDTO>(booking);
 		}
-		public async Task<bool> AssignDoctorToBooking(int bookingId, string userId)
-		{
-			var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(bookingId);
-			if (booking == null)
-				throw new ArgumentException("Không tìm thấy đặt chỗ.");
+        public async Task<bool> AssignDoctorToBooking(int bookingId, string userId)
+        {
+            var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(bookingId);
+            if (booking == null)
+                throw new ArgumentException("Không tìm thấy đặt chỗ.");
 
-			if (booking.Status != BookingStatus.Confirmed)
-				throw new ArgumentException("Chỉ những đặt phòng đã được xác nhận mới có thể được chỉ định cho bác sĩ.");
+            // ✅ Kiểm tra trạng thái booking
+            if (booking.Status != BookingStatus.Confirmed)
+                throw new ArgumentException("Chỉ có thể gán bác sĩ khi trạng thái là 'Confirmed'.");
 
-			var doctorSchedule = new DoctorWorkSchedule
-			{
-				BookingId = bookingId,
-				UserId = userId
-			};
+            // ✅ Kiểm tra xem đã có bác sĩ được gán chưa
+            if (booking.DoctorWorkScheduleId.HasValue)
+                throw new ArgumentException("Bác sĩ đã được gán cho đặt chỗ này.");
 
-			await _unitOfWork.DoctorWorkSchedules.AddAsync(doctorSchedule);
+            // ✅ Tạo lịch làm việc cho bác sĩ
+            var doctorSchedule = new DoctorWorkSchedule
+            {
+                UserId = userId,
+                AssignedDate = DateTime.UtcNow
+            };
 
-			// Trừ vaccine khỏi kho khi lịch tiêm được gán thành công
-			foreach (var detail in booking.BookingDetails)
-			{
-				if (detail.VaccineId.HasValue)
-				{
-					await _inventoryService.ExportVaccineAsync(detail.VaccineId.Value, 1);
-				}
-				else if (detail.ComboVaccineId.HasValue)
-				{
-					var comboDetails = await _unitOfWork.ComboDetails.GetAllAsync(cd => cd.ComboId == detail.ComboVaccineId);
-					foreach (var comboDetail in comboDetails)
-					{
-						await _inventoryService.ExportVaccineAsync(comboDetail.VaccineId, 1);
-					}
-				}
-			}
+            await _unitOfWork.DoctorWorkSchedules.AddAsync(doctorSchedule);
+            await _unitOfWork.CompleteAsync();
 
-			booking.Status = BookingStatus.InProgress;
-			await _unitOfWork.CompleteAsync();
+            // ✅ Gán lịch làm việc vào booking
+            booking.DoctorWorkScheduleId = doctorSchedule.DoctorWorkScheduleId;
+            booking.Status = BookingStatus.InProgress;
 
-			return true;
-		}
+            await _unitOfWork.CompleteAsync();
 
+            return true;
+        }
 
-		public async Task<List<BookingDTO>> GetDoctorBookingsAsync(string userId)
-		{
-			var doctorSchedules = await _unitOfWork.DoctorWorkSchedules
-				.GetAllAsync(dws => dws.UserId == userId, includeProperties: "Booking");
+        public async Task<List<BookingDTO>> GetDoctorBookingsAsync(string userId)
+        {
+            var doctorSchedules = await _unitOfWork.DoctorWorkSchedules
+                .GetAllAsync(dws => dws.UserId == userId, includeProperties: "Bookings");
 
-			var bookingIds = doctorSchedules.Select(dws => dws.BookingId).ToList();
+            var bookingIds = doctorSchedules
+                .Select(dws => dws.DoctorWorkScheduleId)
+                .ToList();
 
-			var bookings = await _unitOfWork.Bookings
-				.GetAllAsync(b => bookingIds.Contains(b.BookingId), includeProperties: "User,Children");
+            var bookings = await _unitOfWork.Bookings
+                .GetAllAsync(b => bookingIds.Contains(b.DoctorWorkScheduleId.Value),
+                             includeProperties: "User,Children,DoctorWorkSchedule");
 
-			return _mapper.Map<List<BookingDTO>>(bookings);
-		}
-		//public async Task<BookingDTO> CompleteBookingAsync(int bookingId, string userId)
-		//{
-		//    var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
+            var result = _mapper.Map<List<BookingDTO>>(bookings);
 
-		//    if (booking == null)
-		//        throw new ArgumentException("Booking not found.");
+            return result;
+        }
 
-		//    if (booking.Status != BookingStatus.InProgress)
-		//        throw new ArgumentException("Only in-progress bookings can be marked as completed.");
-
-		//    // ✅ Kiểm tra userId thay cho doctorId
-		//    var doctorSchedule = await _unitOfWork.DoctorWorkSchedules.GetAsync(
-		//        ds => ds.BookingId == bookingId && ds.UserId == userId);
-
-		//    if (doctorSchedule == null)
-		//        throw new ArgumentException("You are not assigned to this booking.");
-
-		//    // ✅ Chuyển trạng thái sang Completed
-		//    booking.Status = BookingStatus.Completed;
-
-		//    await _unitOfWork.CompleteAsync();
-
-		//    return _mapper.Map<BookingDTO>(booking);
-		//}
-
-		public async Task<List<BookingDTO>> GetUnassignedBookingsAsync()
+        public async Task<List<BookingDTO>> GetUnassignedBookingsAsync()
 		{
 			var unassignedBookings = await _unitOfWork.Bookings
 				.GetAllAsync(b => b.Status == BookingStatus.Confirmed,
@@ -444,59 +417,32 @@ namespace ChildVaccineSystem.Service.Services
 
 			return _mapper.Map<List<BookingDTO>>(bookings);
 		}
-		public async Task<bool> UnassignDoctorFromBookingAsync(int bookingId, string userId)
-		{
-			// Lấy thông tin đặt chỗ
-			var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(bookingId);
-			if (booking == null)
-			{
-				throw new ArgumentException("Không tìm thấy đặt chỗ.");
-			}
+        public async Task<bool> UnassignDoctorFromBookingAsync(int bookingId, string userId)
+        {
+            var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(bookingId);
+            if (booking == null)
+                throw new ArgumentException("Không tìm thấy đặt chỗ.");
 
-			// Kiểm tra trạng thái booking (Chỉ khi trạng thái là 'InProgress' mới cho phép hủy phân công)
-			if (booking.Status != BookingStatus.InProgress)
-			{
-				throw new ArgumentException("Chỉ có thể hủy phân công khi trạng thái là 'Đang xử lý'.");
-			}
+            // ✅ Chỉ cho phép hủy khi trạng thái là InProgress
+            if (booking.Status != BookingStatus.InProgress)
+                throw new ArgumentException("Chỉ có thể hủy phân công khi trạng thái là 'InProgress'.");
 
-			// Lấy thông tin phân công từ DoctorWorkSchedule
-			var doctorSchedule = await _unitOfWork.DoctorWorkSchedules
-				.GetAsync(ds => ds.BookingId == bookingId && ds.UserId == userId);
+            var doctorSchedule = await _unitOfWork.DoctorWorkSchedules
+                .GetAsync(ds => ds.DoctorWorkScheduleId == booking.DoctorWorkScheduleId);
 
-			if (doctorSchedule == null)
-			{
-				throw new ArgumentException("Bạn không được phân công cho đặt chỗ này.");
-			}
+            if (doctorSchedule == null)
+                throw new ArgumentException("Lịch làm việc của bác sĩ không tồn tại hoặc đã bị hủy.");
 
-			// ✅ Trả lại vaccine vào kho
-			foreach (var detail in booking.BookingDetails)
-			{
-				if (detail.VaccineId.HasValue)
-				{
-					await _inventoryService.ReturnVaccineAsync(detail.VaccineId.Value, 1);
-				}
-				else if (detail.ComboVaccineId.HasValue)
-				{
-					var comboDetails = await _unitOfWork.ComboDetails
-						.GetAllAsync(cd => cd.ComboId == detail.ComboVaccineId);
+            // ✅ Bỏ qua kiểm tra quyền → Ai cũng có thể hủy nếu trạng thái hợp lệ
+            _unitOfWork.DoctorWorkSchedules.DeleteAsync(doctorSchedule);
 
-					foreach (var comboDetail in comboDetails)
-					{
-						await _inventoryService.ReturnVaccineAsync(comboDetail.VaccineId, 1);
-					}
-				}
-			}
+            booking.DoctorWorkScheduleId = null;
+            booking.Status = BookingStatus.Confirmed;
 
-			// ✅ Xóa bản ghi phân công khỏi DoctorWorkSchedule
-			_unitOfWork.DoctorWorkSchedules.DeleteAsync(doctorSchedule);
+            await _unitOfWork.CompleteAsync();
 
-			// ✅ Cập nhật trạng thái đặt chỗ về lại `Confirmed`
-			booking.Status = BookingStatus.Confirmed;
+            return true;
+        }
 
-			await _unitOfWork.CompleteAsync();
-
-			return true;
-		}
-
-	}
+    }
 }

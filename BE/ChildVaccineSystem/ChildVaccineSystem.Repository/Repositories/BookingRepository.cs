@@ -32,15 +32,17 @@ namespace ChildVaccineSystem.Repository.Repositories
         {
             return await _context.Bookings
                 .Include(b => b.BookingDetails)
-                .ThenInclude(d => d.Vaccine)  // Nếu có vaccine
+                    .ThenInclude(d => d.Vaccine)
                 .Include(b => b.BookingDetails)
-                .ThenInclude(d => d.ComboVaccine)  // Nếu có combo vaccine
+                    .ThenInclude(d => d.ComboVaccine)
+                .Include(b => b.Children) // ✅ Thêm để ánh xạ ChildName
                 .FirstOrDefaultAsync(b => b.BookingId == bookingId);
         }
+
         public async Task<List<Booking>> GetUnassignedBookingsAsync()
         {
             return await _context.Bookings
-                .Where(b => b.Status == BookingStatus.Pending && !b.DoctorWorkSchedules.Any())
+                .Where(b => b.Status == BookingStatus.Confirmed && b.DoctorWorkScheduleId == null)
                 .Include(b => b.Children)
                 .Include(b => b.User)
                 .ToListAsync();

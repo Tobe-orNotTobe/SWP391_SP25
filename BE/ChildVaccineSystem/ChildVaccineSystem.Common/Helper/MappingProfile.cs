@@ -159,13 +159,13 @@ namespace ChildVaccineSystem.Common.Helper
             // Transaction
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
             CreateMap<CreateTransactionDTO, Transaction>();
-            //Doctor
+         
+            // DoctorWorkSchedule Mapping
             CreateMap<DoctorWorkSchedule, DoctorWorkScheduleDTO>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-                .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Booking.BookingId))
-                .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.User.FullName))
-                .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => src.Booking.BookingDate))
-                .ForMember(dest => dest.ChildName, opt => opt.MapFrom(src => src.Booking.Children.FullName));
+                .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Bookings.FirstOrDefault().BookingId)) 
+                .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => src.Bookings.FirstOrDefault().BookingDate)) 
+                .ForMember(dest => dest.ChildName, opt => opt.MapFrom(src => src.Bookings.FirstOrDefault().Children.FullName)); 
 
             // BlogPost Mapping
             CreateMap<BlogPost, BlogPostDTO>()
