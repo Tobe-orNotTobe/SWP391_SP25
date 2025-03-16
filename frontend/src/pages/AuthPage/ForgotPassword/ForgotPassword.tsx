@@ -7,6 +7,19 @@ const ForgotPassword : React.FC = () => {
 
     const {email, loading, error, setEmail,handleForgotPasswordSubmit} = useForgotPassWord();
 
+    React.useEffect(() => {
+        // Lưu trạng thái ban đầu để khôi phục sau này
+        const originalStyle = window.getComputedStyle(document.body).overflow;
+
+        // Vô hiệu hóa scroll
+        document.body.style.overflow = "hidden";
+
+        // Cleanup function khi component unmount
+        return () => {
+            document.body.style.overflow = originalStyle;
+        };
+    }, []);
+
     return(
         <>
             <CustomerNavbar/>

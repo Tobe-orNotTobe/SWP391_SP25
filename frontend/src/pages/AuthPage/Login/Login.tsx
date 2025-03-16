@@ -25,6 +25,19 @@ const Login : React.FC = () => {
 
     const {handleLoginGoogle} = useAuthGoogle();
 
+    React.useEffect(() => {
+        // Lưu trạng thái ban đầu để khôi phục sau này
+        const originalStyle = window.getComputedStyle(document.body).overflow;
+
+        // Vô hiệu hóa scroll
+        document.body.style.overflow = "hidden";
+
+        // Cleanup function khi component unmount
+        return () => {
+            document.body.style.overflow = originalStyle;
+        };
+    }, []);
+
     if (isRedirecting) {
         return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng..." delay={2000} to="/homepage" />;
     }
