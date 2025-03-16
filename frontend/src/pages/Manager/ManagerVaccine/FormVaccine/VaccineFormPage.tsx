@@ -15,10 +15,8 @@ const VaccineFormPage: React.FC = () => {
         isEditMode,
         form,
         handleSubmit,
-        handleUploadImage,
-        setFile,
-        file,
-        imageUrl,
+        previewUrl,
+        handleFileChange,
         loading,
         handleEditorChange,
     } = useVaccineForm();
@@ -54,20 +52,29 @@ const VaccineFormPage: React.FC = () => {
                             >
                                 <div className="image-upload">
                                     <Upload
+                                        name="image"
                                         accept="image/*"
                                         showUploadList={false}
-                                        beforeUpload={async (file: File) => {
-                                            setFile(file);
-                                            await handleUploadImage(file);
+                                        beforeUpload={(file: File) => {
+                                            handleFileChange(file);
                                             return false;
                                         }}
                                     >
                                         <Button className="upload-button">Chọn ảnh</Button>
                                     </Upload>
-                                    {file && <p className="file-name">{file.name}</p>}
-                                    {imageUrl && (
+
+                                    {/* Hiển thị ảnh preview */}
+                                    {previewUrl && (
                                         <div className="image-preview">
-                                            <img src={imageUrl} alt="Vaccine" />
+                                            <img
+                                                src={previewUrl}
+                                                alt="Xem trước ảnh"
+                                                style={{
+                                                    maxWidth: "100%",
+                                                    maxHeight: "200px",
+                                                    marginTop: "10px"
+                                                }}
+                                            />
                                         </div>
                                     )}
                                 </div>
