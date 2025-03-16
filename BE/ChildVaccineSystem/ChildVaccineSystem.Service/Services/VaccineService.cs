@@ -42,43 +42,62 @@ namespace ChildVaccineSystem.Services
         public async Task<VaccineDTO> CreateVaccineAsync(CreateVaccineDTO vaccineDto)
         {
             var vaccine = _mapper.Map<Vaccine>(vaccineDto);
-            var createdSchedule = await _unitOfWork.Vaccines.AddAsync(vaccine);
+
+            // ✅ Xử lý Parent Vaccine nếu có
+            if (vaccineDto.IsParentId.HasValue)
+            {
+                vaccine.ParentVaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == vaccineDto.IsParentId.Value);
+            }
+
+            var createdVaccine = await _unitOfWork.Vaccines.AddAsync(vaccine);
             await _unitOfWork.CompleteAsync();
-            return _mapper.Map<VaccineDTO>(createdSchedule);
+
+            return _mapper.Map<VaccineDTO>(createdVaccine);
         }
+
 
         public async Task<VaccineDTO> UpdateVaccineAsync(int id, UpdateVaccineDTO updatedVaccineDto)
         {
-            var existingSchedule = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == id);
-            if (existingSchedule == null) return null;
+            var existingVaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == id);
+            if (existingVaccine == null) return null;
 
-            _mapper.Map(updatedVaccineDto, existingSchedule);
-			var updatedVaccine = await _unitOfWork.Vaccines.UpdateAsync(existingSchedule);
+            _mapper.Map(updatedVaccineDto, existingVaccine);
+
+            // ✅ Xử lý Parent Vaccine nếu có
+            if (updatedVaccineDto.IsParentId.HasValue)
+            {
+                existingVaccine.ParentVaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == updatedVaccineDto.IsParentId.Value);
+            }
+
+            var updatedVaccine = await _unitOfWork.Vaccines.UpdateAsync(existingVaccine);
             await _unitOfWork.CompleteAsync();
+
             return _mapper.Map<VaccineDTO>(updatedVaccine);
         }
+
 
         public async Task<bool> DeleteVaccineAsync(int id)
         {
             var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == id);
             if (vaccine == null) return false;
 
-			var comboDetails = await _unitOfWork.ComboDetails.GetAllAsync(cd => cd.VaccineId == id);
-			if (comboDetails.Any())
-			{
-				
-				foreach (var comboDetail in comboDetails)
-				{
-					await _unitOfWork.ComboDetails.DeleteAsync(comboDetail);
-				}
-			}
-		
-			vaccine.Status = false;
-			await _unitOfWork.Vaccines.UpdateAsync(vaccine);
-			await _unitOfWork.CompleteAsync();
+            var childVaccines = await _unitOfWork.Vaccines.GetAllAsync(v => v.IsParentId == id);
+            if (childVaccines.Any())
+            {
+                foreach (var childVaccine in childVaccines)
+                {
+                    childVaccine.IsParentId = null; // Ngắt liên kết với vaccine cha
+                    await _unitOfWork.Vaccines.UpdateAsync(childVaccine);
+                }
+            }
 
-			return true;
+            vaccine.Status = false;
+            await _unitOfWork.Vaccines.UpdateAsync(vaccine);
+            await _unitOfWork.CompleteAsync();
+
+            return true;
         }
+
 
         public async Task<List<VaccineDTO>> GetVaccinesByTypeAsync(bool isNecessary)
         {

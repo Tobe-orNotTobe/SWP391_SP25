@@ -23,6 +23,7 @@ namespace ChildVaccineSystem.Data.DTO
 		public string UndesirableEffects { get; set; }
 		public string Preserve { get; set; }
 		public int InjectionsCount { get; set; }
-
-	}
+        public int? IsParentId { get; set; } // ✅ Thêm thuộc tính
+        public bool IsIncompatibility { get; set; } // ✅ Thêm thuộc tính
+    }
 }
