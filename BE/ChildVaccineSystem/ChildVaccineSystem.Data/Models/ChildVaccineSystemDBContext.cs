@@ -56,13 +56,13 @@ namespace ChildVaccineSystem.Data.Models
 
 			// User Relationships
 			modelBuilder.Entity<User>()
-				.HasMany<Children>()
+				.HasMany(u => u.Children) 
 				.WithOne(c => c.User)
 				.HasForeignKey(c => c.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<User>()
-				.HasMany<Booking>()
+				.HasMany(u => u.Bookings)
 				.WithOne(b => b.User)
 				.HasForeignKey(b => b.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
@@ -74,13 +74,13 @@ namespace ChildVaccineSystem.Data.Models
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<User>()
-				.HasMany<VaccinationRecord>()
+				.HasMany(u => u.VaccinationRecords)
 				.WithOne(vr => vr.User)
 				.HasForeignKey(vr => vr.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<User>()
-				.HasMany<Notification>()
+				.HasMany(u => u.Notifications)
 				.WithOne(n => n.User)
 				.HasForeignKey(n => n.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
