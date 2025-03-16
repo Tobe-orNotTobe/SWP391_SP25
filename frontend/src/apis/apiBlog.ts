@@ -122,24 +122,6 @@ export const apiGetBrieftContent = async () => {
     }
 };
 
-// export const apiGetNewsIntro = async () => {
-//     const response = await axios.get("Decorative/NewsIntro.json");
-//     if (response.data) {
-//         return response.data;
-//     } else {
-//         return [];
-//     }
-// };
-
-export const apiGetVaccineServiceIntro = async () => {
-    const response = await axios.get("Vaccine/VaccineService.json");
-    if (response.data) {
-        return response.data;
-    } else {
-        return [];
-    }
-};
-
 export const apiGetBlogBasic = async () => {
     try{
         const response = await axiosInstance.get("/api/Blog/basic");
@@ -149,3 +131,12 @@ export const apiGetBlogBasic = async () => {
         throw err;
     }
 }
+
+export const apiGetVaccineServiceIntro = async () => {
+    const response = await axios.get("Vaccine/VaccineService.json");
+    if (response.data) {
+        return response.data;
+    } else {
+        return [];
+    }
+};

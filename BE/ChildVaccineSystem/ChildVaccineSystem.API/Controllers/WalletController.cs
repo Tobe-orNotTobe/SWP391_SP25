@@ -16,16 +16,14 @@ namespace ChildVaccineSystem.API.Controllers
 	{
 		private readonly IWalletService _walletService;
 		private readonly IPaymentService _paymentService;
-		private readonly IWalletDepositService _walletDepositService;
 		private readonly IConfiguration _configuration;
 
 		private readonly APIResponse _response;
 
-		public WalletController(IWalletService walletService, IPaymentService paymentService, IWalletDepositService walletDepositService, IConfiguration configuration, APIResponse response)
+		public WalletController(IWalletService walletService, IPaymentService paymentService, IConfiguration configuration, APIResponse response)
 		{
 			_walletService = walletService;
 			_paymentService = paymentService;
-			_walletDepositService = walletDepositService;
 			_configuration = configuration;
 			_response = response;
 		}
@@ -147,22 +145,13 @@ namespace ChildVaccineSystem.API.Controllers
 
 				string ipAddress = Utils.GetIpAddress(HttpContext);
 
-				var result = await _walletDepositService.CreateDepositAsync(userId, depositDto, ipAddress);
+				var paymentUrl = await _walletService.CreateDepositAsync(userId, depositDto, ipAddress);
 
-				if (result.Success)
-				{
-					_response.Result = result;
-					_response.StatusCode = HttpStatusCode.OK;
-					_response.IsSuccess = true;
-					return Ok(_response);
-				}
-				else
-				{
-					_response.StatusCode = HttpStatusCode.BadRequest;
-					_response.IsSuccess = false;
-					_response.ErrorMessages.Add(result.Message);
-					return BadRequest(_response);
-				}
+				_response.Result = new { PaymentUrl = paymentUrl };
+				_response.StatusCode = HttpStatusCode.OK;
+				_response.IsSuccess = true;
+				return Ok(_response);
+
 			}
 			catch (Exception ex)
 			{
@@ -189,7 +178,7 @@ namespace ChildVaccineSystem.API.Controllers
 			try
 			{
 				var match = Regex.Match(vnpayParams["vnp_TxnRef"], @"TXN(\d+)_TIME");
-				int depositId = int.Parse(match.Groups[1].Value);
+				int walletTransactionId = int.Parse(match.Groups[1].Value);
 
 				if (!vnpayParams.TryGetValue("vnp_ResponseCode", out string responseCode))
 				{
@@ -219,7 +208,7 @@ namespace ChildVaccineSystem.API.Controllers
 					return Redirect($"{failureUrl}?errorCode=invalid_signature");
 				}
 
-				bool processResult = await _walletDepositService.ProcessDepositAsync(depositId, responseCode);
+				bool processResult = await _walletService.ProcessDepositAsync(walletTransactionId, responseCode);
 
 				if (processResult && responseCode == "00")
 				{
@@ -239,44 +228,6 @@ namespace ChildVaccineSystem.API.Controllers
 			catch (Exception ex)
 			{
 				return Redirect($"{failureUrl}?errorCode=system_error&message={WebUtility.UrlEncode(ex.Message)}");
-			}
-		}
-
-		/// <summary>
-		/// Lấy lịch sử gửi tiền của người dùng hiện tại
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet("deposit/history")]
-		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Customer")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public async Task<ActionResult<APIResponse>> GetDepositHistory()
-		{
-			try
-			{
-				var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-				if (string.IsNullOrEmpty(userId))
-				{
-					_response.StatusCode = HttpStatusCode.Unauthorized;
-					_response.IsSuccess = false;
-					_response.ErrorMessages.Add("User ID not found in token");
-					return Unauthorized(_response);
-				}
-
-				var deposits = await _walletDepositService.GetUserDepositsAsync(userId);
-
-				_response.Result = deposits;
-				_response.StatusCode = HttpStatusCode.OK;
-				_response.IsSuccess = true;
-				return Ok(_response);
-			}
-			catch (Exception ex)
-			{
-				_response.StatusCode = HttpStatusCode.InternalServerError;
-				_response.IsSuccess = false;
-				_response.ErrorMessages.Add($"Error retrieving deposit history: {ex.Message}");
-				return StatusCode((int)HttpStatusCode.InternalServerError, _response);
 			}
 		}
 

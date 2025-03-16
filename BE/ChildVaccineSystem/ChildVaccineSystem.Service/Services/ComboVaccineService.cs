@@ -31,7 +31,7 @@ namespace ChildVaccineSystem.Service.Services
         {
             var combo = await _unitOfWork.ComboVaccines.GetById(id);
             if (combo == null)
-                throw new Exception("ComboVaccine not found.");
+                throw new Exception("ComboVaccine không tìm thấy.");
             return _mapper.Map<ComboVaccineDTO>(combo);
         }
 
@@ -64,7 +64,7 @@ namespace ChildVaccineSystem.Service.Services
 
             if (comboDto.VaccineIds != null && comboDto.VaccineIds.Distinct().Count() != comboDto.VaccineIds.Count)
             {
-                throw new Exception("Combo Vaccine cannot contain duplicate vaccines. Please remove duplicate entries and try again.");
+                throw new Exception("Combo Vaccine không thể chứa vắc xin trùng lặp. Vui lòng xóa các mục trùng lặp và thử lại.");
             }
 
             var existingVaccineIds = existingCombo.ComboDetails.Select(cd => cd.VaccineId).ToList();
@@ -74,7 +74,7 @@ namespace ChildVaccineSystem.Service.Services
                 var duplicates = comboDto.VaccineIds.Intersect(existingVaccineIds).ToList();
                 if (duplicates.Any())
                 {
-                    throw new Exception($"The following vaccine IDs already exist in the combo: {string.Join(", ", duplicates)}. Please remove them and try again.");
+                    throw new Exception($"Các ID vắc xin sau đây đã tồn tại trong combo: {string.Join(", ", duplicates)}. Vui lòng loại bỏ chúng và thử lại.");
                 }
 
                 var comboDetailsToDelete = existingCombo.ComboDetails.ToList();

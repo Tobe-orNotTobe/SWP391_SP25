@@ -64,14 +64,19 @@ import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBl
 import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
 import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
 import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
-import StaffBlogPost from "./pages/Staff/StaffBlogPost.tsx";
-import AdminBookingPage from "./pages/Admin/AdminBooking/AdminBookingList/AdminBookingList.tsx";
-import DoctorProfile from "./pages/Doctor/DoctorProfile/DoctorProfile.tsx";
-import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
+
 import NewsPage from "./pages/News/NewsPage.tsx";
 import NewsDetailPage from "./pages/News/NewsDetailPage.tsx";
+import Failure from "./components/Failure/Failure.tsx";
 
+import DoctorBlogPostPage from "./pages/Doctor/DoctorBlogPost.tsx";
+import DoctorBlogManagePage from "./pages/Doctor/Blog/DoctorBlogManage/DoctorBlogManage.tsx";
+import AdminBookingPage from "./pages/Admin/AdminBooking/AdminBookingList/AdminBookingList.tsx";
+import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
 
+import StaffBlogPostPage from "./pages/Staff/StaffBlogPost.tsx";
+import StaffBlogManagePage from "./pages/Staff/Blog/StaffBlogManage/StaffBlogManage.tsx";
+import DoctorProfile from "./pages/Doctor/DoctorProfile/DoctorProfile.tsx";
 
 
 function App() {
@@ -79,8 +84,11 @@ function App() {
         <BrowserRouter>
             <PageLoader />
             <Routes>
+                <Route path="/payment" element={<TransactionPage />} />
+                <Route path="/payment/:bookingId" element={<TransactionPage/>} />
                 <Route path="/payment-success" element={<PaymentSuccess />}/>
                 <Route path="/wallet/deposit-success" element={<DepositSuccess/>}/>
+                <Route path="/wallet/deposit-failure" element={<Failure/>}/>
 
                 {/* Public Routes */}
                 <Route path="/" element={<PublicRoute><HomePage/></PublicRoute>}/>
@@ -96,9 +104,10 @@ function App() {
                 <Route path="/handbook/after" element={<PublicRoute><HandBookAfter /></PublicRoute>} />
                 <Route path="/vaccine-packages" element={<PublicRoute><VaccinePackagePage/></PublicRoute>} />
                 <Route path="/blog" element={<PublicRoute><BlogPage/></PublicRoute>} />
-                <Route path="/blog/:id" element={<PublicRoute><BlogDetailPage/></PublicRoute>} />
                 <Route path="/news" element={<PublicRoute><NewsPage/></PublicRoute>} />
                 <Route path="/news/:id" element={<PublicRoute><NewsDetailPage/></PublicRoute>} />
+                <Route path="/blog/:id" element={<PublicRoute><BlogDetailPage/></PublicRoute>} />
+
                 {/* Authentication Routes */}
                 <Route path="/login" element={<NoAuthRoute><Login/></NoAuthRoute>} />
                 <Route path="/register" element={<NoAuthRoute><Register /></NoAuthRoute>} />
@@ -123,12 +132,15 @@ function App() {
                 <Route path="/staff/service" element={<ProtectedRoute allowedRoles={["Staff"]}><ServicePage /></ProtectedRoute>} />
                 <Route path="/staff/assignDoctor" element={<ProtectedRoute allowedRoles={["Staff"]}><AssignPage /></ProtectedRoute>} />
                 <Route path="/staff/booking" element={<ProtectedRoute allowedRoles={["Staff"]}><BookingForStaff /></ProtectedRoute>} />
-                <Route path="/staff/blogPost" element={<ProtectedRoute allowedRoles={["Doctor"]}><StaffBlogPost /></ProtectedRoute>} />
+                <Route path="/staff/blogPost" element={<ProtectedRoute allowedRoles={["Staff"]}><StaffBlogPostPage /></ProtectedRoute>} />
+                <Route path="/staff/blogManager" element={<ProtectedRoute allowedRoles={["Staff"]}><StaffBlogManagePage /></ProtectedRoute>} />
+
+                {/* Doctor Routes */}
                 <Route path="/doctor/vaccination-schedule" element={<ProtectedRoute allowedRoles={["Doctor"]}><VaccinationSchedulePage /></ProtectedRoute>} />
                 <Route path="/doctor/service" element={<ProtectedRoute allowedRoles={["Doctor"]}><ServicePage /></ProtectedRoute>} />
-                <Route path="/doctor/profile" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorProfile/></ProtectedRoute>}/>
-
-
+                <Route path="/doctor/blogPost" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorBlogPostPage /></ProtectedRoute>} />
+                <Route path="/doctor/blogManager" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorBlogManagePage /></ProtectedRoute>} />
+                <Route path="/doctor/profile" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorProfile /></ProtectedRoute>}/>
                 {/* Manager Routes */}
                 <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerDashBoard /></ProtectedRoute>} />
                 <Route path="/manager/vaccines" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerVaccinePage /></ProtectedRoute>} />

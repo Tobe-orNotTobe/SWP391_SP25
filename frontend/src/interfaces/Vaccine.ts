@@ -20,8 +20,10 @@ export interface VaccineDetail {
     notes: string;
     vaccineInteractions: string;
     undesirableEffects: string;
+    injectionsCount : number
     preserve: string;
-    injectionsCount: number;
+    isParentId: number; // ID của vaccine cha (nếu là vaccine kết hợp)
+    isIncompatibility: boolean; // Vaccine có tương kỵ với loại nào khác không
 }
 
 
@@ -44,7 +46,7 @@ export interface PostVaccineComboDetail {
 
 
 export interface InjectionSchedule {
-    doseNumber: number;
+    injectionNumber: number;
     injectionMonth: number;
     isRequired: boolean;
     notes: string;
@@ -108,4 +110,10 @@ export interface ExportedVaccine {
     returnedQuantity : number;
     totalQuantity : number
     status: boolean;
+}
+
+export interface TopUseVaccine {
+    vaccineId: number;
+    vaccineName: string;
+    count :number;
 }

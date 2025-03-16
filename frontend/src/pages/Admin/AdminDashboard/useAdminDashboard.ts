@@ -1,22 +1,46 @@
 import {useEffect, useState} from "react";
-import {apiDashBoardFeedBack, apiDashBoardRevenue} from "../../../apis/apiAdmin.ts";
+import {apiDashBoardFeedBack, apiDashBoardTotalRevenue, apiDashBoardRevenueLast10days} from "../../../apis/apiAdmin.ts";
 
-
-interface Revenue {
-    id: string;
-    revenue: number;
-    date: string;
-}
 
 interface Feedback{
-    id: string;
+    feedbackId: string;
     rating : number;
     comment: string;// Tren revenue thi hien thi 5 chu la dc r
     userName : string;
 }
 
-export const useRevenueDetail = () =>{
-    const [revenue, setRevenue] = useState<Revenue[]>([])
+interface RevenueLast10Days {
+    date: string;
+    totalRevenue: number;
+}
+
+export const useRevenueLast10Days = () => {
+    const [revenue, setRevenueLast10Days ] = useState<RevenueLast10Days[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        const fetchRefundUserList =  async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const data = await apiDashBoardRevenueLast10days();
+                if (data.isSuccess) {
+                    setRevenueLast10Days(data.result);
+                }
+            }catch (err){
+                setError("error");
+                console.log(err);
+            }finally {
+                setLoading(false);
+            }
+        }
+        fetchRefundUserList();
+    },[])
+    return {revenue, loading, error};
+}
+
+export const useRevenueTotal = () =>{
+    const [revenue, setRevenue] = useState<number>(0)
     const[loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -26,10 +50,9 @@ export const useRevenueDetail = () =>{
             setLoading(true);
 
             try {
-                const data = await apiDashBoardRevenue();
+                const data = await apiDashBoardTotalRevenue();
                 if (data ) {
-                    // setRevernue(data.result);
-                    setRevenue(data);
+                    setRevenue(data.result);
                 }
             }catch(err){
                 setError("Lỗi");

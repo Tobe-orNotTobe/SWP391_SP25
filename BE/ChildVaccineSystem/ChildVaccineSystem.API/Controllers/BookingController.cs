@@ -57,7 +57,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error creating booking: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi tạo đặt chỗ: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -74,7 +74,7 @@ namespace ChildVaccineSystem.API.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("No bookings found for this user");
+                    _response.ErrorMessages.Add("Không tìm thấy đặt chỗ nào cho người dùng này");
                     return NotFound(_response);
                 }
 
@@ -87,7 +87,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving user bookings: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi truy xuất đặt chỗ của người dùng: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -104,7 +104,7 @@ namespace ChildVaccineSystem.API.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("Booking not found");
+                    _response.ErrorMessages.Add("Không tìm thấy đặt chỗ");
                     return NotFound(_response);
                 }
 
@@ -117,7 +117,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving booking: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi truy xuất đặt chỗ: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -151,7 +151,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.InternalServerError;
-                _response.ErrorMessages = new List<string> { $"Error cancelling booking: {ex.Message}" };
+                _response.ErrorMessages = new List<string> { $"Lỗi hủy đặt chỗ: {ex.Message}" };
 
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
@@ -169,7 +169,7 @@ namespace ChildVaccineSystem.API.Controllers
 
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
-                _response.Result = new { Success = result, Message = "Doctor assigned to booking successfully." };
+                _response.Result = new { Success = result, Message = "Bác sĩ chỉ định đặt phòng thành công." };
                 return Ok(_response);
             }
             catch (Exception ex)
@@ -203,7 +203,7 @@ namespace ChildVaccineSystem.API.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("No bookings found for this doctor.");
+                    _response.ErrorMessages.Add("Không tìm thấy đặt chỗ nào cho bác sĩ này.");
                     return NotFound(_response);
                 }
             }
@@ -211,7 +211,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving doctor bookings: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi khi truy xuất thông tin đặt chỗ của bác sĩ: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -268,7 +268,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving unassigned bookings: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi truy xuất các đặt chỗ chưa được chỉ định: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -289,9 +289,28 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving all bookings: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi truy xuất tất cả đặt chỗ: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
+
+        [HttpPost("{bookingId}/unassign-doctor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UnassignDoctor(int bookingId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var result = await _bookingService.UnassignDoctorFromBookingAsync(bookingId, userId);
+
+            if (result)
+                return Ok(new { Message = "Hủy phân công thành công." });
+
+            return BadRequest("Hủy phân công thất bại.");
+        }
+
     }
 }

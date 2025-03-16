@@ -1,13 +1,14 @@
 import Staff1Layout from "../../components/Layout/StaffLayout/Stafff1Layout/Staff1Layout";
-import BlogPost from "../../components/Blog/BlogPost.tsx";
+import AdminBlogFormPage from "../Admin/AdminBlog/AdminBlogForm/AdminBogForm.tsx";
+import StaffBlogForm from "./Blog/StaffBogForm.tsx";
 
 
-function StaffBlogPost() {
+function StaffBlogPostPage() {
   return (
     <Staff1Layout>
-      <BlogPost/>
+      <StaffBlogForm/>
     </Staff1Layout>
   );
 }
 
-export default StaffBlogPost;
+export default StaffBlogPostPage;

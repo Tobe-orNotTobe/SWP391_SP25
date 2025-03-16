@@ -14,14 +14,23 @@ export const apiGetAllDoctors = async () => {
   }
 };
 
-export const apiDashBoardRevenue = async  () => {
+export const apiDashBoardTotalRevenue = async  () => {
   try {
-    // const  response = await axiosInstance.get("/api/Dashboard/revenue");
-    const response = await axios.get("/Dashboard/Revenue.json");
+    const response = await axiosInstance.get("/api/Dashboard/total-revenue");
     return response.data;
   }catch(error){
     console.error("API Dashboard Error:", error);
     throw error;
+  }
+}
+
+export const apiDashBoardRevenueLast10days = async  () => {
+  try {
+    const response = await  axiosInstance.get("/api/Dashboard/revenue/last-10-days");
+    return response.data;
+  }catch (err){
+    console.error("API Dashboard Error:", err);
+    throw err;
   }
 }
 
@@ -74,6 +83,16 @@ export const apiAdminExportedVaccine = async () => {
     return response.data;
   }catch (err){
     console.log(err);
+    throw err;
+  }
+}
+
+export const apiTopUseVaccine = async () => {
+  try {
+    const response = await axiosInstance.get("/api/Dashboard/top-used-vaccines");
+    return response.data;
+  }catch (err){
+    console.error("API Top Used Error:", err);
     throw err;
   }
 }

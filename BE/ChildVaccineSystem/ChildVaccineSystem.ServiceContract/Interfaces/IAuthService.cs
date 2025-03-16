@@ -17,5 +17,6 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task LogoutAsync(string refreshToken);
         Task<bool> ForgetPasswordAsync(string email);
         Task<(bool Success, string Message)> ResetPasswordAsync(string email, string token, string newPassword);
+        string GenerateJwtToken(User user);
     }
 }

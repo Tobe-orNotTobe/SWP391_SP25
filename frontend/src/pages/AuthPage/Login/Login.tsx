@@ -1,11 +1,12 @@
 import React from "react";
 import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNavbar";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import {useAuthGoogle, useLogin} from "./useLogin";
 import "../Auth.scss"
 import LoadingRedirect from "../../../components/Loading/LoadingRedirect";
+import {FcGoogle} from "react-icons/fc";
 
 const Login : React.FC = () => {
 

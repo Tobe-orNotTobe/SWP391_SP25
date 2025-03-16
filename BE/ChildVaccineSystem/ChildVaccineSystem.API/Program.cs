@@ -1,8 +1,11 @@
+﻿using ChildVaccineSystem.Common.Config;
 using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.Data.Models;
 using ChildVaccineSystem.Service;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +13,18 @@ using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load cấu hình Firebase từ appsettings.json
+var firebaseSettings = builder.Configuration.GetSection("Firebase").Get<FirebaseSettings>();
+
+// Khởi tạo Firebase Admin SDK nếu chưa có
+if (FirebaseApp.DefaultInstance == null)
+{
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.FromFile(firebaseSettings.ServiceAccountPath)
+    });
+}
 
 // Add services to the container
 builder.Services.AddControllers();
@@ -80,6 +95,20 @@ builder.Services.AddAuthentication(options =>
 		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
 	};
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer("Firebase", options =>
+    {
+        options.Authority = $"https://securetoken.google.com/{firebaseSettings.ProjectId}";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = $"https://securetoken.google.com/{firebaseSettings.ProjectId}",
+            ValidateAudience = true,
+            ValidAudience = firebaseSettings.ProjectId,
+            ValidateLifetime = true
+        };
+    });
 
 builder.Services.AddAuthorization(options =>
 {

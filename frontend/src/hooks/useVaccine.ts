@@ -1,7 +1,7 @@
 import { useState, useEffect , useRef} from "react"
 
 import {
-    GetVaccineComboDetail,
+    GetVaccineComboDetail, TopUseVaccine,
     VaccinationSchedule,
     VaccineDetail,
     VaccineIntro,
@@ -17,8 +17,7 @@ import {
     apiGetVaccinationScheduleById,
     apiGetVaccineInventoryStock, apiGetStockByVaccineInventoryId
 } from "../apis/apiVaccine";
-import {apiGetVaccineRecordByBookingId} from "../apis/apiBooking.ts";
-import {BookingInfo} from "../interfaces/VaccineRecord.ts";
+import {apiTopUseVaccine} from "../apis/apiAdmin.ts";
 
 export const useVaccineIntro = () =>{
     const[vaccineIntro, setVaccineIntro] = useState<VaccineIntro[]>([]);
@@ -276,31 +275,29 @@ export const useVaccineInventoryDetailByVaccineInventoryId = (vaccineId: number 
 
     return{vaccineInventoryDetailById, loading, error};
 }
-
-export const useVaccineRecordByBookingId = (bookingId: number) => {
-    const [vaccineRecord, setVaccineRecord] = useState<BookingInfo | null>(null);
+export const useTopUsedVaccine =  () => {
+    const [topUseVaccine, setTopUseVaccine] = useState<TopUseVaccine[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchVaccineRecord = async () => {
+        const fetchTopUseVaccine = async () => {
             setLoading(true);
             setError(null);
-            try {
-                const data = await apiGetVaccineRecordByBookingId(bookingId);
-                if (data.isSuccess && data.result) {
-                    setVaccineRecord(data.result);
+            try{
+                const response = await apiTopUseVaccine();
+                if (response && Array.isArray(response.result)) {
+                    setTopUseVaccine(response.result)
                 }
-            } catch (err) {
+            }catch (err){
                 console.error(err);
-                setError("Lỗi khi tải dữ liệu hồ sơ tiêm chủng.");
-            } finally {
-                setLoading(false);
+                setError("Err")
+            }finally {
+                setLoading(false)
             }
-        };
+        }
+        fetchTopUseVaccine();
+    },[])
+    return{topUseVaccine, loading, error}
+}
 
-        fetchVaccineRecord();
-    }, [bookingId]);
-
-    return { vaccineRecord, loading, error };
-};

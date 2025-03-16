@@ -31,7 +31,7 @@ public class UserController : ControllerBase
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User ID is missing in the token.");
+                _response.ErrorMessages.Add("Mã thông báo thiếu ID người dùng.");
                 return BadRequest(_response);
             }
 
@@ -40,7 +40,7 @@ public class UserController : ControllerBase
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User profile not found");
+                _response.ErrorMessages.Add("Không tìm thấy hồ sơ người dùng");
                 return NotFound(_response);
             }
 
@@ -53,7 +53,7 @@ public class UserController : ControllerBase
         {
             _response.StatusCode = HttpStatusCode.InternalServerError;
             _response.IsSuccess = false;
-            _response.ErrorMessages.Add($"Error retrieving profile: {ex.Message}");
+            _response.ErrorMessages.Add($"Lỗi khi truy xuất hồ sơ: {ex.Message}");
             return StatusCode((int)HttpStatusCode.InternalServerError, _response);
         }
     }
@@ -71,7 +71,7 @@ public class UserController : ControllerBase
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User ID is missing in the token.");
+                _response.ErrorMessages.Add("Token thiếu ID người dùng.");
                 return BadRequest(_response);
             }
 
@@ -86,20 +86,20 @@ public class UserController : ControllerBase
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Failed to update profile");
+                _response.ErrorMessages.Add("Không thể cập nhật hồ sơ");
                 return BadRequest(_response);
             }
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = new { Message = "Profile updated successfully" };
+            _response.Result = new { Message = "Hồ sơ đã được cập nhật thành công" };
             return Ok(_response);
         }
         catch (Exception ex)
         {
             _response.StatusCode = HttpStatusCode.InternalServerError;
             _response.IsSuccess = false;
-            _response.ErrorMessages.Add($"Error updating profile: {ex.Message}");
+            _response.ErrorMessages.Add($"Lỗi khi cập nhật hồ sơ: {ex.Message}");
             return StatusCode((int)HttpStatusCode.InternalServerError, _response);
         }
     }
@@ -116,7 +116,7 @@ public class UserController : ControllerBase
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User ID is missing in the token.");
+                _response.ErrorMessages.Add("Token thiếu ID người dùng.");
                 return BadRequest(_response);
             }
 
@@ -126,22 +126,37 @@ public class UserController : ControllerBase
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Failed to change password. Please check the old password.");
+                _response.ErrorMessages.Add("Không thể thay đổi mật khẩu. Vui lòng kiểm tra mật khẩu cũ.");
                 return BadRequest(_response);
             }
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = new { Message = "Password changed successfully" };
+            _response.Result = new { Message = "Mật khẩu đã được thay đổi thành công" };
             return Ok(_response);
         }
         catch (Exception ex)
         {
             _response.StatusCode = HttpStatusCode.InternalServerError;
             _response.IsSuccess = false;
-            _response.ErrorMessages.Add($"Error changing password: {ex.Message}");
+            _response.ErrorMessages.Add($"Lỗi khi thay đổi mật khẩu: {ex.Message}");
             return StatusCode((int)HttpStatusCode.InternalServerError, _response);
         }
+    }
+
+    [HttpGet("search")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> SearchUser(string keyword)
+    {
+        if (string.IsNullOrEmpty(keyword))
+            return BadRequest("Keyword không được để trống");
+
+        var user = await _userService.GetUserByPhoneOrEmailAsync(keyword);
+
+        if (user == null)
+            return NotFound("Không tìm thấy khách hàng");
+
+        return Ok(user);
     }
 
 }

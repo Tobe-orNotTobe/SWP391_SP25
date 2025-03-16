@@ -33,7 +33,7 @@ namespace ChildVaccineSystem.Service.Services
             );
 
             if (booking == null)
-                throw new ArgumentException($"Booking with ID {id} not found");
+                throw new ArgumentException($"Đặt chỗ bằng ID {id} không tìm thấy");
 
             var bookingDTO = _mapper.Map<BookingDTO>(booking);
 
@@ -80,7 +80,7 @@ namespace ChildVaccineSystem.Service.Services
             var child = await _unitOfWork.Children.GetAsync(c => c.ChildId == bookingDto.ChildId);
             if (child == null || child.UserId != userId)
             {
-                throw new ArgumentException("This child does not belong to the current user.");
+                throw new ArgumentException("Đứa trẻ này không thuộc về người dùng hiện tại.");
             }
 
             // Get the appropriate PricingPolicy based on booking date and current date
@@ -118,7 +118,7 @@ namespace ChildVaccineSystem.Service.Services
 
 					if (vaccineInventory == null)
 					{
-						throw new ArgumentException($"No inventory found for VaccineId {vaccine.VaccineId}");
+						throw new ArgumentException($"Không tìm thấy hàng tồn kho cho VaccineId {vaccine.VaccineId}");
 					}
 
 					bookingDetail.VaccineInventoryId = vaccineInventory.VaccineInventoryId;
@@ -209,7 +209,7 @@ namespace ChildVaccineSystem.Service.Services
         {
             // Validate booking date
             if (bookingDto.BookingDate < DateTime.Now)
-                throw new ArgumentException("Booking date cannot be in the past");
+                throw new ArgumentException("Ngày đặt phòng không thể là ngày trong quá khứ");
 
             // ✅ Kiểm tra nếu cùng một đứa trẻ đã có booking trong cùng ngày
             var existingBooking = await _unitOfWork.Bookings.GetAsync(
@@ -220,7 +220,7 @@ namespace ChildVaccineSystem.Service.Services
 
             if (existingBooking != null)
             {
-                throw new ArgumentException("This child already has a booking on this date.");
+                throw new ArgumentException("Trẻ này đã được đặt chỗ vào ngày này.");
             }
 
             // ✅ Không cần kiểm tra xung đột theo `userId` nữa vì đã kiểm tra theo `childId`
@@ -229,21 +229,21 @@ namespace ChildVaccineSystem.Service.Services
             // Validate child exists and belongs to the current user
             var child = await _unitOfWork.Children.GetAsync(c => c.ChildId == bookingDto.ChildId);
             if (child == null || child.UserId != userId)
-                throw new ArgumentException("Child not found or does not belong to the user");
+                throw new ArgumentException("Không tìm thấy đứa trẻ hoặc không thuộc về người dùng");
 
             // Validate booking details exist
             if (!bookingDto.BookingDetails.Any())
-                throw new ArgumentException("Booking must contain at least one vaccine or combo vaccine");
+                throw new ArgumentException("Đặt chỗ phải có ít nhất một loại vắc xin hoặc vắc xin kết hợp");
 
             // Validate booking type consistency
             bool hasVaccine = bookingDto.BookingDetails.Any(bd => bd.VaccineId.HasValue);
             bool hasComboVaccine = bookingDto.BookingDetails.Any(bd => bd.ComboVaccineId.HasValue);
 
             if (hasVaccine && hasComboVaccine)
-                throw new ArgumentException("Cannot mix individual vaccines and combo vaccines in the same booking");
+                throw new ArgumentException("Không thể kết hợp vắc xin riêng lẻ và vắc xin combo trong cùng một lần đặt chỗ");
 
             if (!hasVaccine && !hasComboVaccine)
-                throw new ArgumentException("Booking must specify either vaccines or combo vaccines");
+                throw new ArgumentException("Việc đặt chỗ phải nêu rõ vắc xin hoặc vắc xin kết hợp");
 
             // Validate vaccines
             foreach (var detail in bookingDto.BookingDetails)
@@ -252,13 +252,13 @@ namespace ChildVaccineSystem.Service.Services
                 {
                     var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == detail.VaccineId);
                     if (vaccine == null)
-                        throw new ArgumentException($"Vaccine not found: {detail.VaccineId}");
+                        throw new ArgumentException($"Không tìm thấy vắc xin: {detail.VaccineId}");
                 }
                 else if (detail.ComboVaccineId.HasValue)
                 {
                     var comboVaccine = await _unitOfWork.ComboVaccines.GetAsync(cv => cv.ComboId == detail.ComboVaccineId);
                     if (comboVaccine == null)
-                        throw new ArgumentException($"Combo vaccine not found: {detail.ComboVaccineId}");
+                        throw new ArgumentException($"Không tìm thấy vắc xin kết hợp: {detail.ComboVaccineId}");
                 }
             }
         }
@@ -268,17 +268,17 @@ namespace ChildVaccineSystem.Service.Services
             var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
             if (booking == null)
             {
-                throw new ArgumentException($"Booking with ID {bookingId} not found");
+                throw new ArgumentException($"Đặt chỗ bằng ID {bookingId} không tìm thấy");
             }
 
             if (booking.Status != BookingStatus.Pending) 
             {
-                throw new ArgumentException("Only bookings with status 'Pending' can be canceled.");
+                throw new ArgumentException("Chỉ những đặt phòng có trạng thái 'Đang chờ xử lý' mới có thể bị hủy.");
             }
 
             if (booking.UserId != userId)
             {
-                throw new ArgumentException("You are not authorized to cancel this booking.");
+                throw new ArgumentException("Bạn không được phép hủy đặt chỗ này.");
             }
 
             booking.Status = BookingStatus.Cancelled; 
@@ -290,10 +290,10 @@ namespace ChildVaccineSystem.Service.Services
         {
             var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(bookingId);
             if (booking == null)
-                throw new ArgumentException("Booking not found.");
+                throw new ArgumentException("Không tìm thấy đặt chỗ.");
 
             if (booking.Status != BookingStatus.Confirmed)
-                throw new ArgumentException("Only confirmed bookings can be assigned to a doctor.");
+                throw new ArgumentException("Chỉ những đặt phòng đã được xác nhận mới có thể được chỉ định cho bác sĩ.");
 
             var doctorSchedule = new DoctorWorkSchedule
             {
@@ -380,5 +380,59 @@ namespace ChildVaccineSystem.Service.Services
 
             return _mapper.Map<List<BookingDTO>>(bookings);
         }
+        public async Task<bool> UnassignDoctorFromBookingAsync(int bookingId, string userId)
+        {
+            // Lấy thông tin đặt chỗ
+            var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(bookingId);
+            if (booking == null)
+            {
+                throw new ArgumentException("Không tìm thấy đặt chỗ.");
+            }
+
+            // Kiểm tra trạng thái booking (Chỉ khi trạng thái là 'InProgress' mới cho phép hủy phân công)
+            if (booking.Status != BookingStatus.InProgress)
+            {
+                throw new ArgumentException("Chỉ có thể hủy phân công khi trạng thái là 'Đang xử lý'.");
+            }
+
+            // Lấy thông tin phân công từ DoctorWorkSchedule
+            var doctorSchedule = await _unitOfWork.DoctorWorkSchedules
+                .GetAsync(ds => ds.BookingId == bookingId && ds.UserId == userId);
+
+            if (doctorSchedule == null)
+            {
+                throw new ArgumentException("Bạn không được phân công cho đặt chỗ này.");
+            }
+
+            // ✅ Trả lại vaccine vào kho
+            foreach (var detail in booking.BookingDetails)
+            {
+                if (detail.VaccineId.HasValue)
+                {
+                    await _inventoryService.ReturnVaccineAsync(detail.VaccineId.Value, 1);
+                }
+                else if (detail.ComboVaccineId.HasValue)
+                {
+                    var comboDetails = await _unitOfWork.ComboDetails
+                        .GetAllAsync(cd => cd.ComboId == detail.ComboVaccineId);
+
+                    foreach (var comboDetail in comboDetails)
+                    {
+                        await _inventoryService.ReturnVaccineAsync(comboDetail.VaccineId, 1);
+                    }
+                }
+            }
+
+            // ✅ Xóa bản ghi phân công khỏi DoctorWorkSchedule
+            _unitOfWork.DoctorWorkSchedules.DeleteAsync(doctorSchedule);
+
+            // ✅ Cập nhật trạng thái đặt chỗ về lại `Confirmed`
+            booking.Status = BookingStatus.Confirmed;
+
+            await _unitOfWork.CompleteAsync();
+
+            return true;
+        }
+
     }
 }

@@ -1,8 +1,8 @@
-import React from "react";
-import {Calendar, Modal, List, Button, Tag, Form, Input, Rate, Tabs, Popconfirm, Flex} from "antd";
+import React, {useState} from "react";
+import {Calendar, Modal, List, Button, Tag, Form, Input, Rate, Tabs, Popconfirm, Flex, Descriptions, Table} from "antd";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { useBookingUser , STATUS_COLORS} from "./useBookingHistoryPage.ts";
+import {useBookingUser, STATUS_COLORS, useVaccineRecordByBookingId} from "./useBookingHistoryPage.ts";
 import {useBookingHistoryPage} from "./useBookingHistoryPage.ts";
 import "./BookingHistory.scss";
 import { SelectInfo } from "antd/lib/calendar/generateCalendar";
@@ -12,17 +12,17 @@ import { Link } from "react-router-dom";
 import FloatingButtons from "../../../components/FloatingButton/FloatingButtons.tsx";
 import {FiEdit2} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
-// import {useVaccineRecordByBookingId} from "../../../hooks/useVaccine.ts";
+
 
 const BookingHistory: React.FC = () => {
     const { bookings } = useBookingUser();
 
-    // const [bId, setBId] = useState<number>(0);
-    //
-    // const {vaccineRecord} = useVaccineRecordByBookingId(bId)
-    //
-    // const [vaccineRecordModal, setVaccineRecordModal] = useState<boolean>(false);
 
+    const [bkid, setBkId] = useState<number>(0);
+
+    const [vaccineRecordModal,setVaccineRecordModal] = useState<boolean>(false);
+
+    const {vaccineRecord} =  useVaccineRecordByBookingId(bkid)
 
 
 
@@ -227,7 +227,7 @@ const BookingHistory: React.FC = () => {
                                                     <p>
                                                         <span className="label">Tổng tiền:</span>
                                                         <span className="value total-price">
-                                                            {booking.totalPrice.toLocaleString()} VNĐ
+                                                           {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(booking.totalPrice)} VNĐ
                                                         </span>
                                                     </p>
                                                     <p>
@@ -303,16 +303,16 @@ const BookingHistory: React.FC = () => {
                                                                         Nhập Feedback
                                                                     </Button>
                                                                 )}
-                                                                {/*<Button*/}
-                                                                {/*    type="primary"*/}
-                                                                {/*    className="vaccine-record-button"*/}
-                                                                {/*    onClick={() => {*/}
-                                                                {/*       setBId(booking.bookingId)*/}
-                                                                {/*        setVaccineRecordModal(true)*/}
-                                                                {/*    }}*/}
-                                                                {/*>*/}
-                                                                {/*    Xem Vaccine Record*/}
-                                                                {/*</Button>*/}
+                                                                <Button
+                                                                    type="primary"
+                                                                    className="vaccine-record-button"
+                                                                    onClick={() => {
+                                                                        setBkId(booking.bookingId)
+                                                                        setVaccineRecordModal(true)
+                                                                    }}
+                                                                >
+                                                                    Xem Vaccine Record
+                                                                </Button>
                                                             </>
                                                         )}
                                                     </div>
@@ -452,45 +452,49 @@ const BookingHistory: React.FC = () => {
                     />
                 </Modal>
 
-                {/*<Modal*/}
-                {/*    title="Chi Tiết Hồ Sơ Tiêm Chủng"*/}
-                {/*    open={vaccineRecordModal}*/}
-                {/*    onCancel={() => setVaccineRecordModal(false)}*/}
-                {/*    footer={null}*/}
-                {/*    width={800}*/}
-                {/*>*/}
-                {/*    {vaccineRecord ? (*/}
-                {/*        <>*/}
-                {/*            <Descriptions title="Thông Tin Cá Nhân" bordered column={2}>*/}
-                {/*                <Descriptions.Item label="Mã Đặt Lịch">{vaccineRecord.bookingId}</Descriptions.Item>*/}
-                {/*                <Descriptions.Item label="Họ Tên">{vaccineRecord.fullName}</Descriptions.Item>*/}
-                {/*                <Descriptions.Item label="Ngày Sinh">{vaccineRecord.dateOfBirth}</Descriptions.Item>*/}
-                {/*                <Descriptions.Item label="Chiều Cao">{vaccineRecord.height} cm</Descriptions.Item>*/}
-                {/*                <Descriptions.Item label="Cân Nặng">{vaccineRecord.weight} kg</Descriptions.Item>*/}
-                {/*                <Descriptions.Item label="Trạng Thái">{vaccineRecord.message}</Descriptions.Item>*/}
-                {/*            </Descriptions>*/}
+                <Modal
+                    title="Chi Tiết Hồ Sơ Tiêm Chủng"
+                    open={vaccineRecordModal}
+                    onCancel={() => setVaccineRecordModal(false)}
+                    footer={null}
+                    width={1000}
+                >
+                    {vaccineRecord ? (
+                        <>
+                            <Descriptions title="Thông Tin Cá Nhân" bordered column={2}>
+                                <Descriptions.Item label="Mã Đặt Lịch">{vaccineRecord.bookingId}</Descriptions.Item>
+                                <Descriptions.Item label="Họ Tên">{vaccineRecord.fullName}</Descriptions.Item>
+                                <Descriptions.Item label="Ngày Sinh">{vaccineRecord.dateOfBirth}</Descriptions.Item>
+                                <Descriptions.Item label="Chiều Cao">{vaccineRecord.height} cm</Descriptions.Item>
+                                <Descriptions.Item label="Cân Nặng">{vaccineRecord.weight} kg</Descriptions.Item>
+                            </Descriptions>
 
-                {/*            <h3 style={{ marginTop: 16 }}>Lịch Sử Tiêm Chủng</h3>*/}
-                {/*            <Table*/}
-                {/*                dataSource={vaccineRecord}*/}
-                {/*                rowKey="vaccinationRecordId"*/}
-                {/*                pagination={false}*/}
-                {/*                bordered*/}
-                {/*            >*/}
-                {/*                <Table.Column title="ID" dataIndex="vaccinationRecordId" key="id" />*/}
-                {/*                <Table.Column title="Tên Vaccine" dataIndex="vaccineName" key="vaccineName" />*/}
-                {/*                <Table.Column title="Liều Lượng (ml)" dataIndex="doseAmount" key="doseAmount" />*/}
-                {/*                <Table.Column title="Giá (VNĐ)" dataIndex="price" key="price" />*/}
-                {/*                <Table.Column title="Ngày Tiêm Kế Tiếp" dataIndex="nextDoseDate" key="nextDoseDate" />*/}
-                {/*                <Table.Column title="Lô Vaccine" dataIndex="batchNumber" key="batchNumber" />*/}
-                {/*                <Table.Column title="Trạng Thái" dataIndex="status" key="status" />*/}
-                {/*                <Table.Column title="Ghi Chú" dataIndex="notes" key="notes" />*/}
-                {/*            </Table>*/}
-                {/*        </>*/}
-                {/*    ) : (*/}
-                {/*        <p>Không có dữ liệu</p>*/}
-                {/*    )}*/}
-                {/*</Modal>*/}
+                            <h3 style={{ marginTop: 16 }}>Lịch Sử Tiêm Chủng</h3>
+                            <Table
+                                dataSource={vaccineRecord.vaccineRecords}
+                                rowKey="vaccinationRecordId"
+                                pagination={false}
+                                bordered
+                            >
+                                <Table.Column title="Mã booking" dataIndex="vaccinationRecordId" key="id" />
+                                <Table.Column title="Tên Vaccine" dataIndex="vaccineName" key="vaccineName" />
+                                <Table.Column title="Liều Lượng (ml)" dataIndex="doseAmount" key="doseAmount" />
+                                <Table.Column
+                                    title="Giá (VNĐ)"
+                                    dataIndex="price"
+                                    key="price"
+                                    render={(price) => new Intl.NumberFormat("vi-VN").format(price) + " VND"}
+                                />
+                                <Table.Column title="Ngày Tiêm Kế Tiếp" dataIndex="nextDoseDate" key="nextDoseDate" />
+                                <Table.Column title="Lô Vaccine" dataIndex="batchNumber" key="batchNumber" />
+                                <Table.Column title="Trạng Thái" dataIndex="status" key="status" />
+                                <Table.Column title="Ghi Chú" dataIndex="notes" key="notes" />
+                            </Table>
+                        </>
+                    ) : (
+                        <p>Không có dữ liệu</p>
+                    )}
+                </Modal>
 
 
             </div>

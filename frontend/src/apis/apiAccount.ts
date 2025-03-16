@@ -209,7 +209,6 @@ export const apiGetUserWallet = async () => {
         const response = await axiosInstance.get("/api/Wallet/user");
         return response.data;
     }catch (err){
-        console.error("API GetUserWallet Error:", err);
         throw err;
     }
 }

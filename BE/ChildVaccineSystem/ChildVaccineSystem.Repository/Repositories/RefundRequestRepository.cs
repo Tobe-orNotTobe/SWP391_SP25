@@ -55,7 +55,7 @@ namespace ChildVaccineSystem.Repository.Repositories
 		public async Task<bool> HasExistingRequestForBookingAsync(int bookingId)
 		{
 			return await _context.RefundRequests
-				.AnyAsync(r => r.BookingId == bookingId && r.Status == "Pending");
+				.AnyAsync(r => r.BookingId == bookingId );
 		}
 
 		public async Task<RefundRequest> CreateAsync(RefundRequest refundRequest)

@@ -1,5 +1,6 @@
 ﻿using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.DTO.VaccineRecord;
+using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.ServiceContract.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,7 @@ namespace ChildVaccineSystem.API.Controllers
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
+   
     public class VaccineRecordController : ControllerBase
     {
         private readonly IVaccineRecordService _vaccineRecordService;
@@ -29,6 +30,7 @@ namespace ChildVaccineSystem.API.Controllers
         /// <summary>
         /// Bác sĩ tạo hồ sơ tiêm chủng cho lịch hẹn.
         /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
         [HttpPost("{bookingId}/create")]
         public async Task<ActionResult<APIResponse>> CreateVaccineRecord(int bookingId)
         {
@@ -51,16 +53,20 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
-		/// <summary>
-		/// Lấy chi tiết một hồ sơ tiêm chủng.
-		/// </summary>
-		[HttpGet("{vaccineRecordId}")]
+        /// <summary>
+        /// Lấy chi tiết một hồ sơ tiêm chủng.
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Customer, Staff, Admin")]
+        [HttpGet("{vaccineRecordId}")]
 		public async Task<ActionResult<APIResponse>> GetVaccineRecordById(int vaccineRecordId)
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var record = await _vaccineRecordService.GetVaccineRecordByIdAsync(vaccineRecordId, doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+
+                var record = await _vaccineRecordService.GetVaccineRecordByIdAsync(vaccineRecordId, userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
@@ -77,16 +83,20 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 
-		/// <summary>
-		/// Lấy danh sách hồ sơ tiêm chủng theo BookingId.
-		/// </summary>
-		[HttpGet("booking/{bookingId}")]
+        /// <summary>
+        /// Lấy danh sách hồ sơ tiêm chủng theo BookingId.
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Customer, Staff, Admin")]
+        [HttpGet("booking/{bookingId}")]
 		public async Task<ActionResult<APIResponse>> GetVaccineRecordsByBookingId(int bookingId)
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var record = await _vaccineRecordService.GetVaccineRecordsByBookingIdAsync(bookingId, doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+
+                var record = await _vaccineRecordService.GetVaccineRecordsByBookingIdAsync(bookingId, userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
@@ -103,16 +113,19 @@ namespace ChildVaccineSystem.API.Controllers
 		}
 
 
-		/// <summary>
-		/// Lấy danh sách tất cả hồ sơ tiêm chủng (Doctor/Staff).
-		/// </summary>
-		[HttpGet("all")]
+        /// <summary>
+        /// Lấy danh sách tất cả hồ sơ tiêm chủng (Doctor/Staff).
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Customer, Staff, Admin")]
+        [HttpGet("all")]
 		public async Task<ActionResult<APIResponse>> GetAllVaccineRecords()
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var records = await _vaccineRecordService.GetAllVaccineRecordsAsync(doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+                var records = await _vaccineRecordService.GetAllVaccineRecordsAsync(userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
@@ -130,16 +143,20 @@ namespace ChildVaccineSystem.API.Controllers
 
 
 
-		/// <summary>
-		/// Cập nhật hồ sơ tiêm chủng (trạng thái, ghi chú, ngày tiêm tiếp theo).
-		/// </summary>
-		[HttpPut("{vaccineRecordId}/update")]
+        /// <summary>
+        /// Cập nhật hồ sơ tiêm chủng (trạng thái, ghi chú, ngày tiêm tiếp theo).
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Staff, Admin")]
+        [HttpPut("{vaccineRecordId}/update")]
 		public async Task<ActionResult<APIResponse>> UpdateVaccineRecord(int vaccineRecordId, [FromBody] UpdateVaccineRecordDTO updateDto)
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var result = await _vaccineRecordService.UpdateVaccineRecordAsync(vaccineRecordId, updateDto, doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+
+                var result = await _vaccineRecordService.UpdateVaccineRecordAsync(vaccineRecordId, updateDto, userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = result;
@@ -155,16 +172,20 @@ namespace ChildVaccineSystem.API.Controllers
 			}
 		}
 
-		/// <summary>
-		/// Xóa mềm một hồ sơ tiêm chủng (Soft Delete).
-		/// </summary>
-		[HttpDelete("{vaccineRecordId}/delete")]
+        /// <summary>
+        /// Xóa mềm một hồ sơ tiêm chủng (Soft Delete).
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Staff, Admin")]
+        [HttpDelete("{vaccineRecordId}/delete")]
 		public async Task<ActionResult<APIResponse>> SoftDeleteVaccineRecord(int vaccineRecordId)
 		{
 			try
 			{
-				var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				var result = await _vaccineRecordService.SoftDeleteVaccineRecordAsync(vaccineRecordId, doctorId);
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+
+                var result = await _vaccineRecordService.SoftDeleteVaccineRecordAsync(vaccineRecordId, userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = result;

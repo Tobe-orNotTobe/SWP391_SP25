@@ -14,6 +14,8 @@ const Register : React.FC  = () => {
         return <LoadingRedirect message="Hãy Kiểm Tra Hòm Thư Email Của Bạn để xác nhận tài khoản!" delay={5000} to="/login" />;
     }
 
+
+
     return (
         <>
             <CustomerNavbar/>
@@ -113,7 +115,7 @@ const Register : React.FC  = () => {
                         </div>
                         <br/>
                         {register.errorGeneral && <p className="errorText">{register.errorGeneral}</p>}
-                        <button type="submit" className="authButton" >Đăng Kí</button>
+                        <button type="submit" className="authButton" disabled={register.isLoading} >Đăng Kí</button>
 
                         <span>Đã có tài khoản? <Link to="/login">Đăng Nhập</Link></span>
                     </form>

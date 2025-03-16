@@ -29,6 +29,7 @@ export const useGetAllUser = () => {
             return;
         }
         if (response.result) setUsers(response.result);
+
         setLoading(false);
 
     };

@@ -1,4 +1,5 @@
 export interface VaccineRecord {
+    vaccinationRecordId: number;
     vaccineName: string;
     doseAmount: number;
     price: number;
@@ -32,22 +33,12 @@ export interface VaccineRecord {
 
 
 export interface VaccineRecordUser {
-    vaccinationRecordId: number;
-    vaccineName: string;
-    doseAmount: number;
-    price: number;
-    nextDoseDate: string;
-    batchNumber: string;
-    status: string;
-    notes: string;
-}
-
-export interface BookingInfo {
-    bookingId: number;
-    fullName: string;
-    dateOfBirth: string;
+    bookingId : number;
+    fullName : string;
+    dateOfBirth : string;
     height: number;
     weight: number;
     vaccineRecords: VaccineRecord[];
-    message: string;
 }
+
+

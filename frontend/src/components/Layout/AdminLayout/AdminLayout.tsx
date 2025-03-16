@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Menu, Button } from "antd";
-import { AppstoreOutlined, MedicineBoxOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, MedicineBoxOutlined,LogoutOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./AdminLayout.scss";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully.ts";
@@ -10,6 +10,7 @@ import {MdOutlineCalendarToday, MdOutlineChangeCircle} from "react-icons/md";
 import { MdOutlineInventory2 } from "react-icons/md";
 import {CiUser} from "react-icons/ci";
 import {IoWalletOutline} from "react-icons/io5";
+import {RiAdminLine} from "react-icons/ri";
 
 const { Header, Sider, Content } = Layout;
 
@@ -91,7 +92,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 </Link>
 
                 <div className="header-right">
-                    <UserOutlined className="user-icon" />
+                    <RiAdminLine className="user-icon" />
                     <span className="user-info">Xin chào {role} {username}</span>
                     <Button
                         type="primary"

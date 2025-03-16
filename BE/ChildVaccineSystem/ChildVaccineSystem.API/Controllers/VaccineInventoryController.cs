@@ -62,7 +62,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Internal Server Error: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi máy chủ nội bộ: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
@@ -93,7 +93,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Internal Server Error: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi máy chủ nội bộ: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
@@ -144,7 +144,7 @@ namespace ChildVaccineSystem.API.Controllers
             try
             {
                 await _vaccineInventoryService.ReturnVaccineAsync(id, quantity);
-                _response.Result = "Vaccine returned successfully";
+                _response.Result = "Vắc-xin đã được trả về thành công";
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
                 return Ok(_response);

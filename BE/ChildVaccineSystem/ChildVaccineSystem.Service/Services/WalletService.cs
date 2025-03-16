@@ -64,21 +64,80 @@ namespace ChildVaccineSystem.Service.Services
 			return;
 		}
 
+
+		public async Task<string> CreateDepositAsync(string userId, WalletDepositDTO depositDto, string ipAddress)
+		{
+			var wallet = await _unitOfWork.Wallets.GetWalletByUserIdAsync(userId);
+
+			var walletTransaction = new WalletTransaction
+			{
+				WalletId = wallet.WalletId,
+				Amount = depositDto.Amount,
+				TransactionType = "Nạp tiền",
+				Description = $"Nạp tiền vào ví",
+				Status = "Đang chờ xử lý",
+				CreatedAt = DateTime.UtcNow
+			};
+
+			var result = await _unitOfWork.Wallets.AddTransactionAsync(walletTransaction);
+
+			try
+			{
+				string paymentUrl = await _vnPaymentService.CreateWalletDepositUrl(result.WalletTransactionId, depositDto.Amount, userId, ipAddress);
+
+				return paymentUrl;
+			}
+			catch (Exception ex)
+			{
+				throw new ArgumentException("Lỗi tạo url!");
+			}
+		}
+		public async Task<bool> ProcessDepositAsync(int walletTransactionId, string responseCode)
+		{
+			var walletTransaction = await _unitOfWork.WalletTransactions.GetAsync(w => w.WalletTransactionId == walletTransactionId);
+
+			if (walletTransaction == null)
+			{
+				return false;
+			}
+
+			var wallet = await _unitOfWork.Wallets.GetAsync(w => w.WalletId == walletTransaction.WalletId);
+
+			if (responseCode == "00")
+			{
+				walletTransaction.Status = "Hoàn thành";
+				await _unitOfWork.WalletTransactions.UpdateAsync(walletTransaction);
+				await _unitOfWork.CompleteAsync();
+
+				await _unitOfWork.Wallets.UpdateWalletBalanceAsync(wallet.WalletId, walletTransaction.Amount);
+				return true;
+			}
+			else
+			{
+				walletTransaction.Status = "Thất bại";
+				await _unitOfWork.WalletTransactions.UpdateAsync(walletTransaction);
+				await _unitOfWork.CompleteAsync();
+
+				return false;
+			}
+		}
+
 		public async Task<WalletDTO> AddFundsToAdminWalletAsync(AddFundsDTO addFundsDto)
 		{
 			var adminWallet = await _unitOfWork.Wallets.GetAdminWalletAsync();
 
 			if (adminWallet == null)
 			{
-				throw new InvalidOperationException("Admin wallet is not configured. Please contact the system administrator.");
+				throw new InvalidOperationException("Ví quản trị chưa được cấu hình!");
 			}
 
 			var transaction = new WalletTransaction
 			{
 				WalletId = adminWallet.WalletId,
 				Amount = addFundsDto.Amount,
-				TransactionType = "Deposit",
-				Description = $"Admin fund deposit",
+				TransactionType = "Nạp tiền",
+				Description = $"Admin nạp tiền",
+				Status = "Hoàn Thành",
 				CreatedAt = DateTime.UtcNow
 			};
 
@@ -99,12 +158,12 @@ namespace ChildVaccineSystem.Service.Services
 				var sourceWallet = await _unitOfWork.Wallets.GetWalletByUserIdAsync(fromUserId);
 				if (sourceWallet == null)
 				{
-					throw new InvalidOperationException("Source wallet not found.");
+					throw new InvalidOperationException("Không tìm thấy ví của người dùng.");
 				}
 
 				if (sourceWallet.Balance < amount)
 				{
-					throw new InvalidOperationException("Insufficient balance in source wallet.");
+					throw new InvalidOperationException("Số dư trong ví không đủ.");
 				}
 
 				var destWallet = await _unitOfWork.Wallets.GetWalletByUserIdAsync(toUserId);
@@ -117,9 +176,10 @@ namespace ChildVaccineSystem.Service.Services
 				{
 					WalletId = sourceWallet.WalletId,
 					Amount = -amount,
-					TransactionType = "Transfer",
+					TransactionType = "Chuyển khoản",
 					Description = description,
 					RefundRequestId = refundRequestId,
+					Status = "Hoàn Thành",
 					CreatedAt = DateTime.UtcNow
 				};
 				await _unitOfWork.Wallets.AddTransactionAsync(withdrawalTx);
@@ -128,9 +188,10 @@ namespace ChildVaccineSystem.Service.Services
 				{
 					WalletId = destWallet.WalletId,
 					Amount = amount,
-					TransactionType = "Transfer",
+					TransactionType = "Chuyển khoản",
 					Description = description,
 					RefundRequestId = refundRequestId,
+					Status = "Hoàn Thành",
 					CreatedAt = DateTime.UtcNow
 				};
 				await _unitOfWork.Wallets.AddTransactionAsync(depositTx);
@@ -168,21 +229,21 @@ namespace ChildVaccineSystem.Service.Services
 			var refundRequest = await _unitOfWork.RefundRequests.GetByIdAsync(refundRequestId);
 			if (refundRequest == null)
 			{
-				throw new InvalidOperationException("Refund request not found.");
+				throw new InvalidOperationException("Không tìm thấy yêu cầu hoàn tiền!");
 			}
 
 			var adminWallet = await _unitOfWork.Wallets.GetAdminWalletAsync();
 			if (adminWallet == null)
 			{
-				throw new InvalidOperationException("Admin wallet is not configured.");
+				throw new InvalidOperationException("Ví admin chưa được cấu hình!");
 			}
 
 			if (adminWallet.Balance < amount)
 			{
-				throw new InvalidOperationException("Insufficient funds in admin wallet to process refund.");
+				throw new InvalidOperationException("Không đủ tiền trong ví admin để xử lý việc hoàn tiền!");
 			}
 
-			var description = $"Refund for booking #{refundRequest.BookingId}";
+			var description = $"Hoàn tiền cho lịch hẹn #{refundRequest.BookingId}";
 
 			bool flag = true;
 
@@ -201,52 +262,22 @@ namespace ChildVaccineSystem.Service.Services
 			var userWallet = await _unitOfWork.Wallets.GetWalletByUserIdAsync(userId);
 			if (userWallet == null)
 			{
-				throw new InvalidOperationException("User wallet not found.");
+				throw new InvalidOperationException("Không tìm thấy ví người dùng!");
 			}
 
 			if (userWallet.Balance < amount)
 			{
-				throw new InvalidOperationException($"Insufficient balance in wallet. Available: {userWallet.Balance}, Required: {amount}");
+				throw new InvalidOperationException($"Số dư trong ví không đủ. Hiện có: {userWallet.Balance}. Cần trả: {amount}");
 			}
 
 			var adminWallet = await _unitOfWork.Wallets.GetAdminWalletAsync();
 			if (adminWallet == null)
 			{
-				throw new InvalidOperationException("Admin wallet is not configured.");
+				throw new InvalidOperationException("Ví quản trị chưa được cấu hình!");
 			}
 
-			var description = $"Payment for booking #{bookingId}";
+			var description = $"Thanh toán cho lịch hẹn #{bookingId}";
 			return await TransferFundsAsync(userId, adminWallet.UserId, amount, description);
-		}
-
-		public async Task<bool> AddFundsToUserWalletAsync(string userId, decimal amount, string transactionReference)
-		{
-			try
-			{
-				var wallet = await _unitOfWork.Wallets.GetWalletByUserIdAsync(userId);
-				if (wallet == null)
-				{
-					wallet = await _unitOfWork.Wallets.CreateWalletAsync(userId);
-				}
-
-				var transaction = new WalletTransaction
-				{
-					WalletId = wallet.WalletId,
-					Amount = amount,
-					TransactionType = "Deposit",
-					Description = $"Deposit via VnPay (Ref: {transactionReference})",
-					CreatedAt = DateTime.UtcNow
-				};
-
-				await _unitOfWork.Wallets.AddTransactionAsync(transaction);
-				await _unitOfWork.Wallets.UpdateWalletBalanceAsync(wallet.WalletId, amount);
-
-				return true;
-			}
-			catch (Exception)
-			{
-				return false;
-			}
 		}
 	}
 }

@@ -30,7 +30,3 @@ export const useUserProfileDetail = () =>{
 
     return{userProfile, loading, error};
 }
-
-export const useUserProfile = () => {
-
-}

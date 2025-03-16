@@ -88,8 +88,8 @@ const ScheduleVaccinationForm: React.FC = () => {
                                                         {subFields.map((subField) => (
                                                             <div key={subField.key} className="schedule-form__injection-row">
                                                                 <Form.Item
-                                                                    name={[subField.name, 'doseNumber']}
-                                                                    label="Liều thứ"
+                                                                    name={[subField.name, 'injectionNumber']}
+                                                                    label="Số lần tiêm chủng"
                                                                     rules={[{ required: true, message: 'Nhập số liều!' }]}
                                                                     className="schedule-form__dose-number"
                                                                 >

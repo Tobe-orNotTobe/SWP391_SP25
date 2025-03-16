@@ -1,5 +1,5 @@
 import React from "react";
-import {Table, Modal, Button, Tag, Card, Typography, Tabs, InputNumber} from "antd";
+import {Table, Modal, Button, Tag, Card, Typography, Tabs,  Col, Row} from "antd";
 import { WalletHistoryUserDetail } from "../../interfaces/Account";
 import {useWalletLogic} from "./useWallet.ts";
 import "./Wallet.scss";
@@ -30,7 +30,6 @@ const Wallet: React.FC = () => {
         getTransactionTagColor,
         getTransactionTypeName,
         getRefundStatusTagColor,
-        handleTopup,
         handleAddFundToUseWallet,
     } = useWalletLogic();
 
@@ -57,8 +56,8 @@ const Wallet: React.FC = () => {
             dataIndex: 'amount',
             key: 'amount',
             render: (amount: number, record: WalletHistoryUserDetail) => {
-                const isPositive = record.transactionType === "Deposit" ||
-                    (record.transactionType === "Transfer" && amount > 0);
+                const isPositive = record.transactionType === "Nạp tiền" ||
+                    (record.transactionType === "Chuyển khoản" && amount > 0);
                 return (
                     <Text
                         style={{
@@ -151,16 +150,18 @@ const Wallet: React.FC = () => {
 
     const transactionTabItems = [
         { key: "All", label: "Tất cả" },
-        { key: "Deposit", label: "Nạp tiền" },
+        { key: "Nạp tiền", label: "Nạp tiền" },
         { key: "Transfer", label: "Giao dịch" },
     ];
 
     const refundTabItems = [
         { key: "All", label: "Tất cả" },
-        { key: "Pending", label: "Đang chờ" },
+        { key: "Đang chờ xử lý", label: "Đang chờ" },
         { key: "Approved", label: "Đã duyệt" },
         { key: "Rejected", label: "Từ chối" },
     ];
+
+    const topupOptions = [10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000];
 
     return (
         <div className="wallet-page">
@@ -173,7 +174,7 @@ const Wallet: React.FC = () => {
                                 Số dư:
                             </Text>
                             <Text strong className="balance-amount" style={{ color: '#2A388F', fontSize: '1.8rem' }}>
-                                {walletData ? formatCurrency(walletData.balance) : '0 VND'}
+                                {walletData ? new Intl.NumberFormat("vi-VN").format(walletData.balance) + " VNĐ" : "0 VNĐ"}
                             </Text>
                         </div>
                         <Button
@@ -253,33 +254,43 @@ const Wallet: React.FC = () => {
             </div>
 
             <Modal
-                title="Nạp tiền vào ví"
+                title={<span style={{ color: "#2A388F" }}>Nạp tiền vào ví</span>}
                 open={showTopupModal}
                 onCancel={() => setShowTopupModal(false)}
-                onOk={handleTopup}
                 footer={[
-                    <Button key="cancel" onClick={() => setShowTopupModal(false)}>
+                    <Button key="cancel" onClick={() => setShowTopupModal(false)} style={{ color: "#2A388F" }}>
                         Hủy
                     </Button>,
                     <Button
                         key="submit"
                         type="primary"
                         onClick={handleAddFundToUseWallet}
+                        disabled={!topupAmount}
                         style={{ backgroundColor: '#FFB400', color: '#343a40', border: 'none' }}
                     >
                         Nạp tiền
                     </Button>,
                 ]}
             >
-                <div style={{ marginTop: '1rem' }}>
-                    <Text strong>Số tiền:</Text>
-                    <InputNumber
-                        value={topupAmount}
-                        onChange={(value) => setTopupAmount(value ?? 0)}
-                        placeholder="Nhập số tiền"
-                        style={{ marginTop: '0.5rem', marginLeft: '0.5rem' }}
-                        required
-                    />
+                <div style={{ marginTop: '1rem', color: "#2A388F" }}>
+                    <Text strong style={{ color: "#2A388F" }}>Chọn số tiền:</Text>
+                    <Row gutter={[16, 16]} style={{ marginTop: '1rem' }}>
+                        {topupOptions.map((amount) => (
+                            <Col span={8} key={amount}>
+                                <Card
+                                    hoverable
+                                    style={{
+                                        textAlign: 'center',
+                                        border: topupAmount === amount ? '2px solid #FFB400' : '1px solid #d9d9d9',
+                                        color: "#2A388F"
+                                    }}
+                                    onClick={() => setTopupAmount(amount)}
+                                >
+                                    <Text strong style={{ color: "#2A388F" }}>{amount.toLocaleString()} VND</Text>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
                 </div>
             </Modal>
         </div>
