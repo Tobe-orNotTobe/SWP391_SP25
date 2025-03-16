@@ -29,6 +29,7 @@ namespace ChildVaccineSystem.Common.Helper
     {
         public MappingProfile()
         {
+            //vaccine
             CreateMap<Vaccine, VaccineDTO>().ReverseMap();
 
             CreateMap<CreateVaccineDTO, Vaccine>()
@@ -39,7 +40,9 @@ namespace ChildVaccineSystem.Common.Helper
                 .ForMember(dest => dest.ParentVaccine, opt => opt.Ignore()) // ✅ Xử lý riêng trong service
                 .ForMember(dest => dest.IsIncompatibility, opt => opt.MapFrom(src => src.IsIncompatibility))
                                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
+          
+            CreateMap<Vaccine, VaccineBasicDTO>()
+.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.VaccineId));
             // ComboVaccine Mapping
             CreateMap<ComboVaccine, ComboVaccineDTO>()
                 .ForMember(dest => dest.Vaccines,
