@@ -1,11 +1,13 @@
 import React from "react";
-import { Button, Form, Input, InputNumber, Switch, Upload } from "antd";
+import { Button, Form, Input, InputNumber, Switch, Upload, Select } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
 import { useVaccineForm } from "./useManagerVaccine.ts";
 import "./ManagerFormVaccine.scss";
 import {TinyMCEE_API_KEY} from "../../../../config/cloudinaryConfig.ts";
+import {useVaccineDetail} from "../../../../hooks/useVaccine.ts";
+
 
 const VaccineFormPage: React.FC = () => {
     const {
@@ -21,6 +23,7 @@ const VaccineFormPage: React.FC = () => {
         handleEditorChange,
     } = useVaccineForm();
 
+    const {vaccineDetail} = useVaccineDetail();
     return (
         <ManagerLayout>
             <div className="vaccine-form-page">
@@ -42,7 +45,6 @@ const VaccineFormPage: React.FC = () => {
                     className="vaccine-form"
                 >
                     <div className="vaccine-form-container">
-                        {/* Left column - Image upload */}
                         <div className="vaccine-form-left">
                             <Form.Item
                                 label="Hình ảnh"
@@ -139,9 +141,9 @@ const VaccineFormPage: React.FC = () => {
                                     className="form-item"
                                 >
                                     <InputNumber
-                                        style={{ width: "100%" }}
+                                        style={{ width: "20%" }}
                                         min={1}
-                                        max={10}
+                                        max={100}
                                         step={1}
                                         precision={0}
                                         controls
@@ -167,7 +169,31 @@ const VaccineFormPage: React.FC = () => {
                                 >
                                     <Switch checkedChildren="Có" unCheckedChildren="Không" />
                                 </Form.Item>
+
+                                <Form.Item
+                                    name="isIncompatibility"
+                                    label="Tương kỵ với vaccine khác"
+                                    valuePropName="checked"
+                                    className="form-item"
+                                >
+                                    <Switch checkedChildren="Có" unCheckedChildren="Không" />
+                                </Form.Item>
                             </div>
+
+                            <Form.Item
+                                name="isParentId"
+                                label="Vaccine cần phải chích trước"
+                                className="form-item"
+                            >
+                                <Select
+                                    placeholder="Chọn vaccine"
+                                    style={{ width: '100%' }}
+                                    options={vaccineDetail?.map((vaccine) => ({
+                                        label: vaccine.name,
+                                        value: vaccine.vaccineId
+                                    }))}
+                                />
+                            </Form.Item>
 
                             <Form.Item
                                 name="diseasePrevented"

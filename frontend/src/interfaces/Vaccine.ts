@@ -20,8 +20,10 @@ export interface VaccineDetail {
     notes: string;
     vaccineInteractions: string;
     undesirableEffects: string;
+    injectionsCount : number
     preserve: string;
-    injectionsCount: number;
+    isParentId: number; // ID của vaccine cha (nếu là vaccine kết hợp)
+    isIncompatibility: boolean; // Vaccine có tương kỵ với loại nào khác không
 }
 
 

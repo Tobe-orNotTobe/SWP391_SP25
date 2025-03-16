@@ -36,6 +36,7 @@ export const useVaccineForm = () => {
           : null;
 
       if (currentVaccine) {
+
         form.setFieldsValue(currentVaccine);
         setImageUrl(currentVaccine.image);
 
@@ -77,6 +78,7 @@ export const useVaccineForm = () => {
       // Merge form values with rich text editor content
       const submitData = {
         ...values,
+        isIncompatible: values.isIncompatibility ?? false,
         ...editorContent
       };
 
