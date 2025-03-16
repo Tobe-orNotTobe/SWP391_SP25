@@ -25,10 +25,12 @@ namespace ChildVaccineSystem.Data.Entities
 
 		public string? AdminNote { get; set; }
 
+		[ForeignKey("ProcessedBy")]
+		public string ProcessedById { get; set; }
+		public User ProcessedBy { get; set; }
+
 		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 		public DateTime? ProcessedAt { get; set; }
-
-		public ICollection<RefundRequest> RefundRequests { get; set; }
 
 	}
 }

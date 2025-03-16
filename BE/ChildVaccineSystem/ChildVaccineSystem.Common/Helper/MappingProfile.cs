@@ -188,9 +188,9 @@ namespace ChildVaccineSystem.Common.Helper
 
 			// Refund request mappings
 			CreateMap<RefundRequest, RefundRequestDTO>()
-				.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.FullName : "Unknown"))
-				.ForMember(dest => dest.ProcessedBy, opt => opt.MapFrom(src => src.ProcessedBy != null ? src.ProcessedBy.FullName : null));
-
+				.ForMember(dest => dest.UserName,
+					opt => opt.MapFrom(src => src.User != null ? src.User.FullName : "Unknown"));
+;
 			// VaccineRecord mappings
 			CreateMap<VaccinationRecord, VaccineRecordDTO>()
 				.ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.BookingDetail.BookingId))
