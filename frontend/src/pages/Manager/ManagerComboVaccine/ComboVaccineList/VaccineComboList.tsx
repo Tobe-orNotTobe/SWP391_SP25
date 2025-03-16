@@ -14,7 +14,7 @@ const VaccineComboList: React.FC = () => {
 
     const {comboVaccineDetail} = useComboVaccineDetail();
 
-    console.log(comboVaccineDetail);
+    // console.log(comboVaccineDetail);
     const {
         deletingId,
         isDetailModalOpen,

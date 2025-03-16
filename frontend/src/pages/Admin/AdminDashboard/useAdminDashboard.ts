@@ -3,7 +3,7 @@ import {apiDashBoardFeedBack, apiDashBoardTotalRevenue, apiDashBoardRevenueLast1
 
 
 interface Feedback{
-    id: string;
+    feedbackId: string;
     rating : number;
     comment: string;// Tren revenue thi hien thi 5 chu la dc r
     userName : string;

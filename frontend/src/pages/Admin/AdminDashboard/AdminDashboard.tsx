@@ -1,20 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Row, Col, Select, Table, Rate } from "antd";
-// import {TeamOutlined, SolutionOutlined, CrownOutlined, SafetyOutlined } from '@ant-design/icons';
+import {TeamOutlined, SolutionOutlined, CrownOutlined, SafetyOutlined } from '@ant-design/icons';
 import AdminLayout from "../../../components/Layout/AdminLayout/AdminLayout.tsx";
 import {useFeedbackDetail, useRevenueLast10Days, useRevenueTotal} from "./useAdminDashboard.ts";
 import { Chart, registerables, ChartType } from 'chart.js';
 import './AdminDashboard.scss';
 
 import {useTopUsedVaccine} from "../../../hooks/useVaccine.ts";
-// import {useGetAllUser} from "../AdminAccount/useAdminAccount.ts";
+import {useGetAllUser} from "../AdminAccount/useAdminAccount.ts";
+
 
 // Register Chart.js components
 Chart.register(...registerables);
 
 const AdminDashboardPage: React.FC = () => {
-    // const {users} = useGetAllUser();
+    const {users, fetchAllUser} = useGetAllUser();
 
+    useEffect(() => {
+        fetchAllUser()
+    }, []);
+
+    // console.log(users)
     const { revenue } = useRevenueLast10Days();
     const { feedback } = useFeedbackDetail();
     const { topUseVaccine } = useTopUsedVaccine();
@@ -123,7 +129,7 @@ const AdminDashboardPage: React.FC = () => {
 
     const years = Array.from(new Set(revenue.map(item => new Date(item.date).getFullYear())));
 
-    const sortedFeedback = feedback.sort((a, b) => parseInt(b.id) - parseInt(a.id)).slice(0, 3);
+    const sortedFeedback = feedback.sort((a, b) => parseInt(b.feedbackId) - parseInt(a.feedbackId)).slice(0, 3);
 
     const sortedVaccines = topUseVaccine.sort((a, b) => b.count - a.count).slice(0, 3);
 
@@ -165,50 +171,49 @@ const AdminDashboardPage: React.FC = () => {
         <AdminLayout>
             <div className="admin-dashboard-container">
                 <Row gutter={[16, 16]}>
-                    {/* User Statistics Section */}
-                    {/*<Col span={24}>*/}
-                    {/*    <Row gutter={[16, 16]} className="user-statistics">*/}
-                    {/*        <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>*/}
-                    {/*            <div className="stat-card">*/}
-                    {/*                <TeamOutlined className="stat-icon" />*/}
-                    {/*                <div className="stat-content">*/}
-                    {/*                    <div className="stat-title">Tổng Customer</div>*/}
-                    {/*                    <div className="stat-value">{users?.filter(user => user.role === 'CUSTOMER').length || 0}</div>*/}
-                    {/*                </div>*/}
-                    {/*            </div>*/}
-                    {/*        </Col>*/}
+                    <Col span={24}>
+                        <Row gutter={[16, 16]} className="user-statistics">
+                            <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>
+                                <div className="stat-card">
+                                    <TeamOutlined className="stat-icon" />
+                                    <div className="stat-content">
+                                        <div className="stat-title">Tổng Customer</div>
+                                        <div className="stat-value">{users?.filter(user => user.roles[0] === 'Customer').length || 0}</div>
+                                    </div>
+                                </div>
+                            </Col>
 
-                    {/*        <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>*/}
-                    {/*            <div className="stat-card">*/}
-                    {/*                <SolutionOutlined className="stat-icon" />*/}
-                    {/*                <div className="stat-content">*/}
-                    {/*                    <div className="stat-title">Tổng Staff</div>*/}
-                    {/*                    <div className="stat-value">{users?.filter(user => user.role === 'STAFF').length || 0}</div>*/}
-                    {/*                </div>*/}
-                    {/*            </div>*/}
-                    {/*        </Col>*/}
+                            <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>
+                                <div className="stat-card">
+                                    <SolutionOutlined className="stat-icon" />
+                                    <div className="stat-content">
+                                        <div className="stat-title">Tổng Staff</div>
+                                        <div className="stat-value">{users?.filter(user => user.roles[0]=== 'Staff').length || 0}</div>
+                                    </div>
+                                </div>
+                            </Col>
 
-                    {/*        <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>*/}
-                    {/*            <div className="stat-card">*/}
-                    {/*                <CrownOutlined className="stat-icon" />*/}
-                    {/*                <div className="stat-content">*/}
-                    {/*                    <div className="stat-title">Tổng Manager</div>*/}
-                    {/*                    <div className="stat-value">{users?.filter(user => user.role === 'MANAGER').length || 0}</div>*/}
-                    {/*                </div>*/}
-                    {/*            </div>*/}
-                    {/*        </Col>*/}
+                            <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>
+                                <div className="stat-card">
+                                    <CrownOutlined className="stat-icon" />
+                                    <div className="stat-content">
+                                        <div className="stat-title">Tổng Manager</div>
+                                        <div className="stat-value">{users?.filter(user => user.roles[0] === 'Manager').length || 0}</div>
+                                    </div>
+                                </div>
+                            </Col>
 
-                    {/*        <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>*/}
-                    {/*            <div className="stat-card">*/}
-                    {/*                <SafetyOutlined className="stat-icon" />*/}
-                    {/*                <div className="stat-content">*/}
-                    {/*                    <div className="stat-title">Tổng Admin</div>*/}
-                    {/*                    <div className="stat-value">{users?.filter(user => user.role === 'ADMIN').length || 0}</div>*/}
-                    {/*                </div>*/}
-                    {/*            </div>*/}
-                    {/*        </Col>*/}
-                    {/*    </Row>*/}
-                    {/*</Col>*/}
+                            <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>
+                                <div className="stat-card">
+                                    <SafetyOutlined className="stat-icon" />
+                                    <div className="stat-content">
+                                        <div className="stat-title">Tổng Admin</div>
+                                        <div className="stat-value">{users?.filter(user => user.roles[0] === 'Admin').length || 0}</div>
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Col>
 
                     {/* Revenue Chart Section */}
                     <Col span={24}>
@@ -239,7 +244,7 @@ const AdminDashboardPage: React.FC = () => {
                                     <Table
                                         dataSource={sortedFeedback}
                                         columns={feedbackColumns}
-                                        rowKey="id"
+                                        rowKey="feedbackId"
                                         pagination={false}
                                     />
                                 </div>
@@ -250,9 +255,10 @@ const AdminDashboardPage: React.FC = () => {
                                     <Table
                                         dataSource={sortedVaccines}
                                         columns={vaccineColumns}
-                                        rowKey="name"
+                                        rowKey="vaccineId"
                                         pagination={false}
                                     />
+
                                 </div>
                             </Col>
                         </Row>
