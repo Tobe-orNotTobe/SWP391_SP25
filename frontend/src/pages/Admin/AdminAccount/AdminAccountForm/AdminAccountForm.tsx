@@ -35,7 +35,7 @@ const AdminAccountFormPage: React.FC = () => {
 
     return (
         <AdminLayout>
-            <div className="account-form-page">
+            {/*<div className="account-form-page">*/}
                 <div className="form-header">
                     <Button
                         icon={<ArrowLeftOutlined />}
@@ -170,7 +170,7 @@ const AdminAccountFormPage: React.FC = () => {
                         </Button>
                     </div>
                 </Form>
-            </div>
+            {/*</div>*/}
         </AdminLayout>
     );
 };

@@ -5,6 +5,7 @@ import {NewsResponse} from "../interfaces/Blog.ts";
 
 export const useGetAllBlog = () => {
     const [blogs, setBlogs] = useState<BlogResponse[]>([]);
+    const [news, setNews] = useState<NewsResponse[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
@@ -21,7 +22,12 @@ export const useGetAllBlog = () => {
                 response = await apiGetAllNews(isActive);
             }
             if (response && response.result) {
-                setBlogs(response.result);
+                if (blogType === "news") {
+                    setNews(response.result);
+
+                }else {
+                    setBlogs(response.result);
+                }
             }
         } catch (err) {
             console.error(err);
@@ -31,7 +37,7 @@ export const useGetAllBlog = () => {
         }
     };
 
-    return { blogs, loading, error, fetchAllBlog};
+    return { blogs, news, loading, error, fetchAllBlog};
 };
 
 export const useBlogByAuthor = (author: string) => {
@@ -87,30 +93,6 @@ export const useGetBlogDetailById = () => {
 
     return { blog, loading, error, fetchBlogDetail};
 }
-
-export const useGetAllNews = () => {
-    const [news, setNews] = useState<NewsResponse[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
-
-    const fetchAllNews = async (isActive: boolean) => {
-        setLoading(true);
-
-        try {
-            const response = await apiGetAllNews(isActive);
-            if (response && response.result) {
-                setNews(response.result);
-            }
-        } catch (err) {
-            console.error(err);
-            setError("Error Fetching All News Data");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { news, loading, error, fetchAllNews };
-};
 
 export const useGetNewsDetailById = () => {
     const [newsDetail, setNewsDetail] = useState<NewsResponse | null>(null);
