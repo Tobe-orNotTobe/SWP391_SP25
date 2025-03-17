@@ -363,55 +363,55 @@ namespace ChildVaccineSystem.Service.Services
 
 
 
-        //        public async Task<bool> UpdateVaccineRecordAsync(int vaccineRecordId, UpdateVaccineRecordDTO updateDto, string userId, bool isAdmin, bool isStaff)
-        //        {
-        //            if (vaccineRecordId <= 0)
-        //                throw new ArgumentException("VaccineRecord ID không hợp lệ.");
+        public async Task<bool> UpdateVaccineRecordAsync(int vaccineRecordId, UpdateVaccineRecordDTO updateDto, string userId, bool isAdmin, bool isStaff)
+        {
+            if (vaccineRecordId <= 0)
+                throw new ArgumentException("VaccineRecord ID không hợp lệ.");
 
-        //            if (updateDto == null)
-        //                throw new ArgumentNullException(nameof(updateDto), "Dữ liệu cập nhật không được để trống.");
+            if (updateDto == null)
+                throw new ArgumentNullException(nameof(updateDto), "Dữ liệu cập nhật không được để trống.");
 
-        //            var record = await _vaccineRecordRepository.GetByIdAsync(
-        //                vaccineRecordId,
-        //                includeProperties: "BookingDetail.Booking"
-        //            );
+            var record = await _vaccineRecordRepository.GetByIdAsync(
+                vaccineRecordId,
+                includeProperties: "BookingDetail.Booking"
+            );
 
-        //            if (record == null)
-        //                throw new KeyNotFoundException("Không tìm thấy hồ sơ tiêm chủng.");
+            if (record == null)
+                throw new KeyNotFoundException("Không tìm thấy hồ sơ tiêm chủng.");
 
-        //            // Kiểm tra xem bác sĩ có quyền cập nhật lịch này không
-        //            var isDoctorAssigned = await _unitOfWork.DoctorWorkSchedules
-        //                .AnyAsync(dws => dws.BookingId == record.BookingDetail.BookingId && dws.UserId == userId);
+            // Kiểm tra xem bác sĩ có quyền cập nhật lịch này không
+            bool isDoctorAssigned = await _unitOfWork.Bookings.IsDoctorAssignedToBookingAsync(record.BookingDetail.BookingId, userId);
 
-        //            // Phân quyền: chỉ Admin, Staff hoặc Doctor được chỉ định mới có quyền
-        //            if (!(isAdmin || isStaff || isDoctorAssigned))
-        //                throw new UnauthorizedAccessException("Bạn không có quyền cập nhật hồ sơ này.");
 
-        //            if (record.Status == VaccineRecordStatus.Deleted)
-        //                throw new InvalidOperationException("Không thể cập nhật hồ sơ đã bị xóa.");
+            // Phân quyền: chỉ Admin, Staff hoặc Doctor được chỉ định mới có quyền
+            if (!(isAdmin || isStaff || isDoctorAssigned))
+                throw new UnauthorizedAccessException("Bạn không có quyền cập nhật hồ sơ này.");
 
-        //            if (record.Status == VaccineRecordStatus.Completed && updateDto.Status != VaccineRecordStatus.Completed)
-        //                throw new InvalidOperationException("Không thể thay đổi trạng thái của hồ sơ đã hoàn tất.");
+            if (record.Status == VaccineRecordStatus.Deleted)
+                throw new InvalidOperationException("Không thể cập nhật hồ sơ đã bị xóa.");
 
-        //            if (updateDto.Status.HasValue)
-        //                record.Status = updateDto.Status.Value;
+            if (record.Status == VaccineRecordStatus.Completed && updateDto.Status != VaccineRecordStatus.Completed)
+                throw new InvalidOperationException("Không thể thay đổi trạng thái của hồ sơ đã hoàn tất.");
 
-        //            if (!string.IsNullOrEmpty(updateDto.Notes))
-        //                record.Notes = updateDto.Notes;
+            if (updateDto.Status.HasValue)
+                record.Status = updateDto.Status.Value;
 
-        //            if (updateDto.NextDoseDate.HasValue)
-        //            {
-        //                if (updateDto.NextDoseDate.Value < DateTime.Now)
-        //                    throw new ArgumentException("Ngày tiêm tiếp theo không thể nhỏ hơn ngày hiện tại.");
+            if (!string.IsNullOrEmpty(updateDto.Notes))
+                record.Notes = updateDto.Notes;
 
-        //                record.NextDoseDate = updateDto.NextDoseDate.Value;
-        //            }
+            if (updateDto.NextDoseDate.HasValue)
+            {
+                if (updateDto.NextDoseDate.Value < DateTime.Now)
+                    throw new ArgumentException("Ngày tiêm tiếp theo không thể nhỏ hơn ngày hiện tại.");
 
-        //            _vaccineRecordRepository.Update(record);
-        //            await _unitOfWork.CompleteAsync();
+                record.NextDoseDate = updateDto.NextDoseDate.Value;
+            }
 
-        //            return true;
-        //        }
+            _vaccineRecordRepository.Update(record);
+            await _unitOfWork.CompleteAsync();
+
+            return true;
+        }
 
 
         public async Task<VaccineRecordDTO> GetVaccineRecordsByBookingIdAsync(int bookingId, string userId, bool isAdmin, bool isStaff)

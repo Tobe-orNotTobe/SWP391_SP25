@@ -17,7 +17,7 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<VaccineRecordDTO> GetVaccineRecordByIdAsync(int vaccineRecordId, string userId, bool isAdmin, bool isStaff);
         Task<bool> SoftDeleteVaccineRecordAsync(int vaccineRecordId, string userId, bool isAdmin, bool isStaff);
         Task<IEnumerable<VaccineRecordDTO>> GetAllVaccineRecordsAsync(string userId, bool isAdmin, bool isStaff);
-        //Task<bool> UpdateVaccineRecordAsync(int vaccineRecordId, UpdateVaccineRecordDTO updateDto, string userId, bool isAdmin, bool isStaff);
+        Task<bool> UpdateVaccineRecordAsync(int vaccineRecordId, UpdateVaccineRecordDTO updateDto, string userId, bool isAdmin, bool isStaff);
         Task<VaccineRecordDTO> GetVaccineRecordsByBookingIdAsync(int bookingId, string userId, bool isAdmin, bool isStaff);
 
 	}
