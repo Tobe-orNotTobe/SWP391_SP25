@@ -19,6 +19,7 @@ namespace ChildVaccineSystem.Data.DTO.Booking
         public decimal TotalPrice { get; set; }
         public string Notes { get; set; }
         public string Status { get; set; }
+        public int? DoctorWorkScheduleId { get; set; } 
         public List<BookingDetailDTO> BookingDetails { get; set; }
     }
 }
