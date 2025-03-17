@@ -15,7 +15,9 @@ const VaccineDetailPage: React.FC = () => {
 
   if (loading) return (
       <div className="loading-container">
-        <Spin tip="Đang tải dữ liệu..." size="large" />
+        <div className="loading-wrapper">
+          <Spin tip="Đang tải dữ liệu..." size="large" />
+        </div>
       </div>
   );
 

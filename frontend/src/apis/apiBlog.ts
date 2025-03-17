@@ -36,7 +36,7 @@ export const apiGetAllBlog = async (onlyActive: boolean) => {
 export const apiGetAllNews = async (onlyActive: boolean) => {
     try {
         const response = await axiosInstance.get(`/api/Blog/type/news?onlyActive=${onlyActive}`);
-        console.log(response.data)
+        // console.log(response.data)
         return response.data;
     }catch (err: any | undefined) {
         return {
