@@ -13,44 +13,12 @@ import {
 import "./VaccinePackagePage.scss";
 import {GetVaccineComboDetail, VaccineScheduleDetail} from "../../../interfaces/Vaccine.ts";
 import { apiGetComboVaccineDetail } from "../../../apis/apiVaccine.ts";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { FaSortAlphaDown, FaSortAlphaUp, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { Select, Button, Tooltip } from "antd";
 import DOMPurify from "dompurify";
 import { useVaccinationScheduleDetail } from "../../../hooks/useVaccine.ts";
 
-const columns = [
-    {
-        header: "Số thứ tự",
-        accessorKey: "comboId",
-    },
-    {
-        header: "Gói combo",
-        accessorKey: "comboName",
-    },
-    {
-        header: "Giới thiệu",
-        accessorKey: "description",
-    },
-    {
-        header: "Tổng giá (VNĐ)",
-        accessorKey: "totalPrice",
-        cell: (info: any) => new Intl.NumberFormat("vi-VN").format(info.getValue()),
-    },
-    {
-        header: "Vaccines",
-        accessorKey: "vaccines",
-        cell: (info: any) => (
-            <div className="vaccine-buttons">
-                {info.getValue().map((vaccine: any, index: number) => (
-                    <button key={index} className="vaccine-button">
-                        {vaccine.name}
-                    </button>
-                ))}
-            </div>
-        ),
-    },
-];
 
 const ageColumns = [
     { month: 0, label: 'Sơ sinh\n0 tháng' },
@@ -64,6 +32,42 @@ const ageColumns = [
 ];
 
 const VaccinePackagePage: React.FC = () => {
+
+    const navigate = useNavigate();
+
+    const columns = [
+        {
+            header: "Số thứ tự",
+            accessorKey: "comboId",
+        },
+        {
+            header: "Gói combo",
+            accessorKey: "comboName",
+        },
+        {
+            header: "Giới thiệu",
+            accessorKey: "description",
+        },
+        {
+            header: "Tổng giá (VNĐ)",
+            accessorKey: "totalPrice",
+            cell: (info: any) => new Intl.NumberFormat("vi-VN").format(info.getValue()),
+        },
+        {
+            header: "Vaccines",
+            accessorKey: "vaccines",
+            cell: (info: any) => (
+                <div className="vaccine-buttons">
+                    {info.getValue().map((vaccine: any, index: number) => (
+                        <button key={index} className="vaccine-button" onClick={() => navigate(`/vaccines-list/${vaccine.vaccineId}`)}>
+                            {vaccine.name}
+                        </button>
+                    ))}
+                </div>
+            ),
+        },
+    ];
+
     const [comboVaccines, setComboVaccines] = useState<GetVaccineComboDetail[]>([]);
     const [sorting, setSorting] = useState<SortingState>([]);
     const [sortColumn, setSortColumn] = useState<string>("comboId");
