@@ -53,20 +53,20 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
-		/// <summary>
-		/// Lấy chi tiết một hồ sơ tiêm chủng.
-		/// </summary>
-		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Customer, Staff, Admin")]
-		[HttpGet("{vaccineRecordId}")]
+        /// <summary>
+        /// Lấy chi tiết một hồ sơ tiêm chủng.
+        /// </summary>
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Customer, Staff, Admin")]
+        [HttpGet("{vaccineRecordId}")]
 		public async Task<ActionResult<APIResponse>> GetVaccineRecordById(int vaccineRecordId)
 		{
 			try
 			{
 				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
-				bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
 
-				var record = await _vaccineRecordService.GetVaccineRecordByIdAsync(vaccineRecordId, userId, isAdmin, isStaff);
+                var record = await _vaccineRecordService.GetVaccineRecordByIdAsync(vaccineRecordId, userId, isAdmin, isStaff);
 
 				_response.StatusCode = HttpStatusCode.OK;
 				_response.IsSuccess = true;
@@ -175,31 +175,31 @@ namespace ChildVaccineSystem.API.Controllers
 		/// <summary>
 		/// Xóa mềm một hồ sơ tiêm chủng (Soft Delete).
 		/// </summary>
-		//      [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Staff, Admin")]
-		//      [HttpDelete("{vaccineRecordId}/delete")]
-		//public async Task<ActionResult<APIResponse>> SoftDeleteVaccineRecord(int vaccineRecordId)
-		//{
-		//	try
-		//	{
-		//		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		//              bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
-		//              bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
+		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Staff, Admin")]
+		[HttpDelete("{vaccineRecordId}/delete")]
+		public async Task<ActionResult<APIResponse>> SoftDeleteVaccineRecord(int vaccineRecordId)
+		{
+			try
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+				bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
 
-		//              var result = await _vaccineRecordService.SoftDeleteVaccineRecordAsync(vaccineRecordId, userId, isAdmin, isStaff);
+				var result = await _vaccineRecordService.SoftDeleteVaccineRecordAsync(vaccineRecordId, userId, isAdmin, isStaff);
 
-		//		_response.StatusCode = HttpStatusCode.OK;
-		//		_response.IsSuccess = result;
-		//		_response.Result = result ? "Hồ sơ đã được đánh dấu xóa." : "Xóa thất bại.";
-		//		return Ok(_response);
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		_response.StatusCode = HttpStatusCode.BadRequest;
-		//		_response.IsSuccess = false;
-		//		_response.ErrorMessages.Add(ex.Message);
-		//		return BadRequest(_response);
-		//	}
-		//}
+				_response.StatusCode = HttpStatusCode.OK;
+				_response.IsSuccess = result;
+				_response.Result = result ? "Hồ sơ đã được đánh dấu xóa." : "Xóa thất bại.";
+				return Ok(_response);
+			}
+			catch (Exception ex)
+			{
+				_response.StatusCode = HttpStatusCode.BadRequest;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add(ex.Message);
+				return BadRequest(_response);
+			}
+		}
 
 
 	}
