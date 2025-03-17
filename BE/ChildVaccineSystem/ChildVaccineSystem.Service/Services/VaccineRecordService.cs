@@ -314,44 +314,52 @@ namespace ChildVaccineSystem.Service.Services
         }
 
 
-        //        public async Task<IEnumerable<VaccineRecordDTO>> GetAllVaccineRecordsAsync(string userId, bool isAdmin, bool isStaff)
-        //        {
-        //            var doctorBookings = await _unitOfWork.DoctorWorkSchedules
-        //                .GetAllAsync(dws => dws.UserId == userId);
+        public async Task<IEnumerable<VaccineRecordDTO>> GetAllVaccineRecordsAsync(string userId, bool isAdmin, bool isStaff)
+        {
+            // Lấy tất cả BookingId mà bác sĩ này được gán
+            var allBookings = await _unitOfWork.Bookings.GetAllAsync();
+            var assignedBookingIds = new List<int>();
 
-        //            var bookingIds = doctorBookings.Select(dws => dws.BookingId).ToList();
+            foreach (var booking in allBookings)
+            {
+                if (await _unitOfWork.Bookings.IsDoctorAssignedToBookingAsync(booking.BookingId, userId))
+                {
+                    assignedBookingIds.Add(booking.BookingId);
+                }
+            }
 
-        //            var records = await _vaccineRecordRepository.GetAllAsync(
-        //                vr => (isAdmin || isStaff || bookingIds.Contains(vr.BookingDetail.BookingId) || vr.BookingDetail.Booking.UserId == userId)
-        //                    && vr.Status != VaccineRecordStatus.Deleted,
-        //                includeProperties: "Vaccine,BookingDetail,BookingDetail.Booking,Child"
-        //            );
+            var records = await _vaccineRecordRepository.GetAllAsync(
+                vr => (isAdmin || isStaff || assignedBookingIds.Contains(vr.BookingDetail.BookingId) || vr.BookingDetail.Booking.UserId == userId)
+                    && vr.Status != VaccineRecordStatus.Deleted,
+                includeProperties: "Vaccine,BookingDetail,BookingDetail.Booking,Child"
+            );
 
-        //            if (records == null || !records.Any())
-        //                throw new KeyNotFoundException("Không có hồ sơ tiêm chủng nào.");
+            if (records == null || !records.Any())
+                throw new KeyNotFoundException("Không có hồ sơ tiêm chủng nào.");
 
-        //            return records
-        //                .GroupBy(record => record.BookingDetail.BookingId)
-        //                .Select(group => new VaccineRecordDTO
-        //                {
-        //                    BookingId = group.Key,
-        //                    FullName = group.First().Child.FullName,
-        //                    DateOfBirth = group.First().Child.DateOfBirth,
-        //                    Height = group.First().Child.Height,
-        //                    Weight = group.First().Child.Weight,
-        //                    VaccineRecords = group.Select(record => new VaccineRecordDetailDTO
-        //                    {
-        //                        VaccinationRecordId = record.VaccinationRecordId,
-        //                        VaccineName = record.Vaccine.Name,
-        //                        DoseAmount = record.DoseAmount,
-        //                        BatchNumber = record.BatchNumber,
-        //                        Price = Convert.ToDecimal(record.Price),
-        //                        StatusEnum = record.Status,
-        //                        NextDoseDate = record.NextDoseDate,
-        //                        Notes = record.Notes
-        //                    }).ToList()
-        //                }).ToList();
-        //        }
+            return records
+                .GroupBy(record => record.BookingDetail.BookingId)
+                .Select(group => new VaccineRecordDTO
+                {
+                    BookingId = group.Key,
+                    FullName = group.First().Child.FullName,
+                    DateOfBirth = group.First().Child.DateOfBirth,
+                    Height = group.First().Child.Height,
+                    Weight = group.First().Child.Weight,
+                    VaccineRecords = group.Select(record => new VaccineRecordDetailDTO
+                    {
+                        VaccinationRecordId = record.VaccinationRecordId,
+                        VaccineName = record.Vaccine.Name,
+                        DoseAmount = record.DoseAmount,
+                        BatchNumber = record.BatchNumber,
+                        Price = Convert.ToDecimal(record.Price),
+                        StatusEnum = record.Status,
+                        NextDoseDate = record.NextDoseDate,
+                        Notes = record.Notes
+                    }).ToList()
+                }).ToList();
+        }
+
 
 
 
