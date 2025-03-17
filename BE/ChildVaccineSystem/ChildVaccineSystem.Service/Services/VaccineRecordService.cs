@@ -406,58 +406,57 @@ namespace ChildVaccineSystem.Service.Services
         //        }
 
 
-        //        public async Task<VaccineRecordDTO> GetVaccineRecordsByBookingIdAsync(int bookingId, string userId, bool isAdmin, bool isStaff)
-        //        {
-        //            if (bookingId <= 0)
-        //                throw new ArgumentException("Booking ID không hợp lệ.");
+        public async Task<VaccineRecordDTO> GetVaccineRecordsByBookingIdAsync(int bookingId, string userId, bool isAdmin, bool isStaff)
+        {
+            if (bookingId <= 0)
+                throw new ArgumentException("Booking ID không hợp lệ.");
 
-        //            var records = await _vaccineRecordRepository.GetAllAsync(
-        //                vr => vr.BookingDetail.BookingId == bookingId
-        //                   && vr.BookingDetail != null
-        //                   && vr.BookingDetail.Booking != null,
-        //                includeProperties: "Vaccine,BookingDetail,BookingDetail.Booking,Child"
-        //            );
+            var records = await _vaccineRecordRepository.GetAllAsync(
+                vr => vr.BookingDetail.BookingId == bookingId
+                   && vr.BookingDetail != null
+                   && vr.BookingDetail.Booking != null,
+                includeProperties: "Vaccine,BookingDetail,BookingDetail.Booking,Child"
+            );
 
-        //            if (records == null || !records.Any())
-        //                throw new KeyNotFoundException("Không tìm thấy hồ sơ tiêm chủng cho Booking ID này.");
+            if (records == null || !records.Any())
+                throw new KeyNotFoundException("Không tìm thấy hồ sơ tiêm chủng cho Booking ID này.");
 
-        //            var activeRecords = records.Where(r => r.Status != VaccineRecordStatus.Deleted).ToList();
+            var activeRecords = records.Where(r => r.Status != VaccineRecordStatus.Deleted).ToList();
 
-        //            if (!activeRecords.Any())
-        //                throw new InvalidOperationException("Tất cả hồ sơ trong booking này đã bị xóa.");
+            if (!activeRecords.Any())
+                throw new InvalidOperationException("Tất cả hồ sơ trong booking này đã bị xóa.");
 
-        //            var firstRecord = activeRecords.First();
+            var firstRecord = activeRecords.First();
 
-        //            var customerId = firstRecord.BookingDetail.Booking.UserId;
+            var customerId = firstRecord.BookingDetail.Booking.UserId;
 
-        //            bool isDoctorAssigned = await _unitOfWork.DoctorWorkSchedules
-        //                .AnyAsync(dws => dws.BookingId == bookingId && dws.UserId == userId);
+            bool isDoctorAssigned = await _unitOfWork.Bookings.IsDoctorAssignedToBookingAsync(bookingId, userId);
 
-        //            bool isCustomer = customerId == userId;
+            bool isCustomer = customerId == userId;
 
-        //            if (!(isAdmin || isStaff || isDoctorAssigned || isCustomer))
-        //                throw new UnauthorizedAccessException("Bạn không có quyền truy cập hồ sơ này.");
+            if (!(isAdmin || isStaff || isDoctorAssigned || isCustomer))
+                throw new UnauthorizedAccessException("Bạn không có quyền truy cập hồ sơ này.");
 
-        //            return new VaccineRecordDTO
-        //            {
-        //                BookingId = bookingId,
-        //                FullName = firstRecord.Child.FullName,
-        //                DateOfBirth = firstRecord.Child.DateOfBirth,
-        //                Height = firstRecord.Child.Height,
-        //                Weight = firstRecord.Child.Weight,
-        //                VaccineRecords = activeRecords.Select(record => new VaccineRecordDetailDTO
-        //                {
-        //                    VaccinationRecordId = record.VaccinationRecordId,
-        //                    VaccineName = record.Vaccine.Name,
-        //                    DoseAmount = record.DoseAmount,
-        //                    BatchNumber = record.BatchNumber,
-        //                    Price = Convert.ToDecimal(record.Price),
-        //                    StatusEnum = record.Status,
-        //                    NextDoseDate = record.NextDoseDate,
-        //                    Notes = record.Notes
-        //                }).ToList()
-        //            };
-        //        }
+            return new VaccineRecordDTO
+            {
+                BookingId = bookingId,
+                FullName = firstRecord.Child.FullName,
+                DateOfBirth = firstRecord.Child.DateOfBirth,
+                Height = firstRecord.Child.Height,
+                Weight = firstRecord.Child.Weight,
+                VaccineRecords = activeRecords.Select(record => new VaccineRecordDetailDTO
+                {
+                    VaccinationRecordId = record.VaccinationRecordId,
+                    VaccineName = record.Vaccine.Name,
+                    DoseAmount = record.DoseAmount,
+                    BatchNumber = record.BatchNumber,
+                    Price = Convert.ToDecimal(record.Price),
+                    StatusEnum = record.Status,
+                    NextDoseDate = record.NextDoseDate,
+                    Notes = record.Notes
+                }).ToList()
+            };
+        }
 
     }
 }
