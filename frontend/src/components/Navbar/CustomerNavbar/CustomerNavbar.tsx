@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import './CustomerNavbar.scss';
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import {MdNavigateNext, MdOutlineChangeCircle} from "react-icons/md";
@@ -7,14 +7,13 @@ import {MdLogin, MdLogout} from "react-icons/md";
 import {Link, useNavigate} from "react-router-dom";
 import {FaCalendarAlt, FaUserCircle} from "react-icons/fa";
 import {IsLoginSuccessFully} from "../../../validations/IsLogginSuccessfully";
-import {IoIosNotifications} from "react-icons/io";
 import {Button} from "antd";
 import {TbMoodKid} from "react-icons/tb";
 import {BsCalendar2MinusFill} from "react-icons/bs";
 import { ImProfile } from "react-icons/im";
 import { FaWallet } from "react-icons/fa6";
 import {useWalletUserDetail} from "../../Wallet/useWallet.ts";
-
+import NotificationDropdown from "../../Notification/NotificationDropdown"; 
 
 const CustomerNavbar: React.FC = () => {
     const {username, role} = IsLoginSuccessFully();
@@ -91,6 +90,9 @@ const CustomerNavbar: React.FC = () => {
                     <div className="authButtonLink">
                         {username ? (
                             <div className="loggedInUser">
+                                {/* Add NotificationDropdown component for logged-in users */}
+                                {role === 'Customer' && <NotificationDropdown />}
+                                
                                 <li className="user-dropdown">
                                     <Link to="#" className="user-dropdown-toggle">
                                         <div className="cusNavItem" style={{display: "flex", alignItems: "center"}}>
@@ -109,11 +111,6 @@ const CustomerNavbar: React.FC = () => {
                                         <li>
                                             <Link to="/user-profile" className="user-dropdown-item">
                                                 <ImProfile size={23}/> Thông tin tài khoản
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link to="/notifications" className="user-dropdown-item">
-                                                <IoIosNotifications size={23}/> Thông Báo
                                             </Link>
                                         </li>
                                         <li>

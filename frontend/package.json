@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
+    "@microsoft/signalr": "^8.0.7",
     "@tanstack/react-table": "^8.21.2",
     "@tinymce/tinymce-react": "^5.1.1",
     "@uppy/drag-drop": "^4.1.1",
