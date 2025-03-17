@@ -1,5 +1,6 @@
 import axios from "axios";
 import axiosInstance from "../utils/axiosInstance";
+import dayjs from "dayjs";
 
 export const apiGetAllDoctors = async () => {
   try {
@@ -99,8 +100,11 @@ export const apiTopUseVaccine = async () => {
 
 
 export const apiAdminGetRevenuePerDay = async (date: string) => {
+
+  const formattedDate = dayjs(date).format("YYYY-MM-DDT00:00:00[Z]");
+
   try {
-    const response = await axiosInstance.get(`api/Dashboard/revenue/${date}`);
+    const response = await axiosInstance.get(`api/Dashboard/revenue/${formattedDate}`);
     return response.data;
   }catch (err){
     throw err

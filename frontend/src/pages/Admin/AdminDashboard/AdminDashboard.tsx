@@ -41,7 +41,7 @@ const AdminDashboardPage: React.FC = () => {
 
     const formatDateString = (dateString: string): string => {
         const date = new Date(dateString);
-        return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        return date.toISOString().split("T")[0];
     };
 
 
@@ -53,11 +53,9 @@ const AdminDashboardPage: React.FC = () => {
             }
 
             const revenueData: Revenue[] = selectedDate && revenueByDate ? [revenueByDate] : revenue;
-
             if (!revenueData || revenueData.length === 0) {
                 return;
             }
-
 
             const labels = revenueData.map(item => formatDateString(item.date));
             const data = revenueData.map(item => item.totalRevenue);
@@ -220,8 +218,11 @@ const AdminDashboardPage: React.FC = () => {
                             <div className="date-filter">
                                 <DatePicker
                                     value={selectedDate}
-                                    onChange={(date) => setSelectedDate(date)}
-                                    format="DD/MM/YYYY"
+                                    onChange={(date) => {
+                                        setSelectedDate(date);
+                                    }}
+                                    format="YYYY-MM-DD"
+                                    showTime={false}
                                 />
                             </div>
                             <h1 className="title">Biểu đồ doanh thu của SideEffect </h1>
