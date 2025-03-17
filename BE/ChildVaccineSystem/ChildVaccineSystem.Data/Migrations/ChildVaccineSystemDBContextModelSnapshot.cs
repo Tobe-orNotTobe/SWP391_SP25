@@ -78,6 +78,9 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<int>("ChildId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DoctorWorkScheduleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -95,18 +98,15 @@ namespace ChildVaccineSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("BookingId");
 
                     b.HasIndex("ChildId");
 
+                    b.HasIndex("DoctorWorkScheduleId");
+
                     b.HasIndex("PricingPolicyId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Bookings");
                 });
@@ -183,17 +183,12 @@ namespace ChildVaccineSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<double>("Weight")
                         .HasColumnType("float");
 
                     b.HasKey("ChildId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Children");
                 });
@@ -267,21 +262,11 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<DateTime>("AssignedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BookingId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("DoctorWorkScheduleId");
-
-                    b.HasIndex("BookingId");
-
-                    b.HasIndex("BookingId1");
 
                     b.HasIndex("UserId");
 
@@ -372,18 +357,24 @@ namespace ChildVaccineSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RelatedEntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RelatedEntityType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("NotificationId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Notifications");
                 });
@@ -613,9 +604,6 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<int>("BookingDetailId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BookingDetailId1")
-                        .HasColumnType("int");
-
                     b.Property<int>("ChildId")
                         .HasColumnType("int");
 
@@ -642,9 +630,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("VaccinationDate")
                         .HasColumnType("datetime2");
 
@@ -659,21 +644,53 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.HasIndex("BookingDetailId")
                         .IsUnique();
 
-                    b.HasIndex("BookingDetailId1")
-                        .IsUnique()
-                        .HasFilter("[BookingDetailId1] IS NOT NULL");
-
                     b.HasIndex("ChildId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.HasIndex("VaccineId");
 
                     b.HasIndex("VaccineInventoryId");
 
                     b.ToTable("VaccinationRecords");
+                });
+
+            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.VaccinationReminder", b =>
+                {
+                    b.Property<int>("ReminderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReminderId"));
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChildId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ReminderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ReminderId");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("ChildId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("VaccinationReminders");
                 });
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.VaccinationSchedule", b =>
@@ -1087,22 +1104,25 @@ namespace ChildVaccineSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ChildVaccineSystem.Data.Entities.DoctorWorkSchedule", "DoctorWorkSchedule")
+                        .WithMany("Bookings")
+                        .HasForeignKey("DoctorWorkScheduleId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ChildVaccineSystem.Data.Entities.PricingPolicy", "PricingPolicy")
                         .WithMany()
                         .HasForeignKey("PricingPolicyId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ChildVaccineSystem.Data.Entities.User", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("UserId1");
-
                     b.Navigation("Children");
+
+                    b.Navigation("DoctorWorkSchedule");
 
                     b.Navigation("PricingPolicy");
 
@@ -1144,14 +1164,10 @@ namespace ChildVaccineSystem.Data.Migrations
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.Children", b =>
                 {
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Children")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("ChildVaccineSystem.Data.Entities.User", null)
-                        .WithMany("Children")
-                        .HasForeignKey("UserId1");
 
                     b.Navigation("User");
                 });
@@ -1184,23 +1200,11 @@ namespace ChildVaccineSystem.Data.Migrations
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.DoctorWorkSchedule", b =>
                 {
-                    b.HasOne("ChildVaccineSystem.Data.Entities.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ChildVaccineSystem.Data.Entities.Booking", null)
-                        .WithMany("DoctorWorkSchedules")
-                        .HasForeignKey("BookingId1");
-
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Booking");
 
                     b.Navigation("User");
                 });
@@ -1238,14 +1242,10 @@ namespace ChildVaccineSystem.Data.Migrations
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.Notification", b =>
                 {
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("ChildVaccineSystem.Data.Entities.User", null)
-                        .WithMany("Notifications")
-                        .HasForeignKey("UserId1");
 
                     b.Navigation("User");
                 });
@@ -1318,14 +1318,10 @@ namespace ChildVaccineSystem.Data.Migrations
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.VaccinationRecord", b =>
                 {
                     b.HasOne("ChildVaccineSystem.Data.Entities.BookingDetail", "BookingDetail")
-                        .WithOne()
+                        .WithOne("VaccinationRecord")
                         .HasForeignKey("ChildVaccineSystem.Data.Entities.VaccinationRecord", "BookingDetailId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("ChildVaccineSystem.Data.Entities.BookingDetail", null)
-                        .WithOne("VaccinationRecord")
-                        .HasForeignKey("ChildVaccineSystem.Data.Entities.VaccinationRecord", "BookingDetailId1");
 
                     b.HasOne("ChildVaccineSystem.Data.Entities.Children", "Child")
                         .WithMany("VaccinationRecords")
@@ -1334,14 +1330,10 @@ namespace ChildVaccineSystem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("VaccinationRecords")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("ChildVaccineSystem.Data.Entities.User", null)
-                        .WithMany("VaccinationRecords")
-                        .HasForeignKey("UserId1");
 
                     b.HasOne("ChildVaccineSystem.Data.Entities.Vaccine", "Vaccine")
                         .WithMany()
@@ -1364,6 +1356,33 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Navigation("Vaccine");
 
                     b.Navigation("VaccineInventory");
+                });
+
+            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.VaccinationReminder", b =>
+                {
+                    b.HasOne("ChildVaccineSystem.Data.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ChildVaccineSystem.Data.Entities.Children", "Children")
+                        .WithMany()
+                        .HasForeignKey("ChildId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("Children");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.Vaccine", b =>
@@ -1501,8 +1520,6 @@ namespace ChildVaccineSystem.Data.Migrations
                 {
                     b.Navigation("BookingDetails");
 
-                    b.Navigation("DoctorWorkSchedules");
-
                     b.Navigation("Feedback")
                         .IsRequired();
 
@@ -1524,6 +1541,11 @@ namespace ChildVaccineSystem.Data.Migrations
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.ComboVaccine", b =>
                 {
                     b.Navigation("ComboDetails");
+                });
+
+            modelBuilder.Entity("ChildVaccineSystem.Data.Entities.DoctorWorkSchedule", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.User", b =>

@@ -1,5 +1,10 @@
 import AxiosInstance from "../utils/axiosInstance.ts";
-import {AccountDetailResponse, AccountRequest, UpdateAccountRequest} from "../interfaces/Account.ts";
+import {
+    AccountDetailResponse,
+    AccountRequest,
+    LoginGoogleRequest,
+    UpdateAccountRequest
+} from "../interfaces/Account.ts";
 import {
     ConfirmEmailRequest,
     ForgotPasswordRequest,
@@ -122,6 +127,16 @@ export const apiRegister = async (data: RegisterRequest) => {
 export const apiLogIn = async (data: LoginRequest) => {
     try {
         const response = await axiosInstance.post("/api/Auth/login", data);
+        return response.data;
+    } catch (error) {
+        console.error("API Login Error:", error);
+        throw error;
+    }
+};
+
+export const apiLogInGoogle = async (idToken: LoginGoogleRequest) => {
+    try {
+        const response = await axiosInstance.post("/api/Auth/login-google", idToken);
         return response.data;
     } catch (error) {
         console.error("API Login Error:", error);

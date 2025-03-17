@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {Button, Input, Table, Tabs} from "antd";
+import {Button, Input, Select, Table, Tabs} from "antd";
 import {TbListDetails} from "react-icons/tb";
 import {FiEdit2} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
 import {IoMdAdd} from "react-icons/io";
-import {useDeleteBlog, useUpdateBlogActive} from "../useAdminBlog.ts";
+import {useDeleteBlog, useUpdateBlogIsActive} from "../useAdminBlog.ts";
 import {useGetAllBlog} from "../../../../hooks/useBlog.ts"
 import dayjs from "dayjs";
 import {BlogResponse} from "../../../../interfaces/Blog.ts";
@@ -25,11 +25,16 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
     const {blogs, loading, error, fetchAllBlog} = useGetAllBlog();
     const [detailBlog, setDetailBlog] = useState<BlogResponse | null>(null);
     const {handleDelete} = useDeleteBlog();
-    const {handleUpdateActive} = useUpdateBlogActive();
+    const {handleUpdateActive} = useUpdateBlogIsActive();
+    const [blogType, setBlogType] = useState<string>("all");
 
     useEffect(() => {
-        fetchAllBlog(isActive).then();
+        fetchAllBlog(isActive, "all").then();
     }, []);
+
+    useEffect(() => {
+        fetchAllBlog(isActive, blogType).then();
+    }, [blogType]);
 
     const [searchText, setSearchText] = useState("");
     const [hoveredRow, setHoveredRow] = useState<string | null>(null);
@@ -61,7 +66,7 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                             type="text"
                             danger
                             icon={<MdDeleteOutline style={{fontSize: "24px"}}/>}
-                            onClick={() => handleDelete(record.blogPostId).then(() => fetchAllBlog(isActive))}
+                            onClick={() => handleDelete(record.blogPostId).then(() => fetchAllBlog(isActive, blogType))}
                         />
                     )}
 
@@ -80,6 +85,13 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
             key: "title",
             sorter: (a, b) => a.title.localeCompare(b.title),
             render: (title: string) => title.length > 10 ? `${title.slice(0, 15)}...` : title
+        },
+        {
+            title: "Loại",
+            dataIndex: "type",
+            key: "type",
+            sorter: (a, b) => a.type.localeCompare(b.type),
+            render: (type: string) => type.length > 10 ? `${type.slice(0, 15)}...` : type
         },
         {
             title: "Hình minh họa",
@@ -118,15 +130,31 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                     <Button className="detail-button" onClick={() => openDetailPopup(record)}>
                         <TbListDetails/>Chi tiết
                     </Button>
-                    {!isActive ? (
-                        <Button className="edit-button" onClick={() => handleUpdateActive(record).then(() => fetchAllBlog(isActive))}>
-                            <FiEdit2/>Duyệt
-                        </Button>
-                    ): (
+                    {isActive && (
                         <Button className="edit-button" onClick={() => navigate(`/admin/blog/edit/${record.blogPostId}`)}>
                             <FiEdit2/>Chỉnh sửa
                         </Button>
                     )}
+
+                    <Button
+                        className="edit-button"
+                        style={{ backgroundColor: isActive ? "#dc3545" : "" }}
+                        onClick={() => handleUpdateActive(record, isActive).then(() => fetchAllBlog(isActive, blogType))}
+                    >
+
+                        {isActive ? (
+                            <>
+                                <MdDeleteOutline /> Tắt
+                            </>
+                        ) : (
+                            <>
+                                <FiEdit2 /> Duyệt
+                            </>
+                        )}
+
+                    </Button>
+
+
                 </div>
             ),
         },
@@ -152,13 +180,27 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                     </div>
                     {error && ("Lỗi tải danh sách blog.")}
                     {loading && ("Loading...")}
+                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <Input
+                            placeholder="🔍 Tìm kiếm..."
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            style={{ marginBottom: 16, width: 300 }}
+                        />
 
-                    <Input
-                        placeholder="🔍 Tìm kiếm..."
-                        value={searchText}
-                        onChange={(e) => setSearchText(e.target.value)}
-                        style={{ marginBottom: 16, width: 300 }}
-                    />
+                        <Select
+                            style={{marginRight: "26px", width: "90px"}}
+                            placeholder="Chọn loại"
+                            defaultValue="all"
+                            onChange={(value) => { setBlogType(value) }}
+                        >
+                            <Select.Option value="all">Tất cả</Select.Option>
+                            <Select.Option value="blog">Blog</Select.Option>
+                            <Select.Option value="news">News</Select.Option>
+                        </Select>
+
+                    </div>
+
 
                     <Table
                         columns={columns}

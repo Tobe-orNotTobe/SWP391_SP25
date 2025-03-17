@@ -3,6 +3,7 @@ import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavba
 import { Link } from "react-router-dom";
 import Footer from "../../components/Footer/Footer.tsx";
 import "./Handbook.scss";
+import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
 
 const HandBookAfter: React.FC = () => {
     return (
@@ -66,6 +67,7 @@ const HandBookAfter: React.FC = () => {
                 </div>
             </div>
             <Footer />
+            <FloatingButtons/>
         </>
     );
 };

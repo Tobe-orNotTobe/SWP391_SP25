@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
 import Footer from "../../components/Footer/Footer.tsx";
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
-import { useGetAllNews } from "../../hooks/useBlog.ts";
+import {useGetAllBlog} from "../../hooks/useBlog.ts";
 import { NewsResponse } from "../../interfaces/Blog.ts";
 import NewsPost from "../../components/News/NewsPost.tsx";
 import "./News.scss";
@@ -10,13 +10,13 @@ import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 
 const NewsPage: React.FC = () => {
-    const { news, fetchAllNews } = useGetAllNews();
+    const {news, fetchAllBlog } = useGetAllBlog();
     const [currentPage, setCurrentPage] = useState(1);
     const newsPerPage = 9;
 
     useEffect(() => {
-        fetchAllNews(true);
-        console.log(news)
+        fetchAllBlog(true, "news").then();
+        // console.log(blogs)
     }, []);
 
     const mainNews = news.length > 0 ? news[0] : null;

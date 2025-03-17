@@ -110,8 +110,13 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
                            value={form.childName} onChange={(e) => updateForm("childName", e.target.value)} required/>
 
                     <label className="childRegistrationLabel">Ngày sinh trẻ</label>
-                    <input className="childRegistrationInput" type="date" value={formatDateForInput(form.birthDate)}
-                           onChange={handleDateChange} required/>
+                    <input className="childRegistrationInput"
+                           type="date"
+                           value={formatDateForInput(form.birthDate)}
+                           onChange={handleDateChange}
+                           max={new Date().toISOString().split("T")[0]}
+                           required/>
+
 
                     <label className="childRegistrationLabel">Giới tính</label>
 
@@ -154,12 +159,18 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
                         <label>
                             <input type="radio" name="medicalHistory" value="yes"
                                    checked={form.selectedMedicalHistory?.value === "yes"}
-                                   onChange={() => updateForm("selectedMedicalHistory", {value: "yes", label: "Có"})}/> Có
+                                   onChange={() => updateForm("selectedMedicalHistory", {
+                                       value: "yes",
+                                       label: "Có"
+                                   })}/> Có
                         </label>
                         <label>
                             <input type="radio" name="medicalHistory" value="no"
                                    checked={form.selectedMedicalHistory?.value === "no"}
-                                   onChange={() => updateForm("selectedMedicalHistory", {value: "no", label: "Không"})}/> Không
+                                   onChange={() => updateForm("selectedMedicalHistory", {
+                                       value: "no",
+                                       label: "Không"
+                                   })}/> Không
                         </label>
                     </div>
 

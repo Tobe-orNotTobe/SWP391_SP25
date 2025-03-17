@@ -23,9 +23,9 @@ const Login : React.FC = () => {
         isRedirecting
     } = useLogin();
 
-    const {handleLoginGoogle} = useAuthGoogle();
+    const {isGoogleLoading, isGoogleRedirecting, googleError, handleLoginGoogle} = useAuthGoogle();
 
-    if (isRedirecting) {
+    if (isRedirecting || isGoogleRedirecting) {
         return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng..." delay={2000} to="/homepage" />;
     }
 
@@ -61,7 +61,7 @@ const Login : React.FC = () => {
                             </span>
                         </div>
 
-                        {error && <p className="errorText">{error}</p>}
+                        {error || googleError && <p className="errorText">{error}</p>}
                         <button type="submit" className="authButton"  disabled={isLoading}>
                            Đăng Nhập
                         </button>
@@ -72,7 +72,7 @@ const Login : React.FC = () => {
                     </div>
 
                     <div className="authSocialContainer">
-                        <button type="button" className="googleButton" onClick={handleLoginGoogle}>
+                        <button type="button" className="googleButton" onClick={handleLoginGoogle} disabled={isGoogleLoading}>
                             <FcGoogle className="googleIcon" />
                             Đăng nhập với Google
                         </button>

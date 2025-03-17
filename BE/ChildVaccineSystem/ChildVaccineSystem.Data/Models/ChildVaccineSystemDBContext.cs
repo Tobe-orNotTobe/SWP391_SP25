@@ -35,6 +35,7 @@ namespace ChildVaccineSystem.Data.Models
 		public DbSet<Wallet> Wallets { get; set; }
 		public DbSet<WalletTransaction> WalletTransactions { get; set; }
 		public DbSet<RefundRequest> RefundRequests { get; set; }
+		public DbSet<VaccinationReminder> VaccinationReminders { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -56,13 +57,13 @@ namespace ChildVaccineSystem.Data.Models
 
 			// User Relationships
 			modelBuilder.Entity<User>()
-				.HasMany<Children>()
+				.HasMany(u => u.Children) 
 				.WithOne(c => c.User)
 				.HasForeignKey(c => c.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<User>()
-				.HasMany<Booking>()
+				.HasMany(u => u.Bookings)
 				.WithOne(b => b.User)
 				.HasForeignKey(b => b.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
@@ -74,13 +75,13 @@ namespace ChildVaccineSystem.Data.Models
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<User>()
-				.HasMany<VaccinationRecord>()
+				.HasMany(u => u.VaccinationRecords)
 				.WithOne(vr => vr.User)
 				.HasForeignKey(vr => vr.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<User>()
-				.HasMany<Notification>()
+				.HasMany(u => u.Notifications)
 				.WithOne(n => n.User)
 				.HasForeignKey(n => n.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
@@ -89,6 +90,13 @@ namespace ChildVaccineSystem.Data.Models
 				.HasMany<Feedback>()
 				.WithOne(f => f.User)
 				.HasForeignKey(f => f.UserId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			//DoctorWorkSchedule
+			modelBuilder.Entity<DoctorWorkSchedule>()
+				.HasMany(dws => dws.Bookings)
+				.WithOne(b => b.DoctorWorkSchedule)
+				.HasForeignKey(b => b.DoctorWorkScheduleId)
 				.OnDelete(DeleteBehavior.Restrict);
 
 			//Booking
@@ -122,12 +130,6 @@ namespace ChildVaccineSystem.Data.Models
 				.HasForeignKey<Feedback>(f => f.BookingId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<Booking>()
-				.HasMany<DoctorWorkSchedule>()
-				.WithOne(d => d.Booking)
-				.HasForeignKey(d => d.BookingId)
-				.OnDelete(DeleteBehavior.Restrict);
-
 			//BookingDetail
 			modelBuilder.Entity<BookingDetail>()
 				.HasOne(bd => bd.Vaccine)
@@ -144,7 +146,7 @@ namespace ChildVaccineSystem.Data.Models
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<BookingDetail>()
-				.HasOne<VaccinationRecord>()
+				.HasOne(bd => bd.VaccinationRecord)
 				.WithOne(vr => vr.BookingDetail)
 				.HasForeignKey<VaccinationRecord>(vr => vr.BookingDetailId)
 				.OnDelete(DeleteBehavior.Restrict);
@@ -273,6 +275,25 @@ namespace ChildVaccineSystem.Data.Models
 				.WithMany()
 				.HasForeignKey(t => t.RefundRequestId)
 				.IsRequired(false)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			//VaccinationReminder
+			modelBuilder.Entity<VaccinationReminder>()
+				.HasOne(vr => vr.User)
+				.WithMany()
+				.HasForeignKey(vr => vr.UserId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<VaccinationReminder>()
+				.HasOne(vr => vr.Children)
+				.WithMany()
+				.HasForeignKey(vr => vr.ChildId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<VaccinationReminder>()
+				.HasOne(vr => vr.Booking)
+				.WithMany()
+				.HasForeignKey(vr => vr.BookingId)
 				.OnDelete(DeleteBehavior.Restrict);
 		}
 	}

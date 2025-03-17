@@ -5,6 +5,7 @@ import {notification} from "antd";
 import {useForm} from "antd/es/form/Form";
 import {useNavigate, useParams} from "react-router-dom";
 import {decodeToken} from "../../../utils/decodeToken.ts";
+import {toast} from "react-toastify";
 
 export const useDeleteBlog = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +20,7 @@ export const useDeleteBlog = () => {
             notification.success({ message: "Xóa thành công!" });
 
         }catch (err: any) {
-            notification.error({ message: "Lỗi", description: err.message || "Có lỗi xảy ra, vui lòng thử lại." });
+            toast.error(err.message || "Có lỗi xảy ra, vui lòng thử lại.");
             setError(err.message);
         } finally {
             setIsLoading(false);
@@ -29,18 +30,18 @@ export const useDeleteBlog = () => {
     return {handleDelete, isLoading, error}
 }
 
-export const useUpdateBlogActive = () => {
+export const useUpdateBlogIsActive = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleUpdateActive = async (blog: BlogResponse) => {
+    const handleUpdateActive = async (blog: BlogResponse, currentIsActive: boolean ) => {
 
         const updateActiveData: UpdateBlogRequest = {
             title: blog.title,
             content: blog.content,
             imageUrl: blog.imageUrl,
             type: blog.type,
-            isActive: true,
+            isActive: !currentIsActive,
         }
 
         try {
@@ -48,10 +49,11 @@ export const useUpdateBlogActive = () => {
             setIsLoading(true);
             const response = await apiUpdateBlog(blog.blogPostId, updateActiveData);
             if (!response.isSuccess) return new Error(response.errorMessages || "Lỗi xảy ra, vui lòng thử lại.");
-            notification.success({ message: "Duyệt thành công!" });
+            toast.success(currentIsActive ? "Tắt thành công" : "Duyệt thành công!");
+
 
         }catch (err: any) {
-            notification.error({ message: "Lỗi", description: err.message || "Có lỗi xảy ra, vui lòng thử lại." });
+            toast.error(err.message || "Có lỗi xảy ra, vui lòng thử lại.");
             setError(err.message);
         } finally {
             setIsLoading(false);
@@ -86,7 +88,7 @@ export const useBlogForm = () => {
                     }
                 })
                 .catch(() => {
-                    notification.error({ message: "Lỗi", description: "Không thể tải dữ liệu blogs." });
+                    toast.error("Không thể tải dữ liệu blogs.");
                 })
                 .finally(() => setLoading(false));
         }
@@ -101,7 +103,7 @@ export const useBlogForm = () => {
                 };
                 const response = await apiUpdateBlog(Number(id), updateBlogData);
                 if (!response.isSuccess) return new Error(response.errorMessages || "Lỗi cập nhật blog");
-                notification.success({ message: "Cập nhật thành công!" });
+                toast.error("Cập nhật thành công!");
             } else {
                 const newBlogData: BlogRequest = {
                     ...values,
@@ -110,11 +112,11 @@ export const useBlogForm = () => {
                 };
                 const response = await apiCreateBlog(newBlogData);
                 if (!response.isSuccess) return new Error(response.errorMessages || "Lỗi tạo blog");
-                notification.success({ message: "Tạo blog thành công!" });
+                toast.success("Tạo blog thành công!");
             }
             navigate("/admin/blog");
         } catch (error: any) {
-            notification.error({ message: "Lỗi", description: error.message || "Có lỗi xảy ra, vui lòng thử lại." });
+            toast.error(error.message || "Có lỗi xảy ra, vui lòng thử lại.");
         } finally {
             setLoading(false);
         }

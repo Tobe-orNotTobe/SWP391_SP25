@@ -1,0 +1,86 @@
+// src/components/notification/SystemNotification.scss
+.system-notification {
+    position: relative;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    
+    &.unread {
+      border-left: 4px solid #1890ff;
+      background-color: #f0f7ff;
+      
+      &::after {
+        content: "";
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #1890ff;
+      }
+    }
+    
+    .notification-content {
+      display: flex;
+      align-items: flex-start;
+      
+      .notification-icon {
+        margin-right: 16px;
+      }
+      
+      .notification-body {
+        flex: 1;
+        
+        .notification-message {
+          margin-bottom: 12px;
+          
+          p {
+            margin-bottom: 0;
+            font-size: 15px;
+          }
+        }
+        
+        .notification-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          
+          .notification-type {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            background-color: #f5f5f5;
+          }
+        }
+      }
+    }
+    
+    .notification-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+      gap: 8px;
+    }
+  }
+  
+  // Responsive styles
+  @media (max-width: 576px) {
+    .system-notification {
+      .notification-content {
+        flex-direction: column;
+        
+        .notification-icon {
+          margin-right: 0;
+          margin-bottom: 12px;
+        }
+      }
+      
+      .notification-actions {
+        flex-direction: column;
+        
+        .ant-btn {
+          width: 100%;
+        }
+      }
+    }
+  }

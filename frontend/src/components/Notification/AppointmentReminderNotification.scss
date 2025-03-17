@@ -1,0 +1,91 @@
+/* src/components/notification/AppointmentReminderNotification.scss */
+.appointment-reminder {
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    
+    &.unread {
+      border-left: 4px solid #2A388F;
+      background-color: #f0f7ff;
+    }
+    
+    .reminder-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      
+      .reminder-title {
+        margin: 0 0 0 12px;
+        color: #2A388F;
+      }
+    }
+    
+    .reminder-content {
+      margin-bottom: 16px;
+      
+      p {
+        margin-bottom: 12px;
+        font-size: 15px;
+      }
+      
+      .reminder-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        
+        .ant-space {
+          color: #2A388F;
+        }
+      }
+      
+      .reminder-time {
+        font-size: 13px;
+        color: #888;
+        margin-top: 8px;
+      }
+    }
+    
+    .reminder-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      
+      .ant-btn-primary {
+        background-color: #2A388F;
+        
+        &:hover {
+          background-color: #1A277F;
+        }
+      }
+    }
+  }
+  
+  // Responsive styles
+  @media (max-width: 576px) {
+    .appointment-reminder {
+      .reminder-header {
+        flex-direction: column;
+        align-items: flex-start;
+        
+        .ant-avatar {
+          margin-bottom: 8px;
+        }
+        
+        .reminder-title {
+          margin-left: 0;
+        }
+      }
+      
+      .reminder-actions {
+        flex-direction: column;
+        
+        .ant-btn {
+          width: 100%;
+        }
+      }
+    }
+  }
