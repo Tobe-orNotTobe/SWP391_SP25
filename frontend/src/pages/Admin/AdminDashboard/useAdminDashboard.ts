@@ -1,5 +1,10 @@
 import {useEffect, useState} from "react";
-import {apiDashBoardFeedBack, apiDashBoardTotalRevenue, apiDashBoardRevenueLast10days} from "../../../apis/apiAdmin.ts";
+import {
+    apiDashBoardFeedBack,
+    apiDashBoardTotalRevenue,
+    apiDashBoardRevenueLast10days,
+    apiAdminGetRevenuePerDay
+} from "../../../apis/apiAdmin.ts";
 
 
 interface Feedback{
@@ -9,13 +14,13 @@ interface Feedback{
     userName : string;
 }
 
-interface RevenueLast10Days {
+interface Revenue {
     date: string;
     totalRevenue: number;
 }
 
 export const useRevenueLast10Days = () => {
-    const [revenue, setRevenueLast10Days ] = useState<RevenueLast10Days[]>([]);
+    const [revenue, setRevenueLast10Days ] = useState<Revenue[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
@@ -95,5 +100,32 @@ export const useFeedbackDetail = () =>{
     }, [])
 
     return {feedback, loading, error};
+}
+
+export const useRevenueBydate  = (date : string) => {
+    const [revenueByDate, setRevenueByDate] = useState<Revenue[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() =>{
+        const fetchRevenuteByDate = async () => {
+            setLoading(true);
+            setError(null);
+
+            try {
+                const response = await apiAdminGetRevenuePerDay(date);
+                if (response.isSuccess) {
+                    setRevenueByDate(response.result);
+                }
+            }catch (err){
+                setError("Error Fetching RevenueByDate");
+            }finally {
+                setLoading(false);
+            }
+        };
+        fetchRevenuteByDate()
+    },[date])
+
+    return {revenueByDate, loading, error}
 }
 

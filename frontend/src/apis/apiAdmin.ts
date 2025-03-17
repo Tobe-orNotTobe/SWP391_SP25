@@ -97,3 +97,12 @@ export const apiTopUseVaccine = async () => {
   }
 }
 
+
+export const apiAdminGetRevenuePerDay = async (date: string) => {
+  try {
+    const response = await axiosInstance.get(`api/Dashboard/revenue/${date}`);
+    return response.data;
+  }catch (err){
+    throw err
+  }
+}

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Row, Col, Select, Table, Rate } from "antd";
+import React, { useEffect, useRef } from "react";
+import { Row, Col, Table, Rate } from "antd";
 import {TeamOutlined, SolutionOutlined, CrownOutlined, SafetyOutlined } from '@ant-design/icons';
 import AdminLayout from "../../../components/Layout/AdminLayout/AdminLayout.tsx";
 import {useFeedbackDetail, useRevenueLast10Days, useRevenueTotal} from "./useAdminDashboard.ts";
@@ -9,8 +9,6 @@ import './AdminDashboard.scss';
 import {useTopUsedVaccine} from "../../../hooks/useVaccine.ts";
 import {useGetAllUser} from "../AdminAccount/useAdminAccount.ts";
 
-
-// Register Chart.js components
 Chart.register(...registerables);
 
 const AdminDashboardPage: React.FC = () => {
@@ -29,21 +27,6 @@ const AdminDashboardPage: React.FC = () => {
     const chartInstance = useRef<Chart<ChartType> | null>(null);
 
 
-    const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-    const [filteredRevenue, setFilteredRevenue] = useState(revenue);
-
-
-    const handleYearChange = (year: number) => {
-        setSelectedYear(year);
-    };
-
-
-    useEffect(() => {
-        const filteredData = revenue.filter(item => new Date(item.date).getFullYear() === selectedYear);
-        setFilteredRevenue(filteredData);
-    }, [selectedYear, revenue]);
-
-
     const formatDateString = (dateString: string): string => {
         const date = new Date(dateString);
         return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -58,8 +41,8 @@ const AdminDashboardPage: React.FC = () => {
             }
 
 
-            const labels = filteredRevenue.map(item => formatDateString(item.date));
-            const data = filteredRevenue.map(item => item.totalRevenue);
+            const labels = revenue.map(item => formatDateString(item.date));
+            const data = revenue.map(item => item.totalRevenue);
 
 
             const ctx = chartRef.current.getContext('2d');
@@ -125,9 +108,7 @@ const AdminDashboardPage: React.FC = () => {
                 chartInstance.current.destroy();
             }
         };
-    }, [filteredRevenue]);
-
-    const years = Array.from(new Set(revenue.map(item => new Date(item.date).getFullYear())));
+    }, [revenue]);
 
     const sortedFeedback = feedback.sort((a, b) => parseInt(b.feedbackId) - parseInt(a.feedbackId)).slice(0, 3);
 
@@ -220,15 +201,6 @@ const AdminDashboardPage: React.FC = () => {
                         <div className="chart-container">
                             <h1 className="title">Biểu đồ doanh thu của SideEffect </h1>
                             <h1 className="title" style={{color : "#FFB400"}}>Tổng Doanh Thu: {revenueTotal.toLocaleString("vi-VN")} VND</h1>
-                            {/* Year Filter */}
-                            <div className="year-filter">
-                                <Select
-                                    value={selectedYear}
-                                    onChange={handleYearChange}
-                                    style={{width: 100}}
-                                    options={years.map(year => ({label: year.toString(), value: year}))}
-                                />
-                            </div>
                             <div style={{height: '300px', width: '100%'}}>
                                 <canvas ref={chartRef}></canvas>
                             </div>
