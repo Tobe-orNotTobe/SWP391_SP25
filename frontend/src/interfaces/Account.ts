@@ -49,6 +49,20 @@ export interface LoginRequest {
     password: string;
 }
 
+export interface LoginGoogleRequest {
+    idToken: string;
+}
+
+export interface LoginGoogleResponse {
+    message: string;
+    token: string;
+    user: {
+        id: string;
+        email: string;
+        userName: string;
+    }
+}
+
 
 export interface RegisterRequest {
     fullName: string;
