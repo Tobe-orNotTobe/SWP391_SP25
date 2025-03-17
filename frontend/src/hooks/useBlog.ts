@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {BlogResponse} from "../interfaces/Blog.ts";
-import {apiGetAllBlog, apiGetAllNews, apiGetBlogById} from "../apis/apiBlog.ts";
+import {apiGetAll, apiGetAllBlog, apiGetAllNews, apiGetBlogById} from "../apis/apiBlog.ts";
 import {NewsResponse} from "../interfaces/Blog.ts";
 
 export const useGetAllBlog = () => {
@@ -8,11 +8,18 @@ export const useGetAllBlog = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
-    const fetchAllBlog = async (isActive: boolean) => {
+    const fetchAllBlog = async (isActive: boolean, blogType: string) => {
         setLoading(true);
 
         try {
-            const response = await apiGetAllBlog(isActive);
+            let response;
+            if (blogType === "all") {
+                response = await apiGetAll(isActive);
+            }else if (blogType === "blog") {
+                response = await apiGetAllBlog(isActive);
+            }else {
+                response = await apiGetAllNews(isActive);
+            }
             if (response && response.result) {
                 setBlogs(response.result);
             }
@@ -35,7 +42,7 @@ export const useBlogByAuthor = (author: string) => {
     const fetchAllBlog = async () => {
         setLoading(true);
         try {
-            const response = await apiGetAllBlog();
+            const response = await apiGetAll(true);
             if (response && response.result) {
                 const filteredBlogs = response.result.filter(
                     (blog: BlogResponse) => blog.authorName === author

@@ -164,7 +164,7 @@ export const useAdminAccountForm = () => {
                 id,
                 ...values,
                 isActive: values.isActive ?? true, // Nếu thiếu thì mặc định là true
-                imageUrl: values.imageUrl ?? "cocainit",
+                imageUrl: "/null",
                 role: values.role,
             };
             const response = await apiUpdateAccount(updateAccountData);

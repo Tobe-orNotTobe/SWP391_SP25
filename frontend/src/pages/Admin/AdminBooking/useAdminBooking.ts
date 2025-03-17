@@ -7,6 +7,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import {apiCreateAccount, apiUpdateAccount} from "../../../apis/apiAccount.ts";
 import dayjs from "dayjs";
 import {AccountRequest, UpdateAccountRequest} from "../../../interfaces/Account.ts";
+import {apiVaccineRecordByBookingId} from "../../../apis/apiVaccineRecord.ts";
+import {VaccineRecordUser} from "../../../interfaces/VaccineRecord.ts";
 
 export const useGetAllBooking = () => {
     const [bookings, setBookings] = useState<BookingResponse[]>([]);
@@ -30,6 +32,31 @@ export const useGetAllBooking = () => {
 
     return { bookings, loading, error, fetchAllBookings };
 };
+
+export const useGetVaccineRecordByBookingId = () => {
+    const [vaccineRecord, setVaccineRecord] = useState<VaccineRecordUser | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string>("");
+
+    const fetchVaccineRecordByBookingId = async (bookingId: number) => {
+
+        setLoading(true);
+        const response = await apiVaccineRecordByBookingId(bookingId);
+        if (!response.isSuccess) {
+            response.errorMessages.forEach((msg: string) => {
+                toast.error(msg);
+            });
+            setError("Error Fetching All Booking Data")
+            return;
+        }
+        if (response.result) setVaccineRecord(response.result);
+        setLoading(false);
+
+    };
+
+    return { vaccineRecord, loading, error, fetchVaccineRecordByBookingId };
+
+}
 
 
 export const useAdminBookingForm = () => {

@@ -3,7 +3,7 @@ import {BlogRequest, UpdateBlogRequest} from "../interfaces/Blog.ts";
 import axios from "axios";
 
 
-export const apiGetAllBlog = async (onlyActive: boolean) => {
+export const apiGetAll = async (onlyActive: boolean) => {
     try {
         const response = await axiosInstance.get(`/api/Blog?onlyActive=${onlyActive}`);
         return response.data;
@@ -17,6 +17,22 @@ export const apiGetAllBlog = async (onlyActive: boolean) => {
     }
 
 };
+
+export const apiGetAllBlog = async (onlyActive: boolean) => {
+    try {
+        const response = await axiosInstance.get(`/api/Blog/type/blog?onlyActive=${onlyActive}`);
+        return response.data;
+    }catch (err: any | undefined) {
+        return {
+            statusCode: err.response?.data?.statusCode,
+            isSuccess: false,
+            errorMessages: err.response?.data?.errorMessages || ["Có lỗi xảy ra!"],
+            result: null
+        };
+    }
+
+};
+
 export const apiGetAllNews = async (onlyActive: boolean) => {
     try {
         const response = await axiosInstance.get(`/api/Blog/type/news?onlyActive=${onlyActive}`);

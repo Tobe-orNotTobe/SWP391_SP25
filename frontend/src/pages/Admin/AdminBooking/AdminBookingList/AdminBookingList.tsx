@@ -1,19 +1,21 @@
-import {Button, Table, Tabs} from "antd";
+import {Button, Descriptions, Table, Tabs} from "antd";
 import React, {useEffect, useState} from "react";
 import {TbListDetails} from "react-icons/tb";
 // import {FiEdit2} from "react-icons/fi";
 // import {useNavigate} from "react-router-dom";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
 // import {IoMdAdd} from "react-icons/io";
-import {useGetAllBooking} from "../useAdminBooking.ts";
+import {useGetAllBooking, useGetVaccineRecordByBookingId} from "../useAdminBooking.ts";
 import {BookingResponse} from "../../../../interfaces/Booking.ts";
 import dayjs from "dayjs";
+import "../AdminBooking.scss"
 
 const { TabPane } = Tabs;
 
 const AdminBookingPage: React.FC = () => {
 
     const { bookings, loading, error, fetchAllBookings } = useGetAllBooking();
+    const { vaccineRecord, fetchVaccineRecordByBookingId } = useGetVaccineRecordByBookingId();
 
     useEffect(() => {
         fetchAllBookings().then();
@@ -94,6 +96,11 @@ const AdminBookingPage: React.FC = () => {
 
     const [detailBooking, setDetailBooking] = useState<BookingResponse | null>(null);
     // const navigate = useNavigate();
+    useEffect(() => {
+        if (detailBooking) {
+            fetchVaccineRecordByBookingId(detailBooking?.bookingId).then();
+        }
+    }, [detailBooking]);
 
     const openDetailPopup = (booking: BookingResponse) => {
         setDetailBooking(booking);
@@ -133,8 +140,8 @@ const AdminBookingPage: React.FC = () => {
                     />
 
                     {detailBooking && (
-                        <div className="popupOverlay" onClick={closeDetailPopup}>
-                            <div className="popup" style={{width: "800px"}} onClick={(e) => e.stopPropagation()}>
+                        <div className="popup-overlay" onClick={closeDetailPopup}>
+                            <div className="popup" style={{width: "fit-content"}} onClick={(e) => e.stopPropagation()}>
                                 <button className="closeButton" onClick={closeDetailPopup}>×</button>
                                 <h2 style={{fontWeight: "bold", fontSize: "18px", position: "absolute", top: "20px"}}>Chi tiết người dùng</h2>
 
@@ -165,11 +172,48 @@ const AdminBookingPage: React.FC = () => {
                                             </div>
                                         </div>
                                     </TabPane>
-                                    {/*<TabPane tab="Lịch Tiêm Chủng" key="2">*/}
-                                    {/*    <div className="vaccination-schedule-section">*/}
+                                    {detailBooking.status === "Completed" && (
+                                        <TabPane tab="Lịch sử tiêm chủng" key="2">
+                                            <div className="vaccination-schedule-section">
+                                                {vaccineRecord ? (
+                                                    <>
+                                                        <Descriptions title="Thông Tin Cá Nhân" bordered column={2}>
+                                                            <Descriptions.Item label="Mã Đặt Lịch">{vaccineRecord.bookingId}</Descriptions.Item>
+                                                            <Descriptions.Item label="Họ Tên">{vaccineRecord.fullName}</Descriptions.Item>
+                                                            <Descriptions.Item label="Ngày Sinh">{vaccineRecord.dateOfBirth}</Descriptions.Item>
+                                                            <Descriptions.Item label="Chiều Cao">{vaccineRecord.height} cm</Descriptions.Item>
+                                                            <Descriptions.Item label="Cân Nặng">{vaccineRecord.weight} kg</Descriptions.Item>
+                                                        </Descriptions>
 
-                                    {/*    </div>*/}
-                                    {/*</TabPane>*/}
+                                                        <h3 style={{ marginTop: 16 }}>Lịch Sử Tiêm Chủng</h3>
+                                                        <Table
+                                                            dataSource={vaccineRecord.vaccineRecords}
+                                                            rowKey="vaccinationRecordId"
+                                                            pagination={false}
+                                                            bordered
+                                                        >
+                                                            <Table.Column title="Mã booking" dataIndex="vaccinationRecordId" key="id" />
+                                                            <Table.Column title="Tên Vaccine" dataIndex="vaccineName" key="vaccineName" />
+                                                            <Table.Column title="Liều Lượng (ml)" dataIndex="doseAmount" key="doseAmount" />
+                                                            <Table.Column
+                                                                title="Giá (VNĐ)"
+                                                                dataIndex="price"
+                                                                key="price"
+                                                                render={(price) => new Intl.NumberFormat("vi-VN").format(price) + " VND"}
+                                                            />
+                                                            <Table.Column title="Ngày Tiêm Kế Tiếp" dataIndex="nextDoseDate" key="nextDoseDate" />
+                                                            <Table.Column title="Lô Vaccine" dataIndex="batchNumber" key="batchNumber" />
+                                                            <Table.Column title="Trạng Thái" dataIndex="status" key="status" />
+                                                            <Table.Column title="Ghi Chú" dataIndex="notes" key="notes" />
+                                                        </Table>
+                                                    </>
+                                                ) : (
+                                                    <p>Không có dữ liệu</p>
+                                                )}
+                                            </div>
+                                        </TabPane>
+                                    )}
+
                                 </Tabs>
                             </div>
                         </div>

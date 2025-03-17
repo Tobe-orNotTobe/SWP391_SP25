@@ -1,35 +1,35 @@
 import React, { useState } from "react";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import {Button, Form, Input, notification, Select, Switch, Upload} from "antd";
+import {Button, Form, Input, Select, Switch} from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import "./AdminAccountForm.scss";
 import { useNavigate } from "react-router-dom";
 import { useAdminAccountForm } from "../useAdminAccount.ts";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import {uploadImageToCloudinary} from "../../../../utils/cloudinary.ts";
+// import {uploadImageToCloudinary} from "../../../../utils/cloudinary.ts";
 
 const AdminAccountFormPage: React.FC = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
-    const { form, imageUrl, dateOfBirth, setDateOfBirth, isEditMode, handleSubmit } = useAdminAccountForm();
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const { form, dateOfBirth, setDateOfBirth, isEditMode, handleSubmit } = useAdminAccountForm();
+    // const [imageFile, setImageFile] = useState<File | null>(null);
+    // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     const handleShowPassword = () => setShowPassword(!showPassword);
 
     const onFinish = async (values: any) => {
 
-        let imageUrl = values.imageUrl;
-        if (imageFile) {
-            try {
-                imageUrl = await uploadImageToCloudinary(imageFile);
-            } catch (error) {
-                notification.error({ message: "Lỗi", description: "Tải ảnh thất bại." });
-                return;
-            }
-        }
+        // let imageUrl = values.imageUrl;
+        // if (imageFile) {
+        //     try {
+        //         imageUrl = await uploadImageToCloudinary(imageFile);
+        //     } catch (error) {
+        //         notification.error({ message: "Lỗi", description: "Tải ảnh thất bại." });
+        //         return;
+        //     }
+        // }
 
-        const formData = { ...values, imageUrl };
+        const formData = { ...values };
         await handleSubmit(formData);
     };
 
@@ -141,30 +141,28 @@ const AdminAccountFormPage: React.FC = () => {
 
                         </div>
 
-                        <div style={{paddingTop: "26px"}}>
-                            {isEditMode && (
-                                <Form.Item name="imageUrl" label="Ảnh minh họa:">
-                                    <Upload
-                                        listType="picture-card"
-                                        showUploadList={false}
-                                        beforeUpload={(file) => {
-                                            setImageFile(file);
-                                            setPreviewUrl(URL.createObjectURL(file));
-                                            return false;
-                                        }}
-                                    >
-                                        {previewUrl ? (
-                                            <img src={previewUrl} alt="Xem trước" style={{ width: "100%" }} />
-                                        ) : isEditMode ? (
-                                            <img src={imageUrl} alt="Xem trước" style={{ width: "100%" }} />
-                                        ) : (
-                                            "+ Upload"
-                                        )}
-                                    </Upload>
-                                </Form.Item>
-                            )}
+                        {/*    {isEditMode && (*/}
+                        {/*        <Form.Item name="imageUrl" label="Ảnh minh họa:">*/}
+                        {/*            <Upload*/}
+                        {/*                listType="picture-card"*/}
+                        {/*                showUploadList={false}*/}
+                        {/*                beforeUpload={(file) => {*/}
+                        {/*                    setImageFile(file);*/}
+                        {/*                    setPreviewUrl(URL.createObjectURL(file));*/}
+                        {/*                    return false;*/}
+                        {/*                }}*/}
+                        {/*            >*/}
+                        {/*                {previewUrl ? (*/}
+                        {/*                    <img src={previewUrl} alt="Xem trước" style={{ width: "100%" }} />*/}
+                        {/*                ) : isEditMode ? (*/}
+                        {/*                    <img src={imageUrl} alt="Xem trước" style={{ width: "100%" }} />*/}
+                        {/*                ) : (*/}
+                        {/*                    "+ Upload"*/}
+                        {/*                )}*/}
+                        {/*            </Upload>*/}
+                        {/*        </Form.Item>*/}
+                        {/*    )}*/}
                         </div>
-                    </div>
 
                     <div style={{display: "flex", justifyContent: "end"}}>
                         <Button type="primary" htmlType="submit" className="button-input">

@@ -25,7 +25,6 @@ const BookingHistory: React.FC = () => {
     const {vaccineRecord} =  useVaccineRecordByBookingId(bkid)
 
 
-
     const {
         // State
         selectedDate,
