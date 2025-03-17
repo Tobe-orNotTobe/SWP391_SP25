@@ -95,7 +95,7 @@ namespace ChildVaccineSystem.Service.Services
             return last10DaysRevenue;
         }
 
-        public async Task<decimal> GetTotalRevenueByDateAsync(DateTime date)
+        public async Task<RevenueByDateDTO> GetTotalRevenueByDateAsync(DateTime date)
         {
             // Get all transactions for a specific date
             var transactions = await _unitOfWork.Transactions.GetAllAsync(
@@ -103,8 +103,15 @@ namespace ChildVaccineSystem.Service.Services
                 includeProperties: "Booking"
             );
 
-            // Calculate the total revenue for that date
-            return transactions.Sum(t => t.Amount);
+            // Create the result with date and total revenue
+            var result = new RevenueByDateDTO
+            {
+                Date = date.Date,
+                TotalRevenue = transactions.Sum(t => t.Amount)
+            };
+
+            return result;
         }
+
     }
 }
