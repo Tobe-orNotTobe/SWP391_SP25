@@ -38,5 +38,13 @@ namespace ChildVaccineSystem.Repository.Repositories
             return await _context.VaccinationSchedules.AnyAsync(s => s.ScheduleId == scheduleId);
         }
 
+        public async Task<List<int>> GetVaccineIdsFromComboAsync(int comboVaccineId)
+        {
+            return await _context.ComboDetails
+                .Where(cd => cd.ComboId == comboVaccineId)
+                .Select(cd => cd.VaccineId)
+                .ToListAsync();
+        }
+
     }
 }
