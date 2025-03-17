@@ -1,8 +1,14 @@
-import React, { useEffect, useRef } from "react";
-import { Row, Col, Table, Rate } from "antd";
+import React, {useEffect, useRef, useState} from "react";
+import {Row, Col, Table, Rate, DatePicker} from "antd";
 import {TeamOutlined, SolutionOutlined, CrownOutlined, SafetyOutlined } from '@ant-design/icons';
 import AdminLayout from "../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import {useFeedbackDetail, useRevenueLast10Days, useRevenueTotal} from "./useAdminDashboard.ts";
+import {
+    Revenue,
+    useFeedbackDetail,
+    useRevenueBydate,
+    useRevenueLast10Days,
+    useRevenueTotal
+} from "./useAdminDashboard.ts";
 import { Chart, registerables, ChartType } from 'chart.js';
 import './AdminDashboard.scss';
 
@@ -20,9 +26,15 @@ const AdminDashboardPage: React.FC = () => {
 
     // console.log(users)
     const { revenue } = useRevenueLast10Days();
+
+    const [selectedDate, setSelectedDate] = useState<string>("");
+    const {revenueByDate} = useRevenueBydate(selectedDate);
+
+
     const { feedback } = useFeedbackDetail();
     const { topUseVaccine } = useTopUsedVaccine();
     const {revenue : revenueTotal} = useRevenueTotal()
+
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const chartInstance = useRef<Chart<ChartType> | null>(null);
 
@@ -40,9 +52,15 @@ const AdminDashboardPage: React.FC = () => {
                 chartInstance.current.destroy();
             }
 
+            const revenueData: Revenue[] = selectedDate && revenueByDate ? [revenueByDate] : revenue;
 
-            const labels = revenue.map(item => formatDateString(item.date));
-            const data = revenue.map(item => item.totalRevenue);
+            if (!revenueData || revenueData.length === 0) {
+                return;
+            }
+
+
+            const labels = revenueData.map(item => formatDateString(item.date));
+            const data = revenueData.map(item => item.totalRevenue);
 
 
             const ctx = chartRef.current.getContext('2d');
@@ -108,7 +126,7 @@ const AdminDashboardPage: React.FC = () => {
                 chartInstance.current.destroy();
             }
         };
-    }, [revenue]);
+    }, [selectedDate, revenueByDate, revenue]);
 
     const sortedFeedback = feedback.sort((a, b) => parseInt(b.feedbackId) - parseInt(a.feedbackId)).slice(0, 3);
 
@@ -199,6 +217,13 @@ const AdminDashboardPage: React.FC = () => {
                     {/* Revenue Chart Section */}
                     <Col span={24}>
                         <div className="chart-container">
+                            <div className="date-filter">
+                                <DatePicker
+                                    value={selectedDate}
+                                    onChange={(date) => setSelectedDate(date)}
+                                    format="DD/MM/YYYY"
+                                />
+                            </div>
                             <h1 className="title">Biểu đồ doanh thu của SideEffect </h1>
                             <h1 className="title" style={{color : "#FFB400"}}>Tổng Doanh Thu: {revenueTotal.toLocaleString("vi-VN")} VND</h1>
                             <div style={{height: '300px', width: '100%'}}>

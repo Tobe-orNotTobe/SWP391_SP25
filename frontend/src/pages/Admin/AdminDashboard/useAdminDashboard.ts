@@ -7,14 +7,14 @@ import {
 } from "../../../apis/apiAdmin.ts";
 
 
-interface Feedback{
+export interface Feedback{
     feedbackId: string;
     rating : number;
     comment: string;// Tren revenue thi hien thi 5 chu la dc r
     userName : string;
 }
 
-interface Revenue {
+export interface Revenue {
     date: string;
     totalRevenue: number;
 }
