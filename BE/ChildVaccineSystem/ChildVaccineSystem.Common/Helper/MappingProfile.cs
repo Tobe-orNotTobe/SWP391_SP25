@@ -45,20 +45,60 @@ namespace ChildVaccineSystem.Common.Helper
             CreateMap<Vaccine, VaccineBasicDTO>()
 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.VaccineId));
             // ComboVaccine Mapping
-            CreateMap<ComboVaccine, ComboVaccineDTO>()
-                .ForMember(dest => dest.Vaccines,
-                    opt => opt.MapFrom(src => src.ComboDetails.Select(cd => cd.Vaccine)))
+            // ✅ Mapping ComboDetail -> ComboDetailDTO
+            CreateMap<ComboDetail, ComboDetailDTO>()
+                .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order))
+                .ForMember(dest => dest.IntervalDays, opt => opt.MapFrom(src => src.IntervalDays))
+                .ForMember(dest => dest.Vaccine, opt => opt.MapFrom(src => src.Vaccine))
                 .ReverseMap();
 
+            // ✅ Mapping ComboVaccine -> ComboVaccineDTO
+            CreateMap<ComboVaccine, ComboVaccineDTO>()
+                .ForMember(dest => dest.ComboId, opt => opt.MapFrom(src => src.ComboId))
+                .ForMember(dest => dest.ComboName, opt => opt.MapFrom(src => src.ComboName))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice))
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive))
+                .ForMember(dest => dest.Vaccines, opt => opt.MapFrom(src => src.ComboDetails))
+                .ReverseMap();
+
+            // ✅ Mapping CreateComboDetailDTO -> ComboDetail
+            CreateMap<CreateComboDetailDTO, ComboDetail>()
+                .ForMember(dest => dest.VaccineId, opt => opt.MapFrom(src => src.VaccineId))
+                .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order))
+                .ForMember(dest => dest.IntervalDays, opt => opt.MapFrom(src => src.IntervalDays))
+                .ReverseMap();
+
+            // ✅ Mapping CreateComboVaccineDTO -> ComboVaccine
             CreateMap<CreateComboVaccineDTO, ComboVaccine>()
                 .ForMember(dest => dest.ComboDetails,
-                    opt => opt.MapFrom(src => src.VaccineIds.Select(id => new ComboDetail { VaccineId = id })))
+                    opt => opt.MapFrom(src => src.Vaccines
+                        .Select(vaccine => new ComboDetail
+                        {
+                            VaccineId = vaccine.VaccineId,
+                            Order = vaccine.Order,
+                            IntervalDays = vaccine.IntervalDays
+                        })))
                 .ForMember(dest => dest.CreatedAtUpdatedAt,
                     opt => opt.MapFrom(src => DateTime.UtcNow));
 
+            // ✅ Mapping UpdateComboDetailDTO -> ComboDetail
+            CreateMap<UpdateComboDetailDTO, ComboDetail>()
+                .ForMember(dest => dest.VaccineId, opt => opt.MapFrom(src => src.VaccineId))
+                .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order))
+                .ForMember(dest => dest.IntervalDays, opt => opt.MapFrom(src => src.IntervalDays))
+                .ReverseMap();
+
+            // ✅ Mapping UpdateComboVaccineDTO -> ComboVaccine
             CreateMap<UpdateComboVaccineDTO, ComboVaccine>()
                 .ForMember(dest => dest.ComboDetails,
-                    opt => opt.MapFrom(src => src.VaccineIds.Select(id => new ComboDetail { VaccineId = id })))
+                    opt => opt.MapFrom(src => src.Vaccines
+                        .Select(vaccine => new ComboDetail
+                        {
+                            VaccineId = vaccine.VaccineId,
+                            Order = vaccine.Order,
+                            IntervalDays = vaccine.IntervalDays
+                        })))
                 .ForMember(dest => dest.CreatedAtUpdatedAt,
                     opt => opt.MapFrom(src => DateTime.UtcNow));
 
