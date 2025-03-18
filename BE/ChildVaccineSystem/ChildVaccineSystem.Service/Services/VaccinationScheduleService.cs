@@ -332,16 +332,16 @@ namespace ChildVaccineSystem.Service.Services
 				throw new KeyNotFoundException($"Không tìm thấy ID trẻ: {childrenId}");
 
 			var today = DateTime.Today;
-			var ageInMonths = ((today.Year - children.DateOfBirth.Year) * 12) + today.Month - children.DateOfBirth.Month;
-			if (today.Day < children.DateOfBirth.Day)
-				ageInMonths--;
+			int age = (today - children.DateOfBirth).Days / 365;
+			if (today < children.DateOfBirth.AddYears(age))
+				age--;
 
 			var schedules = await _unitOfWork.VaccinationSchedules.GetAllAsync(
-				s => s.AgeRangeStart <= ageInMonths && s.AgeRangeEnd >= ageInMonths,
+				s => s.AgeRangeStart <= age && s.AgeRangeEnd > age,
 				includeProperties: "VaccineScheduleDetails.Vaccine"
 			);
 
-			if (schedules == null)
+			if (schedules.Count() == 0)
 				throw new KeyNotFoundException($"Không tìm thấy lịch phù hợp cho trẻ này!");
 
 			var schedule = schedules.FirstOrDefault();
