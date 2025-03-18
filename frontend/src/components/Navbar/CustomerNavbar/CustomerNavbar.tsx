@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import './CustomerNavbar.scss';
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import {MdNavigateNext, MdOutlineChangeCircle} from "react-icons/md";
@@ -23,7 +23,13 @@ const CustomerNavbar: React.FC = () => {
         navigate("/login");
     };
 
-    const {walletData} = useWalletUserDetail();
+    const {walletData, fetchWalletData} = useWalletUserDetail();
+
+    if(username){
+        useEffect(() => {
+            fetchWalletData()
+        }, [walletData]);
+    }
 
     return (
         <>

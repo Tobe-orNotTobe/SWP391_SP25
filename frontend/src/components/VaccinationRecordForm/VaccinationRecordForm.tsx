@@ -7,7 +7,6 @@ import {
   UpdateVaccineRecordRequest,
 } from "../../interfaces/VaccineRecord.ts";
 import {
-  apiGetVaccineRecord,
   apiGetVaccineRecordByBookingId,
   apiUpdateVaccineRecord,
 } from "../../apis/apiVaccineRecord.ts";
@@ -23,11 +22,11 @@ interface Props {
 
 const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
   const [vaccineData, setVaccineData] = useState<VaccineRecordResponse | null>(
-    null
+      null
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [updatedRecords, setUpdatedRecords] = useState<
-    UpdateVaccineRecordRequest[]
+      UpdateVaccineRecordRequest[]
   >([]);
 
   const navigate = useNavigate();
@@ -47,7 +46,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
 
       // Lấy danh sách tất cả vaccinationRecordId
       const recordIds = vaccineRecords.map(
-        (record) => record.vaccinationRecordId
+          (record) => record.vaccinationRecordId
       );
       setVaccineRecordIds(recordIds); // Lưu danh sách ID vào state
       console.log("Vaccination Record IDs:", recordIds);
@@ -62,8 +61,8 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
   }, [booking.bookingId]);
 
   const handleUpdateRecord = (
-    index: number,
-    updatedField: Partial<VaccineRecord>
+      index: number,
+      updatedField: Partial<VaccineRecord>
   ) => {
     if (!vaccineData) return;
 
@@ -80,7 +79,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
     try {
       // Kiểm tra xem có mục nào thiếu nextDoseDate không
       const missingNextDoseDate = updatedRecords.some(
-        (record) => !record.nextDoseDate
+          (record) => !record.nextDoseDate
       );
 
       if (missingNextDoseDate) {
@@ -123,40 +122,40 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
   }
 
   return (
-    <div className="vaccination-record-container">
-      <form>
-        <h1>GHI NHẬN HỒ SƠ TIÊM CHỦNG</h1>
+      <div className="vaccination-record-container">
+        <form>
+          <h1>GHI NHẬN HỒ SƠ TIÊM CHỦNG</h1>
 
-        {/* Thông tin cá nhân */}
-        <div className="form-section">
-          <h2>Thông tin cá nhân</h2>
-          <div className="form-group">
-            <label>Họ tên *</label>
-            <input type="text" value={vaccineData.result.fullName} readOnly />
+          {/* Thông tin cá nhân */}
+          <div className="form-section">
+            <h2>Thông tin cá nhân</h2>
+            <div className="form-group">
+              <label>Họ tên *</label>
+              <input type="text" value={vaccineData.result.fullName} readOnly />
+            </div>
+            <div className="form-group">
+              <label>Ngày sinh *</label>
+              <input
+                  type="date"
+                  value={vaccineData.result.dateOfBirth.split("T")[0]}
+                  readOnly
+              />
+            </div>
+            <div className="form-group">
+              <label>Chiều cao (cm) *</label>
+              <input type="number" value={vaccineData.result.height} readOnly />
+            </div>
+            <div className="form-group">
+              <label>Cân nặng (kg) *</label>
+              <input type="number" value={vaccineData.result.weight} readOnly />
+            </div>
           </div>
-          <div className="form-group">
-            <label>Ngày sinh *</label>
-            <input
-              type="date"
-              value={vaccineData.result.dateOfBirth.split("T")[0]}
-              readOnly
-            />
-          </div>
-          <div className="form-group">
-            <label>Chiều cao (cm) *</label>
-            <input type="number" value={vaccineData.result.height} readOnly />
-          </div>
-          <div className="form-group">
-            <label>Cân nặng (kg) *</label>
-            <input type="number" value={vaccineData.result.weight} readOnly />
-          </div>
-        </div>
 
-        {/* Thông tin vaccine */}
-        <div className="form-section">
-          <h2>Thông tin vaccine</h2>
-          <table className="vaccine-table">
-            <thead>
+          {/* Thông tin vaccine */}
+          <div className="form-section">
+            <h2>Thông tin vaccine</h2>
+            <table className="vaccine-table">
+              <thead>
               <tr>
                 <th>Tên vaccine</th>
                 <th>Liều lượng</th>
@@ -166,88 +165,88 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
                 <th>Trạng thái</th>
                 <th>Ghi chú</th>
               </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
               {vaccineData.result.vaccineRecords.map((record, index) => (
-                <tr key={record.vaccinationRecordId}>
-                  <td>
-                    <input type="text" value={record.vaccineName} readOnly />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={record.doseAmount + " ml"}
-                      readOnly
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={record.price.toLocaleString("vi-VN") + " VND"}
-                      readOnly
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="date"
-                      required
-                      value={updatedRecords[index].nextDoseDate || ""} 
-                      min={new Date().toISOString().split("T")[0]}
-                      onChange={(e) =>
-                        handleUpdateRecord(index, {
-                          nextDoseDate: e.target.value,
-                        })
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      readOnly
-                      type="text"
-                      value={record.batchNumber}
-                      onChange={(e) =>
-                        handleUpdateRecord(index, {
-                          batchNumber: e.target.value,
-                        })
-                      }
-                    />
-                  </td>
-                  <td>
-                    <Select
-                      value={record.status}
-                      onChange={(value) =>
-                        handleUpdateRecord(index, { status: value })
-                      }
-                      style={{ width: "100%" }}
-                    >
-                      <Option value="Chờ tiêm">Chờ tiêm</Option>
-                      <Option value="Completed">Đã tiêm</Option>
-                    </Select>
-                  </td>
-                  <td>
+                  <tr key={record.vaccinationRecordId}>
+                    <td>
+                      <input type="text" value={record.vaccineName} readOnly />
+                    </td>
+                    <td>
+                      <input
+                          type="text"
+                          value={record.doseAmount + " ml"}
+                          readOnly
+                      />
+                    </td>
+                    <td>
+                      <input
+                          type="text"
+                          value={record.price.toLocaleString("vi-VN") + " VND"}
+                          readOnly
+                      />
+                    </td>
+                    <td>
+                      <input
+                          type="date"
+                          required
+                          value={updatedRecords[index].nextDoseDate || ""}
+                          min={new Date().toISOString().split("T")[0]}
+                          onChange={(e) =>
+                              handleUpdateRecord(index, {
+                                nextDoseDate: e.target.value,
+                              })
+                          }
+                      />
+                    </td>
+                    <td>
+                      <input
+                          readOnly
+                          type="text"
+                          value={record.batchNumber}
+                          onChange={(e) =>
+                              handleUpdateRecord(index, {
+                                batchNumber: e.target.value,
+                              })
+                          }
+                      />
+                    </td>
+                    <td>
+                      <Select
+                          value={record.status}
+                          onChange={(value) =>
+                              handleUpdateRecord(index, { status: value })
+                          }
+                          style={{ width: "100%" }}
+                      >
+                        <Option value="Chờ tiêm">Chờ tiêm</Option>
+                        <Option value="Completed">Đã tiêm</Option>
+                      </Select>
+                    </td>
+                    <td>
                     <textarea
-                      value={updatedRecords[index].notes || ""}
-                      onChange={(e) =>
-                        handleUpdateRecord(index, { notes: e.target.value })
-                      }
+                        value={updatedRecords[index].notes || ""}
+                        onChange={(e) =>
+                            handleUpdateRecord(index, { notes: e.target.value })
+                        }
                     />
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
               ))}
-            </tbody>
-          </table>
-        </div>
+              </tbody>
+            </table>
+          </div>
 
-        {/* Nút hoàn thành */}
-        <button
-          type="button"
-          className="submit-button"
-          onClick={handleComplete}
-        >
-          Hoàn thành
-        </button>
-      </form>
-    </div>
+          {/* Nút hoàn thành */}
+          <button
+              type="button"
+              className="submit-button"
+              onClick={handleComplete}
+          >
+            Hoàn thành
+          </button>
+        </form>
+      </div>
   );
 };
 

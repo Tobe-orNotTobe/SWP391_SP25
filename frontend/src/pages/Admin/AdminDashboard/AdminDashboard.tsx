@@ -39,10 +39,19 @@ const AdminDashboardPage: React.FC = () => {
     const chartInstance = useRef<Chart<ChartType> | null>(null);
 
 
-    const formatDateString = (dateString: string): string => {
+    const formatDateString = (dateString: string | null | undefined): string => {
+        if (!dateString) return "N/A";
+
         const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            console.error("Invalid date:", dateString);
+            return "N/A";
+        }
+
         return date.toISOString().split("T")[0];
     };
+
+
 
 
     useEffect(() => {

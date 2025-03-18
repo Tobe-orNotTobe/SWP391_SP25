@@ -218,15 +218,15 @@ export const apiChangePassword = async (data : ResetPasswordUserProfile)=> {
         throw err;
     }
 }
-
 export const apiGetUserWallet = async () => {
     try {
         const response = await axiosInstance.get("/api/Wallet/user");
         return response.data;
-    }catch (err){
-        throw err;
+    } catch (err) {
+
+        return { isSuccess: false, result: { balance: 0 } };
     }
-}
+};
 
 
 

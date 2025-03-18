@@ -33,32 +33,27 @@ export const useRefundUserList = () => {
 
 export const useWalletUserDetail = () => {
     const [walletData, setWalletData] = useState<WalletUser | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null);
 
-    useEffect(() => {
-        const fetchWalletData = async () => {
-            setIsLoading(true);
-            setError(null);
-            try {
-                const data = await apiGetUserWallet();
-                if(data.isSuccess){
-                    setWalletData(data.result);
-                }
-            } catch (err) {
-                setError(err instanceof Error ? err : new Error('Unknown error occurred'));
-                setWalletData(null);
-            } finally {
-                setIsLoading(false);
+    const fetchWalletData = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const data = await apiGetUserWallet();
+            if (data.isSuccess) {
+                setWalletData(data.result);
             }
-        };
+        } catch (err) {
+            setError(err instanceof Error ? err : new Error('Unknown error occurred'));
+            setWalletData(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-        fetchWalletData();
-    }, []);
-
-    return { walletData, isLoading, error };
+    return { walletData, isLoading, error, fetchWalletData };
 };
-
 export const useRecentTransactions = () => {
     const [transactions, setTransactions] = useState<WalletHistoryUserDetail[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);

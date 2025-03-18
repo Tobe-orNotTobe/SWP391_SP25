@@ -102,30 +102,37 @@ export const useFeedbackDetail = () =>{
     return {feedback, loading, error};
 }
 
-export const useRevenueBydate  = (date : string) => {
+export const useRevenueBydate = (date: string) => {
     const [revenueByDate, setRevenueByDate] = useState<Revenue[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() =>{
-        const fetchRevenuteByDate = async () => {
-            setLoading(true);
-            setError(null);
+    useEffect(() => {
 
-            try {
-                const response = await apiAdminGetRevenuePerDay(date);
-                if (response.isSuccess) {
-                    setRevenueByDate(response.result);
+        if (date) {
+            const fetchRevenuteByDate = async () => {
+                setLoading(true);
+                setError(null);
+
+                try {
+                    const response = await apiAdminGetRevenuePerDay(date);
+                    if (response.isSuccess) {
+                        setRevenueByDate(response.result);
+                    }
+                } catch (err) {
+                    setError("Error Fetching RevenueByDate");
+                } finally {
+                    setLoading(false);
                 }
-            }catch (err){
-                setError("Error Fetching RevenueByDate");
-            }finally {
-                setLoading(false);
-            }
-        };
-        fetchRevenuteByDate()
-    },[date])
+            };
+            fetchRevenuteByDate();
+        } else {
 
-    return {revenueByDate, loading, error}
-}
+            setRevenueByDate([]);
+            setLoading(false);
+            setError(null);
+        }
+    }, [date]);
 
+    return { revenueByDate, loading, error };
+};
