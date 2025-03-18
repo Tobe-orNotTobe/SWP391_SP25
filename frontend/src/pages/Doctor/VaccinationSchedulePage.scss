@@ -73,7 +73,8 @@
 }
 
 /* Custom Modal */
-.custom-modal .ant-modal-content {
+.custom-modal .ant-modal-content { /* Tăng chiều rộng modal */
+  max-width: 90%; /* Giới hạn chiều rộng tối đa */
   border-radius: 12px; /* Bo tròn góc */
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); /* Đổ bóng */
 }
@@ -155,4 +156,42 @@ h2 {
   font-size: 14px;
   padding: 4px 8px;
   border-radius: 4px;
+}
+
+.vaccine-record-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.vaccine-record-table th,
+.vaccine-record-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.vaccine-record-table th {
+  background-color: #2a388f; /* Màu nền header */
+  color: white; /* Màu chữ header */
+}
+
+.vaccine-record-table td {
+  background-color: #f9f9f9; /* Màu nền các ô dữ liệu */
+}
+
+.modal-body {
+  display: flex;
+  gap: 20px; /* Khoảng cách giữa hai cột */
+}
+
+.modal-body .info-section,
+.modal-body .vaccine-section,
+.modal-body .combo-section {
+  flex: 1; /* Chiếm 60% chiều rộng */
+}
+
+.modal-body .vaccine-record-section {
+  flex: 1; /* Chiếm 40% chiều rộng */
+  max-width: 40%; /* Giới hạn chiều rộng tối đa */
 }

@@ -26,6 +26,8 @@ import {
   apiGetComBoVaccineById,
   apiGetVaccineDetailById,
 } from "../../apis/apiVaccine.ts";
+import { apiGetVaccineRecordByBookingId } from "../../apis/apiVaccineRecord.ts";
+import { VaccineRecordResponse } from "../../interfaces/VaccineRecord.ts";
 
 const { Title, Text } = Typography;
 
@@ -39,6 +41,8 @@ function AssignPage() {
   );
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalDoctorIsOpen, setDoctorModalIsOpen] = useState(false);
+    const [vaccineRecordDetails, setVaccineRecordDetails] =
+      useState<VaccineRecordResponse>();
   const [selectedBooking, setSelectedBooking] =
     useState<BookingResponse | null>(null);
   const [vaccineDetails, setVaccineDetails] = useState<any[]>([]);
@@ -161,6 +165,16 @@ function AssignPage() {
           await getVaccineAndComboDetails(bookingDetails);
         setVaccineDetails(vaccineDetails);
         setComboDetails(comboDetails);
+      }
+
+      // Fetch vaccine record if the booking is completed
+      if (booking.status === "Completed") {
+        const vaccineRecordResponse = await apiGetVaccineRecordByBookingId(
+          booking.bookingId
+        );
+        if (vaccineRecordResponse?.isSuccess) {
+          setVaccineRecordDetails(vaccineRecordResponse.result);
+        }
       }
     } catch (error) {
       console.error("Error fetching booking details:", error);
@@ -552,60 +566,151 @@ function AssignPage() {
 
       {/* Modal phân công bác sĩ */}
       <Modal
-        open={modalDoctorIsOpen}
-        onCancel={closeDoctorModal}
+        open={modalIsOpen}
+        onCancel={closeModal}
         footer={null}
-        width={1200}
-        className="doctor-modal"
+        width={900} // Tăng chiều rộng modal
+        centered
+        className="vaccination-modal"
       >
-        <div className="doctorList-wraper">
-          <Title level={2} className="title">
-            Chọn bác sĩ muốn phân công
-          </Title>
-          <Row gutter={[16, 16]} className="doctor-grid">
-            {doctors.length > 0 ? (
-              doctors.map((doctor) => (
-                <Col key={doctor.id} xs={24} sm={12} md={8} lg={6}>
-                  <Card className="doctor-card">
-                    <Avatar
-                      size={120}
-                      icon={<UserOutlined />}
-                      src={doctor?.imageUrl || "/default-avatar.png"}
-                      alt={doctor.fullName}
-                      className="avatar"
-                    />
-                    <Title level={4} className="doctor-name">
-                      {doctor.fullName}
-                    </Title>
-                    <Text type="secondary">@{doctor.userName}</Text>
-                    <Text type="secondary">{doctor.email}</Text>
-                    <Text type="secondary">{doctor.phoneNumber}</Text>
-                    <Text type="secondary">{doctor.address}</Text>
-                    <Tag color={doctor.isActive ? "green" : "red"}>
-                      {doctor.isActive
-                        ? "Đang hoạt động"
-                        : "Đang không hoạt động"}
-                    </Tag>
-                    <Button
-                      type="primary"
-                      block
-                      className="detail-btn"
-                      onClick={() =>
-                        handleAssignDoctor(
-                          doctor.id.toString(),
-                          selectedBooking!.bookingId.toString()
-                        )
-                      }
-                    >
-                      Phân công
-                    </Button>
-                  </Card>
-                </Col>
-              ))
-            ) : (
-              <Text className="no-doctor">Không có bác sĩ nào.</Text>
-            )}
-          </Row>
+        <div className="modal-content">
+          <h2 className="modal-title">Chi Tiết Đặt Lịch</h2>
+          {selectedBooking && (
+            <div className="modal-body">
+                    <div>
+              <div className="info-section">
+                <p>
+                  <strong>ID:</strong> {selectedBooking.bookingId}
+                </p>
+                <p>
+                  <strong>Tên Trẻ:</strong> {selectedBooking.childName}
+                </p>
+                <p>
+                  <strong>Ngày Đặt:</strong>{" "}
+                  {new Date(selectedBooking.bookingDate).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
+                </p>
+                <p>
+                  <strong>Ghi Chú:</strong> {selectedBooking.note}
+                </p>
+                <p>
+                  <strong>Trạng Thái:</strong>{" "}
+                  <Tag
+                    color={
+                      selectedBooking.status === "Pending"
+                        ? "orange"
+                        : selectedBooking.status === "Confirmed"
+                        ? "darkblue"
+                        : selectedBooking.status === "InProgress"
+                        ? "blue"
+                        : selectedBooking.status === "Completed"
+                        ? "green"
+                        : selectedBooking.status === "Cancelled"
+                        ? "red"
+                        : "darkorange"
+                    }
+                  >
+                    {selectedBooking.status === "Pending"
+                      ? "Chờ xác nhận"
+                      : selectedBooking.status === "Confirmed"
+                      ? "Đã xác nhận"
+                      : selectedBooking.status === "InProgress"
+                      ? "Chờ tiêm"
+                      : selectedBooking.status === "Completed"
+                      ? "Hoàn thành"
+                      : selectedBooking.status === "Cancelled"
+                      ? "Đã hủy"
+                      : "Yêu cầu hoàn tiền"}
+                  </Tag>
+                </p>
+              </div>
+        
+
+
+              {comboDetails.length > 0 && (
+                <div className="combo-section">
+                  <h3>Chi Tiết Combo</h3>
+                  {comboDetails.map((combo) => (
+                    <div key={combo.comboId} className="combo-item">
+                      <p>
+                        <strong>Tên Combo:</strong> {combo.comboName}
+                      </p>
+                      <p>
+                        <strong>Giá Combo:</strong>{" "}
+                        {combo.totalPrice?.toLocaleString()} VNĐ
+                      </p>
+                      <p>
+                        <strong>Vaccine trong Combo:</strong>
+                      </p>
+                      <ul>
+                        {combo.vaccines.map((vaccine: Vaccine) => (
+                          <div key={vaccine.vaccine.id}>
+                            {vaccine.vaccine.name}
+                          </div>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {vaccineDetails.length > 0 && comboDetails.length === 0 && (
+                <div className="vaccine-section">
+                  <h3>Chi Tiết Vaccine</h3>
+                  {vaccineDetails.map((vaccine) => (
+                    <div key={vaccine.vaccineId} className="vaccine-item">
+                      <p>
+                        <strong>Tên Vaccine:</strong> {vaccine.name}
+                      </p>
+                      <p>
+                        <strong>Giá:</strong> {vaccine.price?.toLocaleString()}{" "}
+                        VNĐ
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+              {selectedBooking.status === "Completed" &&
+                vaccineRecordDetails && (
+                  <div className="vaccine-record-section">
+                    <h3>Chi Tiết Vaccine Record</h3>
+                    <table className="vaccine-record-table">
+                      <thead>
+                        <tr>
+                          <th>Tên Vaccine</th>
+                          <th>Liều lượng</th>
+                          <th>Giá</th>
+                          <th>Ngày tiêm</th>
+                          <th>Số lô</th>
+                          <th>Trạng thái</th>
+                          <th>Ghi chú</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {vaccineRecordDetails.vaccineRecords.map((record) => (
+                          <tr key={record.vaccinationRecordId}>
+                            <td>{record.vaccineName}</td>
+                            <td>{record.doseAmount} ml</td>
+                            <td>{record.price.toLocaleString()} VNĐ</td>
+                            <td>
+                              {new Date(
+                                record.vaccinationDate
+                              ).toLocaleDateString()}
+                            </td>
+                            <td>{record.batchNumber}</td>
+                            <td>{record.status}</td>
+                            <td>{record.notes}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+            </div>
+          )}
         </div>
       </Modal>
     </Staff1Layout>
