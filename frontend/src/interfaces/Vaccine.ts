@@ -33,7 +33,13 @@ export interface GetVaccineComboDetail {
     description: string;
     totalPrice: number;
     isActive: boolean;
-    vaccines: VaccineDetail[];
+    vaccines: VaccineDetailOnCombo[];
+}
+
+export interface VaccineDetailOnCombo {
+    order : number;
+    intervalDays : number;
+    vaccine : VaccineIntro[];
 }
 
 export interface PostVaccineComboDetail {
