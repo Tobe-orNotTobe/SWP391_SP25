@@ -144,7 +144,7 @@ namespace ChildVaccineSystem.Service.Services
                     Height = booking.Children.Height,
                     Weight = booking.Children.Weight,
                     VaccineRecords = vaccineRecords,
-                    Message = "Vaccine record confirmed successfully"
+                    Message = "Hồ sơ vắc-xin đã được xác nhận thành công."
                 };
             }
             catch (Exception ex)
