@@ -171,7 +171,7 @@ export const DepositSuccess: React.FC = () => {
             .replace("₫", "VND");
         return (
             <LoadingRedirect
-                message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${formattedAmount}`}
+                message={`Nạp tiền vào ví thành công với giá tiền ${formattedAmount}`}
                 delay={3000}
                 to="/customer/wallet"
             />
