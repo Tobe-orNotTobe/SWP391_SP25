@@ -56,19 +56,28 @@ const VaccinePackagePage: React.FC = () => {
         {
             header: "Vaccines",
             accessorKey: "vaccines",
-            cell: (info: any) => (
-                <div className="vaccine-buttons">
-                    {info.getValue().map((vaccine: any, index: number) => (
-                        <button key={index} className="vaccine-button" onClick={() => navigate(`/vaccines-list/${vaccine.vaccineId}`)}>
-                            {vaccine.name}
-                        </button>
-                    ))}
-                </div>
-            ),
-        },
-    ];
+            cell: (info: any) => {
+                const vaccines = info.getValue();
+                return (
+                    <div>
+                        {vaccines.map((vaccineObj: any, index : number) => (
+                            <div className="vaccine-buttons">
+                                <button key={index} className="vaccine-button"
+                                        onClick={() => navigate(`/vaccines-list/${vaccineObj.vaccine.id}`)}>
+                                    ({vaccineObj.order}) {vaccineObj.vaccine.name} (tiêm
+                                    sau {vaccineObj.intervalDays} ngày)
+                                </button>
+                            </div>
+                            ))}
+                    </div>
+                );
+            },
+            },
 
-    const [comboVaccines, setComboVaccines] = useState<GetVaccineComboDetail[]>([]);
+            ];
+
+            const [comboVaccines, setComboVaccines] = useState<GetVaccineComboDetail[]>([]);
+
     const [sorting, setSorting] = useState<SortingState>([]);
     const [sortColumn, setSortColumn] = useState<string>("comboId");
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");

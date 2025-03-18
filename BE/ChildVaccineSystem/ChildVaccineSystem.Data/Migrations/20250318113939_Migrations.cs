@@ -378,7 +378,9 @@ namespace ChildVaccineSystem.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ComboId = table.Column<int>(type: "int", nullable: false),
                     VaccineId = table.Column<int>(type: "int", nullable: false),
-                    VaccineInventoryId = table.Column<int>(type: "int", nullable: true)
+                    VaccineInventoryId = table.Column<int>(type: "int", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    IntervalDays = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

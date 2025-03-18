@@ -204,6 +204,12 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<int>("ComboId")
                         .HasColumnType("int");
 
+                    b.Property<int>("IntervalDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
                     b.Property<int>("VaccineId")
                         .HasColumnType("int");
 

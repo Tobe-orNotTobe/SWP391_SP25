@@ -154,13 +154,21 @@ const VaccineComboList: React.FC = () => {
                             <div className="combo-vaccine-list-title">Danh sách Vaccine</div>
                             <div className="combo-vaccine-grid">
                                 {selectedCombo.vaccines && selectedCombo.vaccines.map((vaccine) => (
-                                    <div key={vaccine.vaccineId} className="combo-vaccine-item">
-                                        <div className="combo-vaccine-item-name">{vaccine.name}</div>
-                                        <div className="combo-vaccine-item-image">
-                                            <img src={vaccine.image} alt={vaccine.name} />
-                                        </div>
+                                    <div key={vaccine.vaccine.id} className="combo-vaccine-item">
                                         <div className="combo-vaccine-item-price">
-                                            {new Intl.NumberFormat("vi-VN").format(vaccine.price)} VNĐ
+                                            <strong>Thứ tự:</strong> {vaccine.order}
+                                        </div>
+
+                                        <div className="combo-vaccine-item-name">
+                                            {vaccine.vaccine.name}
+                                        </div>
+
+                                        <div className="combo-vaccine-item-image">
+                                            <img src={vaccine.vaccine.image} alt={vaccine.vaccine.name}/>
+                                        </div>
+
+                                        <div className="combo-vaccine-item-price">
+                                            <strong>Khoảng cách ngày:</strong> {vaccine.intervalDays} ngày
                                         </div>
                                     </div>
                                 ))}
