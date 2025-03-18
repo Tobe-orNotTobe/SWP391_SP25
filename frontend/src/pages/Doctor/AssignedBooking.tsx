@@ -19,7 +19,6 @@ import Highlighter from "react-highlight-words";
 import { Modal } from "antd";
 import {
   apiCreateVaccineRecord,
-  apiGetVaccineRecord,
   apiGetVaccineRecordByBookingId,
 } from "../../apis/apiVaccineRecord.ts";
 import { toast } from "react-toastify";

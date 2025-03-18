@@ -25,11 +25,11 @@ const CustomerNavbar: React.FC = () => {
 
     const {walletData, fetchWalletData} = useWalletUserDetail();
 
-    if(username){
-        useEffect(() => {
-            fetchWalletData()
-        }, [walletData]);
-    }
+    useEffect(() => {
+        if (username) {
+            fetchWalletData();
+        }
+    }, [username]); // Chạy khi username thay đổi
 
     return (
         <>
