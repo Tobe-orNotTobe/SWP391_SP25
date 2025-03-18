@@ -2,10 +2,16 @@ import { useEffect, useState, useRef } from "react";
 import {
   apiAssignDoctor,
   apiGetAllBookings,
+  apiGetBookingById,
   apiGetUnassignedBooking,
+  apiUnAssignDoctor,
 } from "../../apis/apiBooking";
 import { toast } from "react-toastify";
-import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
+import {
+  BookingDetail,
+  BookingResponse,
+  Vaccine,
+} from "../../interfaces/VaccineRegistration.ts";
 import { apiGetAllDoctors } from "../../apis/apiAdmin";
 import { Doctor } from "../../interfaces/Doctor";
 import "./DoctorList.scss";
@@ -16,6 +22,10 @@ import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import { Modal, Card, Avatar, Typography, Row, Col, Tag } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import {
+  apiGetComBoVaccineById,
+  apiGetVaccineDetailById,
+} from "../../apis/apiVaccine.ts";
 
 const { Title, Text } = Typography;
 
@@ -28,6 +38,8 @@ function AssignPage() {
   const [modalDoctorIsOpen, setDoctorModalIsOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] =
     useState<BookingResponse | null>(null);
+  const [vaccineDetails, setVaccineDetails] = useState<any[]>([]);
+  const [comboDetails, setComboDetails] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -89,9 +101,88 @@ function AssignPage() {
     }
   };
 
-  const openModal = (booking: BookingResponse) => {
+  const handleUnassignDoctor = async (bookingId: string) => {
+    try {
+      const response = await apiUnAssignDoctor(bookingId);
+      toast.success(response.status);
+      toast.success("Hủy phân công thành công");
+
+      // Cập nhật lại danh sách đặt lịch và danh sách chưa phân công
+      const updatedBookings = await apiGetAllBookings();
+      if (updatedBookings?.isSuccess) {
+        setBookings(updatedBookings.result);
+      }
+
+      const updatedUnassignedBookings = await apiGetUnassignedBooking();
+      if (updatedUnassignedBookings?.isSuccess) {
+        setUnassignBookings(updatedUnassignedBookings.result);
+      }
+
+      setDoctorModalIsOpen(false); // Đóng modal sau khi phân công
+    } catch (error) {
+      console.error("Lỗi khi hủy phân công bác sĩ:", error);
+      toast.error("Hủy phân công thất bại");
+    }
+  };
+  
+  const openModal = async (booking: BookingResponse) => {
+    // Reset state về mảng rỗng
+    setVaccineDetails([]);
+    setComboDetails([]);
+
     setSelectedBooking(booking);
     setModalIsOpen(true);
+
+    try {
+      const bookingDetailsResponse = await apiGetBookingById(booking.bookingId);
+      if (bookingDetailsResponse?.isSuccess) {
+        const bookingDetails = bookingDetailsResponse.result.bookingDetails;
+
+        const { vaccineDetails, comboDetails } =
+          await getVaccineAndComboDetails(bookingDetails);
+        setVaccineDetails(vaccineDetails);
+        setComboDetails(comboDetails);
+      }
+    } catch (error) {
+      console.error("Error fetching booking details:", error);
+    }
+  };
+
+  const getVaccineAndComboDetails = async (bookingDetails: BookingDetail[]) => {
+    const vaccineDetails = [];
+    const comboDetails = [];
+
+    for (const detail of bookingDetails) {
+      if (detail.vaccineId !== null && detail.vaccineId !== undefined) {
+        // Lấy thông tin vaccine đơn lẻ
+        const vaccine = await apiGetVaccineDetailById(detail.vaccineId);
+        if (vaccine && vaccine.result) {
+          vaccineDetails.push(vaccine.result);
+        }
+      } else if (
+        detail.comboVaccineId !== null &&
+        detail.comboVaccineId !== undefined
+      ) {
+        // Lấy thông tin combo và các vaccine trong combo
+        const comboVaccine = await apiGetComBoVaccineById(
+          detail.comboVaccineId
+        );
+        if (comboVaccine && comboVaccine.result) {
+          // Thêm thông tin combo vào danh sách combo
+          comboDetails.push(comboVaccine.result);
+
+          // Thêm các vaccine trong combo vào danh sách vaccine
+          if (
+            comboVaccine.result.vaccines &&
+            comboVaccine.result.vaccines.length > 0
+          ) {
+            vaccineDetails.push(...comboVaccine.result.vaccines);
+          }
+        }
+      }
+    }
+
+    return { vaccineDetails, comboDetails };
   };
 
   const closeModal = () => {
@@ -248,6 +339,17 @@ function AssignPage() {
       onFilter: (value: any, record: BookingResponse) =>
         record.status === value,
       render: (status: string) => {
+        // Ánh xạ trạng thái tiếng Anh sang tiếng Việt
+        const statusLabels: { [key: string]: string } = {
+          Pending: "Đang chờ",
+          Confirmed: "Đã xác nhận",
+          InProgress: "Đang thực hiện",
+          Completed: "Hoàn thành",
+          Cancelled: "Đã hủy",
+          RequestRefund: "Yêu cầu hoàn tiền",
+        };
+
+        // Ánh xạ màu sắc cho từng trạng thái
         const statusColors: { [key: string]: string } = {
           Pending: "orange",
           Confirmed: "darkblue",
@@ -257,10 +359,16 @@ function AssignPage() {
           RequestRefund: "darkorange",
         };
 
-        return <Tag color={statusColors[status] || "default"}>{status}</Tag>;
+        // Lấy tên tiếng Việt tương ứng với trạng thái
+        const vietnameseStatus = statusLabels[status] || status;
+
+        return (
+          <Tag color={statusColors[status] || "default"}>
+            {vietnameseStatus}
+          </Tag>
+        );
       },
     },
-
     {
       title: "Trạng Thái Phân Công",
       key: "assignedStatus",
@@ -291,7 +399,7 @@ function AssignPage() {
       title: "Chi Tiết",
       key: "action",
       render: (_: undefined, record: BookingResponse) => {
-        const isAssigned = unassignBookings.some(
+        const isAssigned = !unassignBookings.some(
           (unassignBooking) => unassignBooking.bookingId === record.bookingId
         );
         return (
@@ -303,7 +411,7 @@ function AssignPage() {
             >
               Chi tiết
             </Button>
-            {isAssigned && (
+            {!isAssigned && (
               <Button
                 type="primary"
                 color="green"
@@ -311,6 +419,22 @@ function AssignPage() {
                 onClick={() => openDoctorModal(record)}
               >
                 Phân công
+              </Button>
+            )}
+            {isAssigned && (
+              <Button
+                type="primary"
+                color="orange"
+                variant="solid"
+                onClick={() => {
+                  if (selectedBooking && selectedBooking.bookingId) {
+                    handleUnassignDoctor(selectedBooking.bookingId.toString());
+                  } else {
+                    console.log("Booking ID là undefined");
+                  }
+                }}
+              >
+                Hủy phân công
               </Button>
             )}
           </Space>
@@ -328,31 +452,102 @@ function AssignPage() {
       )}
 
       {/* Modal chi tiết */}
-      <Modal open={modalIsOpen} onCancel={closeModal}>
-        <h2>Chi Tiết Đặt Lịch</h2>
-        {selectedBooking && (
-          <div>
-            <p>
-              <strong>ID:</strong> {selectedBooking.bookingId}
-            </p>
-            <p>
-              <strong>Tên Trẻ:</strong> {selectedBooking.childName}
-            </p>
-            <p>
-              <strong>Ngày Đặt:</strong>{" "}
-              {new Date(selectedBooking.bookingDate).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
-            </p>
-            <p>
-              <strong>Ghi Chú:</strong> {selectedBooking.note}
-            </p>
-            <p>
-              <strong>Trạng Thái:</strong> {selectedBooking.status}
-            </p>
-          </div>
-        )}
+      <Modal
+        open={modalIsOpen}
+        onCancel={closeModal}
+        footer={null}
+        width={600}
+        centered
+        className="custom-modal"
+      >
+        <div className="modal-content">
+          <h2 className="modal-title">Chi Tiết Đặt Lịch</h2>
+          {selectedBooking && (
+            <div className="modal-body">
+              <div className="info-section">
+                <p>
+                  <strong>ID:</strong> {selectedBooking.bookingId}
+                </p>
+                <p>
+                  <strong>Tên Trẻ:</strong> {selectedBooking.childName}
+                </p>
+                <p>
+                  <strong>Ngày Đặt:</strong>{" "}
+                  {new Date(selectedBooking.bookingDate).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
+                </p>
+                <p>
+                  <strong>Ghi Chú:</strong> {selectedBooking.note}
+                </p>
+                <p>
+                  <strong>Trạng Thái:</strong>{" "}
+                  <Tag
+                    color={
+                      selectedBooking.status === "Pending"
+                        ? "orange"
+                        : selectedBooking.status === "Completed"
+                        ? "green"
+                        : selectedBooking.status === "Canceled"
+                        ? "red"
+                        : "gray"
+                    }
+                  >
+                    {selectedBooking.status}
+                  </Tag>
+                </p>
+              </div>
+
+              {/* Hiển thị Chi Tiết Vaccine hoặc Combo */}
+              {comboDetails.length > 0 && (
+                <div className="combo-section">
+                  <h3>Chi Tiết Combo</h3>
+                  {comboDetails.map((combo) => (
+                    <div key={combo.comboId} className="combo-item">
+                      <p>
+                        <strong>Tên Combo:</strong> {combo.comboName}
+                      </p>
+                      <p>
+                        <strong>Giá Combo:</strong>{" "}
+                        {combo.totalPrice?.toLocaleString()} VNĐ
+                      </p>
+                      <p>
+                        <strong>Vaccine trong Combo:</strong>
+                      </p>
+                      <ul>
+                        {combo.vaccines.map((vaccine: Vaccine) => (
+                          <div key={vaccine.vaccineId}>
+                            {vaccine.name} - {vaccine.price?.toLocaleString()}{" "}
+                            VNĐ
+                          </div>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Hiển thị vaccine đơn lẻ (chỉ khi không có combo) */}
+              {vaccineDetails.length > 0 && comboDetails.length === 0 && (
+                <div className="vaccine-section">
+                  <h3>Chi Tiết Vaccine</h3>
+                  {vaccineDetails.map((vaccine) => (
+                    <div key={vaccine.vaccineId} className="vaccine-item">
+                      <p>
+                        <strong>Tên Vaccine:</strong> {vaccine.name}
+                      </p>
+                      <p>
+                        <strong>Giá:</strong> {vaccine.price?.toLocaleString()}{" "}
+                        VNĐ
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </Modal>
 
       {/* Modal phân công bác sĩ */}

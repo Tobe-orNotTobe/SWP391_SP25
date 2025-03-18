@@ -56,9 +56,6 @@
   background: white;
   padding: 20px;
   border-radius: 10px;
-  width: 400px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
 }
 
 .close-btn {
@@ -73,4 +70,80 @@
 
 .close-btn:hover {
   background: darkred;
+}
+
+/* Custom Modal */
+.custom-modal .ant-modal-content {
+  border-radius: 12px; /* Bo tròn góc */
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+}
+
+.custom-modal .ant-modal-header {
+  background-color: #2a388f; /* Màu nền header */
+  border-radius: 12px 12px 0 0; /* Bo tròn góc trên */
+}
+
+.custom-modal .ant-modal-title {
+  color: white; /* Màu chữ tiêu đề */
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.custom-modal .ant-modal-body {
+  padding: 24px; /* Khoảng cách nội dung */
+}
+
+/* Modal Content */
+.modal-content {
+  font-family: Arial, sans-serif;
+}
+
+.modal-title {
+  color: #2a388f; /* Màu tiêu đề */
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.info-section p {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.info-section strong {
+  color: #2a388f; /* Màu chữ đậm */
+}
+
+.vaccine-section,
+.combo-section {
+  margin-top: 20px;
+}
+
+.vaccine-section h3,
+.combo-section h3 {
+  color: #2a388f; /* Màu tiêu đề section */
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.vaccine-item,
+.combo-item {
+  background-color: #f9f9f9; /* Màu nền item */
+  padding: 12px;
+  border-radius: 8px; /* Bo tròn góc item */
+  margin-bottom: 10px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
+
+.vaccine-item p,
+.combo-item p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+/* Tag trạng thái */
+.ant-tag {
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
