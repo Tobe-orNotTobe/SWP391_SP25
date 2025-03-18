@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import {Button, Input, Table, Tabs} from "antd";
+import {Button, Form, Input, Select, Table, Tabs} from "antd";
 import {useDeleteUser, useGetAllUser, useUpdateUserIsActive} from "../useAdminAccount.ts";
 import {IoMdAdd} from "react-icons/io";
 import "./AdminAccount.scss"
@@ -10,6 +10,8 @@ import {MdDeleteOutline} from "react-icons/md";
 import {AccountDetailResponse} from "../../../../interfaces/Account.ts";
 import {useNavigate} from "react-router-dom";
 import {ColumnsType} from "antd/es/table";
+import { IoMdNotificationsOutline } from "react-icons/io";
+import {useSendNotification} from "../../../Customer/Notification/useNotification.ts";
 
 const { TabPane } = Tabs;
 
@@ -18,10 +20,12 @@ const AdminAccountPage: React.FC = () => {
     const {handleDelete} = useDeleteUser();
     const {handleUpdateIsActive} = useUpdateUserIsActive();
     const {users, loading, error, fetchAllUser} = useGetAllUser();
+    const {handleSendNotification} = useSendNotification();
+
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchAllUser()
+        fetchAllUser().then();
     }, []);
 
     const [searchText, setSearchText] = useState("");
@@ -117,6 +121,9 @@ const AdminAccountPage: React.FC = () => {
                     </Button>
                     <Button className="edit-button" onClick={() => navigate(`/admin/account/edit/${record.id}`)}>
                         <FiEdit2/>Chỉnh sửa
+                    </Button> <br/>
+                    <Button className="send-notification-button"  onClick={() => openNotificationPopup(record)}>
+                        <IoMdNotificationsOutline/>Gửi thông báo
                     </Button>
                     <Button className={record.isActive ? "deactive-button" : "active-button"} onClick={() => {handleUpdateIsActive(record.isActive, record.id).then(() => fetchAllUser())}}>
                         <MdDeleteOutline/> {record.isActive ? "Deactive" : "Active"}
@@ -128,12 +135,22 @@ const AdminAccountPage: React.FC = () => {
 
     const [detailUser, setDetailUser] = useState<AccountDetailResponse | null>(null);
 
+    const [sendNotificationUser, setSendNotificationUser] = useState<AccountDetailResponse | null>(null);
+
     const openDetailPopup = (user: AccountDetailResponse) => {
         setDetailUser(user);
     }
 
     const closeDetailPopup = () => {
         setDetailUser(null);
+    }
+
+    const openNotificationPopup = (user: AccountDetailResponse) => {
+        setSendNotificationUser(user);
+    }
+
+    const closeNotificationPopup = () => {
+        setSendNotificationUser(null);
     }
 
     return (
@@ -174,55 +191,104 @@ const AdminAccountPage: React.FC = () => {
                         })}
                     />
 
-                    {detailUser && (
-                        <div className="popupOverlay" onClick={closeDetailPopup}>
+                    {detailUser || sendNotificationUser ?  (
+                        <div className="popupOverlay" onClick={detailUser ? closeDetailPopup : closeNotificationPopup}>
                             <div className="popup" style={{width: "800px"}} onClick={(e) => e.stopPropagation()}>
-                                <button className="closeButton" onClick={closeDetailPopup}>×</button>
-                                <h2 style={{fontWeight: "bold", fontSize: "18px", position: "absolute", top: "20px"}}>Chi tiết người dùng</h2>
+                                <button className="closeButton" onClick={detailUser ? closeDetailPopup : closeNotificationPopup}>×</button>
+                                <h2 style={{fontWeight: "bold", fontSize: "18px", position: "absolute", top: "20px"}}>{detailUser ? "Chi tiết người dùng" : "Gửi thông báo"}</h2>
 
                                 <Tabs defaultActiveKey="1">
-                                    <TabPane tab="Thông tin người dùng" key="1">
+                                    <TabPane tab={detailUser ? "Thông tin người dùng": "Tạo thông báo"} key="1">
                                         <div className="vaccine-detail-mananger-popups">
-                                            <div className="vaccine-detail-mananger-popups-left">
-                                                <h3>{detailUser.userName}</h3>
-                                                <p><strong style={{paddingRight: "2px"}} >Id:</strong> {detailUser.id}</p>
-                                                <p><strong style={{paddingRight: "2px"}}>Tên đầy đủ:</strong> {detailUser.fullName}</p>
-                                                <p><strong style={{paddingRight: "2px"}}>Email:</strong> {detailUser.email}</p>
-                                                <p><strong style={{paddingRight: "4px"}}>Ngày sinh:</strong>
-                                                    {new Date(detailUser.dateOfBirth).toLocaleDateString()}</p>
-                                                <p><strong style={{paddingRight: "2px"}}>Số điện thoại:</strong> {detailUser.phoneNumber}</p>
-                                                <p><strong style={{paddingRight: "2px"}}>Trạng thái:</strong>
-                                                    {detailUser.isActive ? "Đang hoạt động." : "Dừng hoạt động"}</p>
-                                            </div>
+                                            {detailUser ? (
+                                                <>
+                                                    <div className="vaccine-detail-mananger-popups-left">
+                                                        <h3>{detailUser.userName}</h3>
+                                                        <p><strong
+                                                            style={{paddingRight: "2px"}}>Id:</strong> {detailUser.id}
+                                                        </p>
+                                                        <p><strong style={{paddingRight: "2px"}}>Tên đầy
+                                                            đủ:</strong> {detailUser.fullName}</p>
+                                                        <p><strong
+                                                            style={{paddingRight: "2px"}}>Email:</strong> {detailUser.email}
+                                                        </p>
+                                                        <p><strong style={{paddingRight: "4px"}}>Ngày sinh:</strong>
+                                                            {new Date(detailUser.dateOfBirth).toLocaleDateString()}</p>
+                                                        <p><strong style={{paddingRight: "2px"}}>Số điện
+                                                            thoại:</strong> {detailUser.phoneNumber}</p>
+                                                        <p><strong style={{paddingRight: "2px"}}>Trạng thái:</strong>
+                                                            {detailUser.isActive ? "Đang hoạt động." : "Dừng hoạt động"}
+                                                        </p>
 
-                                            <div className="vaccine-detail-mananger-popups-right">
+                                                    </div>
 
-                                                <p><strong style={{paddingRight: "2px"}}>Xác thực email:</strong>
-                                                    {detailUser.emailConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
-                                                </p>
-                                                <p><strong style={{paddingRight: "2px"}}>Xác thực số điệm thoại:
-                                                    </strong> {detailUser.phoneNumberConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
-                                                </p>
-                                                <p><strong style={{paddingRight: "2px"}}>Bảo mật hai yếu tố:
-                                                    </strong> {detailUser.twoFactorEnabled ? ("Cho phép") : ("Không cho phép")}
-                                                </p>
-                                                <p><strong style={{paddingRight: "2px"}}>Khóa tài khoản:
-                                                    </strong> {detailUser.lockoutEnabled ? ("Cho phép") : ("Không cho phép")}
-                                                </p>
-                                                <p><strong style={{paddingRight: "2px"}}>Số lần nhập sai: </strong> {detailUser.accessFailedCount}
-                                                </p>
-                                            </div>
+                                                    <div className="vaccine-detail-mananger-popups-right">
+                                                        <p><strong style={{paddingRight: "2px"}}>Xác thực
+                                                            email:</strong>
+                                                            {detailUser.emailConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
+                                                        </p>
+                                                        <p><strong style={{paddingRight: "2px"}}>Xác thực số điệm thoại:
+                                                        </strong> {detailUser.phoneNumberConfirmed ? ("Dã xác thực") : ("Chưa xác thực")}
+                                                        </p>
+                                                        <p><strong style={{paddingRight: "2px"}}>Bảo mật hai yếu tố:
+                                                        </strong> {detailUser.twoFactorEnabled ? ("Cho phép") : ("Không cho phép")}
+                                                        </p>
+                                                        <p><strong style={{paddingRight: "2px"}}>Khóa tài khoản:
+                                                        </strong> {detailUser.lockoutEnabled ? ("Cho phép") : ("Không cho phép")}
+                                                        </p>
+                                                        <p><strong style={{paddingRight: "2px"}}>Số lần nhập
+                                                            sai: </strong> {detailUser.accessFailedCount}
+                                                        </p>
+
+                                                    </div>
+                                                </>
+                                            ) : sendNotificationUser ? (
+                                                <>
+                                                    <Form
+                                                        layout="vertical"
+                                                        onFinish={(values) => handleSendNotification(sendNotificationUser.id, values.message, values.relatedEntityType).then(closeNotificationPopup)}
+
+                                                    >
+                                                        <Form.Item
+                                                            name="message"
+                                                            label="Thông báo:"
+                                                            rules={[{ required: true, message: "Vui lòng nhập thông báo." }]}
+                                                        >
+                                                            <Input.TextArea placeholder="Nhập nội dung thông báo..." rows={4} />
+                                                        </Form.Item>
+
+                                                        <Form.Item
+                                                            name="relatedEntityType"
+                                                            label="Loại thông báo:"
+                                                            initialValue="Booking" // Thêm dòng này để form luôn có giá trị mặc định
+                                                        >
+                                                            <Select placeholder="Chọn loại thông báo">
+                                                                <Select.Option value="Booking">Nhắc lịch</Select.Option>
+                                                                <Select.Option value="Reminder">Nhắc nhở</Select.Option>
+                                                            </Select>
+                                                        </Form.Item>
+
+                                                        {/* Nút gửi thông báo */}
+                                                        <Form.Item>
+                                                            <Button type="primary" htmlType="submit">
+                                                                Gửi thông báo
+                                                            </Button>
+                                                        </Form.Item>
+                                                    </Form>
+
+                                                </>
+                                            ) : null}
                                         </div>
                                     </TabPane>
-                                    <TabPane tab="Lịch Tiêm Chủng" key="2">
-                                        <div className="vaccination-schedule-section">
+                                    {/*<TabPane tab="Lịch Tiêm Chủng" key="2">*/}
+                                    {/*    <div className="vaccination-schedule-section">*/}
 
-                                        </div>
-                                    </TabPane>
+                                    {/*    </div>*/}
+                                    {/*</TabPane>*/}
                                 </Tabs>
                             </div>
                         </div>
-                    )}
+                    ) : null}
 
                 </div>
             </AdminLayout>

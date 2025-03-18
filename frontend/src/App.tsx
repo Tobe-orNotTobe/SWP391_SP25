@@ -32,6 +32,7 @@ import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import ServicePage from "./pages/Doctor/ServicePage.tsx";
+import NotificationPage from "./pages/Customer/Notification/Notification.tsx";
 
 // Manager Pages
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
@@ -125,7 +126,7 @@ function App() {
                 <Route path="/customer/wallet" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerWallet /></ProtectedRoute>} />
                 <Route path="/user-profile" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerProfile /></ProtectedRoute>} />
                 <Route path="/booking-history" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><BookingHistoryPage /></ProtectedRoute>} />
-
+                <Route path="/notifications" element={<ProtectedRoute allowedRoles={["Customer"]}><NotificationPage/></ProtectedRoute>} />
 
                 {/* Staff Routes */}
                 <Route path="/staff/service" element={<ProtectedRoute allowedRoles={["Staff"]}><ServicePage /></ProtectedRoute>} />

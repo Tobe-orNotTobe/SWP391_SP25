@@ -1,25 +1,12 @@
 // src/contexts/NotificationContext.tsx
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { NotificationType } from '../interfaces/Notification';
+import React, { useContext, useEffect, useState } from 'react';
+import { NotificationType, NotificationContextType } from '../interfaces/Notification';
 import { apiGetAllNotifications, apiGetUnreadCount, apiMarkAsRead, apiDeleteNotification } from '../apis/apiNotification';
 import notificationService from '../services/NotificationService';
 import { message } from 'antd';
 import { IsLoginSuccessFully } from '../validations/IsLogginSuccessfully';
 import { useNavigate } from 'react-router-dom';
-import { PropsWithChildren } from 'react';
-
-interface NotificationContextType {
-  notifications: NotificationType[];
-  reminderNotifications: NotificationType[];
-  otherNotifications: NotificationType[];
-  unreadCount: number;
-  loading: boolean;
-  connectionStatus: string | null;
-  markAsRead: (notificationId: number) => Promise<void>;
-  deleteNotification: (notificationId: number) => Promise<void>;
-  handleNotificationClick: (notification: NotificationType) => Promise<void>;
-  refreshNotifications: () => Promise<void>;
-}
+// import { PropsWithChildren } from 'react';
 
 const NotificationContext = React.createContext<NotificationContextType | undefined>(undefined);
 
