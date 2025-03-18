@@ -105,7 +105,7 @@ export const PaymentSuccess: React.FC = () => {
     if (statusType === "success") {
         return (
             <LoadingRedirect
-                message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${(Number(amount) / 100).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`}
+                message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${Number(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`}
                 delay={3000}
                 to="/booking-history"
             />
@@ -165,12 +165,17 @@ export const DepositSuccess: React.FC = () => {
         processDeposit();
     }, [amount]);
 
-    if (statusType === "success") {
-        return <LoadingRedirect
-            message={`Nạp tiền thành công với số tiền ${amount} VND vào ví của bạn`}
-            delay={5000}
-            to="/customer/wallet"
-        />;
+    if (statusType === "success" && amount != null) {
+        const formattedAmount = Number(amount)
+            .toLocaleString("vi-VN", { style: "currency", currency: "VND" })
+            .replace("₫", "VND");
+        return (
+            <LoadingRedirect
+                message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${formattedAmount}`}
+                delay={3000}
+                to="/booking-history"
+            />
+        );
     }
 
     return (
