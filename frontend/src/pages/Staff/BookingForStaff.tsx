@@ -7,6 +7,8 @@ import {
   Child,
   BookingDetail,
   Booking,
+  Vaccine,
+  VaccinePackage,
 } from "../../interfaces/VaccineRegistration.ts";
 import { apiBooking } from "../../apis/apiBooking";
 import { apiPostVNPayTransaction } from "../../apis/apiTransaction";
@@ -19,7 +21,8 @@ import {
 import Staff1Layout from "../../components/Layout/StaffLayout/Stafff1Layout/Staff1Layout.tsx";
 import { toast } from "react-toastify";
 import { Avatar } from "antd";
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from "@ant-design/icons";
+import { apiGetVaccinationScheduleByChildrenId } from "../../apis/apiVaccine.ts";
 
 const BookingForStaff = () => {
   const navigate = useNavigate();
@@ -34,7 +37,6 @@ const BookingForStaff = () => {
   });
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [formLoading, setFormLoading] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState<string | "">("");
 
   // State for vaccine selection
@@ -43,6 +45,9 @@ const BookingForStaff = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [bookingDate, setBookingDate] = useState<string | null>(null);
   const [bookingDetails, setBookingDetails] = useState<BookingDetail[]>([]);
+
+  const [suggestedVaccines, setSuggestedVaccines] = useState<string[]>([]);
+  const [suggestedCombos, setSuggestedCombos] = useState<string[]>([]);
 
   // Fetch vaccine data
   const {
@@ -66,7 +71,6 @@ const BookingForStaff = () => {
     }
 
     setFormLoading(true);
-    setFormError(null);
 
     try {
       const data = await apiGetMyChilds(userId);
@@ -90,15 +94,40 @@ const BookingForStaff = () => {
     } catch (error) {
       const errorMessage = error || "Lỗi không xác định";
       console.error("Lỗi khi lấy thông tin phụ huynh:", error);
-      setFormError(errorMessage.toString()); // Sử dụng thông báo lỗi từ API
-      notification.error({
-        message: "Lỗi",
-        description: errorMessage.toString(), // Hiển thị thông báo lỗi từ API
-      });
+      toast.error(errorMessage.toString())
     } finally {
       setFormLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (selectedChild) {
+      const fetchVaccinationSchedule = async () => {
+        try {
+          const response = await apiGetVaccinationScheduleByChildrenId(
+            selectedChild.childId
+          );
+
+          if (response.statusCode === "OK" && response.isSuccess) {
+            const vaccineIds = response.result.vaccines.map(
+              (vaccine: Vaccine) => vaccine.vaccineId
+            );
+            const comboIds = response.result.comboVaccines.map(
+              (combo: VaccinePackage) => combo.comboId
+            );
+            setSuggestedVaccines(vaccineIds);
+            setSuggestedCombos(comboIds);
+          } else {
+            console.error("Error: Invalid response structure", response);
+          }
+        } catch (error) {
+          console.error("Error fetching vaccination schedule:", error);
+        }
+      };
+
+      fetchVaccinationSchedule();
+    }
+  }, [selectedChild]);
 
   // Handle selecting a child
   const handleSelectChild = (child: Child | null) => {
@@ -133,7 +162,6 @@ const BookingForStaff = () => {
     }
 
     setFormLoading(true);
-    setFormError(null);
 
     try {
       const bookingData: Booking = {
@@ -153,7 +181,6 @@ const BookingForStaff = () => {
       if (paymentResponse.isSuccess) {
         window.location.href = paymentResponse.result?.paymentUrl;
       } else {
-        setFormError("Không lấy được đường dẫn thanh toán.");
         notification.error({
           message: "Lỗi",
           description: "Không lấy được đường dẫn thanh toán.",
@@ -162,7 +189,6 @@ const BookingForStaff = () => {
     } catch (error) {
       let errorMessage = error || "Lỗi không xác định";
       console.error("Error submitting booking:", error);
-      setFormError("Có lỗi xảy ra khi gửi dữ liệu.");
       notification.error({
         message: "Lỗi",
         description: errorMessage.toString(),
@@ -437,6 +463,13 @@ const BookingForStaff = () => {
                                 }}
                               >
                                 <h3>{vaccinePackage.comboName}</h3>
+                                {suggestedCombos.includes(
+                                  vaccinePackage.comboId
+                                ) && (
+                                  <span className="recommendation-badge">
+                                    Đề xuất
+                                  </span>
+                                )}
                                 <span>
                                   {expandedCategory === vaccinePackage.comboName
                                     ? "▲"
@@ -499,6 +532,13 @@ const BookingForStaff = () => {
                                     {vaccine.price?.toLocaleString("vi-VN")} vnđ
                                   </p>
                                 </div>
+                                {suggestedVaccines.includes(
+                                  vaccine.vaccineId
+                                ) && (
+                                  <span className="recommendation-badge">
+                                    Đề xuất
+                                  </span>
+                                )}
                               </label>
                             ))}
                           </div>

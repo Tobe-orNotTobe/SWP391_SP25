@@ -1,5 +1,5 @@
 export interface VaccineRecord {
-    vaccinationRecordId: number;
+    vaccinationRecordId: string;
     vaccineName: string;
     doseAmount: number;
     price: number;
@@ -7,30 +7,33 @@ export interface VaccineRecord {
     batchNumber: string;
     status: string;
     notes: string;
-  }
-  
-  export interface VaccineRecordResponse {
+}
+
+export interface VaccineRecordResponse {
     statusCode: string;
     isSuccess: boolean;
     errorMessages: string[];
     result: {
-      vaccinationRecordId: number;
-      bookingId: number;
-      fullName: string;
-      dateOfBirth: string;
-      height: number;
-      weight: number;
-      vaccineRecords: VaccineRecord[];
-      message: string;
+        vaccinationRecordId: number;
+        bookingId: number;
+        fullName: string;
+        dateOfBirth: string;
+        height: number;
+        weight: number;
+        vaccineRecords: VaccineRecord[];
+        message: string;
     };
-  }
-  
-  export interface UpdateVaccineRecordRequest {
-    notes: string;
-    status: string;
-    nextDoseDate: string;
-  }
+}
 
+export interface UpdateVaccineRecordRequest {
+    vaccineName?: string;
+    doseAmount?: number;
+    price?: number;
+    nextDoseDate: string | null; // Allow `null` as well
+    batchNumber?: string;
+    status: string;
+    notes: string;
+}
 
 export interface VaccineRecordUser {
     bookingId : number;
@@ -40,5 +43,3 @@ export interface VaccineRecordUser {
     weight: number;
     vaccineRecords: VaccineRecord[];
 }
-
-
