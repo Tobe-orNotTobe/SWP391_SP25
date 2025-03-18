@@ -8,16 +8,17 @@ import {
 } from "../../interfaces/VaccineRecord.ts";
 import {
   apiGetVaccineRecord,
+  apiGetVaccineRecordByBookingId,
   apiUpdateVaccineRecord,
 } from "../../apis/apiVaccineRecord.ts";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { apiPutBookingComplete } from "../../apis/apiBooking.ts";
+import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 
 const { Option } = Select;
 
 interface Props {
-  bookingId: number; // Nhận bookingId thay vì toàn bộ đối tượng booking
+  booking: BookingResponse; // Nhận bookingId thay vì toàn bộ đối tượng booking
 }
 
 const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
@@ -25,7 +26,6 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
     null
   );
   const [loading, setLoading] = useState<boolean>(true);
-  const [vaccineRecordId, setvaccineRecordId] = useState<number>(-1);
   const [updatedRecords, setUpdatedRecords] = useState<
     UpdateVaccineRecordRequest[]
   >([]);
@@ -33,22 +33,31 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
   const navigate = useNavigate();
 
   // Fetch dữ liệu từ API khi component mount
+  const fetchData = async () => {
+    try {
+      const response = await apiGetVaccineRecordByBookingId(booking.bookingId);
+      setVaccineData(response);
+      console.log(response);
+
+      const vaccineRecords = response.result.vaccineRecords;
+
+      // Lưu toàn bộ danh sách vaccineRecords vào state
+      setUpdatedRecords(vaccineRecords);
+      console.log("Vaccine Records:", vaccineRecords);
+
+      // Lấy danh sách tất cả vaccinationRecordId
+      const recordIds = vaccineRecords.map(
+        (record) => record.vaccinationRecordId
+      );
+      setVaccineRecordIds(recordIds); // Lưu danh sách ID vào state
+      console.log("Vaccination Record IDs:", recordIds);
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu vaccine:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await apiGetVaccineRecord(booking.bookingId);
-        setVaccineData(response);
-        console.log(response);
-        setUpdatedRecords(response.result.vaccineRecords); // Lưu dữ liệu vào state
-        console.log(response.result.vaccineRecords)
-        setvaccineRecordId(response.result.vaccineRecords[0].vaccinationRecordId);
-        console.log(response.result.vaccineRecords[0].vaccinationRecordId)
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu vaccine:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, [booking.bookingId]);
 
@@ -64,47 +73,37 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
     setUpdatedRecords(newRecords);
   };
 
-  // Xử lý cập nhật trạng thái, số lô, ngày nhắc lại
-  // const handleUpdateRecord = async (index: number, updatedField: Partial<VaccineRecord>) => {
-  //   if (!vaccineData) return;
-
-  //   try {
-  //     const updatedRecords = [...vaccineData.result.vaccineRecords];
-  //     updatedRecords[index] = { ...updatedRecords[index], ...updatedField };
-
-  //     setVaccineData({
-  //       ...vaccineData,
-  //       result: { ...vaccineData.result, vaccineRecords: updatedRecords },
-  //     });
-
-  //     // Gửi request cập nhật đến API
-  //     const updateRequest: UpdateVaccineRecordRequest = {
-  //       notes: updatedRecords[index].notes,
-  //       status: updatedRecords[index].status,
-  //       nextDoseDate: updatedRecords[index].nextDoseDate || "",
-  //     };
-  //     await apiUpdateVaccineRecord(booking.bookingId, updateRequest);
-  //     toast.success("Cập nhật thành công!");
-  //   } catch (error) {
-  //     console.error("Lỗi khi cập nhật vaccine record:", error);
-  //     toast.error("Cập nhật thất bại!");
-  //   }
-  // };
-
   // Xử lý hoàn thành booking
   const handleComplete = async () => {
     if (!vaccineData) return;
 
     try {
+      // Kiểm tra xem có mục nào thiếu nextDoseDate không
+      const missingNextDoseDate = updatedRecords.some(
+        (record) => !record.nextDoseDate
+      );
+
+      if (missingNextDoseDate) {
+        // Hiển thị cảnh báo nếu có mục thiếu nextDoseDate
+        toast.warn("Có mục chưa nhập ngày nhắc. Bạn có muốn tiếp tục không?", {
+          autoClose: 5000, // Tự động đóng thông báo sau 5 giây
+          closeButton: true, // Hiển thị nút đóng
+          pauseOnHover: true, // Tạm dừng đếm thời gian khi di chuột vào thông báo
+          draggable: true, // Cho phép kéo thông báo
+          position: "top-center", // Vị trí hiển thị thông báo
+        });
+      }
+
+      // Tiến hành cập nhật từng bản ghi một
       for (const record of updatedRecords) {
         const updateRequest: UpdateVaccineRecordRequest = {
           notes: record.notes,
-          status: record.status,
-          nextDoseDate: record.nextDoseDate || "",
+          status: "Completed",
+          nextDoseDate: record.nextDoseDate || "", // Nếu nextDoseDate bị bỏ trống, gán giá trị rỗng
         };
 
-        await apiUpdateVaccineRecord(vaccineRecordId, updateRequest);
-
+        // Gọi API để cập nhật từng bản ghi
+        await apiUpdateVaccineRecord(record.vaccinationRecordId, updateRequest);
       }
 
       toast.success("Hồ sơ đã được cập nhật thành công!");
@@ -170,7 +169,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
             </thead>
             <tbody>
               {vaccineData.result.vaccineRecords.map((record, index) => (
-                <tr key={index}>
+                <tr key={record.vaccinationRecordId}>
                   <td>
                     <input type="text" value={record.vaccineName} readOnly />
                   </td>
@@ -191,11 +190,9 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
                   <td>
                     <input
                       type="date"
-                      // value={
-                      //   record.nextDoseDate
-                      //     ? record.nextDoseDate.split("T")[0]
-                      //     : ""
-                      // }
+                      required
+                      value={updatedRecords[index].nextDoseDate || ""} 
+                      min={new Date().toISOString().split("T")[0]}
                       onChange={(e) =>
                         handleUpdateRecord(index, {
                           nextDoseDate: e.target.value,
@@ -224,12 +221,12 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
                       style={{ width: "100%" }}
                     >
                       <Option value="Chờ tiêm">Chờ tiêm</Option>
-                      <Option value="Đã tiêm">Đã tiêm</Option>
+                      <Option value="Completed">Đã tiêm</Option>
                     </Select>
                   </td>
                   <td>
                     <textarea
-                      //value={record.notes}
+                      value={updatedRecords[index].notes || ""}
                       onChange={(e) =>
                         handleUpdateRecord(index, { notes: e.target.value })
                       }
