@@ -26,6 +26,7 @@ import {
   apiGetComBoVaccineById,
   apiGetVaccineDetailById,
 } from "../../apis/apiVaccine.ts";
+import {exportPDF} from "../../utils/exportPDF.ts";
 
 const { Title, Text } = Typography;
 
@@ -76,6 +77,10 @@ function AssignPage() {
 
     fetchUnassingBookings();
   }, []);
+
+  const handleExportPDF = (selectedBooking :any, comboDetails : any, vaccineDetails : any) => {
+      exportPDF(selectedBooking, comboDetails, vaccineDetails);
+  }
 
   const handleAssignDoctor = async (doctorId: string, bookingId: string) => {
     try {
@@ -463,102 +468,114 @@ function AssignPage() {
         <div className="modal-content">
           <h2 className="modal-title">Chi Tiết Đặt Lịch</h2>
           {selectedBooking && (
-            <div className="modal-body">
-              <div className="info-section">
-                <p>
-                  <strong>ID:</strong> {selectedBooking.bookingId}
-                </p>
-                <p>
-                  <strong>Tên Trẻ:</strong> {selectedBooking.childName}
-                </p>
-                <p>
-                  <strong>Ngày Đặt:</strong>{" "}
-                  {new Date(selectedBooking.bookingDate).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
-                </p>
-                <p>
-                  <strong>Ghi Chú:</strong> {selectedBooking.note}
-                </p>
-                <p>
-                  <strong>Trạng Thái:</strong>{" "}
-                  <Tag
-                    color={
-                      selectedBooking.status === "Pending"
-                        ? "orange"
-                        : selectedBooking.status === "Completed"
-                        ? "green"
-                        : selectedBooking.status === "Canceled"
-                        ? "red"
-                        : "gray"
-                    }
-                  >
-                    {selectedBooking.status}
-                  </Tag>
-                </p>
-              </div>
+              <div className="modal-body">
+                <div className="info-section">
+                  <p>
+                    <strong>ID:</strong> {selectedBooking.bookingId}
+                  </p>
+                  <p>
+                    <strong>Tên Trẻ:</strong> {selectedBooking.childName}
+                  </p>
+                  <p>
+                    <strong>Ngày Đặt:</strong>{" "}
+                    {new Date(selectedBooking.bookingDate).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
+                  </p>
+                  <p>
+                    <strong>Ghi Chú:</strong> {selectedBooking.note}
+                  </p>
+                  <p>
+                    <strong>Trạng Thái:</strong>{" "}
+                    <Tag
+                        color={
+                          selectedBooking.status === "Pending"
+                              ? "orange"
+                              : selectedBooking.status === "Completed"
+                                  ? "green"
+                                  : selectedBooking.status === "Canceled"
+                                      ? "red"
+                                      : "gray"
+                        }
+                    >
+                      {selectedBooking.status}
+                    </Tag>
+                  </p>
+                </div>
 
-              {/* Hiển thị Chi Tiết Vaccine hoặc Combo */}
-              {comboDetails.length > 0 && (
-                <div className="combo-section">
-                  <h3>Chi Tiết Combo</h3>
-                  {comboDetails.map((combo) => (
-                    <div key={combo.comboId} className="combo-item">
-                      <p>
-                        <strong>Tên Combo:</strong> {combo.comboName}
-                      </p>
-                      <p>
-                        <strong>Giá Combo:</strong>{" "}
-                        {combo.totalPrice?.toLocaleString()} VNĐ
-                      </p>
-                      <p>
-                        <strong>Vaccine trong Combo:</strong>
-                      </p>
-                      <ul>
-                        {combo.vaccines.map((vaccine: Vaccine) => (
-                          <div key={vaccine.vaccineId}>
-                            {vaccine.name} - {vaccine.price?.toLocaleString()}{" "}
-                            VNĐ
+                {/* Hiển thị Chi Tiết Vaccine hoặc Combo */}
+                {comboDetails.length > 0 && (
+                    <div className="combo-section">
+                      <h3>Chi Tiết Combo</h3>
+                      {comboDetails.map((combo) => (
+                          <div key={combo.comboId} className="combo-item">
+                            <p>
+                              <strong>Tên Combo:</strong> {combo.comboName}
+                            </p>
+                            <p>
+                              <strong>Giá Combo:</strong>{" "}
+                              {combo.totalPrice?.toLocaleString()} VNĐ
+                            </p>
+                            <p>
+                              <strong>Vaccine trong Combo:</strong>
+                            </p>
+                            <ul>
+                              {combo.vaccines.map((vaccine: Vaccine) => (
+                                  <div key={vaccine.vaccineId}>
+                                    {vaccine.name} - {vaccine.price?.toLocaleString()}{" "}
+                                    VNĐ
+                                  </div>
+                              ))}
+                            </ul>
                           </div>
-                        ))}
-                      </ul>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              )}
+                )}
 
-              {/* Hiển thị vaccine đơn lẻ (chỉ khi không có combo) */}
-              {vaccineDetails.length > 0 && comboDetails.length === 0 && (
-                <div className="vaccine-section">
-                  <h3>Chi Tiết Vaccine</h3>
-                  {vaccineDetails.map((vaccine) => (
-                    <div key={vaccine.vaccineId} className="vaccine-item">
-                      <p>
-                        <strong>Tên Vaccine:</strong> {vaccine.name}
-                      </p>
-                      <p>
-                        <strong>Giá:</strong> {vaccine.price?.toLocaleString()}{" "}
-                        VNĐ
-                      </p>
+                {/* Hiển thị vaccine đơn lẻ (chỉ khi không có combo) */}
+                {vaccineDetails.length > 0 && comboDetails.length === 0 && (
+                    <div className="vaccine-section">
+                      <h3>Chi Tiết Vaccine</h3>
+                      {vaccineDetails.map((vaccine) => (
+                          <div key={vaccine.vaccineId} className="vaccine-item">
+                            <p>
+                              <strong>Tên Vaccine:</strong> {vaccine.name}
+                            </p>
+                            <p>
+                              <strong>Giá:</strong> {vaccine.price?.toLocaleString()}{" "}
+                              VNĐ
+                            </p>
+                          </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                )}
+              </div>
           )}
+          <div style={{textAlign: "right", marginTop: "20px"}}>
+            <Button
+                type="primary"
+                onClick={() => {
+                  if (selectedBooking) {
+                    handleExportPDF(selectedBooking, comboDetails, vaccineDetails);
+                  }
+                }}
+            >
+              Xuất PDF
+            </Button>
+          </div>
         </div>
       </Modal>
 
       {/* Modal phân công bác sĩ */}
       <Modal
-        open={modalDoctorIsOpen}
-        onCancel={closeDoctorModal}
-        footer={null}
-        width={1200}
-        className="doctor-modal"
+          open={modalDoctorIsOpen}
+          onCancel={closeDoctorModal}
+          footer={null}
+          width={1200}
+          className="doctor-modal"
       >
-        <div className="doctorList-wraper">
+      <div className="doctorList-wraper">
           <Title level={2} className="title">
             Chọn bác sĩ muốn phân công
           </Title>
