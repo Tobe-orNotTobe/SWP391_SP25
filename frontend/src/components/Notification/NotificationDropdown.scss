@@ -29,7 +29,12 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  //
+  //position: fixed;
+  //top: 50px;
 }
+
+
 
 .notification-header {
   display: flex;
@@ -66,7 +71,7 @@
   &.unread {
     background-color: #e6f7ff;
     border-left: 3px solid #2A388F;
-    
+
     &:hover {
       background-color: #d6f0ff;
     }
@@ -93,6 +98,7 @@
     height: 8px;
     border-radius: 50%;
     background-color: #2A388F;
+    margin: 5px;
   }
 }
 
@@ -136,6 +142,7 @@
 
 /* Ant Design Tabs customization */
 .notification-dropdown-content {
+
   .ant-tabs-nav {
     margin-bottom: 0;
     
@@ -156,4 +163,17 @@
   .ant-tabs-content {
     padding: 0;
   }
+}
+
+.ant-list-item-action {
+  margin-inline-start: 0 !important;
+}
+
+.ant-list-item-meta-avatar {
+  margin-inline-start: 8px !important;
+  margin-inline-end: 8px !important;
+}
+
+.anticon-info-circle {
+    color: white !important;
 }

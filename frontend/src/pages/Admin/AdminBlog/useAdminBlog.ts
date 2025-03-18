@@ -103,7 +103,7 @@ export const useBlogForm = () => {
                 };
                 const response = await apiUpdateBlog(Number(id), updateBlogData);
                 if (!response.isSuccess) return new Error(response.errorMessages || "Lỗi cập nhật blog");
-                toast.error("Cập nhật thành công!");
+                toast.success("Cập nhật thành công!");
             } else {
                 const newBlogData: BlogRequest = {
                     ...values,

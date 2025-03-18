@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import './CustomerNavbar.scss';
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import {MdNavigateNext, MdOutlineChangeCircle} from "react-icons/md";

@@ -1,6 +1,6 @@
 // src/api/apiNotification.ts
 import axiosInstance from '../utils/axiosInstance';
-import { NotificationResponse, NotificationCountResponse } from '../interfaces/Notification';
+import {NotificationResponse, NotificationCountResponse, SendNotificationRequest} from '../interfaces/Notification';
 
 export const apiGetAllNotifications = async (): Promise<NotificationResponse> => {
   try {
@@ -49,3 +49,19 @@ export const apiDeleteNotification = async (notificationId: number): Promise<boo
     return false;
   }
 };
+
+export const apiSendNotification = async (data: SendNotificationRequest) => {
+
+  try {
+    const response = await axiosInstance.post('/api/Notification/send', data);
+    return response.data;
+  } catch (err: any) {
+    return {
+      statusCode: err.response?.data?.statusCode || 500,
+      isSuccess: false,
+      errorMessages: err.response?.data?.errorMessages || ['Failed to send notification'],
+      result: null,
+    };
+  }
+
+}

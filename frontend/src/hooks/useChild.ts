@@ -156,6 +156,14 @@ export const useChildForm = (refetch: () => void) => {
             if (form.selectedImage) {
                 imageUrl = await uploadImageToCloudinary(form.selectedImage);
                 if (!imageUrl) throw new Error("Lỗi tải ảnh lên");
+            }else {
+                if (!imageUrl) {
+                    if (form.selectedGender?.value === "Male") {
+                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742300123/gzprq2pdsvczizvscupv.png";
+                    }else {
+                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742300122/jkahvkbjgp4ofrwnfohz.png";
+                    }
+                }
             }
 
             const requestData: ChildDetailRequest = {

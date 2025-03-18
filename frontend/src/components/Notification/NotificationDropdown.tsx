@@ -11,11 +11,11 @@ import {
   BellOutlined,
   RightOutlined
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useNotificationHook } from '../../hooks/useNotificationHook';
 import './NotificationDropdown.scss';
+import {useNavigate} from "react-router-dom";
 
 dayjs.extend(relativeTime);
 
@@ -41,7 +41,7 @@ const NotificationDropdown: React.FC = () => {
   useEffect(() => {
     // Refresh notifications when dropdown is opened
     if (open) {
-      refreshNotifications();
+      refreshNotifications().then();
     }
   }, [open, refreshNotifications]);
 
@@ -89,30 +89,32 @@ const NotificationDropdown: React.FC = () => {
             className={`notification-item ${!item.isRead ? 'unread' : ''}`}
             onClick={() => handleNotificationClick(item)}
             actions={[
-              !item.isRead ? (
-                <Tooltip title="Đánh dấu đã đọc">
-                  <Button
-                    type="text"
-                    icon={<CheckOutlined />}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      markAsRead(item.notificationId);
-                    }}
-                    className="notification-action-btn"
-                  />
-                </Tooltip>
-              ) : null,
-              <Tooltip title="Xóa">
-                <Button
-                  type="text"
-                  icon={<DeleteOutlined />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteNotification(item.notificationId);
-                  }}
-                  className="notification-action-btn"
-                />
-              </Tooltip>
+                <div style={{display: "grid"}}>
+                  {!item.isRead ? (
+                      <Tooltip title="Đánh dấu đã đọc">
+                        <Button
+                            type="text"
+                            icon={<CheckOutlined />}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              markAsRead(item.notificationId);
+                            }}
+                            className="notification-action-btn"
+                        />
+                      </Tooltip>
+                  ) : null},
+                  <Tooltip title="Xóa">
+                    <Button
+                        type="text"
+                        icon={<DeleteOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteNotification(item.notificationId);
+                        }}
+                        className="notification-action-btn"
+                    />
+                  </Tooltip>
+                </div>
             ]}
           >
             <List.Item.Meta
@@ -122,12 +124,14 @@ const NotificationDropdown: React.FC = () => {
                   style={{ backgroundColor: item.type.toLowerCase() === 'reminder' ? '#2A388F' : '#1890ff' }}
                 />
               }
+
               title={
                 <div className="notification-title">
                   {item.message}
                   {!item.isRead && <span className="unread-dot"></span>}
                 </div>
               }
+
               description={
                 <div className="notification-time">
                   <ClockCircleOutlined /> {formatTime(item.createdAt)}
@@ -180,7 +184,7 @@ const NotificationDropdown: React.FC = () => {
             onClick={() => {
               setOpen(false);
               // Navigate to all notifications page if needed
-              // navigate('/notifications');
+              navigate('/notifications');
             }}
           >
             Xem tất cả <RightOutlined />
