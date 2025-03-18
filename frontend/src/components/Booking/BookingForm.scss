@@ -16,7 +16,7 @@
 
   .recommendation-badge {
     position: absolute;
-    top: 5px;
+    bottom: 5px;
     right: 5px;
     background-color: #28a745; /* Màu xanh lá cây, bạn có thể thay đổi */
     color: white;
@@ -33,10 +33,7 @@
     align-items: center;
   }
 
-  .vaccine-card .recommendation-badge {
-    top: 5px;
-    right: 5px;
-  }
+
 
   .vaccination-form {
     margin-top: 30px;

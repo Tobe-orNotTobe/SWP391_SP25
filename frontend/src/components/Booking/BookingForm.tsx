@@ -152,14 +152,14 @@ const BookingForm = () => {
       }
     };
   
-    // Chỉ gọi API khi có vaccine mới được chọn
-    if (selectedVaccines.length > 0) {
+    // Chỉ gọi API khi có vaccine mới được chọn và loại vaccine là "Lẻ" (không phải combo)
+    if (selectedVaccines.length > 0 && vaccineType === "Lẻ") {
       const lastSelectedVaccineId = selectedVaccines[selectedVaccines.length - 1]; // Lấy vaccine cuối cùng được chọn
       checkParentVaccines(lastSelectedVaccineId);
     } else {
-      setParentVaccineMessages([]); // Reset nếu không có vaccine được chọn
+      setParentVaccineMessages([]); // Reset nếu không có vaccine được chọn hoặc là combo
     }
-  }, [selectedVaccines]);
+  }, [selectedVaccines, vaccineType]); // Thêm vaccineType vào dependency array
 
   // Show confirmation modal
   const showConfirmationModal = (messages: string[], newVaccineId: string) => {
@@ -218,7 +218,7 @@ const BookingForm = () => {
 
       const status = await apiBooking(parentInfo.customerCode, bookingData);
       navigate("/payment", { state: { bookingResult: status.result } });
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Error submitting booking:", error);
       toast.error(error);
     } finally {
@@ -435,65 +435,47 @@ const BookingForm = () => {
                   <div className="vaccine-list">
                     <label>* Chọn vắc xin</label>
                     {vaccineType === "Gói" ? (
-                      vaccinePackages.map((vaccinePackage) => (
-                        <div
-                          key={vaccinePackage.comboId}
-                          className="vaccine-category"
-                        >
-                          <div
-                            className="category-header"
-                            onClick={() => {
-                              toggleCategory(vaccinePackage.comboName);
-                              if (
-                                expandedCategory !== vaccinePackage.comboName
-                              ) {
+                      <div className="vaccine-grid">
+                        {vaccinePackages.map((vaccinePackage) => (
+                          <label
+                            key={vaccinePackage.comboId}
+                            className="vaccine-card"
+                          >
+                            <input
+                              type="checkbox"
+                              value={vaccinePackage.comboId}
+                              checked={selectedVaccines.includes(
+                                vaccinePackage.comboId.toString()
+                              )}
+                              onChange={() =>
                                 handleSelectVaccine(
                                   vaccinePackage.comboId.toString()
-                                );
+                                )
                               }
-                            }}
-                          >
-                            <h3>{vaccinePackage.comboName}</h3>
-                            {suggestedCombos.includes(
-                              vaccinePackage.comboId as any
-                            ) && (
-                              <span className="recommendation-badge">
-                                Đề xuất
-                              </span>
-                            )}
-                            <span>
-                              {expandedCategory === vaccinePackage.comboName
-                                ? "▲"
-                                : "▼"}
-                            </span>
-                          </div>
-                          {expandedCategory === vaccinePackage.comboName && (
-                            <div className="vaccine-grid">
-                              {vaccinePackage.vaccines.map((vaccine) => (
-                                <label
-                                  key={vaccine.vaccineId}
-                                  className="vaccine-card"
-                                >
-                                  <input
-                                    disabled
-                                    type="checkbox"
-                                    value={vaccine.vaccineId}
-                                    checked={true}
-                                  />
-                                  <div className="vaccine-info">
-                                    <h4>{vaccine.name}</h4>
-                                    <p className="price">
-                                      Giá:{" "}
-                                      {vaccine.price?.toLocaleString("vi-VN")}{" "}
-                                      vnđ
-                                    </p>
-                                  </div>
-                                </label>
-                              ))}
+                            />
+                            <div className="vaccine-info">
+                              <h4>{vaccinePackage.comboName}</h4>
+                              <p className="description">
+                                {vaccinePackage.description}
+                              </p>
+                              <p className="price">
+                                Giá:{" "}
+                                {vaccinePackage.totalPrice?.toLocaleString(
+                                  "vi-VN"
+                                )}{" "}
+                                vnđ
+                              </p>
+                              {suggestedCombos.includes(
+                                vaccinePackage.comboId as any
+                              ) && (
+                                <span className="recommendation-badge">
+                                  Đề xuất
+                                </span>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      ))
+                          </label>
+                        ))}
+                      </div>
                     ) : (
                       <div className="vaccine-grid">
                         {singleVaccines.map((vaccine) => (
@@ -515,18 +497,21 @@ const BookingForm = () => {
                             />
                             <div className="vaccine-info">
                               <h4>{vaccine.name}</h4>
+                              <p className="description">
+                                {vaccine.description}
+                              </p>
                               <p className="price">
                                 Giá: {vaccine.price?.toLocaleString("vi-VN")}{" "}
                                 vnđ
                               </p>
+                              {suggestedVaccines.includes(
+                                vaccine.vaccineId as any
+                              ) && (
+                                <span className="recommendation-badge">
+                                  Đề xuất
+                                </span>
+                              )}
                             </div>
-                            {suggestedVaccines.includes(
-                              vaccine.vaccineId as any
-                            ) && (
-                              <span className="recommendation-badge">
-                                Đề xuất
-                              </span>
-                            )}
                           </label>
                         ))}
                       </div>
