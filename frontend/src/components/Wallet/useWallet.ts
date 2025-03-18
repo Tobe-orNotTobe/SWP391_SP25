@@ -84,9 +84,13 @@ export const useRecentTransactions = () => {
 };
 
 export const useWalletLogic = () => {
-    const { walletData, } = useWalletUserDetail();
+    const { walletData,fetchWalletData } = useWalletUserDetail();
     const { transactions} = useRecentTransactions();
     const { refundUser} = useRefundUserList();
+
+    useEffect(() => {
+        fetchWalletData()
+    }, []);
 
     const [activeTransactionTab, setActiveTransactionTab] = useState("All");
     const [activeRefundTab, setActiveRefundTab] = useState("All");
