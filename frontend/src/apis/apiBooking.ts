@@ -153,6 +153,19 @@ export const apiAssignDoctor = async (doctorId: string, bookingId: string) => {
     throw error;
   }
 };
+
+export const apiUnAssignDoctor = async (bookingId: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/Booking/${bookingId}/unassign-doctor`
+    );
+    return response.data || {};
+  } catch (error) {
+    console.error("API Unassign doctor Error:", error);
+    throw error;
+  }
+};
+
 export const apiCancelBooking = async (bookingId : number) => {
   const finalUserId =  decodeToken(localStorage.getItem("token"))?.sub;
 
@@ -213,6 +226,31 @@ export const apiUpdateFeedback = async ( bookingId : number, data : UpdateFeedba
 export const apiGetUnassignedBooking = async () => {
   try {
     const response = await axiosInstance.get("/api/Booking/unassigned");
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data.errorMessages || ["Unknown error occurred"];
+    } else {
+      throw ["An unexpected error occurred"];
+    }
+  }
+};
+
+export const apiCheckParentVaccine = async (vaccineIds: number[]) => {
+  try {
+    const formData = new FormData();
+
+    // Thêm vaccineIds vào formData
+    vaccineIds.forEach(id => {
+      formData.append("VaccineIds", id.toString());
+    });
+
+    const response = await axiosInstance.post("/api/Booking/check-parent-vaccine", formData, {
+      headers: {
+        "Accept": "*/*",
+      },
+    });
+
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

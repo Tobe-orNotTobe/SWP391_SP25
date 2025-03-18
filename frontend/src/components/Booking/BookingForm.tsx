@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Spin } from "antd";
+import { Spin, Modal } from "antd"; // Thêm Modal từ Ant Design để hiển thị thông báo
 import "./BookingForm.scss";
 import {
   Parent,
   Child,
   BookingDetail,
   Booking,
+  Vaccine,
+  VaccinePackage,
 } from "../../interfaces/VaccineRegistration.ts";
-import { apiBooking } from "../../apis/apiBooking";
-import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
+import { apiBooking, apiCheckParentVaccine } from "../../apis/apiBooking";
 import { apiGetMyChilds } from "../../apis/apiChild.ts";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -20,13 +21,15 @@ import {
 import { toast } from "react-toastify";
 import { ChildDetailResponse } from "../../interfaces/Child.ts";
 import { apiGetVaccinationScheduleByChildrenId } from "../../apis/apiVaccine.ts";
+import { apiGetProfileUser } from "../../apis/apiAccount.ts";
 
 const BookingForm = () => {
   const navigate = useNavigate();
-  const { username, sub } = IsLoginSuccessFully();
 
   // State for vaccination form
   const [isFormSplit, setIsFormSplit] = useState(false);
+  const [username, setUsername] = useState("");
+  const [sub, setSub] = useState("");
   const [parentInfo, setParentInfo] = useState<Parent>({
     customerCode: sub,
     parentName: username || "Không rõ",
@@ -34,18 +37,17 @@ const BookingForm = () => {
   });
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [formLoading, setFormLoading] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
 
   // State for vaccine selection
   const [vaccineType, setVaccineType] = useState<"Gói" | "Lẻ">("Gói");
   const [selectedVaccines, setSelectedVaccines] = useState<string[]>([]);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [bookingDate, setBookingDate] = useState<string | null>(null);
+  const [notes, setNotes] = useState<string>("");
   const [bookingDetails, setBookingDetails] = useState<BookingDetail[]>([]);
-
-  // State for suggested vaccines and combos
-  const [suggestedVaccines, setSuggestedVaccines] = useState<string[]>([]);
-  const [suggestedCombos, setSuggestedCombos] = useState<string[]>([]);
+  const [parentVaccineMessages, setParentVaccineMessages] = useState<string[]>(
+    []
+  ); // State để lưu thông báo ParentVaccine
 
   // Fetch vaccine data
   const { vaccineDetail: singleVaccines, loading: vaccineLoading } =
@@ -53,45 +55,58 @@ const BookingForm = () => {
   const { comboVaccineDetail: vaccinePackages, loading: comboLoading } =
     useComboVaccineDetail();
 
+  // State for suggested vaccines and combos
+  const [suggestedVaccines, setSuggestedVaccines] = useState<string[]>([]);
+  const [suggestedCombos, setSuggestedCombos] = useState<string[]>([]);
+
   // Fetch parent and children info
   useEffect(() => {
     const fetchParentAndChildrenInfo = async () => {
       setFormLoading(true);
-      setFormError(null);
-
       try {
-        const data = await apiGetMyChilds();
-
-        if (data.isSuccess && data.result) {
-          const children = data.result.map((child: ChildDetailResponse) => ({
-            childId: child.childId,
-            fullName: child.fullName,
-            dateOfBirth: child.dateOfBirth,
-            gender: child.gender === "Female" ? "Nữ" : "Nam",
-            imageUrl: child.imageUrl,
-          }));
-
-          setParentInfo({
-            customerCode: sub,
-            parentName: username,
-            children: children as Child[],
-          });
-        } else {
-          setFormError("Không có trẻ.");
-          toast.warning("Không có dữ liệu trẻ.");
+        const profileData = await apiGetProfileUser();
+        if (!profileData.isSuccess || !profileData.result) {
+          toast.warning(
+            "Không thể lấy thông tin profile. Vui lòng đăng nhập lại."
+          );
+          navigate("/login");
+          return;
         }
+
+        const fetchedUsername = profileData.result.fullName;
+        const fetchedSub = profileData.result.id;
+
+        setUsername(fetchedUsername);
+        setSub(fetchedSub);
+
+        const data = await apiGetMyChilds();
+        if (!data.isSuccess || !data.result) {
+          toast.warning("Không có dữ liệu trẻ.");
+          return;
+        }
+
+        const children = data.result.map((child: ChildDetailResponse) => ({
+          childId: child.childId,
+          fullName: child.fullName,
+          dateOfBirth: child.dateOfBirth,
+          gender: child.gender === "Female" ? "Nữ" : "Nam",
+          imageUrl: child.imageUrl,
+        }));
+
+        setParentInfo({
+          customerCode: fetchedSub,
+          parentName: fetchedUsername,
+          children: children as Child[],
+        });
       } catch (error) {
-        const errorMessage = error || "Lỗi không xác định";
-        console.error("Lỗi khi lấy thông tin phụ huynh:", error);
-        setFormError(errorMessage.toString());
-        toast.warning(errorMessage.toString());
+        navigate("/login");
       } finally {
         setFormLoading(false);
       }
     };
 
     fetchParentAndChildrenInfo();
-  }, [sub, username]);
+  }, [navigate]);
 
   // Fetch vaccination schedule for selected child
   useEffect(() => {
@@ -101,31 +116,77 @@ const BookingForm = () => {
           const response = await apiGetVaccinationScheduleByChildrenId(
             selectedChild.childId
           );
-
           if (response.statusCode === "OK" && response.isSuccess) {
             const vaccineIds = response.result.vaccines.map(
-              (vaccine) => vaccine.vaccineId
+              (vaccine: Vaccine) => vaccine.vaccineId
             );
             const comboIds = response.result.comboVaccines.map(
-              (combo) => combo.comboId
+              (combo: VaccinePackage) => combo.comboId
             );
-
-            console.log("Vaccine IDs:", vaccineIds);
-            console.log("Combo IDs:", comboIds);
-
             setSuggestedVaccines(vaccineIds);
             setSuggestedCombos(comboIds);
-          } else {
-            console.error("Error: Invalid response structure", response);
           }
         } catch (error) {
           console.error("Error fetching vaccination schedule:", error);
         }
       };
-
       fetchVaccinationSchedule();
     }
   }, [selectedChild]);
+
+  // Check ParentVaccine when selectedVaccines change
+  useEffect(() => {
+    const checkParentVaccines = async (newVaccineId: string) => {
+      try {
+        const vaccineId = Number(newVaccineId); // Chuyển đổi ID sang số
+        const response = await apiCheckParentVaccine([vaccineId]); // Chỉ kiểm tra vaccine mới được chọn
+        if (response.result && response.result.length > 0) {
+          setParentVaccineMessages(response.result); // Lưu thông báo từ API
+          showConfirmationModal(response.result, newVaccineId); // Truyền ID vaccine mới vào modal
+        } else {
+          setParentVaccineMessages([]); // Không có thông báo
+        }
+      } catch (error) {
+        console.error("Error checking parent vaccine:", error);
+        toast.error("Không thể kiểm tra vaccine yêu cầu trước đó.");
+      }
+    };
+  
+    // Chỉ gọi API khi có vaccine mới được chọn
+    if (selectedVaccines.length > 0) {
+      const lastSelectedVaccineId = selectedVaccines[selectedVaccines.length - 1]; // Lấy vaccine cuối cùng được chọn
+      checkParentVaccines(lastSelectedVaccineId);
+    } else {
+      setParentVaccineMessages([]); // Reset nếu không có vaccine được chọn
+    }
+  }, [selectedVaccines]);
+
+  // Show confirmation modal
+  const showConfirmationModal = (messages: string[], newVaccineId: string) => {
+    Modal.confirm({
+      title: "Xác nhận tiêm chủng trước đó",
+      content: (
+        <div>
+          {messages.map((msg, index) => (
+            <p key={index}>{msg}</p>
+          ))}
+        </div>
+      ),
+      okText: "Đã tiêm",
+      cancelText: "Chưa tiêm",
+      onOk: () => {
+        // Người dùng xác nhận đã tiêm, tiếp tục xử lý
+        setParentVaccineMessages([]); // Xóa thông báo sau khi xác nhận
+      },
+      onCancel: () => {
+        // Người dùng chưa tiêm, chỉ bỏ chọn vaccine mới được chọn
+        setSelectedVaccines((prevSelected) =>
+          prevSelected.filter((id) => id !== newVaccineId)
+        );
+        toast.warning("Vui lòng tiêm vaccine yêu cầu trước khi tiếp tục.");
+      },
+    });
+  };
 
   // Handle selecting a child
   const handleSelectChild = (child: Child | null) => {
@@ -141,37 +202,25 @@ const BookingForm = () => {
   // Handle submitting the booking
   const submitBooking = async (
     bookingDate: string,
-    bookingDetails: BookingDetail[]
+    bookingDetails: BookingDetail[],
+    notes: string
   ) => {
-    if (!selectedChild) {
-      toast.warning("Vui lòng chọn trẻ để đặt lịch.");
-      return;
-    }
-
-    if (!parentInfo?.customerCode) {
-      toast.warning("Không tìm thấy thông tin phụ huynh.");
-      return;
-    }
+    if (!selectedChild || !parentInfo?.customerCode) return;
 
     setFormLoading(true);
-    setFormError(null);
-
     try {
       const bookingData: Booking = {
         childId: Number(selectedChild.childId),
         bookingDate: bookingDate,
-        notes: "Ghi chú đặt lịch",
+        notes: notes,
         bookingDetails: bookingDetails,
       };
 
       const status = await apiBooking(parentInfo.customerCode, bookingData);
-      console.log(status.result);
       navigate("/payment", { state: { bookingResult: status.result } });
-    } catch (error) {
-      const errorMessage = error || "Lỗi không xác định";
-      console.error("Error submitting booking:", errorMessage);
-      setFormError("Có lỗi xảy ra khi gửi dữ liệu.");
-      toast.error(errorMessage.toString());
+    } catch (error:any) {
+      console.error("Error submitting booking:", error);
+      toast.error(error);
     } finally {
       setFormLoading(false);
     }
@@ -205,6 +254,12 @@ const BookingForm = () => {
       toast.error("Ngày không hợp lệ.");
       return;
     }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) {
+      toast.error("Không thể chọn ngày trong quá khứ.");
+      return;
+    }
     setBookingDate(date.toISOString());
   };
 
@@ -214,29 +269,24 @@ const BookingForm = () => {
       vaccineId: vaccineType === "Lẻ" ? Number(id) : null,
       comboVaccineId: vaccineType === "Gói" ? Number(id) : null,
     }));
-    setBookingDetails(newBookingDetails);
+    setBookingDetails(newBookingDetails as any);
   }, [selectedVaccines, vaccineType]);
 
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!selectedChild) {
-      toast.warning("Vui lòng chọn trẻ để đặt lịch.");
+    if (!selectedChild || !bookingDate || bookingDetails.length === 0) {
+      toast.warning("Vui lòng điền đầy đủ thông tin.");
       return;
     }
 
-    if (!bookingDate) {
-      toast.warning("Vui lòng chọn ngày đặt lịch.");
+    if (parentVaccineMessages.length > 0) {
+      toast.warning("Vui lòng xác nhận tình trạng tiêm chủng trước đó.");
       return;
     }
 
-    if (bookingDetails.length === 0) {
-      toast.warning("Vui lòng chọn ít nhất một vaccine.");
-      return;
-    }
-
-    await submitBooking(bookingDate, bookingDetails);
+    await submitBooking(bookingDate, bookingDetails, notes);
   };
 
   return (
@@ -343,7 +393,6 @@ const BookingForm = () => {
               {selectedChild && (
                 <div className="form-section">
                   <h3>Thông tin dịch vụ</h3>
-
                   <div className="form-group">
                     <label>Ngày muốn đặt lịch tiêm *</label>
                     <input
@@ -356,7 +405,14 @@ const BookingForm = () => {
                       }
                     />
                   </div>
-
+                  <div className="form-group">
+                    <label>Ghi chú</label>
+                    <textarea
+                      name="notes"
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                    />
+                  </div>
                   <div className="form-group">
                     <label>* Loại vắc xin muốn đăng ký</label>
                     <div className="vaccine-selection">
@@ -376,7 +432,6 @@ const BookingForm = () => {
                       </button>
                     </div>
                   </div>
-
                   <div className="vaccine-list">
                     <label>* Chọn vắc xin</label>
                     {vaccineType === "Gói" ? (
@@ -400,7 +455,7 @@ const BookingForm = () => {
                           >
                             <h3>{vaccinePackage.comboName}</h3>
                             {suggestedCombos.includes(
-                              vaccinePackage.comboId
+                              vaccinePackage.comboId as any
                             ) && (
                               <span className="recommendation-badge">
                                 Đề xuất
@@ -465,7 +520,9 @@ const BookingForm = () => {
                                 vnđ
                               </p>
                             </div>
-                            {suggestedVaccines.includes(vaccine.vaccineId) && (
+                            {suggestedVaccines.includes(
+                              vaccine.vaccineId as any
+                            ) && (
                               <span className="recommendation-badge">
                                 Đề xuất
                               </span>
