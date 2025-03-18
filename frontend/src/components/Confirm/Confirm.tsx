@@ -173,7 +173,7 @@ export const DepositSuccess: React.FC = () => {
             <LoadingRedirect
                 message={`Thanh toán Đăng Kí Tiêm Chủng Thành Công Với Giá Tiền ${formattedAmount}`}
                 delay={3000}
-                to="/booking-history"
+                to="/customer/wallet"
             />
         );
     }
