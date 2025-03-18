@@ -62,7 +62,7 @@ namespace ChildVaccineSystem.API.Controllers
         {
             var response = new APIResponse();
 
-            if (comboDto.VaccineIds.Distinct().Count() != comboDto.VaccineIds.Count)
+            if (comboDto.Vaccines.Distinct().Count() != comboDto.Vaccines.Count)
             {
                 response.IsSuccess = false;
                 response.StatusCode = HttpStatusCode.BadRequest;
