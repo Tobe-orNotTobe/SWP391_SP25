@@ -26,6 +26,7 @@ import {
   apiGetVaccineDetailById,
   apiGetComBoVaccineById,
 } from "../../apis/apiVaccine.ts";
+import { VaccineRecordResponse } from "../../interfaces/VaccineRecord.ts";
 
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();
@@ -37,6 +38,8 @@ const VaccinationSchedulePage: React.FC = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [vaccineDetails, setVaccineDetails] = useState<any[]>([]);
   const [comboDetails, setComboDetails] = useState<any[]>([]);
+  const [vaccineRecordDetails, setVaccineRecordDetails] =
+    useState<VaccineRecordResponse>();
   const searchInput = useRef<InputRef>(null);
 
   const navigate = useNavigate();
@@ -77,6 +80,16 @@ const VaccinationSchedulePage: React.FC = () => {
           await getVaccineAndComboDetails(bookingDetails);
         setVaccineDetails(vaccineDetails);
         setComboDetails(comboDetails);
+      }
+
+      // Fetch vaccine record if the booking is completed
+      if (booking.status === "Completed") {
+        const vaccineRecordResponse = await apiGetVaccineRecordByBookingId(
+          booking.bookingId
+        );
+        if (vaccineRecordResponse?.isSuccess) {
+          setVaccineRecordDetails(vaccineRecordResponse.result);
+        }
       }
     } catch (error) {
       console.error("Error fetching booking details:", error);
@@ -350,17 +363,19 @@ const VaccinationSchedulePage: React.FC = () => {
   ];
 
   // Cột cho bảng đã hoàn thành (không có nút "Tiến hành tiêm")
-  const completedColumns = columns.filter((col) => col.key !== "action").concat({
-    title: "Hành động",
-    key: "action",
-    render: (_: undefined, record: BookingResponse) => (
-      <Space size="middle">
-        <Button type="primary" onClick={() => openModal(record)}>
-          Chi tiết
-        </Button>
-      </Space>
-    ),
-  });
+  const completedColumns = columns
+    .filter((col) => col.key !== "action")
+    .concat({
+      title: "Hành động",
+      key: "action",
+      render: (_: undefined, record: BookingResponse) => (
+        <Space size="middle">
+          <Button type="primary" onClick={() => openModal(record)}>
+            Chi tiết
+          </Button>
+        </Space>
+      ),
+    });
 
   return (
     <DoctorLayout>
@@ -393,14 +408,15 @@ const VaccinationSchedulePage: React.FC = () => {
         open={modalIsOpen}
         onCancel={closeModal}
         footer={null}
-        width={600}
+        width={900} // Tăng chiều rộng modal
         centered
-        className="custom-modal"
+        className="vaccination-modal"
       >
         <div className="modal-content">
           <h2 className="modal-title">Chi Tiết Đặt Lịch</h2>
           {selectedBooking && (
             <div className="modal-body">
+                    <div>
               <div className="info-section">
                 <p>
                   <strong>ID:</strong> {selectedBooking.bookingId}
@@ -449,6 +465,8 @@ const VaccinationSchedulePage: React.FC = () => {
                   </Tag>
                 </p>
               </div>
+        
+
 
               {comboDetails.length > 0 && (
                 <div className="combo-section">
@@ -467,9 +485,8 @@ const VaccinationSchedulePage: React.FC = () => {
                       </p>
                       <ul>
                         {combo.vaccines.map((vaccine: Vaccine) => (
-                          <div key={vaccine.vaccineId}>
-                            {vaccine.name} - {vaccine.price?.toLocaleString()}{" "}
-                            VNĐ
+                          <div key={vaccine.vaccine.id}>
+                            {vaccine.vaccine.name}
                           </div>
                         ))}
                       </ul>
@@ -494,6 +511,43 @@ const VaccinationSchedulePage: React.FC = () => {
                   ))}
                 </div>
               )}
+            </div>
+              {selectedBooking.status === "Completed" &&
+                vaccineRecordDetails && (
+                  <div className="vaccine-record-section">
+                    <h3>Chi Tiết Vaccine Record</h3>
+                    <table className="vaccine-record-table">
+                      <thead>
+                        <tr>
+                          <th>Tên Vaccine</th>
+                          <th>Liều lượng</th>
+                          <th>Giá</th>
+                          <th>Ngày tiêm</th>
+                          <th>Số lô</th>
+                          <th>Trạng thái</th>
+                          <th>Ghi chú</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {vaccineRecordDetails.vaccineRecords.map((record) => (
+                          <tr key={record.vaccinationRecordId}>
+                            <td>{record.vaccineName}</td>
+                            <td>{record.doseAmount} ml</td>
+                            <td>{record.price.toLocaleString()} VNĐ</td>
+                            <td>
+                              {new Date(
+                                record.vaccinationDate
+                              ).toLocaleDateString()}
+                            </td>
+                            <td>{record.batchNumber}</td>
+                            <td>{record.status}</td>
+                            <td>{record.notes}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
             </div>
           )}
         </div>
