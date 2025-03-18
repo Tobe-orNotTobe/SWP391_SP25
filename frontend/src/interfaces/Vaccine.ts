@@ -37,9 +37,9 @@ export interface GetVaccineComboDetail {
 }
 
 export interface VaccineDetailOnCombo {
-    order : number;
-    intervalDays : number;
-    vaccine : VaccineIntro[];
+    order: number;
+    intervalDays: number;
+    vaccine: VaccineIntro;
 }
 
 export interface PostVaccineComboDetail {
