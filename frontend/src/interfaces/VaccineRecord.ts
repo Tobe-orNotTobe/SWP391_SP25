@@ -29,7 +29,7 @@ export interface UpdateVaccineRecordRequest {
   vaccineName?: string;
   doseAmount?: number;
   price?: number;
-  nextDoseDate: string | null; // Allow `null` as well
+  nextDoseDate: string | null;
   batchNumber?: string;
   status: string;
   notes: string;

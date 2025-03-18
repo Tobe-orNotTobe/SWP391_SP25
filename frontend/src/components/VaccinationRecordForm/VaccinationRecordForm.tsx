@@ -7,7 +7,6 @@ import {
   UpdateVaccineRecordRequest,
 } from "../../interfaces/VaccineRecord.ts";
 import {
-  apiGetVaccineRecord,
   apiGetVaccineRecordByBookingId,
   apiUpdateVaccineRecord,
 } from "../../apis/apiVaccineRecord.ts";
@@ -18,45 +17,34 @@ import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 const { Option } = Select;
 
 interface Props {
-  booking: BookingResponse; // Nhận bookingId thay vì toàn bộ đối tượng booking
+  booking: BookingResponse;
 }
 
 const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
-  const [vaccineData, setVaccineData] = useState<VaccineRecordResponse | null>(
-    null
-  );
+  const [vaccineData, setVaccineData] = useState<VaccineRecordResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [updatedRecords, setUpdatedRecords] = useState<
-    UpdateVaccineRecordRequest[]
-  >([]);
-
+  const [updatedRecords, setUpdatedRecords] = useState<UpdateVaccineRecordRequest[]>([]);
   const navigate = useNavigate();
 
-  // Fetch dữ liệu từ API khi component mount
   const fetchData = async () => {
     try {
       const response = await apiGetVaccineRecordByBookingId(booking.bookingId);
       setVaccineData(response);
-      console.log(response);
-
-      const vaccineRecords = response.result.vaccineRecords;
-
-      // Lưu toàn bộ danh sách vaccineRecords vào state
+      
+      const vaccineRecords = response.result.vaccineRecords.map(record => ({
+        ...record,
+        nextDoseDate: record.nextDoseDate || "",
+        notes: record.notes || ""
+      }));
+      
       setUpdatedRecords(vaccineRecords);
-      console.log("Vaccine Records:", vaccineRecords);
-
-      // Lấy danh sách tất cả vaccinationRecordId
-      const recordIds = vaccineRecords.map(
-        (record) => record.vaccinationRecordId
-      );
-      setVaccineRecordIds(recordIds); // Lưu danh sách ID vào state
-      console.log("Vaccination Record IDs:", recordIds);
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu vaccine:", error);
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, [booking.bookingId]);
@@ -69,40 +57,33 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
 
     const newRecords = [...updatedRecords];
     newRecords[index] = { ...newRecords[index], ...updatedField };
-
     setUpdatedRecords(newRecords);
   };
 
-  // Xử lý hoàn thành booking
   const handleComplete = async () => {
     if (!vaccineData) return;
 
     try {
-      // Kiểm tra xem có mục nào thiếu nextDoseDate không
       const missingNextDoseDate = updatedRecords.some(
         (record) => !record.nextDoseDate
       );
 
       if (missingNextDoseDate) {
-        // Hiển thị cảnh báo nếu có mục thiếu nextDoseDate
-        toast.warn("Có mục chưa nhập ngày nhắc. Bạn có muốn tiếp tục không?", {
-          autoClose: 5000, // Tự động đóng thông báo sau 5 giây
-          closeButton: true, // Hiển thị nút đóng
-          pauseOnHover: true, // Tạm dừng đếm thời gian khi di chuột vào thông báo
-          draggable: true, // Cho phép kéo thông báo
-          position: "top-center", // Vị trí hiển thị thông báo
+        const confirm = await new Promise((resolve) => {
+          toast.warn(
+            "Có mục chưa nhập ngày nhắc.",
+          );
         });
+
+        if (!confirm) return;
       }
 
-      // Tiến hành cập nhật từng bản ghi một
       for (const record of updatedRecords) {
         const updateRequest: UpdateVaccineRecordRequest = {
           notes: record.notes,
           status: "Completed",
-          nextDoseDate: record.nextDoseDate || "", // Nếu nextDoseDate bị bỏ trống, gán giá trị rỗng
+          nextDoseDate: record.nextDoseDate || "",
         };
-
-        // Gọi API để cập nhật từng bản ghi
         await apiUpdateVaccineRecord(record.vaccinationRecordId, updateRequest);
       }
 
@@ -114,13 +95,10 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
     }
   };
 
-  if (loading) {
-    return <div>Đang tải dữ liệu...</div>;
-  }
+  if (loading) return <div>Đang tải dữ liệu...</div>;
+  if (!vaccineData) return <div>Không tìm thấy dữ liệu!</div>;
 
-  if (!vaccineData) {
-    return <div>Không tìm thấy dữ liệu!</div>;
-  }
+
 
   return (
     <div className="vaccination-record-container">

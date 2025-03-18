@@ -19,7 +19,6 @@ import Highlighter from "react-highlight-words";
 import { Modal } from "antd";
 import {
   apiCreateVaccineRecord,
-  apiGetVaccineRecord,
   apiGetVaccineRecordByBookingId,
 } from "../../apis/apiVaccineRecord.ts";
 import { toast } from "react-toastify";
@@ -40,24 +39,33 @@ const VaccinationSchedulePage: React.FC = () => {
   const [comboDetails, setComboDetails] = useState<any[]>([]);
   const searchInput = useRef<InputRef>(null);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      if (doctorId) {
-        const data = await apiGetDoctorBookings(doctorId);
-        if (data?.isSuccess) {
-          console.log(data.result);
-          setBookings(data.result);
-        }
+  const navigate = useNavigate();
+
+  const fetchBookings = async () => {
+    if (doctorId) {
+      const data = await apiGetDoctorBookings(doctorId);
+      if (data?.isSuccess) {
+        console.log(data.result);
+        setBookings(data.result);
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchBookings();
   }, [doctorId]);
 
+  // Chia bookings thành hai mảng: chưa hoàn thành và đã hoàn thành
+  const pendingBookings = bookings.filter(
+    (booking) => booking.status !== "Completed"
+  );
+  const completedBookings = bookings.filter(
+    (booking) => booking.status === "Completed"
+  );
+
   const openModal = async (booking: BookingResponse) => {
-    // Reset state về mảng rỗng
     setVaccineDetails([]);
     setComboDetails([]);
-
     setSelectedBooking(booking);
     setModalIsOpen(true);
 
@@ -65,7 +73,6 @@ const VaccinationSchedulePage: React.FC = () => {
       const bookingDetailsResponse = await apiGetBookingById(booking.bookingId);
       if (bookingDetailsResponse?.isSuccess) {
         const bookingDetails = bookingDetailsResponse.result.bookingDetails;
-
         const { vaccineDetails, comboDetails } =
           await getVaccineAndComboDetails(bookingDetails);
         setVaccineDetails(vaccineDetails);
@@ -82,7 +89,6 @@ const VaccinationSchedulePage: React.FC = () => {
 
     for (const detail of bookingDetails) {
       if (detail.vaccineId !== null && detail.vaccineId !== undefined) {
-        // Lấy thông tin vaccine đơn lẻ
         const vaccine = await apiGetVaccineDetailById(detail.vaccineId);
         if (vaccine && vaccine.result) {
           vaccineDetails.push(vaccine.result);
@@ -91,15 +97,11 @@ const VaccinationSchedulePage: React.FC = () => {
         detail.comboVaccineId !== null &&
         detail.comboVaccineId !== undefined
       ) {
-        // Lấy thông tin combo và các vaccine trong combo
         const comboVaccine = await apiGetComBoVaccineById(
           detail.comboVaccineId
         );
         if (comboVaccine && comboVaccine.result) {
-          // Thêm thông tin combo vào danh sách combo
           comboDetails.push(comboVaccine.result);
-
-          // Thêm các vaccine trong combo vào danh sách vaccine
           if (
             comboVaccine.result.vaccines &&
             comboVaccine.result.vaccines.length > 0
@@ -109,7 +111,6 @@ const VaccinationSchedulePage: React.FC = () => {
         }
       }
     }
-
     return { vaccineDetails, comboDetails };
   };
 
@@ -119,8 +120,6 @@ const VaccinationSchedulePage: React.FC = () => {
     setComboDetails([]);
     setModalIsOpen(false);
   };
-
-  const navigate = useNavigate();
 
   const handleSearch = (
     selectedKeys: string[],
@@ -208,13 +207,12 @@ const VaccinationSchedulePage: React.FC = () => {
     try {
       if (!booking.bookingId) return;
 
-      // Kiểm tra xem vaccine record đã tồn tại chưa
       let existingRecord;
       try {
         existingRecord = await apiGetVaccineRecordByBookingId(
           booking.bookingId
         );
-      } catch (error:any) {
+      } catch (error: any) {
         if (error.response && error.response.status === 400) {
           existingRecord = null;
         } else {
@@ -223,14 +221,11 @@ const VaccinationSchedulePage: React.FC = () => {
       }
 
       if (existingRecord && existingRecord.isSuccess) {
-        // Nếu record đã tồn tại, hiển thị thông báo và không tạo mới
         navigate("/doctor/service", { state: booking });
         return;
       }
 
-      // Nếu record chưa tồn tại, tạo mới
       const response = await apiCreateVaccineRecord(booking.bookingId);
-
       if (response?.isSuccess) {
         console.log("Vaccine record created successfully", response);
         navigate("/doctor/service", { state: booking });
@@ -297,39 +292,49 @@ const VaccinationSchedulePage: React.FC = () => {
       dataIndex: "status",
       key: "status",
       filters: [
-        { text: "Chờ tiêm", value: "Pending" },
-        { text: "Đã tiêm", value: "Completed" },
-        { text: "Đã hủy", value: "Canceled" },
-        { text: "Đã xóa", value: "Deleted" },
+        { text: "Chờ xác nhận", value: "Pending" },
+        { text: "Đã xác nhận", value: "Confirmed" },
+        { text: "Chờ tiêm", value: "InProgress" },
+        { text: "Hoàn thành", value: "Completed" },
+        { text: "Đã hủy", value: "Cancelled" },
+        { text: "Yêu cầu hoàn tiền", value: "RequestRefund" },
       ],
       onFilter: (value: any, record: BookingResponse) =>
         record.status === value,
       render: (status: string) => {
-        const statusMapping: {
-          [key: string]: { text: string; color: string };
-        } = {
-          Pending: { text: "Chờ tiêm", color: "orange" },
-          Completed: { text: "Đã tiêm", color: "green" },
-          Canceled: { text: "Đã hủy", color: "red" },
-          Deleted: { text: "Đã xóa", color: "gray" },
+        const statusLabels: { [key: string]: string } = {
+          Pending: "Chờ xác nhận",
+          Confirmed: "Đã xác nhận",
+          InProgress: "Chờ tiêm",
+          Completed: "Hoàn thành",
+          Cancelled: "Đã hủy",
+          RequestRefund: "Yêu cầu hoàn tiền",
         };
-
-        const statusInfo = statusMapping[status] || {
-          text: status,
-          color: "default",
+        const statusColors: { [key: string]: string } = {
+          Pending: "orange",
+          Confirmed: "darkblue",
+          InProgress: "blue",
+          Completed: "green",
+          Cancelled: "red",
+          RequestRefund: "darkorange",
         };
-        return <Tag color={statusInfo.color}>{statusInfo.text}</Tag>;
+        const vietnameseStatus = statusLabels[status] || status;
+        return (
+          <Tag color={statusColors[status] || "default"}>
+            {vietnameseStatus}
+          </Tag>
+        );
       },
     },
     {
-      title: "Chi Tiết",
+      title: "Hành động",
       key: "action",
       render: (_: undefined, record: BookingResponse) => (
         <Space size="middle">
           <Button type="primary" onClick={() => openModal(record)}>
             Chi tiết
           </Button>
-          {record.status !== "Completed" && (
+          {record.status === "InProgress" && (
             <Button
               type="primary"
               color="green"
@@ -344,13 +349,44 @@ const VaccinationSchedulePage: React.FC = () => {
     },
   ];
 
+  // Cột cho bảng đã hoàn thành (không có nút "Tiến hành tiêm")
+  const completedColumns = columns.filter((col) => col.key !== "action").concat({
+    title: "Hành động",
+    key: "action",
+    render: (_: undefined, record: BookingResponse) => (
+      <Space size="middle">
+        <Button type="primary" onClick={() => openModal(record)}>
+          Chi tiết
+        </Button>
+      </Space>
+    ),
+  });
+
   return (
     <DoctorLayout>
       <h1>Lịch Tiêm Chủng</h1>
-      {bookings.length > 0 ? (
-        <Table dataSource={bookings} columns={columns} rowKey="bookingId" />
+
+      <h2>Các Đơn Chưa Hoàn Thành</h2>
+      {pendingBookings.length > 0 ? (
+        <Table
+          dataSource={pendingBookings}
+          columns={columns}
+          rowKey="bookingId"
+          style={{ marginBottom: 20 }}
+        />
       ) : (
-        <p>Không có lịch tiêm chủng.</p>
+        <p>Không có lịch tiêm chủng chưa hoàn thành.</p>
+      )}
+
+      <h2>Các Đơn Đã Hoàn Thành</h2>
+      {completedBookings.length > 0 ? (
+        <Table
+          dataSource={completedBookings}
+          columns={completedColumns}
+          rowKey="bookingId"
+        />
+      ) : (
+        <p>Không có lịch tiêm chủng đã hoàn thành.</p>
       )}
 
       <Modal
@@ -388,19 +424,32 @@ const VaccinationSchedulePage: React.FC = () => {
                     color={
                       selectedBooking.status === "Pending"
                         ? "orange"
+                        : selectedBooking.status === "Confirmed"
+                        ? "darkblue"
+                        : selectedBooking.status === "InProgress"
+                        ? "blue"
                         : selectedBooking.status === "Completed"
                         ? "green"
-                        : selectedBooking.status === "Canceled"
+                        : selectedBooking.status === "Cancelled"
                         ? "red"
-                        : "gray"
+                        : "darkorange"
                     }
                   >
-                    {selectedBooking.status}
+                    {selectedBooking.status === "Pending"
+                      ? "Chờ xác nhận"
+                      : selectedBooking.status === "Confirmed"
+                      ? "Đã xác nhận"
+                      : selectedBooking.status === "InProgress"
+                      ? "Chờ tiêm"
+                      : selectedBooking.status === "Completed"
+                      ? "Hoàn thành"
+                      : selectedBooking.status === "Cancelled"
+                      ? "Đã hủy"
+                      : "Yêu cầu hoàn tiền"}
                   </Tag>
                 </p>
               </div>
 
-              {/* Hiển thị Chi Tiết Vaccine hoặc Combo */}
               {comboDetails.length > 0 && (
                 <div className="combo-section">
                   <h3>Chi Tiết Combo</h3>
@@ -429,7 +478,6 @@ const VaccinationSchedulePage: React.FC = () => {
                 </div>
               )}
 
-              {/* Hiển thị vaccine đơn lẻ (chỉ khi không có combo) */}
               {vaccineDetails.length > 0 && comboDetails.length === 0 && (
                 <div className="vaccine-section">
                   <h3>Chi Tiết Vaccine</h3>
