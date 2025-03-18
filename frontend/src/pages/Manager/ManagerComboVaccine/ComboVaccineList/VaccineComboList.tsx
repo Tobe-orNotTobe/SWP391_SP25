@@ -48,7 +48,8 @@ const VaccineComboList: React.FC = () => {
             title: "Mô tả",
             dataIndex: "description",
             key: "description",
-            sorter: (a: GetVaccineComboDetail, b: GetVaccineComboDetail) => a.description.localeCompare(b.description),
+            sorter: (a : any, b : any) => a.description.localeCompare(b.description),
+            render: (text : any) => <div dangerouslySetInnerHTML={{ __html: text }} />
         },
         {
             title: "Tổng giá",
