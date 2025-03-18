@@ -461,110 +461,66 @@ function AssignPage() {
         )}
       </div>
 
-      {/* Modal chi tiết */}
+      {/* Modal phân công bác sĩ */}
       <Modal
-        open={modalIsOpen}
-        onCancel={closeModal}
+        open={modalDoctorIsOpen}
+        onCancel={closeDoctorModal}
         footer={null}
-        width={600}
-        centered
-        className="custom-modal"
+        width={1200}
+        className="doctor-modal"
       >
-        <div className="modal-content">
-          <h2 className="modal-title">Chi Tiết Đặt Lịch</h2>
-          {selectedBooking && (
-            <div className="modal-body">
-              <div className="info-section">
-                <p>
-                  <strong>ID:</strong> {selectedBooking.bookingId}
-                </p>
-                <p>
-                  <strong>Tên Trẻ:</strong> {selectedBooking.childName}
-                </p>
-                <p>
-                  <strong>Ngày Đặt:</strong>{" "}
-                  {new Date(selectedBooking.bookingDate).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
-                </p>
-                <p>
-                  <strong>Ghi Chú:</strong> {selectedBooking.note}
-                </p>
-                <p>
-                  <strong>Trạng Thái:</strong>{" "}
-                  <Tag
-                    color={
-                      selectedBooking.status === "InProgress"
-                        ? "orange"
-                        : selectedBooking.status === "Completed"
-                        ? "green"
-                        : selectedBooking.status === "Canceled"
-                        ? "red"
-                        : "gray"
-                    }
-                  >
-                    {selectedBooking.status === "InProgress"
-                      ? "Chờ tiêm"
-                      : selectedBooking.status === "Completed"
-                      ? "Đã tiêm"
-                      : selectedBooking.status === "Canceled"
-                      ? "Đã hủy"
-                      : "Đã xóa"}
-                  </Tag>
-                </p>
-              </div>
-
-              {comboDetails.length > 0 && (
-                <div className="combo-section">
-                  <h3>Chi Tiết Combo</h3>
-                  {comboDetails.map((combo) => (
-                    <div key={combo.comboId} className="combo-item">
-                      <p>
-                        <strong>Tên Combo:</strong> {combo.comboName}
-                      </p>
-                      <p>
-                        <strong>Giá Combo:</strong>{" "}
-                        {combo.totalPrice?.toLocaleString()} VNĐ
-                      </p>
-                      <p>
-                        <strong>Vaccine trong Combo:</strong>
-                      </p>
-                      <ul>
-                        {combo.vaccines.map((vaccine: Vaccine) => (
-                          <div key={vaccine.vaccineId}>
-                            {vaccine.name} - {vaccine.price?.toLocaleString()}{" "}
-                            VNĐ
-                          </div>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {vaccineDetails.length > 0 && comboDetails.length === 0 && (
-                <div className="vaccine-section">
-                  <h3>Chi Tiết Vaccine</h3>
-                  {vaccineDetails.map((vaccine) => (
-                    <div key={vaccine.vaccineId} className="vaccine-item">
-                      <p>
-                        <strong>Tên Vaccine:</strong> {vaccine.name}
-                      </p>
-                      <p>
-                        <strong>Giá:</strong> {vaccine.price?.toLocaleString()}{" "}
-                        VNĐ
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+        <div className="doctorList-wraper">
+          <Title level={2} className="title">
+            Chọn bác sĩ muốn phân công
+          </Title>
+          <Row gutter={[16, 16]} className="doctor-grid">
+            {doctors.length > 0 ? (
+              doctors.map((doctor) => (
+                <Col key={doctor.id} xs={24} sm={12} md={8} lg={6}>
+                  <Card className="doctor-card">
+                    <Avatar
+                      size={120}
+                      icon={<UserOutlined />}
+                      src={doctor?.imageUrl || "/default-avatar.png"}
+                      alt={doctor.fullName}
+                      className="avatar"
+                    />
+                    <Title level={4} className="doctor-name">
+                      {doctor.fullName}
+                    </Title>
+                    <Text type="secondary">@{doctor.userName}</Text>
+                    <Text type="secondary">{doctor.email}</Text>
+                    <Text type="secondary">{doctor.phoneNumber}</Text>
+                    <Text type="secondary">{doctor.address}</Text>
+                    <Tag color={doctor.isActive ? "green" : "red"}>
+                      {doctor.isActive
+                        ? "Đang hoạt động"
+                        : "Đang không hoạt động"}
+                    </Tag>
+                    <Button
+                      type="primary"
+                      block
+                      className="detail-btn"
+                      onClick={() =>
+                        handleAssignDoctor(
+                          doctor.id.toString(),
+                          selectedBooking!.bookingId.toString()
+                        )
+                      }
+                    >
+                      Phân công
+                    </Button>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              <Text className="no-doctor">Không có bác sĩ nào.</Text>
+            )}
+          </Row>
         </div>
       </Modal>
 
-      {/* Modal phân công bác sĩ */}
+      {/* Modal chi tiết */}
       <Modal
         open={modalIsOpen}
         onCancel={closeModal}
