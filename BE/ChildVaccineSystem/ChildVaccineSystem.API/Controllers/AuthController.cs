@@ -224,46 +224,30 @@ namespace ChildVaccineSystem.API.Controllers
         {
             try
             {
-                // Xác thực ID Token từ Firebase
-                var decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(model.IdToken);
-                var uid = decodedToken.Uid;
+                var result = await _loginGoogleService.LoginWithGoogleAsync(model);
 
-                // Kiểm tra xem người dùng đã có trong hệ thống chưa
-                var user = await _userManager.FindByIdAsync(uid);
-                if (user == null)
+                if (result == null)
                 {
-                    // Nếu chưa có, tạo user mới
-                    user = new User
-                    {
-                        Id = uid,
-                        UserName = decodedToken.Claims["email"].ToString(),
-                        Email = decodedToken.Claims["email"].ToString(),
-                        EmailConfirmed = true
-                    };
-
-                    await _userManager.CreateAsync(user);
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages.Add("Không tìm thấy tài khoản hợp lệ.");
+                    return NotFound(_response);
                 }
 
-                // Tạo JWT Token
-                var token = _authService.GenerateJwtToken(user);
-
-                return Ok(new
-                {
-                    Message = "Đăng nhập Google thành công!",
-                    Token = token,
-                    User = new
-                    {
-                        user.Id,
-                        user.Email,
-                        user.UserName
-                    }
-                });
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = result;
+                return Ok(_response);
             }
             catch (Exception ex)
             {
-                return Unauthorized(new { Message = "Invalid token", Error = ex.Message });
+                _response.StatusCode = HttpStatusCode.NotFound;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return NotFound(_response);
             }
         }
+
 
     }
 }
