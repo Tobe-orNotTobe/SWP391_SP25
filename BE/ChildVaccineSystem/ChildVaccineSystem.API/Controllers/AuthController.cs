@@ -112,7 +112,7 @@ namespace ChildVaccineSystem.API.Controllers
 			}
 			catch (Exception ex)
 			{
-				_response.StatusCode = HttpStatusCode.Unauthorized;
+				_response.StatusCode = HttpStatusCode.NotFound;
 				_response.IsSuccess = false;
 				_response.ErrorMessages.Add(ex.Message);
 				return Unauthorized(_response);
