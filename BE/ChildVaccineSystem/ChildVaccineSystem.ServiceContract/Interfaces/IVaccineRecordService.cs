@@ -19,6 +19,6 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<IEnumerable<VaccineRecordDTO>> GetAllVaccineRecordsAsync(string userId, bool isAdmin, bool isStaff);
         Task<bool> UpdateVaccineRecordAsync(int vaccineRecordId, UpdateVaccineRecordDTO updateDto, string userId, bool isAdmin, bool isStaff);
         Task<VaccineRecordDTO> GetVaccineRecordsByBookingIdAsync(int bookingId, string userId, bool isAdmin, bool isStaff);
-
+        Task<VaccineRecordDTO> GetVaccineRecordByBookingDetailIdAsync(int bookingDetailId, string userId, bool isAdmin, bool isStaff);
     }
 }
