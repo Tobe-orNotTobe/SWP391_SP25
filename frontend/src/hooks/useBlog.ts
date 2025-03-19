@@ -121,13 +121,22 @@ export const useGetNewsDetailById = () => {
 export const useRandomBlogs = () => {
 
     const handleGetRandomBlogs = (num: number, blogs: BlogResponse[]): BlogResponse[] => {
-        const result = new Set<BlogResponse>(); // Định nghĩa kiểu của Set
+        const result = new Set<BlogResponse>();
         while (result.size < num && blogs.length > 0) {
             const randomIndex = Math.floor(Math.random() * blogs.length);
             result.add(blogs[randomIndex]);
         }
-        return Array.from(result); // Chuyển đổi Set thành mảng
+        return Array.from(result);
     };
 
-    return {handleGetRandomBlogs}
+    const handleGetRandomNews = (num: number, news: NewsResponse[]): NewsResponse[] => {
+        const result = new Set<NewsResponse>();
+        while (result.size < num && news.length > 0) {
+            const randomIndex = Math.floor(Math.random() * news.length);
+            result.add(news[randomIndex]);
+        }
+        return Array.from(result);
+    }
+
+    return {handleGetRandomBlogs, handleGetRandomNews}
 };
