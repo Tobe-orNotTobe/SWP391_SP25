@@ -610,6 +610,7 @@ namespace ChildVaccineSystem.Service.Services
                 .SelectMany(b => b.BookingDetails
                     .Select(detail => new BookingDetailDTO
                     {
+                        BookingId = detail.Booking.BookingId, // ✅ Lấy BookingId từ BookingDetail
                         BookingDetailId = detail.BookingDetailId,
                         VaccineId = detail.VaccineId,
                         VaccineName = detail.Vaccine?.Name ?? "Không xác định",
