@@ -7,7 +7,7 @@ import {
   UpdateVaccineRecordRequest,
 } from "../../interfaces/VaccineRecord.ts";
 import {
-  apiGetVaccineRecordByBookingId,
+  apiGetVaccineRecordByBookingDetailId,
   apiUpdateVaccineRecord,
 } from "../../apis/apiVaccineRecord.ts";
 import { toast } from "react-toastify";
@@ -28,7 +28,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
 
   const fetchData = async () => {
     try {
-      const response = await apiGetVaccineRecordByBookingId(booking.bookingId);
+      const response = await apiGetVaccineRecordByBookingDetailId(booking.bookingDetailId);
       setVaccineData(response);
       
       const vaccineRecords = response.result.vaccineRecords.map(record => ({
@@ -47,7 +47,7 @@ const VaccinationRecordForm: React.FC<Props> = ({ booking }) => {
 
   useEffect(() => {
     fetchData();
-  }, [booking.bookingId]);
+  }, [booking.bookingDetailId]);
 
   const handleUpdateRecord = (
     index: number,

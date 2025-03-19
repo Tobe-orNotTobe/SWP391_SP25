@@ -19,7 +19,6 @@ export interface Parent {
   children: Child[];
 }
 
-
 // Kiểu dữ liệu cho vắc xin
 export interface Vaccine {
   vaccineId: string;
@@ -64,10 +63,9 @@ export interface Booking {
 export interface BookingDetail {
   vaccineId: number | null;
   comboVaccineId: number | null;
-  vaccineName : string | null;
-  comboVaccineName : string | null;
+  vaccineName: string | null;
+  comboVaccineName: string | null;
 }
-
 
 export interface BookingUser {
   bookingId: number;
@@ -83,7 +81,7 @@ export interface BookingUser {
 }
 
 export interface BookingResponse {
-  bookingId: number;
+  bookingDetailId: number;
   childName: string;
   bookingDate: string;
   bookingType: string;
@@ -92,10 +90,9 @@ export interface BookingResponse {
   status: string;
 }
 
-
 export interface Feedback {
   bookingId: number;
-  rating : number;
+  rating: number;
   comment: string;
 }
 
