@@ -5,7 +5,7 @@ import {apiLogIn, apiLogInGoogle} from "../../../apis/apiAccount.ts";
 import {AxiosError} from "axios";
 import { toast } from "react-toastify";
 import {decodeToken} from "../../../utils/decodeToken.ts";
-import { auth, provider, signInWithPopup, signOut } from "../../../utils/firebase.ts";
+import { auth, provider, signInWithPopup } from "../../../utils/firebase.ts";
 import {User} from "firebase/auth"
 
 export const useLogin = () => {
@@ -129,8 +129,8 @@ export const useAuthGoogle = () => {
             const result = await signInWithPopup(auth, provider);
             const idToken = await result.user.getIdToken(); // Lấy idToken từ user
             setUser(result.user);
-            console.log("User:", result.user);
-            console.log("ID Token:", idToken);
+            // console.log("User:", result.user);
+            // console.log("ID Token:", idToken);
             setIsGoogleLoading(true);
 
             const data: LoginGoogleRequest = {
@@ -139,12 +139,12 @@ export const useAuthGoogle = () => {
 
             if (idToken) {
                 const response: LoginGoogleResponse = await apiLogInGoogle(data);
-                toast.success(response.message);
-                localStorage.setItem("token", response.token);
+                // toast.success(response.message);
+                localStorage.setItem("token", response.result.token);
 
                 setIsGoogleLoading(false);
 
-                const decoded = decodeToken(response.token);
+                const decoded = decodeToken(response.result.token);
 
                 if (!decoded) {
                     toast.error("Token không hợp lệ!");
@@ -175,6 +175,7 @@ export const useAuthGoogle = () => {
                         return;
                 }
                 toast.success("Đăng nhập thành công!");
+                localStorage.setItem("isGoogleLogin", "true")
 
                 setGoogleIsRedirecting(true);
 
@@ -190,13 +191,6 @@ export const useAuthGoogle = () => {
         }
     };
 
-
-    // Hàm đăng xuất
-    const handleLogoutGoogle = async () => {
-        await signOut(auth);
-        setUser(null);
-    };
-
-    return {isGoogleLoading, isGoogleRedirecting, googleError, handleLoginGoogle, handleLogoutGoogle, user}
+    return {isGoogleLoading, isGoogleRedirecting, googleError, handleLoginGoogle, user}
 
 }

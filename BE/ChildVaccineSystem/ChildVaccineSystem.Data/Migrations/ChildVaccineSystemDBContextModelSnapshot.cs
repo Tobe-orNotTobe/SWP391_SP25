@@ -119,7 +119,13 @@ namespace ChildVaccineSystem.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingDetailId"));
 
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookingType")
                         .HasColumnType("int");
 
                     b.Property<int?>("ComboVaccineId")
@@ -127,6 +133,9 @@ namespace ChildVaccineSystem.Data.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int?>("VaccineId")
                         .HasColumnType("int");
@@ -202,6 +211,12 @@ namespace ChildVaccineSystem.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComboDetailId"));
 
                     b.Property<int>("ComboId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IntervalDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
                         .HasColumnType("int");
 
                     b.Property<int>("VaccineId")
@@ -641,8 +656,7 @@ namespace ChildVaccineSystem.Data.Migrations
 
                     b.HasKey("VaccinationRecordId");
 
-                    b.HasIndex("BookingDetailId")
-                        .IsUnique();
+                    b.HasIndex("BookingDetailId");
 
                     b.HasIndex("ChildId");
 
@@ -1318,8 +1332,8 @@ namespace ChildVaccineSystem.Data.Migrations
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.VaccinationRecord", b =>
                 {
                     b.HasOne("ChildVaccineSystem.Data.Entities.BookingDetail", "BookingDetail")
-                        .WithOne("VaccinationRecord")
-                        .HasForeignKey("ChildVaccineSystem.Data.Entities.VaccinationRecord", "BookingDetailId")
+                        .WithMany("VaccinationRecords")
+                        .HasForeignKey("BookingDetailId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1529,8 +1543,7 @@ namespace ChildVaccineSystem.Data.Migrations
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.BookingDetail", b =>
                 {
-                    b.Navigation("VaccinationRecord")
-                        .IsRequired();
+                    b.Navigation("VaccinationRecords");
                 });
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.Children", b =>

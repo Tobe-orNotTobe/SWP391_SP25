@@ -13,13 +13,21 @@ import {BsCalendar2MinusFill} from "react-icons/bs";
 import { ImProfile } from "react-icons/im";
 import { FaWallet } from "react-icons/fa6";
 import {useWalletUserDetail} from "../../Wallet/useWallet.ts";
-import NotificationDropdown from "../../Notification/NotificationDropdown"; 
+import NotificationDropdown from "../../Notification/NotificationDropdown";
+import {auth, signOut} from "../../../utils/firebase.ts";
+
 
 const CustomerNavbar: React.FC = () => {
     const {username, role} = IsLoginSuccessFully();
     const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.clear();
+        navigate("/login");
+    };
+
+    const handleLogoutGoogle = async () => {
+        await signOut(auth);
+        localStorage.clear()
         navigate("/login");
     };
 
@@ -134,7 +142,7 @@ const CustomerNavbar: React.FC = () => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <span onClick={handleLogout} className="user-dropdown-item">
+                                            <span onClick={localStorage.getItem("isGoogleLogin") ? handleLogoutGoogle : handleLogout} className="user-dropdown-item">
                                               <MdLogout size={23}/> Đăng Xuất
                                             </span>
                                         </li>
