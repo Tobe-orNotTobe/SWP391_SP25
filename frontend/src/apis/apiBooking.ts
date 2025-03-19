@@ -47,12 +47,12 @@ export const apiBooking = async (userId: string, booking: Booking) => {
 export const apiGetDoctorBookings = async (doctorId: string) => {
   try {
     const response = await axiosInstance.get(
-      `api/Booking/doctor/${doctorId}/bookings`
+      `api/Booking/doctor/${doctorId}/booking-details`
     );
 
     if (response.status === 200) {
       const data = response.data;
-      if (data.isSuccess) {
+      if (data) {
         return data;
       } else {
         // alert(
