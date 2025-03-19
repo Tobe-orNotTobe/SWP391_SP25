@@ -145,13 +145,13 @@ namespace ChildVaccineSystem.Data.Models
 				.IsRequired(false)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<BookingDetail>()
-				.HasOne(bd => bd.VaccinationRecord)
-				.WithOne(vr => vr.BookingDetail)
-				.HasForeignKey<VaccinationRecord>(vr => vr.BookingDetailId)
-				.OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<BookingDetail>()
+                .HasMany<VaccinationRecord>()
+                .WithOne(vr => vr.BookingDetail)
+                .HasForeignKey(vr => vr.BookingDetailId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<BookingDetail>()
+            modelBuilder.Entity<BookingDetail>()
 			  .HasOne(bd => bd.VaccineInventory)
 			  .WithMany()
 			  .HasForeignKey(bd => bd.VaccineInventoryId)
@@ -201,8 +201,13 @@ namespace ChildVaccineSystem.Data.Models
 			  .HasForeignKey(vr => vr.ChildId)
 			.OnDelete(DeleteBehavior.Restrict);
 
-			// Vaccine Inventory constraints
-			modelBuilder.Entity<VaccineInventory>()
+            modelBuilder.Entity<VaccinationRecord>()
+       .HasOne(vr => vr.BookingDetail) // Một VaccinationRecord thuộc một BookingDetail
+       .WithMany(bd => bd.VaccinationRecords) // Một BookingDetail có nhiều VaccinationRecords
+       .HasForeignKey(vr => vr.BookingDetailId)
+       .OnDelete(DeleteBehavior.Restrict); // Không cho phép xóa cascade
+                                           // Vaccine Inventory constraints
+            modelBuilder.Entity<VaccineInventory>()
 				.HasIndex(vi => vi.BatchNumber)
 				.IsUnique();
 

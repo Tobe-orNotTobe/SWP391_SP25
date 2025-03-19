@@ -33,7 +33,16 @@ namespace ChildVaccineSystem.Data.Entities
 		[Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
-        public VaccinationRecord VaccinationRecord { get; set; }
+        //public VaccinationRecord VaccinationRecord { get; set; }
+        [Required]
+        public BookingDetailStatus Status { get; set; } = BookingDetailStatus.Pending;
 
-	}
+        public BookingType BookingType { get; set; }
+
+        [Required]
+        public DateTime BookingDate { get; set; }
+        // Quan hệ 1-N với VaccinationRecords
+        public virtual ICollection<VaccinationRecord> VaccinationRecords { get; set; } = new List<VaccinationRecord>();
+
+    }
 }
