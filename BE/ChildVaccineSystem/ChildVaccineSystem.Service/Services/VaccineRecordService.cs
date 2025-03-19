@@ -512,5 +512,47 @@ namespace ChildVaccineSystem.Service.Services
             };
         }
 
+        public async Task<VaccineRecordDTO> GetVaccineRecordByBookingDetailIdAsync(int bookingDetailId, string userId, bool isAdmin, bool isStaff)
+        {
+            if (bookingDetailId <= 0)
+                throw new ArgumentException("BookingDetail ID không hợp lệ.");
+
+            var records = await _vaccineRecordRepository.GetAllAsync(
+                vr => vr.BookingDetailId == bookingDetailId,
+                includeProperties: "Vaccine,BookingDetail,BookingDetail.Booking,Child"
+            );
+
+            if (records == null || !records.Any())
+                throw new KeyNotFoundException("Không tìm thấy hồ sơ tiêm chủng cho BookingDetail ID này.");
+
+            var firstRecord = records.First();
+            var customerId = firstRecord.BookingDetail.Booking.UserId;
+
+            bool isDoctorAssigned = await _unitOfWork.Bookings.IsDoctorAssignedToBookingAsync(firstRecord.BookingDetail.BookingId, userId);
+            bool isCustomer = customerId == userId;
+
+            if (!(isAdmin || isStaff || isDoctorAssigned || isCustomer))
+                throw new UnauthorizedAccessException("Bạn không có quyền truy cập hồ sơ này.");
+
+            return new VaccineRecordDTO
+            {
+                BookingId = firstRecord.BookingDetail.BookingId,
+                FullName = firstRecord.Child.FullName,
+                DateOfBirth = firstRecord.Child.DateOfBirth,
+                Height = firstRecord.Child.Height,
+                Weight = firstRecord.Child.Weight,
+                VaccineRecords = records.Select(record => new VaccineRecordDetailDTO
+                {
+                    VaccinationRecordId = record.VaccinationRecordId,
+                    VaccineName = record.Vaccine.Name,
+                    DoseAmount = record.DoseAmount,
+                    BatchNumber = record.BatchNumber,
+                    Price = Convert.ToDecimal(record.Price),
+                    StatusEnum = record.Status,
+                    NextDoseDate = record.NextDoseDate,
+                    Notes = record.Notes
+                }).ToList()
+            };
+        }
     }
 }

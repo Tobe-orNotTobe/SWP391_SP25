@@ -201,6 +201,31 @@ namespace ChildVaccineSystem.API.Controllers
 			}
 		}
 
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor, Customer, Staff, Admin")]
+        [HttpGet("bookingDetail/{bookingDetailId}")]
+        public async Task<ActionResult<APIResponse>> GetVaccineRecordByBookingDetailId(int bookingDetailId)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+                bool isStaff = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Staff");
 
-	}
+                var record = await _vaccineRecordService.GetVaccineRecordByBookingDetailIdAsync(bookingDetailId, userId, isAdmin, isStaff);
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = record;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
+            }
+        }
+
+    }
 }
