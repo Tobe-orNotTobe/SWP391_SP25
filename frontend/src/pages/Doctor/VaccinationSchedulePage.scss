@@ -182,16 +182,6 @@ h2 {
 
 .modal-body {
   display: flex;
+  flex-direction: column;
   gap: 20px; /* Khoảng cách giữa hai cột */
-}
-
-.modal-body .info-section,
-.modal-body .vaccine-section,
-.modal-body .combo-section {
-  flex: 1; /* Chiếm 60% chiều rộng */
-}
-
-.modal-body .vaccine-record-section {
-  flex: 1; /* Chiếm 40% chiều rộng */
-  max-width: 40%; /* Giới hạn chiều rộng tối đa */
 }

@@ -416,102 +416,100 @@ const VaccinationSchedulePage: React.FC = () => {
           <h2 className="modal-title">Chi Tiết Đặt Lịch</h2>
           {selectedBooking && (
             <div className="modal-body">
-                    <div>
-              <div className="info-section">
-                <p>
-                  <strong>ID:</strong> {selectedBooking.bookingId}
-                </p>
-                <p>
-                  <strong>Tên Trẻ:</strong> {selectedBooking.childName}
-                </p>
-                <p>
-                  <strong>Ngày Đặt:</strong>{" "}
-                  {new Date(selectedBooking.bookingDate).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
-                </p>
-                <p>
-                  <strong>Ghi Chú:</strong> {selectedBooking.note}
-                </p>
-                <p>
-                  <strong>Trạng Thái:</strong>{" "}
-                  <Tag
-                    color={
-                      selectedBooking.status === "Pending"
-                        ? "orange"
+              <div >
+                <div className="info-section">
+                  <p>
+                    <strong>ID:</strong> {selectedBooking.bookingId}
+                  </p>
+                  <p>
+                    <strong>Tên Trẻ:</strong> {selectedBooking.childName}
+                  </p>
+                  <p>
+                    <strong>Ngày Đặt:</strong>{" "}
+                    {new Date(selectedBooking.bookingDate).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
+                  </p>
+                  <p>
+                    <strong>Ghi Chú:</strong> {selectedBooking.note}
+                  </p>
+                  <p>
+                    <strong>Trạng Thái:</strong>{" "}
+                    <Tag
+                      color={
+                        selectedBooking.status === "Pending"
+                          ? "orange"
+                          : selectedBooking.status === "Confirmed"
+                          ? "darkblue"
+                          : selectedBooking.status === "InProgress"
+                          ? "blue"
+                          : selectedBooking.status === "Completed"
+                          ? "green"
+                          : selectedBooking.status === "Cancelled"
+                          ? "red"
+                          : "darkorange"
+                      }
+                    >
+                      {selectedBooking.status === "Pending"
+                        ? "Chờ xác nhận"
                         : selectedBooking.status === "Confirmed"
-                        ? "darkblue"
+                        ? "Đã xác nhận"
                         : selectedBooking.status === "InProgress"
-                        ? "blue"
+                        ? "Chờ tiêm"
                         : selectedBooking.status === "Completed"
-                        ? "green"
+                        ? "Hoàn thành"
                         : selectedBooking.status === "Cancelled"
-                        ? "red"
-                        : "darkorange"
-                    }
-                  >
-                    {selectedBooking.status === "Pending"
-                      ? "Chờ xác nhận"
-                      : selectedBooking.status === "Confirmed"
-                      ? "Đã xác nhận"
-                      : selectedBooking.status === "InProgress"
-                      ? "Chờ tiêm"
-                      : selectedBooking.status === "Completed"
-                      ? "Hoàn thành"
-                      : selectedBooking.status === "Cancelled"
-                      ? "Đã hủy"
-                      : "Yêu cầu hoàn tiền"}
-                  </Tag>
-                </p>
+                        ? "Đã hủy"
+                        : "Yêu cầu hoàn tiền"}
+                    </Tag>
+                  </p>
+                </div>
+
+                {comboDetails.length > 0 && (
+                  <div className="combo-section">
+                    <h3>Chi Tiết Combo</h3>
+                    {comboDetails.map((combo) => (
+                      <div key={combo.comboId} className="combo-item">
+                        <p>
+                          <strong>Tên Combo:</strong> {combo.comboName}
+                        </p>
+                        <p>
+                          <strong>Giá Combo:</strong>{" "}
+                          {combo.totalPrice?.toLocaleString()} VNĐ
+                        </p>
+                        <p>
+                          <strong>Vaccine trong Combo:</strong>
+                        </p>
+                        <ul>
+                          {combo.vaccines.map((vaccine: Vaccine) => (
+                            <div key={vaccine.vaccine.id}>
+                              {vaccine.vaccine.name}
+                            </div>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {vaccineDetails.length > 0 && comboDetails.length === 0 && (
+                  <div className="vaccine-section">
+                    <h3>Chi Tiết Vaccine</h3>
+                    {vaccineDetails.map((vaccine) => (
+                      <div key={vaccine.vaccineId} className="vaccine-item">
+                        <p>
+                          <strong>Tên Vaccine:</strong> {vaccine.name}
+                        </p>
+                        <p>
+                          <strong>Giá:</strong>{" "}
+                          {vaccine.price?.toLocaleString()} VNĐ
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-        
-
-
-              {comboDetails.length > 0 && (
-                <div className="combo-section">
-                  <h3>Chi Tiết Combo</h3>
-                  {comboDetails.map((combo) => (
-                    <div key={combo.comboId} className="combo-item">
-                      <p>
-                        <strong>Tên Combo:</strong> {combo.comboName}
-                      </p>
-                      <p>
-                        <strong>Giá Combo:</strong>{" "}
-                        {combo.totalPrice?.toLocaleString()} VNĐ
-                      </p>
-                      <p>
-                        <strong>Vaccine trong Combo:</strong>
-                      </p>
-                      <ul>
-                        {combo.vaccines.map((vaccine: Vaccine) => (
-                          <div key={vaccine.vaccine.id}>
-                            {vaccine.vaccine.name}
-                          </div>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {vaccineDetails.length > 0 && comboDetails.length === 0 && (
-                <div className="vaccine-section">
-                  <h3>Chi Tiết Vaccine</h3>
-                  {vaccineDetails.map((vaccine) => (
-                    <div key={vaccine.vaccineId} className="vaccine-item">
-                      <p>
-                        <strong>Tên Vaccine:</strong> {vaccine.name}
-                      </p>
-                      <p>
-                        <strong>Giá:</strong> {vaccine.price?.toLocaleString()}{" "}
-                        VNĐ
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
               {selectedBooking.status === "Completed" &&
                 vaccineRecordDetails && (
                   <div className="vaccine-record-section">
