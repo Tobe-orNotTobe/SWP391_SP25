@@ -117,3 +117,17 @@ export const useGetNewsDetailById = () => {
 
     return { newsDetail, loading, error, fetchNewsDetail };
 };
+
+export const useRandomBlogs = () => {
+
+    const handleGetRandomBlogs = (num: number, blogs: BlogResponse[]): BlogResponse[] => {
+        const result = new Set<BlogResponse>(); // Định nghĩa kiểu của Set
+        while (result.size < num && blogs.length > 0) {
+            const randomIndex = Math.floor(Math.random() * blogs.length);
+            result.add(blogs[randomIndex]);
+        }
+        return Array.from(result); // Chuyển đổi Set thành mảng
+    };
+
+    return {handleGetRandomBlogs}
+};
