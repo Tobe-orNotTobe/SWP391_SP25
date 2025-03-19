@@ -369,5 +369,31 @@ namespace ChildVaccineSystem.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("user/{userId}/booking-details")]
+        public async Task<IActionResult> GetAllBookingDetailsByUserId(string userId)
+        {
+            try
+            {
+                var result = await _bookingService.GetAllBookingDetailsByUserIdAsync(userId);
+                return Ok(new
+                {
+                    statusCode = StatusCodes.Status200OK,
+                    isSuccess = true,
+                    errorMessages = Array.Empty<string>(),
+                    result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    statusCode = StatusCodes.Status400BadRequest,
+                    isSuccess = false,
+                    errorMessages = new string[] { ex.Message },
+                    result = (object)null
+                });
+            }
+        }
+
     }
 }

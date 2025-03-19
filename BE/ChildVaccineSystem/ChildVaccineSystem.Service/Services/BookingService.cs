@@ -593,6 +593,38 @@ namespace ChildVaccineSystem.Service.Services
 
             return true;
         }
+        public async Task<List<BookingDetailDTO>> GetAllBookingDetailsByUserIdAsync(string userId)
+        {
+            // ✅ Lấy tất cả các booking của user
+            var bookings = await _unitOfWork.Bookings
+                .GetAllAsync(b => b.UserId == userId,
+                             includeProperties: "BookingDetails.Vaccine,BookingDetails.ComboVaccine,Children");
+
+            if (bookings == null || !bookings.Any())
+            {
+                throw new ArgumentException("Không tìm thấy lịch tiêm cho người dùng này.");
+            }
+
+            // ✅ Sử dụng `.SelectMany()` để trả về từng BookingDetail thay vì từng Booking
+            var result = bookings
+                .SelectMany(b => b.BookingDetails
+                    .Select(detail => new BookingDetailDTO
+                    {
+                        BookingDetailId = detail.BookingDetailId,
+                        VaccineId = detail.VaccineId,
+                        VaccineName = detail.Vaccine?.Name ?? "Không xác định",
+                        BookingDate = detail.BookingDate,
+                        Price = detail.Price,
+                        Status = detail.Status == BookingDetailStatus.Completed ? "Hoàn thành" : "Chưa hoàn thành",
+                        ComboVaccineId = detail.ComboVaccineId,
+                        ComboVaccineName = detail.ComboVaccine?.ComboName,
+                        BookingType = detail.BookingType.ToString() // ✅ Lấy loại vaccine (single/combo)
+                    })
+                )
+                .ToList();
+
+            return result;
+        }
 
 
     }

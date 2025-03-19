@@ -24,6 +24,7 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
 
         Task<bool> CompleteBookingDetailAsync(int bookingDetailId);
         Task<List<BookingDetailDTO>> GetDoctorBookingDetailsAsync(string userId);
+        Task<List<BookingDetailDTO>> GetAllBookingDetailsByUserIdAsync(string userId);
 
     }
 }

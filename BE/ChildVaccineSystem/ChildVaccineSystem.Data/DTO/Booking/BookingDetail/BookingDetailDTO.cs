@@ -16,6 +16,8 @@ namespace ChildVaccineSystem.Data.DTO.Booking.BookingDetail
         public decimal Price { get; set; }
         public int? ComboVaccineId { get; set; }
         public string? ComboVaccineName { get; set; } = string.Empty;
+        public string BookingType { get; set; } = string.Empty;
+
     }
 
 }
