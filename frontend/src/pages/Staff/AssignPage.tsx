@@ -687,7 +687,7 @@ function AssignPage() {
                 icon={<FaRegFilePdf/>}
                 onClick={() => handelExportPDF(selectedBooking, comboDetails, vaccineDetails)}
             >
-              Export PDF
+              Xuất PDF
             </Button>
           </div>
         </div>
