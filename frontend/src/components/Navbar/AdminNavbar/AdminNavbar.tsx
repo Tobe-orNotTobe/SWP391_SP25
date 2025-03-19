@@ -36,13 +36,6 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ username, avatarUrl }) => {
   return (
     <div className="wrapedStatusbar">
       <nav>
-        <a href="#" className="nav-link underline">
-          Categories
-        </a>
-        <a href="#" className="notification">
-          <BellOutlined className="bell-icon" />
-          <span className="num">8</span>
-        </a>
         <div className="profile">
           <Avatar
             src={avatarUrl}
