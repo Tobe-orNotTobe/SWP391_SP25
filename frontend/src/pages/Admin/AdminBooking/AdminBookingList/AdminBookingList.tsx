@@ -16,8 +16,8 @@ const { TabPane } = Tabs;
 const AdminBookingPage: React.FC = () => {
 
     const { bookings, loading, error, fetchAllBookings } = useGetAllBooking();
-    const { vaccineRecord, fetchVaccineRecordByBookingId } = useGetVaccineRecordByBookingId();
     const [searchText, setSearchText] = useState("");
+    const { vaccineRecord, fetchVaccineRecordByBookingId } = useGetVaccineRecordByBookingId();
 
     const filteredBooking = bookings.filter((booking) =>
         Object.values(booking).some(
@@ -149,22 +149,27 @@ const AdminBookingPage: React.FC = () => {
 
                     {error && ("Lỗi tải danh sách user.")}
                     {loading && ("Loading...")}
-                    <Table
-                        columns={columns}
-                        dataSource={filteredBooking.map((booking => ({
-                            ...booking,
-                            id: booking.bookingId || Math.random(),
-                            userId: booking.userId || "Chưa có dữ liệu",
-                            childName: booking.childName || "Chưa có dữ liệu",
-                            bookingType: booking.bookingType || "Chưa có dữ liệu",
-                            bookingDate: booking.bookingDate || "Chưa có dữ liệu",
-                            totalPrice: booking.totalPrice || Math.random(),
-                            status: booking.status || "Chưa có dữ liệu"
-                        })))}
-                        rowKey="id"
-                        pagination={{pageSize: 8, showSizeChanger: false}}
-                        className="account-table"
-                    />
+
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="Tất cả" key="1">
+                            {FilterTable(columns, filteredBooking)}
+                        </TabPane>
+                        <TabPane tab="Chờ thanh toán" key="2">
+                            {FilterTable(columns, filteredBooking.filter(booking => booking.status === "Pending"))}
+                        </TabPane>
+                        <TabPane tab="Đã thanh toán" key="3">
+                            {FilterTable(columns, filteredBooking.filter(booking => booking.status === "Confirmed"))}
+                        </TabPane>
+                        <TabPane tab="Đang tiến hành" key="4">
+                            {FilterTable(columns, filteredBooking.filter(booking => booking.status === "InProgress"))}
+                        </TabPane>
+                        <TabPane tab="Đã hoàn tất" key="5">
+                            {FilterTable(columns, filteredBooking.filter(booking => booking.status === "Completed"))}
+                        </TabPane>
+                        <TabPane tab="Hủy" key="6">
+                            {FilterTable(columns, filteredBooking.filter(booking => booking.status === "Cancelled"))}
+                        </TabPane>
+                    </Tabs>
 
                     {detailBooking && (
                         <div className="popup-overlay" onClick={closeDetailPopup}>
@@ -245,7 +250,6 @@ const AdminBookingPage: React.FC = () => {
                             </div>
                         </div>
                     )}
-
                 </div>
             </AdminLayout>
         </>
@@ -253,3 +257,28 @@ const AdminBookingPage: React.FC = () => {
 };
 
 export default AdminBookingPage;
+
+const FilterTable = (columns: ColumnsType<BookingResponse>, filteredBooking: BookingResponse[]) => {
+
+    return (
+        <>
+            <Table
+                columns={columns}
+                dataSource={filteredBooking.map((booking => ({
+                    ...booking,
+                    id: booking.bookingId || Math.random(),
+                    userId: booking.userId || "Chưa có dữ liệu",
+                    childName: booking.childName || "Chưa có dữ liệu",
+                    bookingType: booking.bookingType || "Chưa có dữ liệu",
+                    bookingDate: booking.bookingDate || "Chưa có dữ liệu",
+                    totalPrice: booking.totalPrice || Math.random(),
+                    status: booking.status || "Chưa có dữ liệu"
+                })))}
+                rowKey="id"
+                pagination={{pageSize: 8, showSizeChanger: false}}
+                className="account-table"
+            />
+        </>
+    );
+
+}

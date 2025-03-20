@@ -119,7 +119,13 @@ namespace ChildVaccineSystem.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingDetailId"));
 
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookingType")
                         .HasColumnType("int");
 
                     b.Property<int?>("ComboVaccineId")
@@ -127,6 +133,9 @@ namespace ChildVaccineSystem.Data.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int?>("VaccineId")
                         .HasColumnType("int");

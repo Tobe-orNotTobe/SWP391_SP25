@@ -43,7 +43,7 @@ namespace ChildVaccineSystem.Service.Services
 		public async Task<VaccinationScheduleDTO> CreateScheduleAsync(CreateVaccinationScheduleDTO scheduleDto)
 		{
 
-			var conflictSchedule = _unitOfWork.VaccinationSchedules.GetAsync(vs =>
+			var conflictSchedule = await _unitOfWork.VaccinationSchedules.GetAsync(vs =>
 				vs.AgeRangeStart == scheduleDto.AgeRangeStart || vs.AgeRangeEnd == scheduleDto.AgeRangeEnd);
 			if (conflictSchedule != null)
 			{

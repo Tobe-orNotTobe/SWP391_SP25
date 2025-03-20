@@ -16,8 +16,10 @@ const NewsPage: React.FC = () => {
 
     useEffect(() => {
         fetchAllBlog(true, "news").then();
-        // console.log(blogs)
+        // console.log(news)
     }, []);
+
+
 
     const mainNews = news.length > 0 ? news[0] : null;
     const startIndex = (currentPage - 1) * (newsPerPage - 1) + 1;

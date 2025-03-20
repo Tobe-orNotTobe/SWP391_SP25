@@ -8,7 +8,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="footerContainer">
+    <footer className="footerContainer" id="footer">
       <div className="footerContent">
         <div className="footerSection">
           <h3 className="footerSectionTitle">Về Side_Effect</h3>

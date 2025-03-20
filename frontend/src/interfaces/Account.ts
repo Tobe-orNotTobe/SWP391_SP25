@@ -54,12 +54,11 @@ export interface LoginGoogleRequest {
 }
 
 export interface LoginGoogleResponse {
-    message: string;
-    token: string;
-    user: {
-        id: string;
-        email: string;
-        userName: string;
+    statusCode: string;
+    isSuccess: boolean;
+    errorMessages: string[],
+    result: {
+        token: string;
     }
 }
 

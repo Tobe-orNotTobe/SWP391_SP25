@@ -159,9 +159,9 @@ export const useChildForm = (refetch: () => void) => {
             }else {
                 if (!imageUrl) {
                     if (form.selectedGender?.value === "Male") {
-                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742300123/gzprq2pdsvczizvscupv.png";
+                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742345394/mhkyilwl3aa6qmabesvr.jpg";
                     }else {
-                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742300122/jkahvkbjgp4ofrwnfohz.png";
+                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742345393/zwofzhjeyyoif4vlibav.jpg";
                     }
                 }
             }

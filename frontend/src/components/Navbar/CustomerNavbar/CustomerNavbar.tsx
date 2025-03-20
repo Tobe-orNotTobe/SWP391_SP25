@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import './CustomerNavbar.scss';
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import {MdNavigateNext, MdOutlineChangeCircle} from "react-icons/md";
@@ -29,7 +29,15 @@ const CustomerNavbar: React.FC = () => {
         if (username) {
             fetchWalletData();
         }
-    }, [username]); // Chạy khi username thay đổi
+    }, [username]);// Chạy khi username thay đổi
+
+    const handleLogoutGoogle = async () => {
+        await signOut(auth);
+        localStorage.clear()
+        navigate("/login");
+    };
+
+    const {walletData} = useWalletUserDetail();
 
     return (
         <>

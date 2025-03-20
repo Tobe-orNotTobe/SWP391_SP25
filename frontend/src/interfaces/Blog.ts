@@ -30,7 +30,7 @@ export interface UpdateBlogRequest {
 }
 
 export interface NewsIntro {
-    blogPostId: string;
+    blogPostId: number;
     title: string;
     imageUrl: string;
     category: string;
