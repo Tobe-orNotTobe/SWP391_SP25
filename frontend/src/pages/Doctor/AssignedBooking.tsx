@@ -1,55 +1,66 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
-import {
-  apiGetBookingById,
-  apiGetDoctorBookings,
-} from "../../apis/apiBooking.ts";
+import { apiGetDoctorBookings } from "../../apis/apiBooking.ts";
 import "./VaccinationSchedulePage.scss";
-import {
-  BookingResponse,
-  BookingDetail,
-  Vaccine,
-} from "../../interfaces/VaccineRegistration.ts";
+import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import { useNavigate } from "react-router-dom";
 import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
-import { Table, Button, Space, Input, InputRef, Tag } from "antd";
+import {
+  Table,
+  Button,
+  Space,
+  Input,
+  InputRef,
+  Tag,
+  DatePicker,
+  Radio,
+} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import { Modal } from "antd";
 import {
   apiCreateVaccineRecord,
-  apiGetVaccineRecordByBookingId,
+  apiGetVaccineRecordByBookingDetailId,
 } from "../../apis/apiVaccineRecord.ts";
 import { toast } from "react-toastify";
 import {
-  apiGetVaccineDetailById,
-  apiGetComBoVaccineById,
-} from "../../apis/apiVaccine.ts";
-import { VaccineRecordResponse } from "../../interfaces/VaccineRecord.ts";
+  VaccineRecord,
+  VaccineRecordResponse,
+} from "../../interfaces/VaccineRecord.ts";
+import moment from "moment";
+import { BookingDetailResponse } from "../../interfaces/Booking.ts";
+
+const { RangePicker } = DatePicker;
 
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();
-  const [bookings, setBookings] = useState<BookingResponse[]>([]);
+  const [bookings, setBookings] = useState<BookingDetailResponse[]>([]);
   const [selectedBooking, setSelectedBooking] =
-    useState<BookingResponse | null>(null);
+    useState<BookingDetailResponse | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [vaccineDetails, setVaccineDetails] = useState<any[]>([]);
-  const [comboDetails, setComboDetails] = useState<any[]>([]);
+  const [vaccineDetails, setVaccineDetails] = useState<VaccineRecord[]>([]);
   const [vaccineRecordDetails, setVaccineRecordDetails] =
-    useState<VaccineRecordResponse>();
-  const searchInput = useRef<InputRef>(null);
+    useState<VaccineRecordResponse | null>(null);
+  const [filterDate, setFilterDate] = useState<moment.Moment | null>(null);
+  const [filterRange, setFilterRange] = useState<
+    [moment.Moment, moment.Moment] | null
+  >(null);
+  const [filterType, setFilterType] = useState<
+    "today" | "thisWeek" | "thisMonth" | "thisYear" | "custom"
+  >("today");
 
+  const searchInput = useRef<InputRef>(null);
   const navigate = useNavigate();
 
   const fetchBookings = async () => {
     if (doctorId) {
       const data = await apiGetDoctorBookings(doctorId);
-      if (data?.isSuccess) {
-        console.log(data.result);
-        setBookings(data.result);
+      if (data) {
+        console.log(data);
+        setBookings(data);
       }
     }
   };
@@ -58,79 +69,110 @@ const VaccinationSchedulePage: React.FC = () => {
     fetchBookings();
   }, [doctorId]);
 
-  // Chia bookings thành hai mảng: chưa hoàn thành và đã hoàn thành
-  const pendingBookings = bookings.filter(
-    (booking) => booking.status !== "Completed"
+  const handleDateChange = (date: moment.Moment | null) => {
+    setFilterDate(date);
+    setFilterRange(null);
+    setFilterType("custom");
+  };
+
+  const handleRangeChange = (dates: [moment.Moment, moment.Moment] | null) => {
+    setFilterRange(dates);
+    setFilterDate(null);
+    setFilterType("custom");
+  };
+
+  const handleFilterTypeChange = (e: any) => {
+    setFilterType(e.target.value);
+    setFilterDate(null);
+    setFilterRange(null);
+  };
+
+  const getFilteredBookings = () => {
+    let filteredBookings = bookings;
+
+    if (filterType === "today") {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(moment(), "day")
+      );
+    } else if (filterType === "thisWeek") {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(moment(), "week")
+      );
+    } else if (filterType === "thisMonth") {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(moment(), "month")
+      );
+    } else if (filterType === "thisYear") {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(moment(), "year")
+      );
+    } else if (filterDate) {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(filterDate, "day")
+      );
+    } else if (filterRange) {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isBetween(
+          filterRange[0],
+          filterRange[1],
+          "day",
+          "[]"
+        )
+      );
+    }
+
+    return filteredBookings;
+  };
+
+  const filteredBookings = getFilteredBookings();
+  const pendingBookings = filteredBookings.filter(
+    (booking) => booking.status === "Chưa hoàn thành"
   );
-  const completedBookings = bookings.filter(
-    (booking) => booking.status === "Completed"
+  const completedBookings = filteredBookings.filter(
+    (booking) => booking.status !== "Chưa hoàn thành"
   );
 
-  const openModal = async (booking: BookingResponse) => {
+  const openModal = async (booking: BookingDetailResponse) => {
     setVaccineDetails([]);
-    setComboDetails([]);
     setSelectedBooking(booking);
     setModalIsOpen(true);
 
     try {
-      const bookingDetailsResponse = await apiGetBookingById(booking.bookingId);
-      if (bookingDetailsResponse?.isSuccess) {
-        const bookingDetails = bookingDetailsResponse.result.bookingDetails;
-        const { vaccineDetails, comboDetails } =
-          await getVaccineAndComboDetails(bookingDetails);
-        setVaccineDetails(vaccineDetails);
-        setComboDetails(comboDetails);
+      let existingRecord;
+      try {
+        existingRecord = await apiGetVaccineRecordByBookingDetailId(
+          booking.bookingDetailId
+        );
+      } catch (error: any) {
+        if (error.response?.status === 400) {
+          const createResponse = await apiCreateVaccineRecord(
+            booking.bookingDetailId
+          );
+          if (createResponse && createResponse?.isSuccess) {
+            existingRecord = await apiGetVaccineRecordByBookingDetailId(
+              booking.bookingDetailId
+            );
+          } else {
+          }
+        } else {
+          throw error;
+        }
       }
 
-      // Fetch vaccine record if the booking is completed
-      if (booking.status === "Completed") {
-        const vaccineRecordResponse = await apiGetVaccineRecordByBookingId(
-          booking.bookingId
-        );
-        if (vaccineRecordResponse?.isSuccess) {
-          setVaccineRecordDetails(vaccineRecordResponse.result);
-        }
+      if (existingRecord?.isSuccess) {
+        setVaccineRecordDetails(existingRecord);
+      } else {
+        setVaccineDetails([]);
       }
     } catch (error) {
-      console.error("Error fetching booking details:", error);
+      console.error("Error fetching or creating vaccine record:", error);
     }
-  };
-
-  const getVaccineAndComboDetails = async (bookingDetails: BookingDetail[]) => {
-    const vaccineDetails = [];
-    const comboDetails = [];
-
-    for (const detail of bookingDetails) {
-      if (detail.vaccineId !== null && detail.vaccineId !== undefined) {
-        const vaccine = await apiGetVaccineDetailById(detail.vaccineId);
-        if (vaccine && vaccine.result) {
-          vaccineDetails.push(vaccine.result);
-        }
-      } else if (
-        detail.comboVaccineId !== null &&
-        detail.comboVaccineId !== undefined
-      ) {
-        const comboVaccine = await apiGetComBoVaccineById(
-          detail.comboVaccineId
-        );
-        if (comboVaccine && comboVaccine.result) {
-          comboDetails.push(comboVaccine.result);
-          if (
-            comboVaccine.result.vaccines &&
-            comboVaccine.result.vaccines.length > 0
-          ) {
-            vaccineDetails.push(...comboVaccine.result.vaccines);
-          }
-        }
-      }
-    }
-    return { vaccineDetails, comboDetails };
   };
 
   const closeModal = () => {
     setSelectedBooking(null);
     setVaccineDetails([]);
-    setComboDetails([]);
+    setVaccineRecordDetails(null);
     setModalIsOpen(false);
   };
 
@@ -216,14 +258,14 @@ const VaccinationSchedulePage: React.FC = () => {
       ),
   });
 
-  const handleProceedVaccination = async (booking: BookingResponse) => {
+  const handleProceedVaccination = async (booking: BookingDetailResponse) => {
     try {
-      if (!booking.bookingId) return;
+      if (!booking.bookingDetailId) return;
 
       let existingRecord;
       try {
-        existingRecord = await apiGetVaccineRecordByBookingId(
-          booking.bookingId
+        existingRecord = await apiGetVaccineRecordByBookingDetailId(
+          booking.bookingDetailId
         );
       } catch (error: any) {
         if (error.response && error.response.status === 400) {
@@ -238,7 +280,7 @@ const VaccinationSchedulePage: React.FC = () => {
         return;
       }
 
-      const response = await apiCreateVaccineRecord(booking.bookingId);
+      const response = await apiCreateVaccineRecord(booking.bookingDetailId);
       if (response?.isSuccess) {
         console.log("Vaccine record created successfully", response);
         navigate("/doctor/service", { state: booking });
@@ -255,81 +297,46 @@ const VaccinationSchedulePage: React.FC = () => {
   const columns = [
     {
       title: "Mã đơn",
-      dataIndex: "bookingId",
-      key: "bookingId",
-      ...getColumnSearchProps("bookingId"),
-      sorter: (a: BookingResponse, b: BookingResponse) =>
-        Number(a.bookingId) - Number(b.bookingId),
-    },
-    {
-      title: "Tên Trẻ",
-      dataIndex: "childName",
-      key: "childName",
-      ...getColumnSearchProps("childName"),
-      sorter: (a: BookingResponse, b: BookingResponse) =>
-        a.childName.localeCompare(b.childName),
+      dataIndex: "bookingDetailId",
+      key: "bookingDetailId",
+      ...getColumnSearchProps("bookingDetailId"),
+      sorter: (a: BookingDetailResponse, b: BookingDetailResponse) =>
+        Number(a.bookingDetailId) - Number(b.bookingDetailId),
     },
     {
       title: "Ngày Đặt",
       dataIndex: "bookingDate",
       key: "bookingDate",
       render: (date: string) => new Date(date).toLocaleDateString(),
-      sorter: (a: BookingResponse, b: BookingResponse) =>
+      sorter: (a: BookingDetailResponse, b: BookingDetailResponse) =>
         new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime(),
     },
     {
-      title: "Loại Tiêm",
-      dataIndex: "bookingType",
-      key: "bookingType",
-      ...getColumnSearchProps("bookingType"),
-      filters: [
-        { text: "Loại 1", value: "Loại 1" },
-        { text: "Loại 2", value: "Loại 2" },
-      ],
-      onFilter: (value: string | number, record: BookingResponse) =>
-        record.bookingType
-          ?.toString()
-          .toLowerCase()
-          .includes(value.toString().toLowerCase()),
-    },
-    {
       title: "Giá Tiền",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
+      dataIndex: "price",
+      key: "price",
       render: (price: number) => `${price.toLocaleString()} VNĐ`,
-      sorter: (a: BookingResponse, b: BookingResponse) =>
-        Number(a.totalPrice) - Number(b.totalPrice),
+      sorter: (a: BookingDetailResponse, b: BookingDetailResponse) =>
+        Number(a.price) - Number(b.price),
     },
     {
       title: "Trạng Thái",
       dataIndex: "status",
       key: "status",
       filters: [
-        { text: "Chờ xác nhận", value: "Pending" },
-        { text: "Đã xác nhận", value: "Confirmed" },
-        { text: "Chờ tiêm", value: "InProgress" },
-        { text: "Hoàn thành", value: "Completed" },
-        { text: "Đã hủy", value: "Cancelled" },
-        { text: "Yêu cầu hoàn tiền", value: "RequestRefund" },
+        { text: "Chờ tiêm", value: "Chưa hoàn thành" },
+        { text: "Đã tiêm", value: "Hoàn thành" },
       ],
-      onFilter: (value: any, record: BookingResponse) =>
+      onFilter: (value: any, record: BookingDetailResponse) =>
         record.status === value,
       render: (status: string) => {
         const statusLabels: { [key: string]: string } = {
-          Pending: "Chờ xác nhận",
-          Confirmed: "Đã xác nhận",
-          InProgress: "Chờ tiêm",
-          Completed: "Hoàn thành",
-          Cancelled: "Đã hủy",
-          RequestRefund: "Yêu cầu hoàn tiền",
+          "Chưa hoàn thành": "Chờ tiêm",
+          "Hoàn thành": "Đã tiêm",
         };
         const statusColors: { [key: string]: string } = {
-          Pending: "orange",
-          Confirmed: "darkblue",
-          InProgress: "blue",
-          Completed: "green",
-          Cancelled: "red",
-          RequestRefund: "darkorange",
+          "Chưa hoàn thành": "orange",
+          "Hoàn thành": "green",
         };
         const vietnameseStatus = statusLabels[status] || status;
         return (
@@ -342,12 +349,12 @@ const VaccinationSchedulePage: React.FC = () => {
     {
       title: "Hành động",
       key: "action",
-      render: (_: undefined, record: BookingResponse) => (
+      render: (_: undefined, record: BookingDetailResponse) => (
         <Space size="middle">
           <Button type="primary" onClick={() => openModal(record)}>
             Chi tiết
           </Button>
-          {record.status === "InProgress" && (
+          {record.status === "Chưa hoàn thành" && (
             <Button
               type="primary"
               color="green"
@@ -362,13 +369,12 @@ const VaccinationSchedulePage: React.FC = () => {
     },
   ];
 
-  // Cột cho bảng đã hoàn thành (không có nút "Tiến hành tiêm")
   const completedColumns = columns
     .filter((col) => col.key !== "action")
     .concat({
       title: "Hành động",
       key: "action",
-      render: (_: undefined, record: BookingResponse) => (
+      render: (_: undefined, record: BookingDetailResponse) => (
         <Space size="middle">
           <Button type="primary" onClick={() => openModal(record)}>
             Chi tiết
@@ -379,36 +385,55 @@ const VaccinationSchedulePage: React.FC = () => {
 
   return (
     <DoctorLayout>
-      <h1>Lịch Tiêm Chủng</h1>
+      <h1>Lịch tiêm chủng</h1>
+
+      <div style={{ marginBottom: 16 }}>
+        <Radio.Group onChange={handleFilterTypeChange} value={filterType}>
+          <Radio.Button value="today">Hôm nay</Radio.Button>
+          <Radio.Button value="thisWeek">Tuần này</Radio.Button>
+          <Radio.Button value="thisMonth">Tháng này</Radio.Button>
+          <Radio.Button value="thisYear">Năm này</Radio.Button>
+          <Radio.Button value="custom">Tùy chọn</Radio.Button>
+        </Radio.Group>
+
+        {filterType === "custom" && (
+          <div style={{ marginTop: 16 }}>
+            <DatePicker
+              value={filterDate}
+              onChange={handleDateChange}
+              style={{ marginRight: 8 }}
+            />
+            <RangePicker value={filterRange} onChange={handleRangeChange} />
+          </div>
+        )}
+      </div>
 
       <h2>Các Đơn Chưa Hoàn Thành</h2>
-      {pendingBookings.length > 0 ? (
-        <Table
-          dataSource={pendingBookings}
-          columns={columns}
-          rowKey="bookingId"
-          style={{ marginBottom: 20 }}
-        />
-      ) : (
-        <p>Không có lịch tiêm chủng chưa hoàn thành.</p>
-      )}
+      <Table
+        dataSource={pendingBookings}
+        columns={columns}
+        rowKey="bookingDetailId"
+        style={{ marginBottom: 20 }}
+        locale={{
+          emptyText: "Không có dữ liệu",
+        }}
+      />
 
       <h2>Các Đơn Đã Hoàn Thành</h2>
-      {completedBookings.length > 0 ? (
-        <Table
-          dataSource={completedBookings}
-          columns={completedColumns}
-          rowKey="bookingId"
-        />
-      ) : (
-        <p>Không có lịch tiêm chủng đã hoàn thành.</p>
-      )}
+      <Table
+        dataSource={completedBookings}
+        columns={completedColumns}
+        rowKey="bookingDetailId"
+        locale={{
+          emptyText: "Không có dữ liệu",
+        }}
+      />
 
       <Modal
         open={modalIsOpen}
         onCancel={closeModal}
         footer={null}
-        width={900} // Tăng chiều rộng modal
+        width={700}
         centered
         className="vaccination-modal"
       >
@@ -416,132 +441,99 @@ const VaccinationSchedulePage: React.FC = () => {
           <h2 className="modal-title">Chi Tiết Đặt Lịch</h2>
           {selectedBooking && (
             <div className="modal-body">
-              <div >
-                <div className="info-section">
+              <div className="info-section">
+                <div>
                   <p>
-                    <strong>ID:</strong> {selectedBooking.bookingId}
+                    <strong>Mã đơn:</strong>{" "}
+                    {vaccineRecordDetails?.result.bookingId}
                   </p>
                   <p>
-                    <strong>Tên Trẻ:</strong> {selectedBooking.childName}
+                    <strong>Tên trẻ:</strong>{" "}
+                    {vaccineRecordDetails?.result.fullName}
                   </p>
                   <p>
-                    <strong>Ngày Đặt:</strong>{" "}
-                    {new Date(selectedBooking.bookingDate).toLocaleDateString()}
-                  </p>
-                  <p>
-                    <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
-                  </p>
-                  <p>
-                    <strong>Ghi Chú:</strong> {selectedBooking.note}
+                    <strong>Ngày sinh:</strong>{" "}
+                    {vaccineRecordDetails?.result.dateOfBirth
+                      ? vaccineRecordDetails.result.dateOfBirth
+                          .split("T")[0]
+                          .split("-")
+                          .reverse()
+                          .join("/")
+                      : "N/A"}
                   </p>
                   <p>
                     <strong>Trạng Thái:</strong>{" "}
                     <Tag
                       color={
-                        selectedBooking.status === "Pending"
+                        selectedBooking.status === "Chưa hoàn thành"
                           ? "orange"
-                          : selectedBooking.status === "Confirmed"
-                          ? "darkblue"
-                          : selectedBooking.status === "InProgress"
-                          ? "blue"
-                          : selectedBooking.status === "Completed"
-                          ? "green"
-                          : selectedBooking.status === "Cancelled"
-                          ? "red"
-                          : "darkorange"
+                          : "green"
                       }
                     >
-                      {selectedBooking.status === "Pending"
-                        ? "Chờ xác nhận"
-                        : selectedBooking.status === "Confirmed"
-                        ? "Đã xác nhận"
-                        : selectedBooking.status === "InProgress"
+                      {selectedBooking.status === "Chưa hoàn thành"
                         ? "Chờ tiêm"
-                        : selectedBooking.status === "Completed"
-                        ? "Hoàn thành"
-                        : selectedBooking.status === "Cancelled"
-                        ? "Đã hủy"
-                        : "Yêu cầu hoàn tiền"}
+                        : "Đã tiêm"}
                     </Tag>
                   </p>
                 </div>
-
-                {comboDetails.length > 0 && (
-                  <div className="combo-section">
-                    <h3>Chi Tiết Combo</h3>
-                    {comboDetails.map((combo) => (
-                      <div key={combo.comboId} className="combo-item">
-                        <p>
-                          <strong>Tên Combo:</strong> {combo.comboName}
-                        </p>
-                        <p>
-                          <strong>Giá Combo:</strong>{" "}
-                          {combo.totalPrice?.toLocaleString()} VNĐ
-                        </p>
-                        <p>
-                          <strong>Vaccine trong Combo:</strong>
-                        </p>
-                        <ul>
-                          {combo.vaccines.map((vaccine: Vaccine) => (
-                            <div key={vaccine.vaccine.id}>
-                              {vaccine.vaccine.name}
-                            </div>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {vaccineDetails.length > 0 && comboDetails.length === 0 && (
-                  <div className="vaccine-section">
-                    <h3>Chi Tiết Vaccine</h3>
-                    {vaccineDetails.map((vaccine) => (
-                      <div key={vaccine.vaccineId} className="vaccine-item">
-                        <p>
-                          <strong>Tên Vaccine:</strong> {vaccine.name}
-                        </p>
-                        <p>
-                          <strong>Giá:</strong>{" "}
-                          {vaccine.price?.toLocaleString()} VNĐ
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                {vaccineRecordDetails?.result?.vaccineRecords &&
+                  vaccineRecordDetails?.result.vaccineRecords.length > 0 && (
+                    <div className="combo-section">
+                      <h3>Chi Tiết Vaccine</h3>
+                      {vaccineRecordDetails?.result.vaccineRecords.map(
+                        (vaccine) => (
+                          <div
+                            key={vaccine.vaccinationRecordId}
+                            className="vaccine-item"
+                          >
+                            <p>
+                              <strong>Tên Vaccine:</strong>{" "}
+                              {vaccine.vaccineName}
+                            </p>
+                            <p>
+                              <strong>Giá:</strong>{" "}
+                              {vaccine.price?.toLocaleString()} VNĐ
+                            </p>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
               </div>
-              {selectedBooking.status === "Completed" &&
-                vaccineRecordDetails && (
+
+              {selectedBooking.status !== "Chưa hoàn thành" &&
+                vaccineRecordDetails?.result?.vaccineRecords &&
+                vaccineRecordDetails?.result?.vaccineRecords?.length > 0 && (
                   <div className="vaccine-record-section">
-                    <h3>Chi Tiết Vaccine Record</h3>
+                    <h3>Thông Tin Tiêm Chủng</h3>
                     <table className="vaccine-record-table">
                       <thead>
                         <tr>
                           <th>Tên Vaccine</th>
                           <th>Liều lượng</th>
-                          <th>Giá</th>
-                          <th>Ngày tiêm</th>
+                          <th>Ngày nhắc lại</th>
                           <th>Số lô</th>
-                          <th>Trạng thái</th>
-                          <th>Ghi chú</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {vaccineRecordDetails.vaccineRecords.map((record) => (
-                          <tr key={record.vaccinationRecordId}>
-                            <td>{record.vaccineName}</td>
-                            <td>{record.doseAmount} ml</td>
-                            <td>{record.price.toLocaleString()} VNĐ</td>
-                            <td>
-                              {new Date(
-                                record.vaccinationDate
-                              ).toLocaleDateString()}
-                            </td>
-                            <td>{record.batchNumber}</td>
-                            <td>{record.status}</td>
-                            <td>{record.notes}</td>
-                          </tr>
-                        ))}
+                        {vaccineRecordDetails &&
+                          vaccineRecordDetails.result.vaccineRecords.map(
+                            (record) => (
+                              <tr key={record.vaccinationRecordId}>
+                                <td>{record.vaccineName}</td>
+                                <td>{record.doseAmount} ml</td>
+                                <td>
+                                  {record.nextDoseDate
+                                    ? new Date(
+                                        record.nextDoseDate
+                                      ).toLocaleDateString()
+                                    : "N/A"}
+                                </td>
+
+                                <td>{record.batchNumber}</td>
+                              </tr>
+                            )
+                          )}
                       </tbody>
                     </table>
                   </div>

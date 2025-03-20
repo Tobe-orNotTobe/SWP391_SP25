@@ -31,6 +31,16 @@ export const apiGetVaccineRecordByBookingId = async (id: number) => {
   }
 };
 
+export const apiGetVaccineRecordByBookingDetailId = async (id: number) => {
+  try {
+    const response = await axiosInstance.get(`/api/VaccineRecord/bookingDetail/${id}`);
+    return response.data || {};
+  } catch (error) {
+    console.error("API Get Vaccine Record By Booking Detail Id Error:", error);
+    throw error;
+  }
+};
+
 export const apiUpdateVaccineRecord = async (id: number, data: UpdateVaccineRecordRequest) => {
     try {
       const response = await axiosInstance.put(`api/VaccineRecord/${id}/update`, data);
