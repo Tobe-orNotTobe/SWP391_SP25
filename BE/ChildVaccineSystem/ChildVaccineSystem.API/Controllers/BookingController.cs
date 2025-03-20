@@ -201,40 +201,40 @@ namespace ChildVaccineSystem.API.Controllers
 
 
 
-        [HttpGet("doctor/{userId}/bookings")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Staff")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetDoctorBookings(string userId)
-        {
-            try
-            {
-                var bookings = await _bookingService.GetDoctorBookingsAsync(userId);
+        //[HttpGet("doctor/{userId}/bookings")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Staff")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> GetDoctorBookings(string userId)
+        //{
+        //    try
+        //    {
+        //        var bookings = await _bookingService.GetDoctorBookingsAsync(userId);
 
-                if (bookings.Any())
-                {
-                    _response.StatusCode = HttpStatusCode.OK;
-                    _response.IsSuccess = true;
-                    _response.Result = bookings;
-                    return Ok(_response);
-                }
-                else
-                {
-                    _response.StatusCode = HttpStatusCode.NotFound;
-                    _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("Không tìm thấy đặt chỗ nào cho bác sĩ này.");
-                    return NotFound(_response);
-                }
-            }
-            catch (Exception ex)
-            {
-                _response.StatusCode = HttpStatusCode.InternalServerError;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Lỗi khi truy xuất thông tin đặt chỗ của bác sĩ: {ex.Message}");
-                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
-            }
-        }
+        //        if (bookings.Any())
+        //        {
+        //            _response.StatusCode = HttpStatusCode.OK;
+        //            _response.IsSuccess = true;
+        //            _response.Result = bookings;
+        //            return Ok(_response);
+        //        }
+        //        else
+        //        {
+        //            _response.StatusCode = HttpStatusCode.NotFound;
+        //            _response.IsSuccess = false;
+        //            _response.ErrorMessages.Add("Không tìm thấy đặt chỗ nào cho bác sĩ này.");
+        //            return NotFound(_response);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _response.StatusCode = HttpStatusCode.InternalServerError;
+        //        _response.IsSuccess = false;
+        //        _response.ErrorMessages.Add($"Lỗi khi truy xuất thông tin đặt chỗ của bác sĩ: {ex.Message}");
+        //        return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+        //    }
+        //}
 
 
         // Lấy tất cả các booking chưa được gán bác sĩ
@@ -338,5 +338,62 @@ namespace ChildVaccineSystem.API.Controllers
 				return BadRequest(_response);
 			}
 		}
-	}
+        [HttpPost("complete-detail/{bookingDetailId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CompleteBookingDetail(int bookingDetailId)
+        {
+            try
+            {
+                var result = await _bookingService.CompleteBookingDetailAsync(bookingDetailId);
+
+                if (result)
+                    return Ok(new { Message = "Mũi tiêm đã được đánh dấu hoàn thành." });
+
+                return BadRequest(new { Message = "Hoàn thành mũi tiêm thất bại." });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = $"Lỗi: {ex.Message}" });
+            }
+        }
+        [HttpGet("doctor/{userId}/booking-details")]
+        public async Task<IActionResult> GetDoctorBookingDetails(string userId)
+        {
+            var result = await _bookingService.GetDoctorBookingDetailsAsync(userId);
+            return Ok(result);
+        }
+
+        [HttpGet("user/{userId}/booking-details")]
+        public async Task<IActionResult> GetAllBookingDetailsByUserId(string userId)
+        {
+            try
+            {
+                var result = await _bookingService.GetAllBookingDetailsByUserIdAsync(userId);
+                return Ok(new
+                {
+                    statusCode = StatusCodes.Status200OK,
+                    isSuccess = true,
+                    errorMessages = Array.Empty<string>(),
+                    result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    statusCode = StatusCodes.Status400BadRequest,
+                    isSuccess = false,
+                    errorMessages = new string[] { ex.Message },
+                    result = (object)null
+                });
+            }
+        }
+
+    }
 }

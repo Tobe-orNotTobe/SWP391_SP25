@@ -1,4 +1,5 @@
-﻿using ChildVaccineSystem.Data.Entities;
+﻿using ChildVaccineSystem.Data.DTO.Auth;
+using ChildVaccineSystem.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
 {
     public interface ILoginGoogleService
     {
-        Task<(bool Success, string Message, string Token, User User)> LoginWithGoogleAsync(string idToken);
+        Task<object> LoginWithGoogleAsync(GoogleLoginDTO model);
     }
 }
