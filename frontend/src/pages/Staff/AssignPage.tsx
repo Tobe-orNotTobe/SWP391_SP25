@@ -16,40 +16,38 @@ import { apiGetAllDoctors } from "../../apis/apiAdmin";
 import { Doctor } from "../../interfaces/Doctor";
 import "./DoctorList.scss";
 import Staff1Layout from "../../components/Layout/StaffLayout/Stafff1Layout/Staff1Layout";
-import { Table, Button, Space, Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Table, Button, Space, Input, DatePicker, Radio, Typography, Card, Avatar, Tag, Modal, Row, Col } from "antd";
+import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
-import { Modal, Card, Avatar, Typography, Row, Col, Tag } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 import {
   apiGetComBoVaccineById,
   apiGetVaccineDetailById,
 } from "../../apis/apiVaccine.ts";
 import { apiGetVaccineRecordByBookingId } from "../../apis/apiVaccineRecord.ts";
 import { VaccineRecordResponse } from "../../interfaces/VaccineRecord.ts";
+import moment from "moment";
 
+const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
 
 function AssignPage() {
   const [bookings, setBookings] = useState<BookingResponse[]>([]);
-  const [unassignBookings, setUnassignBookings] = useState<BookingResponse[]>(
-    []
-  );
-  const [assignedBookings, setAssignedBookings] = useState<BookingResponse[]>(
-    []
-  );
+  const [unassignBookings, setUnassignBookings] = useState<BookingResponse[]>([]);
+  const [assignedBookings, setAssignedBookings] = useState<BookingResponse[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalDoctorIsOpen, setDoctorModalIsOpen] = useState(false);
-    const [vaccineRecordDetails, setVaccineRecordDetails] =
-      useState<VaccineRecordResponse>();
-  const [selectedBooking, setSelectedBooking] =
-    useState<BookingResponse | null>(null);
+  const [vaccineRecordDetails, setVaccineRecordDetails] = useState<VaccineRecordResponse>();
+  const [selectedBooking, setSelectedBooking] = useState<BookingResponse | null>(null);
   const [vaccineDetails, setVaccineDetails] = useState<any[]>([]);
   const [comboDetails, setComboDetails] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [filterDate, setFilterDate] = useState<moment.Moment | null>(null);
+  const [filterRange, setFilterRange] = useState<[moment.Moment, moment.Moment] | null>(null);
+  const [filterType, setFilterType] = useState<"today" | "thisWeek" | "thisMonth" | "thisYear" | "custom">("today");
+
   const searchInput = useRef<any>(null);
 
   useEffect(() => {
@@ -73,7 +71,6 @@ function AssignPage() {
       const data = await apiGetUnassignedBooking();
       if (data?.isSuccess) {
         setUnassignBookings(data.result);
-        // Filter assigned bookings from the full list
         const assigned = bookings.filter(
           (booking) =>
             !data.result.some(
@@ -88,6 +85,64 @@ function AssignPage() {
     };
     fetchUnassignedBookings();
   }, [bookings]);
+
+  const handleDateChange = (date: moment.Moment | null) => {
+    setFilterDate(date);
+    setFilterRange(null);
+    setFilterType("custom");
+  };
+
+  const handleRangeChange = (dates: [moment.Moment, moment.Moment] | null) => {
+    setFilterRange(dates);
+    setFilterDate(null);
+    setFilterType("custom");
+  };
+
+  const handleFilterTypeChange = (e: any) => {
+    setFilterType(e.target.value);
+    setFilterDate(null);
+    setFilterRange(null);
+  };
+
+  const getFilteredBookings = () => {
+    let filteredBookings = bookings;
+
+    if (filterType === "today") {
+      filteredBookings = filteredBookings.filter(booking =>
+        moment(booking.bookingDate).isSame(moment(), "day")
+      );
+    } else if (filterType === "thisWeek") {
+      filteredBookings = filteredBookings.filter(booking =>
+        moment(booking.bookingDate).isSame(moment(), "week")
+      );
+    } else if (filterType === "thisMonth") {
+      filteredBookings = filteredBookings.filter(booking =>
+        moment(booking.bookingDate).isSame(moment(), "month")
+      );
+    } else if (filterType === "thisYear") {
+      filteredBookings = filteredBookings.filter(booking =>
+        moment(booking.bookingDate).isSame(moment(), "year")
+      );
+    } else if (filterDate) {
+      filteredBookings = filteredBookings.filter(booking =>
+        moment(booking.bookingDate).isSame(filterDate, "day")
+      );
+    } else if (filterRange) {
+      filteredBookings = filteredBookings.filter(booking =>
+        moment(booking.bookingDate).isBetween(filterRange[0], filterRange[1], "day", "[]")
+      );
+    }
+
+    return filteredBookings;
+  };
+
+  const filteredBookings = getFilteredBookings();
+  const filteredUnassignBookings = filteredBookings.filter(
+    (booking) => unassignBookings.some((unassign) => unassign.bookingId === booking.bookingId)
+  );
+  const filteredAssignedBookings = filteredBookings.filter(
+    (booking) => assignedBookings.some((assign) => assign.bookingId === booking.bookingId)
+  );
 
   const handleAssignDoctor = async (doctorId: string, bookingId: string) => {
     try {
@@ -167,13 +222,12 @@ function AssignPage() {
         setComboDetails(comboDetails);
       }
 
-      // Fetch vaccine record if the booking is completed
       if (booking.status === "Completed") {
         const vaccineRecordResponse = await apiGetVaccineRecordByBookingId(
           booking.bookingId
         );
         if (vaccineRecordResponse?.isSuccess) {
-          setVaccineRecordDetails(vaccineRecordResponse.result);
+          setVaccineRecordDetails(vaccineRecordResponse);
         }
       }
     } catch (error) {
@@ -435,11 +489,36 @@ function AssignPage() {
 
   return (
     <Staff1Layout>
+      <h1>Phân công bác sĩ</h1>
+      <div style={{ marginBottom: 16 }}>
+        <Radio.Group onChange={handleFilterTypeChange} value={filterType}>
+          <Radio.Button value="today">Hôm nay</Radio.Button>
+          <Radio.Button value="thisWeek">Tuần này</Radio.Button>
+          <Radio.Button value="thisMonth">Tháng này</Radio.Button>
+          <Radio.Button value="thisYear">Năm này</Radio.Button>
+          <Radio.Button value="custom">Tùy chọn</Radio.Button>
+        </Radio.Group>
+
+        {filterType === "custom" && (
+          <div style={{ marginTop: 16 }}>
+            <DatePicker
+              value={filterDate}
+              onChange={handleDateChange}
+              style={{ marginRight: 8 }}
+            />
+            <RangePicker
+              value={filterRange}
+              onChange={handleRangeChange}
+            />
+          </div>
+        )}
+      </div>
+
       <div>
         <Title level={3}>Chưa phân công</Title>
-        {unassignBookings.length > 0 ? (
+        {filteredUnassignBookings.length > 0 ? (
           <Table
-            dataSource={unassignBookings}
+            dataSource={filteredUnassignBookings}
             columns={columns}
             rowKey="bookingId"
           />
@@ -450,9 +529,9 @@ function AssignPage() {
 
       <div style={{ marginTop: "40px" }}>
         <Title level={3}>Đã phân công</Title>
-        {assignedBookings.length > 0 ? (
+        {filteredAssignedBookings.length > 0 ? (
           <Table
-            dataSource={assignedBookings}
+            dataSource={filteredAssignedBookings}
             columns={columns}
             rowKey="bookingId"
           />
@@ -525,7 +604,7 @@ function AssignPage() {
         open={modalIsOpen}
         onCancel={closeModal}
         footer={null}
-        width={900} // Tăng chiều rộng modal
+        width={900}
         centered
         className="vaccination-modal"
       >
@@ -533,7 +612,7 @@ function AssignPage() {
           <h2 className="modal-title">Chi Tiết Đặt Lịch</h2>
           {selectedBooking && (
             <div className="modal-body">
-              <div  className="info-section" >
+              <div className="info-section">
                 <div>
                   <p>
                     <strong>ID:</strong> {selectedBooking.bookingId}
@@ -583,33 +662,6 @@ function AssignPage() {
                   </p>
                 </div>
 
-                {comboDetails.length > 0 && (
-                  <div className="vaccine-section">
-                    <h3>Chi Tiết Combo</h3>
-                    {comboDetails.map((combo) => (
-                      <div key={combo.comboId} className="combo-item">
-                        <p>
-                          <strong>Tên Combo:</strong> {combo.comboName}
-                        </p>
-                        <p>
-                          <strong>Giá Combo:</strong>{" "}
-                          {combo.totalPrice?.toLocaleString()} VNĐ
-                        </p>
-                        <p>
-                          <strong>Vaccine trong Combo:</strong>
-                        </p>
-                        <ul>
-                          {combo.vaccines.map((vaccine: Vaccine) => (
-                            <div key={vaccine.vaccine.id}>
-                              {vaccine.vaccine.name}
-                            </div>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
                 {vaccineDetails.length > 0 && comboDetails.length === 0 && (
                   <div className="combo-section">
                     <h3>Chi Tiết Vaccine</h3>
@@ -626,7 +678,6 @@ function AssignPage() {
                     ))}
                   </div>
                 )}
-
               </div>
               {selectedBooking.status === "Completed" &&
                 vaccineRecordDetails && (
@@ -638,22 +689,20 @@ function AssignPage() {
                           <th>Tên Vaccine</th>
                           <th>Liều lượng</th>
                           <th>Giá</th>
-                          <th>Ngày tiêm</th>
+                          <th>Ngày nhắc lại</th>
                           <th>Số lô</th>
                           <th>Trạng thái</th>
                           <th>Ghi chú</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {vaccineRecordDetails.vaccineRecords.map((record) => (
+                        {vaccineRecordDetails.result.vaccineRecords.map((record) => (
                           <tr key={record.vaccinationRecordId}>
                             <td>{record.vaccineName}</td>
                             <td>{record.doseAmount} ml</td>
                             <td>{record.price.toLocaleString()} VNĐ</td>
                             <td>
-                              {new Date(
-                                record.vaccinationDate
-                              ).toLocaleDateString()}
+                              {record.nextDoseDate ? record.nextDoseDate.split('T')[0] : ""}
                             </td>
                             <td>{record.batchNumber}</td>
                             <td>{record.status}</td>

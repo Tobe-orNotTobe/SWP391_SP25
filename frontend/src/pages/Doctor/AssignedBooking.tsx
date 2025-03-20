@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully.ts";
-import {
-  apiGetBookingById,
-  apiGetDoctorBookings,
-} from "../../apis/apiBooking.ts";
+import { apiGetDoctorBookings } from "../../apis/apiBooking.ts";
 import "./VaccinationSchedulePage.scss";
-import {
-  BookingResponse,
-  BookingDetail,
-  Vaccine,
-} from "../../interfaces/VaccineRegistration.ts";
+import { BookingResponse } from "../../interfaces/VaccineRegistration.ts";
 import { useNavigate } from "react-router-dom";
 import DoctorLayout from "../../components/Layout/StaffLayout/DoctorLayout/DoctorLayout.tsx";
-import { Table, Button, Space, Input, InputRef, Tag } from "antd";
+import {
+  Table,
+  Button,
+  Space,
+  Input,
+  InputRef,
+  Tag,
+  DatePicker,
+  Radio,
+} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
@@ -20,32 +22,37 @@ import { Modal } from "antd";
 import {
   apiCreateVaccineRecord,
   apiGetVaccineRecordByBookingDetailId,
-  apiGetVaccineRecordByBookingId,
 } from "../../apis/apiVaccineRecord.ts";
 import { toast } from "react-toastify";
-import {
-  apiGetVaccineDetailById,
-  apiGetComBoVaccineById,
-  apiGetVaccineDetail,
-} from "../../apis/apiVaccine.ts";
 import {
   VaccineRecord,
   VaccineRecordResponse,
 } from "../../interfaces/VaccineRecord.ts";
+import moment from "moment";
+import { BookingDetailResponse } from "../../interfaces/Booking.ts";
+
+const { RangePicker } = DatePicker;
 
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();
-  const [bookings, setBookings] = useState<BookingResponse[]>([]);
+  const [bookings, setBookings] = useState<BookingDetailResponse[]>([]);
   const [selectedBooking, setSelectedBooking] =
-    useState<BookingResponse | null>(null);
+    useState<BookingDetailResponse | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [vaccineDetails, setVaccineDetails] = useState<VaccineRecord[]>([]);
   const [vaccineRecordDetails, setVaccineRecordDetails] =
     useState<VaccineRecordResponse | null>(null);
-  const searchInput = useRef<InputRef>(null);
+  const [filterDate, setFilterDate] = useState<moment.Moment | null>(null);
+  const [filterRange, setFilterRange] = useState<
+    [moment.Moment, moment.Moment] | null
+  >(null);
+  const [filterType, setFilterType] = useState<
+    "today" | "thisWeek" | "thisMonth" | "thisYear" | "custom"
+  >("today");
 
+  const searchInput = useRef<InputRef>(null);
   const navigate = useNavigate();
 
   const fetchBookings = async () => {
@@ -62,14 +69,70 @@ const VaccinationSchedulePage: React.FC = () => {
     fetchBookings();
   }, [doctorId]);
 
-  const pendingBookings = bookings.filter(
+  const handleDateChange = (date: moment.Moment | null) => {
+    setFilterDate(date);
+    setFilterRange(null);
+    setFilterType("custom");
+  };
+
+  const handleRangeChange = (dates: [moment.Moment, moment.Moment] | null) => {
+    setFilterRange(dates);
+    setFilterDate(null);
+    setFilterType("custom");
+  };
+
+  const handleFilterTypeChange = (e: any) => {
+    setFilterType(e.target.value);
+    setFilterDate(null);
+    setFilterRange(null);
+  };
+
+  const getFilteredBookings = () => {
+    let filteredBookings = bookings;
+
+    if (filterType === "today") {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(moment(), "day")
+      );
+    } else if (filterType === "thisWeek") {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(moment(), "week")
+      );
+    } else if (filterType === "thisMonth") {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(moment(), "month")
+      );
+    } else if (filterType === "thisYear") {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(moment(), "year")
+      );
+    } else if (filterDate) {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isSame(filterDate, "day")
+      );
+    } else if (filterRange) {
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isBetween(
+          filterRange[0],
+          filterRange[1],
+          "day",
+          "[]"
+        )
+      );
+    }
+
+    return filteredBookings;
+  };
+
+  const filteredBookings = getFilteredBookings();
+  const pendingBookings = filteredBookings.filter(
     (booking) => booking.status === "Chưa hoàn thành"
   );
-  const completedBookings = bookings.filter(
+  const completedBookings = filteredBookings.filter(
     (booking) => booking.status !== "Chưa hoàn thành"
   );
 
-  const openModal = async (booking: BookingResponse) => {
+  const openModal = async (booking: BookingDetailResponse) => {
     setVaccineDetails([]);
     setSelectedBooking(booking);
     setModalIsOpen(true);
@@ -195,7 +258,7 @@ const VaccinationSchedulePage: React.FC = () => {
       ),
   });
 
-  const handleProceedVaccination = async (booking: BookingResponse) => {
+  const handleProceedVaccination = async (booking: BookingDetailResponse) => {
     try {
       if (!booking.bookingDetailId) return;
 
@@ -237,47 +300,24 @@ const VaccinationSchedulePage: React.FC = () => {
       dataIndex: "bookingDetailId",
       key: "bookingDetailId",
       ...getColumnSearchProps("bookingDetailId"),
-      sorter: (a: BookingResponse, b: BookingResponse) =>
+      sorter: (a: BookingDetailResponse, b: BookingDetailResponse) =>
         Number(a.bookingDetailId) - Number(b.bookingDetailId),
-    },
-    {
-      title: "Tên Trẻ",
-      dataIndex: "childName",
-      key: "childName",
-      ...getColumnSearchProps("childName"),
-      sorter: (a: BookingResponse, b: BookingResponse) =>
-        a.childName.localeCompare(b.childName),
     },
     {
       title: "Ngày Đặt",
       dataIndex: "bookingDate",
       key: "bookingDate",
       render: (date: string) => new Date(date).toLocaleDateString(),
-      sorter: (a: BookingResponse, b: BookingResponse) =>
+      sorter: (a: BookingDetailResponse, b: BookingDetailResponse) =>
         new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime(),
-    },
-    {
-      title: "Loại Tiêm",
-      dataIndex: "bookingType",
-      key: "bookingType",
-      ...getColumnSearchProps("bookingType"),
-      filters: [
-        { text: "Loại 1", value: "Loại 1" },
-        { text: "Loại 2", value: "Loại 2" },
-      ],
-      onFilter: (value: string | number, record: BookingResponse) =>
-        record.bookingType
-          ?.toString()
-          .toLowerCase()
-          .includes(value.toString().toLowerCase()),
     },
     {
       title: "Giá Tiền",
       dataIndex: "price",
       key: "price",
       render: (price: number) => `${price.toLocaleString()} VNĐ`,
-      sorter: (a: BookingResponse, b: BookingResponse) =>
-        Number(a.totalPrice) - Number(b.totalPrice),
+      sorter: (a: BookingDetailResponse, b: BookingDetailResponse) =>
+        Number(a.price) - Number(b.price),
     },
     {
       title: "Trạng Thái",
@@ -287,7 +327,7 @@ const VaccinationSchedulePage: React.FC = () => {
         { text: "Chờ tiêm", value: "Chưa hoàn thành" },
         { text: "Đã tiêm", value: "Hoàn thành" },
       ],
-      onFilter: (value: any, record: BookingResponse) =>
+      onFilter: (value: any, record: BookingDetailResponse) =>
         record.status === value,
       render: (status: string) => {
         const statusLabels: { [key: string]: string } = {
@@ -309,7 +349,7 @@ const VaccinationSchedulePage: React.FC = () => {
     {
       title: "Hành động",
       key: "action",
-      render: (_: undefined, record: BookingResponse) => (
+      render: (_: undefined, record: BookingDetailResponse) => (
         <Space size="middle">
           <Button type="primary" onClick={() => openModal(record)}>
             Chi tiết
@@ -334,7 +374,7 @@ const VaccinationSchedulePage: React.FC = () => {
     .concat({
       title: "Hành động",
       key: "action",
-      render: (_: undefined, record: BookingResponse) => (
+      render: (_: undefined, record: BookingDetailResponse) => (
         <Space size="middle">
           <Button type="primary" onClick={() => openModal(record)}>
             Chi tiết
@@ -345,30 +385,49 @@ const VaccinationSchedulePage: React.FC = () => {
 
   return (
     <DoctorLayout>
-      <h1>Lịch Tiêm Chủng</h1>
+      <h1>Lịch tiêm chủng</h1>
+
+      <div style={{ marginBottom: 16 }}>
+        <Radio.Group onChange={handleFilterTypeChange} value={filterType}>
+          <Radio.Button value="today">Hôm nay</Radio.Button>
+          <Radio.Button value="thisWeek">Tuần này</Radio.Button>
+          <Radio.Button value="thisMonth">Tháng này</Radio.Button>
+          <Radio.Button value="thisYear">Năm này</Radio.Button>
+          <Radio.Button value="custom">Tùy chọn</Radio.Button>
+        </Radio.Group>
+
+        {filterType === "custom" && (
+          <div style={{ marginTop: 16 }}>
+            <DatePicker
+              value={filterDate}
+              onChange={handleDateChange}
+              style={{ marginRight: 8 }}
+            />
+            <RangePicker value={filterRange} onChange={handleRangeChange} />
+          </div>
+        )}
+      </div>
 
       <h2>Các Đơn Chưa Hoàn Thành</h2>
-      {pendingBookings.length > 0 ? (
-        <Table
-          dataSource={pendingBookings}
-          columns={columns}
-          rowKey="bookingDetailId"
-          style={{ marginBottom: 20 }}
-        />
-      ) : (
-        <p>Không có lịch tiêm chủng chưa hoàn thành.</p>
-      )}
+      <Table
+        dataSource={pendingBookings}
+        columns={columns}
+        rowKey="bookingDetailId"
+        style={{ marginBottom: 20 }}
+        locale={{
+          emptyText: "Không có dữ liệu",
+        }}
+      />
 
       <h2>Các Đơn Đã Hoàn Thành</h2>
-      {completedBookings.length > 0 ? (
-        <Table
-          dataSource={completedBookings}
-          columns={completedColumns}
-          rowKey="bookingDetailId"
-        />
-      ) : (
-        <p>Không có lịch tiêm chủng đã hoàn thành.</p>
-      )}
+      <Table
+        dataSource={completedBookings}
+        columns={completedColumns}
+        rowKey="bookingDetailId"
+        locale={{
+          emptyText: "Không có dữ liệu",
+        }}
+      />
 
       <Modal
         open={modalIsOpen}
@@ -417,27 +476,33 @@ const VaccinationSchedulePage: React.FC = () => {
                     </Tag>
                   </p>
                 </div>
-                {vaccineRecordDetails?.result.vaccineRecords.length > 0 && (
-                  <div className="combo-section">
-                    <h3>Chi Tiết Vaccine</h3>
-                    {vaccineRecordDetails?.result.vaccineRecords.map(
-                      (vaccine) => (
-                        <div key={vaccine.vaccineId} className="vaccine-item">
-                          <p>
-                            <strong>Tên Vaccine:</strong> {vaccine.vaccineName}
-                          </p>
-                          <p>
-                            <strong>Giá:</strong>{" "}
-                            {vaccine.price?.toLocaleString()} VNĐ
-                          </p>
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
+                {vaccineRecordDetails?.result?.vaccineRecords &&
+                  vaccineRecordDetails?.result.vaccineRecords.length > 0 && (
+                    <div className="combo-section">
+                      <h3>Chi Tiết Vaccine</h3>
+                      {vaccineRecordDetails?.result.vaccineRecords.map(
+                        (vaccine) => (
+                          <div
+                            key={vaccine.vaccinationRecordId}
+                            className="vaccine-item"
+                          >
+                            <p>
+                              <strong>Tên Vaccine:</strong>{" "}
+                              {vaccine.vaccineName}
+                            </p>
+                            <p>
+                              <strong>Giá:</strong>{" "}
+                              {vaccine.price?.toLocaleString()} VNĐ
+                            </p>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
               </div>
 
               {selectedBooking.status !== "Chưa hoàn thành" &&
+                vaccineRecordDetails?.result?.vaccineRecords &&
                 vaccineRecordDetails?.result?.vaccineRecords?.length > 0 && (
                   <div className="vaccine-record-section">
                     <h3>Thông Tin Tiêm Chủng</h3>
@@ -446,25 +511,29 @@ const VaccinationSchedulePage: React.FC = () => {
                         <tr>
                           <th>Tên Vaccine</th>
                           <th>Liều lượng</th>
-                          <th>Ngày tiêm</th>
+                          <th>Ngày nhắc lại</th>
                           <th>Số lô</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {vaccineRecordDetails.result.vaccineRecords.map(
-                          (record) => (
-                            <tr key={record.vaccinationRecordId}>
-                              <td>{record.vaccineName}</td>
-                              <td>{record.doseAmount} ml</td>
-                              <td>
-                                {new Date(
-                                  record.vaccinationDate
-                                ).toLocaleDateString()}
-                              </td>
-                              <td>{record.batchNumber}</td>
-                            </tr>
-                          )
-                        )}
+                        {vaccineRecordDetails &&
+                          vaccineRecordDetails.result.vaccineRecords.map(
+                            (record) => (
+                              <tr key={record.vaccinationRecordId}>
+                                <td>{record.vaccineName}</td>
+                                <td>{record.doseAmount} ml</td>
+                                <td>
+                                  {record.nextDoseDate
+                                    ? new Date(
+                                        record.nextDoseDate
+                                      ).toLocaleDateString()
+                                    : "N/A"}
+                                </td>
+
+                                <td>{record.batchNumber}</td>
+                              </tr>
+                            )
+                          )}
                       </tbody>
                     </table>
                   </div>
