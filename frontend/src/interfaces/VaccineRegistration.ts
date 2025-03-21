@@ -60,13 +60,6 @@ export interface Booking {
   bookingDetails: BookingDetail[];
 }
 
-export interface BookingDetail {
-  vaccineId: number | null;
-  comboVaccineId: number | null;
-  vaccineName: string | null;
-  comboVaccineName: string | null;
-}
-
 export interface BookingUser {
   bookingId: number;
   userId: string;
@@ -77,7 +70,14 @@ export interface BookingUser {
   totalPrice: number;
   notes: string;
   status: string;
-  bookingDetails: BookingDetail[];
+  bookingDetails: BookingDetailResponse[];
+}
+
+export interface BookingDetail {
+  vaccineId: number | null;
+  comboVaccineId: number | null;
+  vaccineName: string | null;
+  comboVaccineName: string | null;
 }
 
 export interface BookingResponse {
@@ -95,9 +95,13 @@ export interface BookingDetailResponse {
   childName: string;
   bookingDate: string;
   bookingType: string;
-  totalPrice: string;
+  price: number;
   note: string;
   status: string;
+  vaccineId: number | null;
+  comboVaccineId: number | null;
+  vaccineName: string | null;
+  comboVaccineName: string | null;
 }
 
 export interface Feedback {
