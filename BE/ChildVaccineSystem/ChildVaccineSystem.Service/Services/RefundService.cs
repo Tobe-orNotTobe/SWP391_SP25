@@ -85,14 +85,14 @@ namespace ChildVaccineSystem.Service.Services
 				refundAmount = booking.TotalPrice;
 				refundPolicy = "Hoàn tiền đầy đủ (100%) - Hủy trước 7 ngày hoặc hơn so với lịch hẹn";
 			}
-			else if (daysUntilAppointment >= 3 && daysUntilAppointment <= 6)
+			else if (daysUntilAppointment >= 4 && daysUntilAppointment <= 6)
 			{
 				refundAmount = booking.TotalPrice * 0.5m;
-				refundPolicy = "Hoàn tiền một phần (50%) - Hủy trước 3-6 ngày so với lịch hẹn";
+				refundPolicy = "Hoàn tiền một phần (50%) - Hủy trước 4-6 ngày so với lịch hẹn";
 			}
 			else
 			{
-				throw new InvalidOperationException("Không thể yêu cầu hoàn tiền trước 2 ngày!");
+				throw new InvalidOperationException("Không thể yêu cầu hoàn tiền trước 3 ngày!");
 			}
 
 			// Create new refund request

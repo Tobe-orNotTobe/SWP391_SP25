@@ -32,7 +32,10 @@ namespace ChildVaccineSystem.API.Jobs
 				{
 					var reminderService = scope.ServiceProvider.GetRequiredService<IReminderService>();
 
-					// Process reminders for appointments 3 days ahead
+					// This will handle all reminder processing:
+					// 1. Clean up expired reminders
+					// 2. Send due reminders for confirmed/in progress bookings
+					// 3. Create new reminders for confirmed/in progress bookings that don't have reminders yet
 					await reminderService.ProcessAppointmentRemindersAsync(3);
 				}
 
