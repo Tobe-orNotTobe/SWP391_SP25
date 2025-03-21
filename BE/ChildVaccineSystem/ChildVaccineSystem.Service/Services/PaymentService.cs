@@ -22,7 +22,7 @@ namespace ChildVaccineSystem.Service.Services
 			// Validate booking exists and belongs to user
 			if (!await ValidateBookingForPaymentAsync(bookingId, userId))
 			{
-				throw new UnauthorizedAccessException("Đặt li không hợp lệ hoặc bạn không được phép thanh toán cho đặt chỗ này!");
+				throw new UnauthorizedAccessException("lịch hẹn không hợp lệ hoặc bạn không được phép thanh toán cho lịch hẹn này!");
 			}
 
 			var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
