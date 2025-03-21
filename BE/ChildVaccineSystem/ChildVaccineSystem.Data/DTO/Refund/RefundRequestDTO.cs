@@ -12,7 +12,6 @@ namespace ChildVaccineSystem.Data.DTO.Refund
 		public string Reason { get; set; }
 		public string Status { get; set; }
 		public string AdminNote { get; set; }
-		public string ProcessedBy { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public DateTime? ProcessedAt { get; set; }
 	}
