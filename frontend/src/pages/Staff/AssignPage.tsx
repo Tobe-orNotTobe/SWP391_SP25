@@ -16,7 +16,21 @@ import { apiGetAllDoctors } from "../../apis/apiAdmin";
 import { Doctor } from "../../interfaces/Doctor";
 import "./DoctorList.scss";
 import Staff1Layout from "../../components/Layout/StaffLayout/Stafff1Layout/Staff1Layout";
-import { Table, Button, Space, Input, DatePicker, Radio, Typography, Card, Avatar, Tag, Modal, Row, Col } from "antd";
+import {
+  Table,
+  Button,
+  Space,
+  Input,
+  DatePicker,
+  Radio,
+  Typography,
+  Card,
+  Avatar,
+  Tag,
+  Modal,
+  Row,
+  Col,
+} from "antd";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
@@ -33,20 +47,30 @@ const { Title, Text } = Typography;
 
 function AssignPage() {
   const [bookings, setBookings] = useState<BookingResponse[]>([]);
-  const [unassignBookings, setUnassignBookings] = useState<BookingResponse[]>([]);
-  const [assignedBookings, setAssignedBookings] = useState<BookingResponse[]>([]);
+  const [unassignBookings, setUnassignBookings] = useState<BookingResponse[]>(
+    []
+  );
+  const [assignedBookings, setAssignedBookings] = useState<BookingResponse[]>(
+    []
+  );
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalDoctorIsOpen, setDoctorModalIsOpen] = useState(false);
-  const [vaccineRecordDetails, setVaccineRecordDetails] = useState<VaccineRecordResponse>();
-  const [selectedBooking, setSelectedBooking] = useState<BookingResponse | null>(null);
+  const [vaccineRecordDetails, setVaccineRecordDetails] =
+    useState<VaccineRecordResponse>();
+  const [selectedBooking, setSelectedBooking] =
+    useState<BookingResponse | null>(null);
   const [vaccineDetails, setVaccineDetails] = useState<any[]>([]);
   const [comboDetails, setComboDetails] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [filterDate, setFilterDate] = useState<moment.Moment | null>(null);
-  const [filterRange, setFilterRange] = useState<[moment.Moment, moment.Moment] | null>(null);
-  const [filterType, setFilterType] = useState<"today" | "thisWeek" | "thisMonth" | "thisYear" | "custom">("today");
+  const [filterRange, setFilterRange] = useState<
+    [moment.Moment, moment.Moment] | null
+  >(null);
+  const [filterType, setFilterType] = useState<
+    "today" | "thisWeek" | "thisMonth" | "thisYear" | "custom"
+  >("today");
 
   const searchInput = useRef<any>(null);
 
@@ -108,28 +132,33 @@ function AssignPage() {
     let filteredBookings = bookings;
 
     if (filterType === "today") {
-      filteredBookings = filteredBookings.filter(booking =>
+      filteredBookings = filteredBookings.filter((booking) =>
         moment(booking.bookingDate).isSame(moment(), "day")
       );
     } else if (filterType === "thisWeek") {
-      filteredBookings = filteredBookings.filter(booking =>
+      filteredBookings = filteredBookings.filter((booking) =>
         moment(booking.bookingDate).isSame(moment(), "week")
       );
     } else if (filterType === "thisMonth") {
-      filteredBookings = filteredBookings.filter(booking =>
+      filteredBookings = filteredBookings.filter((booking) =>
         moment(booking.bookingDate).isSame(moment(), "month")
       );
     } else if (filterType === "thisYear") {
-      filteredBookings = filteredBookings.filter(booking =>
+      filteredBookings = filteredBookings.filter((booking) =>
         moment(booking.bookingDate).isSame(moment(), "year")
       );
     } else if (filterDate) {
-      filteredBookings = filteredBookings.filter(booking =>
+      filteredBookings = filteredBookings.filter((booking) =>
         moment(booking.bookingDate).isSame(filterDate, "day")
       );
     } else if (filterRange) {
-      filteredBookings = filteredBookings.filter(booking =>
-        moment(booking.bookingDate).isBetween(filterRange[0], filterRange[1], "day", "[]")
+      filteredBookings = filteredBookings.filter((booking) =>
+        moment(booking.bookingDate).isBetween(
+          filterRange[0],
+          filterRange[1],
+          "day",
+          "[]"
+        )
       );
     }
 
@@ -137,11 +166,13 @@ function AssignPage() {
   };
 
   const filteredBookings = getFilteredBookings();
-  const filteredUnassignBookings = filteredBookings.filter(
-    (booking) => unassignBookings.some((unassign) => unassign.bookingId === booking.bookingId)
+  const filteredUnassignBookings = filteredBookings.filter((booking) =>
+    unassignBookings.some(
+      (unassign) => unassign.bookingId === booking.bookingId
+    )
   );
-  const filteredAssignedBookings = filteredBookings.filter(
-    (booking) => assignedBookings.some((assign) => assign.bookingId === booking.bookingId)
+  const filteredAssignedBookings = filteredBookings.filter((booking) =>
+    assignedBookings.some((assign) => assign.bookingId === booking.bookingId)
   );
 
   const handleAssignDoctor = async (doctorId: string, bookingId: string) => {
@@ -505,10 +536,12 @@ function AssignPage() {
               value={filterDate}
               onChange={handleDateChange}
               style={{ marginRight: 8 }}
+              placeholder="Chọn ngày"
             />
             <RangePicker
               value={filterRange}
               onChange={handleRangeChange}
+              placeholder={["Từ ngày", "Đến ngày"]}
             />
           </div>
         )}
@@ -696,19 +729,23 @@ function AssignPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {vaccineRecordDetails.result.vaccineRecords.map((record) => (
-                          <tr key={record.vaccinationRecordId}>
-                            <td>{record.vaccineName}</td>
-                            <td>{record.doseAmount} ml</td>
-                            <td>{record.price.toLocaleString()} VNĐ</td>
-                            <td>
-                              {record.nextDoseDate ? record.nextDoseDate.split('T')[0] : ""}
-                            </td>
-                            <td>{record.batchNumber}</td>
-                            <td>{record.status}</td>
-                            <td>{record.notes}</td>
-                          </tr>
-                        ))}
+                        {vaccineRecordDetails.result.vaccineRecords.map(
+                          (record) => (
+                            <tr key={record.vaccinationRecordId}>
+                              <td>{record.vaccineName}</td>
+                              <td>{record.doseAmount} ml</td>
+                              <td>{record.price.toLocaleString()} VNĐ</td>
+                              <td>
+                                {record.nextDoseDate
+                                  ? record.nextDoseDate.split("T")[0]
+                                  : ""}
+                              </td>
+                              <td>{record.batchNumber}</td>
+                              <td>{record.status}</td>
+                              <td>{record.notes}</td>
+                            </tr>
+                          )
+                        )}
                       </tbody>
                     </table>
                   </div>

@@ -32,6 +32,7 @@ import moment from "moment";
 import { BookingDetailResponse } from "../../interfaces/Booking.ts";
 
 const { RangePicker } = DatePicker;
+import dayjs, { Dayjs } from 'dayjs';
 
 const VaccinationSchedulePage: React.FC = () => {
   const { sub: doctorId } = IsLoginSuccessFully();
@@ -308,8 +309,56 @@ const VaccinationSchedulePage: React.FC = () => {
       dataIndex: "bookingDate",
       key: "bookingDate",
       render: (date: string) => new Date(date).toLocaleDateString(),
-      sorter: (a: BookingDetailResponse, b: BookingDetailResponse) =>
+      sorter: (a: BookingResponse, b: BookingResponse) =>
         new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime(),
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <RangePicker
+            value={
+              selectedKeys[0]
+                ? [dayjs(selectedKeys[0]), dayjs(selectedKeys[1])]
+                : [null, null]
+            }
+            onChange={(dates: [Dayjs | null, Dayjs | null] | null) => {
+              if (dates && dates[0] && dates[1]) {
+                setSelectedKeys([dates[0].toISOString(), dates[1].toISOString()]);
+              } else {
+                setSelectedKeys([]);
+              }
+            }}
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => confirm()}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Lọc
+            </Button>
+            <Button
+              onClick={() => {
+                clearFilters?.();
+                confirm();
+              }}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Đặt lại
+            </Button>
+          </Space>
+        </div>
+      ),
+      onFilter: (value: any, record: BookingResponse) => {
+        const [startDate, endDate] = value as [string, string];
+        const bookingDate = new Date(record.bookingDate).getTime();
+        return (
+          bookingDate >= new Date(startDate).getTime() &&
+          bookingDate <= new Date(endDate).getTime()
+        );
+      },
     },
     {
       title: "Giá Tiền",
@@ -402,8 +451,9 @@ const VaccinationSchedulePage: React.FC = () => {
               value={filterDate}
               onChange={handleDateChange}
               style={{ marginRight: 8 }}
+              placeholder="Chọn ngày"
             />
-            <RangePicker value={filterRange} onChange={handleRangeChange} />
+            <RangePicker value={filterRange} onChange={handleRangeChange}  placeholder={["Từ ngày", "Đến ngày"]}  />
           </div>
         )}
       </div>
