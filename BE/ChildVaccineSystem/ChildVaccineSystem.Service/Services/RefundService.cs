@@ -70,7 +70,7 @@ namespace ChildVaccineSystem.Service.Services
 			// Check if there's already a pending refund request
 			if (await _unitOfWork.RefundRequests.HasExistingRequestForBookingAsync(createDto.BookingId))
 			{
-				throw new InvalidOperationException("Đã có yêu cầu hoàn tiền cho đơn đặt lịch này.");
+				throw new InvalidOperationException("Đã có yêu cầu hoàn tiền cho đơn lịch hẹn này.");
 			}
 
 			// Tính toán số tiền hoàn lại dựa trên số ngày trước lịch tiêm
@@ -85,14 +85,14 @@ namespace ChildVaccineSystem.Service.Services
 				refundAmount = booking.TotalPrice;
 				refundPolicy = "Hoàn tiền đầy đủ (100%) - Hủy trước 7 ngày hoặc hơn so với lịch hẹn";
 			}
-			else if (daysUntilAppointment >= 3 && daysUntilAppointment <= 6)
+			else if (daysUntilAppointment >= 4 && daysUntilAppointment <= 6)
 			{
 				refundAmount = booking.TotalPrice * 0.5m;
-				refundPolicy = "Hoàn tiền một phần (50%) - Hủy trước 3-6 ngày so với lịch hẹn";
+				refundPolicy = "Hoàn tiền một phần (50%) - Hủy trước 4-6 ngày so với lịch hẹn";
 			}
 			else
 			{
-				throw new InvalidOperationException("Không thể yêu cầu hoàn tiền trước 2 ngày!");
+				throw new InvalidOperationException("Không thể yêu cầu hoàn tiền trước 3 ngày!");
 			}
 
 			// Create new refund request
@@ -126,7 +126,7 @@ namespace ChildVaccineSystem.Service.Services
 
 			if (refundRequest.Status != "Đang chờ xử lý")
 			{
-				throw new InvalidOperationException($"Không thể chấp thuận yêu cầu hoàn tiền có trạng thái  {refundRequest.Status}!");
+				throw new InvalidOperationException($"Không thể chấp thuận yêu cầu hoàn tiền có trạng thái {refundRequest.Status}!");
 			}
 
 			// Không cho phép điều chỉnh số tiền hoàn lại - sử dụng số tiền đã tính tự động
@@ -137,7 +137,6 @@ namespace ChildVaccineSystem.Service.Services
 				try
 				{
 					refundRequest.Status = "Đã chấp nhận";
-					refundRequest.ProcessedById = adminId;
 					refundRequest.ProcessedAt = DateTime.UtcNow;
 
 					await _unitOfWork.RefundRequests.UpdateAsync(refundRequest);
@@ -178,7 +177,6 @@ namespace ChildVaccineSystem.Service.Services
 
 			// Update refund request
 			refundRequest.Status = "Bị từ chối";
-			refundRequest.ProcessedById = adminId;
 			refundRequest.ProcessedAt = DateTime.UtcNow;
 			refundRequest.AdminNote = processDto.AdminNote;
 

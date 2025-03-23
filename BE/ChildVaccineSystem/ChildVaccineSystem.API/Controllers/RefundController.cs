@@ -162,16 +162,20 @@ namespace ChildVaccineSystem.API.Controllers
 				{
 					_response.StatusCode = HttpStatusCode.Unauthorized;
 					_response.IsSuccess = false;
-					_response.ErrorMessages.Add("User ID not found in token");
+					_response.ErrorMessages.Add("Không tìm thấy người dùng trong token");
 					return Unauthorized(_response);
 				}
 
 				var refundRequest = await _refundService.CreateRefundRequestAsync(userId, createDto);
 
-				_response.Result = refundRequest;
+				_response.Result = new
+				{
+					Message = $"Đã yêu cầu hoàn lại {refundRequest.Amount:C} dựa trên chính sách hủy.",
+					RefundRequest = refundRequest
+				};
 				_response.StatusCode = HttpStatusCode.Created;
 				_response.IsSuccess = true;
-				_response.ErrorMessages.Add($"A refund of {refundRequest.Amount:C} has been requested based on the cancellation policy.");
+
 				return CreatedAtAction(nameof(GetRefundRequestById), new { id = refundRequest.RefundRequestId }, _response);
 			}
 			catch (KeyNotFoundException ex)
