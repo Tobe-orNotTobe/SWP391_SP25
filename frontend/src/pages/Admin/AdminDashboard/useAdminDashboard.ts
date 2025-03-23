@@ -1,26 +1,51 @@
 import {useEffect, useState} from "react";
-import {apiDashBoardFeedBack, apiDashBoardRevenue, apiExportedVaccines} from "../../../apis/apiAdmin.ts";
+import {
+    apiDashBoardFeedBack,
+    apiDashBoardTotalRevenue,
+    apiDashBoardRevenueLast10days,
+    apiAdminGetRevenuePerDay
+} from "../../../apis/apiAdmin.ts";
 
 
-interface Revenue {
-    id: string;
-    revenue: number;
-    date: string;
-}
-
-interface Feedback{
-    id: string;
+export interface Feedback{
+    feedbackId: string;
     rating : number;
     comment: string;// Tren revenue thi hien thi 5 chu la dc r
     userName : string;
 }
 
-interface ExportedVaccines {
-    name: string;
-    quantity: number;
+export interface Revenue {
+    date: string;
+    totalRevenue: number;
 }
-export const useRevenueDetail = () =>{
-    const [revenue, setRevenue] = useState<Revenue[]>([])
+
+export const useRevenueLast10Days = () => {
+    const [revenue, setRevenueLast10Days ] = useState<Revenue[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        const fetchRefundUserList =  async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const data = await apiDashBoardRevenueLast10days();
+                if (data.isSuccess) {
+                    setRevenueLast10Days(data.result);
+                }
+            }catch (err){
+                setError("error");
+                console.log(err);
+            }finally {
+                setLoading(false);
+            }
+        }
+        fetchRefundUserList();
+    },[])
+    return {revenue, loading, error};
+}
+
+export const useRevenueTotal = () =>{
+    const [revenue, setRevenue] = useState<number>(0)
     const[loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,10 +55,9 @@ export const useRevenueDetail = () =>{
             setLoading(true);
 
             try {
-                const data = await apiDashBoardRevenue();
+                const data = await apiDashBoardTotalRevenue();
                 if (data ) {
-                    // setRevernue(data.result);
-                    setRevenue(data);
+                    setRevenue(data.result);
                 }
             }catch(err){
                 setError("Lỗi");
@@ -78,29 +102,37 @@ export const useFeedbackDetail = () =>{
     return {feedback, loading, error};
 }
 
-export const useExportedVaccines = () => {
+export const useRevenueBydate = (date: string) => {
+    const [revenueByDate, setRevenueByDate] = useState<Revenue[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [exportedVaccine, setExportedVaccine] = useState<ExportedVaccines[]>([]);
 
     useEffect(() => {
-        const fetchVaccine = async () => {
-            setLoading(true);
+
+        if (date) {
+            const fetchRevenuteByDate = async () => {
+                setLoading(true);
+                setError(null);
+
+                try {
+                    const response = await apiAdminGetRevenuePerDay(date);
+                    if (response.isSuccess) {
+                        setRevenueByDate(response.result);
+                    }
+                } catch (err) {
+                    setError("Error Fetching RevenueByDate");
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchRevenuteByDate();
+        } else {
+
+            setRevenueByDate([]);
+            setLoading(false);
             setError(null);
-
-            try{
-                const response = await apiExportedVaccines();
-                setExportedVaccine(response);
-            }catch (err) {
-                setError("ERRRRRRR");
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
         }
+    }, [date]);
 
-        fetchVaccine();
-    }, []);
-
-    return{exportedVaccine, loading, error};
-}
+    return { revenueByDate, loading, error };
+};

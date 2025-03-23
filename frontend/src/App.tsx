@@ -32,6 +32,7 @@ import ChildDetailPage from "./pages/ChildPage/ChildDetail/ChildDetailPage.tsx";
 import VaccinationRegistrationPage from "./pages/Customer/BookingPage.tsx";
 import TransactionPage from "./pages/Customer/TransactionPage.tsx";
 import ServicePage from "./pages/Doctor/ServicePage.tsx";
+import NotificationPage from "./pages/Customer/Notification/Notification.tsx";
 
 // Manager Pages
 import ManagerDashBoard from "./pages/Manager/ManagerDashboard/ManagerDashBoard.tsx";
@@ -57,20 +58,25 @@ import AdminProfile from "./pages/Admin/AdminProfile/AdminProfile.tsx";
 import ManagerProfile from "./pages/Manager/ManagerProfile/ManagerProfile.tsx";
 import BookingHistoryPage from "./pages/Customer/BookingHistory/BookingHistoryPage.tsx";
 import AssignPage from "./pages/Staff/AssignPage.tsx";
-import AssignedBooking from "./pages/Doctor/AssignedBooking.tsx";
 import VaccinePackagePage from "./pages/VaccinePage/VaccinePackagePage/VaccinePackagePage.tsx";
 import AdminBlogManagePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogManage/AdminBlogManage.tsx";
 import AdminBlogDeactivePage from "./pages/Admin/AdminBlog/AdminBlogList/AdminBlogDeactive/AdminBlogDeactive.tsx";
 import AdminFeedbackListPage from "./pages/Admin/AdminFeedback/AdminFeedbackList/AdminFeedbackList.tsx";
 import CustomerWallet from "./pages/Customer/CustomerWallet/CustomerWallet.tsx";
 import BookingForStaff from "./pages/Staff/BookingForStaff.tsx";
-import StaffBlogPost from "./pages/Staff/StaffBlogPost.tsx";
+
 import NewsPage from "./pages/News/NewsPage.tsx";
 import NewsDetailPage from "./pages/News/NewsDetailPage.tsx";
-import StaffBlogManagePage from "./pages/Staff/Blog/StaffBlogManage/StaffBlogManage.tsx";
-import StaffBlogPostPage from "./pages/Staff/StaffBlogPost.tsx";
+import Failure from "./components/Failure/Failure.tsx";
+
 import DoctorBlogPostPage from "./pages/Doctor/DoctorBlogPost.tsx";
 import DoctorBlogManagePage from "./pages/Doctor/Blog/DoctorBlogManage/DoctorBlogManage.tsx";
+import AdminBookingPage from "./pages/Admin/AdminBooking/AdminBookingList/AdminBookingList.tsx";
+import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
+
+import StaffBlogPostPage from "./pages/Staff/StaffBlogPost.tsx";
+import StaffBlogManagePage from "./pages/Staff/Blog/StaffBlogManage/StaffBlogManage.tsx";
+import DoctorProfile from "./pages/Doctor/DoctorProfile/DoctorProfile.tsx";
 
 
 function App() {
@@ -78,8 +84,11 @@ function App() {
         <BrowserRouter>
             <PageLoader />
             <Routes>
+                <Route path="/payment" element={<TransactionPage />} />
+                <Route path="/payment/:bookingId" element={<TransactionPage/>} />
                 <Route path="/payment-success" element={<PaymentSuccess />}/>
                 <Route path="/wallet/deposit-success" element={<DepositSuccess/>}/>
+                <Route path="/wallet/deposit-failure" element={<Failure/>}/>
 
                 {/* Public Routes */}
                 <Route path="/" element={<PublicRoute><HomePage/></PublicRoute>}/>
@@ -117,7 +126,7 @@ function App() {
                 <Route path="/customer/wallet" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerWallet /></ProtectedRoute>} />
                 <Route path="/user-profile" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><CustomerProfile /></ProtectedRoute>} />
                 <Route path="/booking-history" element={<ProtectedRoute allowedRoles={["Customer", "Admin"]}><BookingHistoryPage /></ProtectedRoute>} />
-
+                <Route path="/notifications" element={<ProtectedRoute allowedRoles={["Customer"]}><NotificationPage/></ProtectedRoute>} />
 
                 {/* Staff Routes */}
                 <Route path="/staff/service" element={<ProtectedRoute allowedRoles={["Staff"]}><ServicePage /></ProtectedRoute>} />
@@ -131,8 +140,7 @@ function App() {
                 <Route path="/doctor/service" element={<ProtectedRoute allowedRoles={["Doctor"]}><ServicePage /></ProtectedRoute>} />
                 <Route path="/doctor/blogPost" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorBlogPostPage /></ProtectedRoute>} />
                 <Route path="/doctor/blogManager" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorBlogManagePage /></ProtectedRoute>} />
-
-
+                <Route path="/doctor/profile" element={<ProtectedRoute allowedRoles={["Doctor"]}><DoctorProfile /></ProtectedRoute>}/>
                 {/* Manager Routes */}
                 <Route path="/manager/dashboard" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerDashBoard /></ProtectedRoute>} />
                 <Route path="/manager/vaccines" element={<ProtectedRoute allowedRoles={["Manager"]}><ManagerVaccinePage /></ProtectedRoute>} />
@@ -161,6 +169,9 @@ function App() {
                 <Route path="/admin/blog/add" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogFormPage /></ProtectedRoute>} />
                 <Route path="/admin/blog/edit/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogFormPage /></ProtectedRoute>} />
                 <Route path="/admin/feedback" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminFeedbackListPage /></ProtectedRoute>} />
+                <Route path="/admin/booking" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBookingPage/></ProtectedRoute>} />
+                <Route path="/admin/wallet"element={<ProtectedRoute allowedRoles={["Admin"]}><AdminRefund/></ProtectedRoute>}/>
+
 
 
                 {/* Trang 404 */}

@@ -1,40 +1,143 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Select, Table, Rate } from "antd";
+import React, {useEffect, useRef, useState} from "react";
+import {Row, Col, Table, Rate, DatePicker} from "antd";
+import {TeamOutlined, SolutionOutlined, CrownOutlined, SafetyOutlined } from '@ant-design/icons';
 import AdminLayout from "../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import { useFeedbackDetail, useRevenueDetail, useExportedVaccines } from "./useAdminDashboard.ts";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+    Revenue,
+    useFeedbackDetail,
+    useRevenueBydate,
+    useRevenueLast10Days,
+    useRevenueTotal
+} from "./useAdminDashboard.ts";
+import { Chart, registerables, ChartType } from 'chart.js';
 import './AdminDashboard.scss';
 
+import {useTopUsedVaccine} from "../../../hooks/useVaccine.ts";
+import {useGetAllUser} from "../AdminAccount/useAdminAccount.ts";
+
+Chart.register(...registerables);
+
 const AdminDashboardPage: React.FC = () => {
-    const { revenue } = useRevenueDetail();
+    const {users, fetchAllUser} = useGetAllUser();
+
+    useEffect(() => {
+        fetchAllUser()
+    }, []);
+
+    // console.log(users)
+    const { revenue } = useRevenueLast10Days();
+
+    const [selectedDate, setSelectedDate] = useState<string>("");
+    const {revenueByDate} = useRevenueBydate(selectedDate);
+
+
     const { feedback } = useFeedbackDetail();
-    const { exportedVaccine } = useExportedVaccines(); // Dữ liệu vaccine
+    const { topUseVaccine } = useTopUsedVaccine();
+    const {revenue : revenueTotal} = useRevenueTotal()
 
-    // State to hold the selected year
-    const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-    const [filteredRevenue, setFilteredRevenue] = useState(revenue);
+    const chartRef = useRef<HTMLCanvasElement | null>(null);
+    const chartInstance = useRef<Chart<ChartType> | null>(null);
 
-    // Handle year change
-    const handleYearChange = (year: number) => {
-        setSelectedYear(year);
+
+    const formatDateString = (dateString: string | null | undefined): string => {
+        if (!dateString) return "N/A";
+
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            console.error("Invalid date:", dateString);
+            return "N/A";
+        }
+
+        return date.toISOString().split("T")[0];
     };
 
-    // Filter revenue based on the selected year
+
+
+
     useEffect(() => {
-        const filteredData = revenue.filter(item => new Date(item.date).getFullYear() === selectedYear);
-        setFilteredRevenue(filteredData);
-    }, [selectedYear, revenue]);
+        if (chartRef.current) {
+            // Destroy previous chart instance if it exists
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
+            }
+
+            const revenueData: Revenue[] = selectedDate && revenueByDate ? [revenueByDate] : revenue;
+            if (!revenueData || revenueData.length === 0) {
+                return;
+            }
+
+            const labels = revenueData.map(item => formatDateString(item.date));
+            const data = revenueData.map(item => item.totalRevenue);
 
 
-    const years = Array.from(new Set(revenue.map(item => new Date(item.date).getFullYear())));
+            const ctx = chartRef.current.getContext('2d');
+            if (ctx) {
+                chartInstance.current = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Doanh thu (VND)',
+                            data: data,
+                            backgroundColor: '#2A388F',
+                            barThickness: 40,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Ngày'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Doanh thu (VND)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return new Intl.NumberFormat('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND',
+                                            maximumFractionDigits: 0
+                                        }).format(value as number);
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return new Intl.NumberFormat('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND',
+                                            maximumFractionDigits: 0
+                                        }).format(context.raw as number);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
 
+        // Clean up function
+        return () => {
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
+            }
+        };
+    }, [selectedDate, revenueByDate, revenue]);
 
-    const sortedFeedback = feedback.sort((a, b) => parseInt(b.id) - parseInt(a.id)).slice(0, 3);
+    const sortedFeedback = feedback.sort((a, b) => parseInt(b.feedbackId) - parseInt(a.feedbackId)).slice(0, 3);
 
-
-    const sortedVaccines = exportedVaccine.sort((a, b) => b.quantity - a.quantity).slice(0, 3);
-
-    console.log("Feedback data:", feedback);
+    const sortedVaccines = topUseVaccine.sort((a, b) => b.count - a.count).slice(0, 3);
 
     const feedbackColumns = [
         {
@@ -60,13 +163,13 @@ const AdminDashboardPage: React.FC = () => {
     const vaccineColumns = [
         {
             title: "Tên vaccine",
-            dataIndex: "name",
-            key: "name",
+            dataIndex: "vaccineName",
+            key: "vaccineName",
         },
         {
             title: "Số lượng",
-            dataIndex: "quantity",
-            key: "quantity",
+            dataIndex: "count",
+            key: "count",
         }
     ];
 
@@ -74,32 +177,72 @@ const AdminDashboardPage: React.FC = () => {
         <AdminLayout>
             <div className="admin-dashboard-container">
                 <Row gutter={[16, 16]}>
-                    {/* Phần trên (bên trái) */}
+                    <Col span={24}>
+                        <Row gutter={[16, 16]} className="user-statistics">
+                            <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>
+                                <div className="stat-card">
+                                    <TeamOutlined className="stat-icon" />
+                                    <div className="stat-content">
+                                        <div className="stat-title">Tổng Customer</div>
+                                        <div className="stat-value">{users?.filter(user => user.roles[0] === 'Customer').length || 0}</div>
+                                    </div>
+                                </div>
+                            </Col>
+
+                            <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>
+                                <div className="stat-card">
+                                    <SolutionOutlined className="stat-icon" />
+                                    <div className="stat-content">
+                                        <div className="stat-title">Tổng Staff</div>
+                                        <div className="stat-value">{users?.filter(user => user.roles[0]=== 'Staff').length || 0}</div>
+                                    </div>
+                                </div>
+                            </Col>
+
+                            <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>
+                                <div className="stat-card">
+                                    <CrownOutlined className="stat-icon" />
+                                    <div className="stat-content">
+                                        <div className="stat-title">Tổng Manager</div>
+                                        <div className="stat-value">{users?.filter(user => user.roles[0] === 'Manager').length || 0}</div>
+                                    </div>
+                                </div>
+                            </Col>
+
+                            <Col xs={24} sm={12} md={8} lg={6} xl={4.8}>
+                                <div className="stat-card">
+                                    <SafetyOutlined className="stat-icon" />
+                                    <div className="stat-content">
+                                        <div className="stat-title">Tổng Admin</div>
+                                        <div className="stat-value">{users?.filter(user => user.roles[0] === 'Admin').length || 0}</div>
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Col>
+
+                    {/* Revenue Chart Section */}
                     <Col span={24}>
                         <div className="chart-container">
-                            <h1 className="title">Biểu đồ doanh thu của SideEffect</h1>
-                            {/* Year Filter */}
-                            <div className="year-filter">
-                                <Select
-                                    value={selectedYear}
-                                    onChange={handleYearChange}
-                                    style={{width: 100}}
-                                    options={years.map(year => ({label: year.toString(), value: year}))}
+                            <div className="date-filter">
+                                <DatePicker
+                                    value={selectedDate}
+                                    onChange={(date) => {
+                                        setSelectedDate(date);
+                                    }}
+                                    format="YYYY-MM-DD"
+                                    showTime={false}
                                 />
                             </div>
-                            <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={filteredRevenue}>
-                                    <CartesianGrid strokeDasharray="3 3"/>
-                                    <XAxis dataKey="date"/>
-                                    <YAxis/>
-                                    <Tooltip/>
-                                    <Bar dataKey="revenue" fill="#2A388F" barSize={40}/>
-                                </BarChart>
-                            </ResponsiveContainer>
+                            <h1 className="title">Biểu đồ doanh thu của SideEffect </h1>
+                            <h1 className="title" style={{color : "#FFB400"}}>Tổng Doanh Thu: {revenueTotal.toLocaleString("vi-VN")} VND</h1>
+                            <div style={{height: '300px', width: '100%'}}>
+                                <canvas ref={chartRef}></canvas>
+                            </div>
                         </div>
                     </Col>
 
-                    {/* Phần dưới (bên phải, chia nhỏ thành 2 phần) */}
+                    {/* Bottom Section with Feedback and Vaccines */}
                     <Col span={24}>
                         <Row gutter={16}>
                             <Col span={12}>
@@ -108,8 +251,8 @@ const AdminDashboardPage: React.FC = () => {
                                     <Table
                                         dataSource={sortedFeedback}
                                         columns={feedbackColumns}
-                                        rowKey="id"
-                                        pagination={false} // Remove pagination if not needed
+                                        rowKey="feedbackId"
+                                        pagination={false}
                                     />
                                 </div>
                             </Col>
@@ -119,9 +262,10 @@ const AdminDashboardPage: React.FC = () => {
                                     <Table
                                         dataSource={sortedVaccines}
                                         columns={vaccineColumns}
-                                        rowKey="name"
-                                        pagination={false} // Remove pagination if not needed
+                                        rowKey="vaccineId"
+                                        pagination={false}
                                     />
+
                                 </div>
                             </Col>
                         </Row>

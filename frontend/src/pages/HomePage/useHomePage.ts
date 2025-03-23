@@ -1,17 +1,62 @@
 
 import { useState, useEffect } from "react";
-import { ImgCarousel, BriefContent, VaccineService, NewsIntro } from "../../interfaces/Decorative";
+
 import {
      apiGetBlogBasic,
     apiGetBrieftContent,
     apiGetImgCarousel,
-    apiGetNewsIntro,
     apiGetVaccineServiceIntro
 } from "../../apis/apiBlog.ts";
 
 import {BlogIntro} from "../../interfaces/Blog.ts";
 
+export interface ImgCarousel{
+    image: string;
+}
 
+export interface BriefContent{
+    image: string;
+    title: string;
+    paragraph1: string;
+    paragraph2: string;
+}
+
+export interface VaccineService {
+    id: string;
+    name: string;
+    image: string;
+}
+
+export const useNewIntro = () => {
+    const [news, setNews] = useState<BlogIntro[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchAllNewsIntro = async () => {
+
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await apiGetBlogBasic();
+                if (response && Array.isArray(response)) {
+                    // Lọc chỉ lấy blog có type === "Blog"
+                    const filteredBlogs = response.filter((blog: BlogIntro) => blog.type === "News");
+                    setNews(filteredBlogs);
+                }
+            }catch (err){
+                setError("Error Fetching Blog Intro Data");
+                console.error(err);
+            }finally{
+                setLoading(false)
+            }
+        }
+        fetchAllNewsIntro();
+    }, []);
+
+    return { news, loading, error };
+
+}
 export const useImgCarousel = () =>{
     const[imgCarousel, setImgCarousel] = useState<ImgCarousel[]>([]);
     const[loading, setLoading] = useState<boolean>(false);
@@ -90,30 +135,7 @@ export const useVaccineServiceIntro  = () => {
     
     return {vaccineServiceIntro, loading, error};
 }
-export const useNewsIntro = () => {
-    const [newsIntro, setNewsIntro] = useState<NewsIntro[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
 
-    useEffect(() => {
-        const fetchBlogIntro = async () =>{
-            setLoading(true)
-            try{
-                const data = await apiGetNewsIntro();
-                setNewsIntro(data);
-            } catch (err) {
-                setError("Error fetching Blog Intro Data");
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchBlogIntro();
-    }, []);
-
-    return {newsIntro, loading, error};
-}
 
 
 export const useBlogIntro = () => {

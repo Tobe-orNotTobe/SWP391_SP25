@@ -5,8 +5,6 @@ import {apiDepositeUserToWallet, apiGetUserRefundList} from "../../apis/apiTrans
 import {toast} from "react-toastify";
 import {AxiosError} from "axios";
 
-
-
 export const useRefundUserList = () => {
     const [refundUser, setRefundUser] = useState< RefundListUser[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -33,35 +31,29 @@ export const useRefundUserList = () => {
     return {refundUser, isLoading, error};
 }
 
-
 export const useWalletUserDetail = () => {
     const [walletData, setWalletData] = useState<WalletUser | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null);
 
-    useEffect(() => {
-        const fetchWalletData = async () => {
-            setIsLoading(true);
-            setError(null);
-            try {
-                const data = await apiGetUserWallet();
-                if(data.isSuccess){
-                    setWalletData(data.result);
-                }
-            } catch (err) {
-                setError(err instanceof Error ? err : new Error('Unknown error occurred'));
-                setWalletData(null);
-            } finally {
-                setIsLoading(false);
+    const fetchWalletData = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const data = await apiGetUserWallet();
+            if (data.isSuccess) {
+                setWalletData(data.result);
             }
-        };
+        } catch (err) {
+            setError(err instanceof Error ? err : new Error('Unknown error occurred'));
+            setWalletData(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-        fetchWalletData();
-    }, []);
-
-    return { walletData, isLoading, error };
+    return { walletData, isLoading, error, fetchWalletData };
 };
-
 export const useRecentTransactions = () => {
     const [transactions, setTransactions] = useState<WalletHistoryUserDetail[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -91,11 +83,14 @@ export const useRecentTransactions = () => {
     return { transactions, isLoading, error };
 };
 
-
 export const useWalletLogic = () => {
-    const { walletData, } = useWalletUserDetail();
+    const { walletData,fetchWalletData } = useWalletUserDetail();
     const { transactions} = useRecentTransactions();
     const { refundUser} = useRefundUserList();
+
+    useEffect(() => {
+        fetchWalletData()
+    }, []);
 
     const [activeTransactionTab, setActiveTransactionTab] = useState("All");
     const [activeRefundTab, setActiveRefundTab] = useState("All");
@@ -125,31 +120,23 @@ export const useWalletLogic = () => {
         return amount.toLocaleString('vi-VN') + ' VND';
     };
 
-    const getTransactionTagColor = (type: string) => {
+    const getTransactionTagColor = (type: string, amount: number) => {
         switch (type) {
-            case 'Deposit':
+            case 'Nạp tiền':
                 return 'green';
-            case 'Withdrawal':
-                return 'red';
-            case 'Transfer':
-                return 'blue';
-            case 'Refund':
-                return 'gold';
+            case 'Chuyển khoản':
+                return amount < 0 ? 'red' : 'green';
             default:
                 return 'default';
         }
     };
 
-    const getTransactionTypeName = (type: string) => {
+    const getTransactionTypeName = (type: string, amount: number) => {
         switch (type) {
-            case 'Deposit':
+            case 'Nạp tiền':
                 return 'Nạp tiền';
-            case 'Withdrawal':
-                return 'Rút tiền';
-            case 'Transfer':
-                return 'Chuyển tiền';
-            case 'Refund':
-                return 'Hoàn tiền';
+            case 'Chuyển khoản':
+                return amount < 0 ? 'Thanh toán' : 'Hoàn tiền';
             default:
                 return type;
         }
@@ -158,11 +145,11 @@ export const useWalletLogic = () => {
     // Function to get the refund status tag color
     const getRefundStatusTagColor = (status: string) => {
         switch (status) {
-            case 'Pending':
+            case 'Đang chờ xử lý':
                 return 'gold';
-            case 'Approved':
+            case 'Đã chấp nhận':
                 return 'green';
-            case 'Rejected':
+            case 'Bị từ chối':
                 return 'red';
             default:
                 return 'blue';

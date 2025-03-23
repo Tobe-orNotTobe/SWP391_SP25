@@ -1,6 +1,7 @@
 ﻿using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Service.Services;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using ChildVaccineSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -14,13 +15,15 @@ namespace ChildVaccineSystem.API.Controllers
         private readonly IFeedbackService _feedbackService;
         private readonly IVaccineInventoryService _vaccineInventoryService;
         private readonly APIResponse _response;
+        private readonly IVaccineService _vaccineService;
 
-        public DashboardController(ITransactionService transactionService, IFeedbackService feedbackService, IVaccineInventoryService vaccineInventoryService, APIResponse response)
+        public DashboardController(ITransactionService transactionService, IFeedbackService feedbackService, IVaccineInventoryService vaccineInventoryService, APIResponse response, IVaccineService vaccineService)
         {
             _transactionService = transactionService;
             _feedbackService = feedbackService;
             _vaccineInventoryService = vaccineInventoryService;
             _response = response;
+            _vaccineService = vaccineService;
         }
 
         [HttpGet("revenue/{date}")]
@@ -40,7 +43,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving revenue: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi khi truy xuất doanh thu: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -63,7 +66,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving last 10 days revenue: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi truy xuất doanh thu 10 ngày qua: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -86,7 +89,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving total revenue: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi khi truy xuất tổng doanh thu: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -108,7 +111,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving feedback: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi lấy phản hồi: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -131,9 +134,34 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving exported vaccines: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi truy xuất vắc xin đã xuất khẩu: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
+
+        [HttpGet("top-used-vaccines")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<APIResponse>> GetTopUsedVaccines()
+        {
+            try
+            {
+                var result = await _vaccineService.GetTopUsedVaccinesAsync();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = result;
+
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Lỗi truy xuất vắc xin được sử dụng nhiều nhất: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
+
     }
 }

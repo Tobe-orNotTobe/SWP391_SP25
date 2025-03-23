@@ -11,6 +11,8 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<BlogPostDTO> CreatePostAsync(CreateBlogPostDTO createPostDto);
         Task<BlogPostDTO> UpdatePostAsync(int id, UpdateBlogPostDTO updatePostDto);
         Task<bool> DeletePostAsync(int id);
-        Task<List<BlogPostBasicDTO>> GetBlogBasicAsync(); 
+        Task<List<BlogPostBasicDTO>> GetBlogBasicAsync();
+        Task<List<BlogPostDTO>> GetBlogsByTypeAsync(string type);
+
     }
 }

@@ -21,5 +21,7 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
         Task<UserProfileDTO> GetProfileAsync(string userId);
         Task<bool> UpdateProfileAsync(UserProfileDTO userDTO);
         Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
+        Task<UserDTO> GetUserByPhoneOrEmailAsync(string keyword);
+
     }
 }

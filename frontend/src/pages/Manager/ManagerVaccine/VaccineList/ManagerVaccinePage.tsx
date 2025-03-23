@@ -7,7 +7,12 @@ import { FiEdit2 } from "react-icons/fi";
 
 import { VaccineDetail, VaccinationSchedule } from "../../../../interfaces/Vaccine.ts";
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
-import { useVaccineDetail, useVaccinationScheduleDetail, useVaccineInventoryStockDetail } from "../../../../hooks/useVaccine.ts";
+import {
+    useVaccineDetail,
+    useVaccinationScheduleDetail,
+    useVaccineInventoryStockDetail,
+    useVaccineDetailById
+} from "../../../../hooks/useVaccine.ts";
 import { useVaccineManagement } from "./useVaccineManagement.ts";
 
 import "./ManagerVaccinePage.scss";
@@ -29,6 +34,8 @@ const ManagerVaccinePage: React.FC = () => {
         handleDetailClick,
         handleDetailModalClose
     } = useVaccineManagement();
+
+    const {vaccineDetail : VaccineDetailParent} = useVaccineDetailById(Number(selectedVaccine?.isParentId))
 
 
     const getRelevantSchedules = () => {
@@ -70,7 +77,12 @@ const ManagerVaccinePage: React.FC = () => {
 
 
     const columns = [
-        { title: "ID", dataIndex: "vaccineId", key: "id" },
+        {
+            title: "ID",
+            dataIndex: "vaccineId",
+            key: "id",
+            sorter: (a : VaccineDetail, b: VaccineDetail) => a.vaccineId - b.vaccineId
+        },
         {
             title: "Hình ảnh",
             dataIndex: "image",
@@ -81,28 +93,36 @@ const ManagerVaccinePage: React.FC = () => {
             title: "Tên Vaccine",
             dataIndex: "name",
             key: "name",
+            sorter: (a :VaccineDetail, b :VaccineDetail) => a.name.localeCompare(b.name),
             render: (name: string) => name.length > 20 ? `${name.slice(0, 20)}...` : name
         },
         {
             title: "Nhà sản xuất",
             dataIndex: "manufacturer",
             key: "manufacturer",
+            sorter: (a : VaccineDetail, b : VaccineDetail) => a.manufacturer.localeCompare(b.manufacturer),
             render: (manufacturer: string) => manufacturer.length > 15 ? `${manufacturer.slice(0, 15)}...` : manufacturer
         },
         {
             title: "Giá (VNĐ)",
             dataIndex: "price",
             key: "price",
-            render: (price: number) => price.toLocaleString() + " VNĐ"
+            sorter: (a: VaccineDetail, b: VaccineDetail) => a.price - b.price,
+            render: (price: number) => new Intl.NumberFormat("vi-VN").format(price) + " VNĐ"
         },
         {
             title: "Trạng thái",
             dataIndex: "status",
             key: "status",
+            filters: [
+                { text: "Có sẵn", value: true },
+                { text: "Hết hàng", value: false }
+            ],
+            onFilter: (value : boolean | React.Key, record : VaccineDetail) => record.status === value,
             render: (status: boolean) => (
                 <span className={`status-badge ${status ? 'available' : 'unavailable'}`}>
-                    {status ? "Có sẵn" : "Hết hàng"}
-                </span>
+                {status ? "Có sẵn" : "Hết hàng"}
+            </span>
             )
         },
         {
@@ -151,11 +171,13 @@ const ManagerVaccinePage: React.FC = () => {
             title: "Số lượng ban đầu",
             dataIndex: "initialQuantity",
             key: "initialQuantity",
+            render: (value: number) => value.toLocaleString("vi-VN")
         },
         {
             title: "Số hàng trong kho",
             dataIndex: "quantityInStock",
             key: "quantityInStock",
+            render: (value: number) => value.toLocaleString("vi-VN")
         },
     ];
 
@@ -197,9 +219,10 @@ const ManagerVaccinePage: React.FC = () => {
                                         <p><strong>Giá:</strong> {selectedVaccine.price.toLocaleString()} VNĐ</p>
                                         <p><strong>Trạng thái:</strong> {selectedVaccine.status ? "Có sẵn" : "Hết hàng"}
                                         </p>
-                                        <p><strong>Cần thiết:</strong> {selectedVaccine.isNecessary ? "Có" : "Không"}
-                                        </p>
+                                        <p><strong>Cần thiết:</strong> {selectedVaccine.isNecessary ? "Có" : "Không"}</p>
                                         <p><strong>Số mũi tiêm:</strong> {selectedVaccine.injectionsCount}</p>
+                                        <p><strong>Vaccine cần tiêm trước: </strong> {VaccineDetailParent?.name || "Không Có"}</p>
+                                        <p><h3 style={{color : "#2A388F"}}>{selectedVaccine.isIncompatibility ? "Có" : "Không"} tương kị với vaccine khác</h3> </p>
                                     </div>
 
                                     <div className="vaccine-detail-mananger-popups-right">
@@ -270,16 +293,16 @@ const ManagerVaccinePage: React.FC = () => {
                                                             <>
                                                                 <h4>Lịch tiêm:</h4>
                                                                 <List
-                                                                    dataSource={vaccineDetails.injectionSchedules.sort((a, b) => a.doseNumber - b.doseNumber)}
+                                                                    dataSource={vaccineDetails.injectionSchedules.sort((a, b) => a.injectionNumber - b.injectionNumber)}
                                                                     renderItem={injection => (
                                                                         <List.Item>
                                                                             <div className="injection-item">
                                                                                 <div>
                                                                                     <Badge
                                                                                         status={injection.isRequired ? "success" : "default"}
-                                                                                        text={`Mũi ${injection.doseNumber}`}
+                                                                                        text={`Tổng Số Mũi ${injection.injectionNumber}`}
                                                                                     />
-                                                                                    <span className="injection-month">{injection.injectionMonth} tháng tuổi</span>
+                                                                                    <span className="injection-month">{injection.injectionMonth}</span>
                                                                                 </div>
                                                                                 {injection.isRequired && (
                                                                                     <span className="required-badge">Bắt buộc</span>

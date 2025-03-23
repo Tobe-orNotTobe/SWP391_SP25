@@ -14,7 +14,7 @@ const VaccineComboList: React.FC = () => {
 
     const {comboVaccineDetail} = useComboVaccineDetail();
 
-    console.log(comboVaccineDetail);
+    // console.log(comboVaccineDetail);
     const {
         deletingId,
         isDetailModalOpen,
@@ -36,34 +36,37 @@ const VaccineComboList: React.FC = () => {
             title: "ComboId",
             dataIndex: "comboId",
             key: "comboId",
+            sorter: (a: GetVaccineComboDetail, b: GetVaccineComboDetail) => a.comboId - b.comboId,
         },
         {
             title: "Tên Combo",
             dataIndex: "comboName",
             key: "comboName",
+            sorter: (a: GetVaccineComboDetail, b: GetVaccineComboDetail) => a.comboName.localeCompare(b.comboName),
         },
         {
             title: "Mô tả",
             dataIndex: "description",
             key: "description",
-            render: (description: string) => {
-                // Create a truncated version for the table (strip HTML and limit length)
-                const tempDiv = document.createElement("div");
-                tempDiv.innerHTML = description;
-                const textContent = tempDiv.textContent || tempDiv.innerText || "";
-                return textContent.length > 50 ? textContent.substring(0, 50) + "..." : textContent;
-            }
+            sorter: (a : any, b : any) => a.description.localeCompare(b.description),
+            render: (text : any) => <div dangerouslySetInnerHTML={{ __html: text }} />
         },
         {
             title: "Tổng giá",
             dataIndex: "totalPrice",
             key: "totalPrice",
-            render: (price: number) => `${price.toLocaleString()} VND`,
+            sorter: (a: GetVaccineComboDetail, b: GetVaccineComboDetail) => a.totalPrice - b.totalPrice,
+            render: (value: number) => `${new Intl.NumberFormat('vi-VN').format(value)} VNĐ`
         },
         {
             title: "Trạng thái",
             dataIndex: "isActive",
             key: "isActive",
+            filters: [
+                { text: "Đang hoạt động", value: true },
+                { text: "Ngừng hoạt động", value: false },
+            ],
+            onFilter: (value: boolean | React.Key, record: GetVaccineComboDetail) => record.isActive === value,
             render: (isActive: boolean) => (isActive ? "Đang hoạt động" : "Ngừng hoạt động"),
         },
         {
@@ -137,7 +140,7 @@ const VaccineComboList: React.FC = () => {
 
                             <div className="combo-vaccine-info-item">
                                 <div className="combo-vaccine-info-label">Tổng giá</div>
-                                <div className="combo-vaccine-info-value">{selectedCombo.totalPrice.toLocaleString()} VND</div>
+                                <div className="combo-vaccine-info-value">{new Intl.NumberFormat("vi-VN").format(selectedCombo.totalPrice)} VNĐ</div>
                             </div>
 
                             <div className="combo-vaccine-info-item">
@@ -152,13 +155,21 @@ const VaccineComboList: React.FC = () => {
                             <div className="combo-vaccine-list-title">Danh sách Vaccine</div>
                             <div className="combo-vaccine-grid">
                                 {selectedCombo.vaccines && selectedCombo.vaccines.map((vaccine) => (
-                                    <div key={vaccine.vaccineId} className="combo-vaccine-item">
-                                        <div className="combo-vaccine-item-name">{vaccine.name}</div>
-                                        <div className="combo-vaccine-item-image">
-                                            <img src={vaccine.image} alt={vaccine.name} />
-                                        </div>
+                                    <div key={vaccine.vaccine.id} className="combo-vaccine-item">
                                         <div className="combo-vaccine-item-price">
-                                            {vaccine.price.toLocaleString()} VND
+                                            <strong>Thứ tự:</strong> {vaccine.order}
+                                        </div>
+
+                                        <div className="combo-vaccine-item-name">
+                                            {vaccine.vaccine.name}
+                                        </div>
+
+                                        <div className="combo-vaccine-item-image">
+                                            <img src={vaccine.vaccine.image} alt={vaccine.vaccine.name}/>
+                                        </div>
+
+                                        <div className="combo-vaccine-item-price">
+                                            <strong>Khoảng cách ngày:</strong> {vaccine.intervalDays} ngày
                                         </div>
                                     </div>
                                 ))}

@@ -1,15 +1,49 @@
+﻿using ChildVaccineSystem.Common.Config;
 using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.Data.Models;
 using ChildVaccineSystem.Service;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using ChildVaccineSystem.API.Jobs;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddQuartz(q =>
+{
+	// Register the job
+	q.AddJob<AppointmentReminderJob>(opts => opts.WithIdentity("AppointmentReminderJob"));
+
+	// Create a trigger for the job that runs daily at 8:00 AM
+	q.AddTrigger(opts => opts
+		.ForJob("AppointmentReminderJob")
+		.WithIdentity("AppointmentReminderTrigger")
+		.WithCronSchedule("0 50 14 * * ?"));  // Daily at 8:00 AM
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+builder.Services.AddSignalR();
+
+// Load cấu hình Firebase từ appsettings.json
+var firebaseSettings = builder.Configuration.GetSection("Firebase").Get<FirebaseSettings>();
+
+// Khởi tạo Firebase Admin SDK nếu chưa có
+if (FirebaseApp.DefaultInstance == null)
+{
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.FromFile(firebaseSettings.ServiceAccountPath)
+    });
+}
 
 // Add services to the container
 builder.Services.AddControllers();
@@ -80,6 +114,20 @@ builder.Services.AddAuthentication(options =>
 		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
 	};
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer("Firebase", options =>
+    {
+        options.Authority = $"https://securetoken.google.com/{firebaseSettings.ProjectId}";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = $"https://securetoken.google.com/{firebaseSettings.ProjectId}",
+            ValidateAudience = true,
+            ValidAudience = firebaseSettings.ProjectId,
+            ValidateLifetime = true
+        };
+    });
 
 builder.Services.AddAuthorization(options =>
 {
@@ -172,9 +220,15 @@ else
 }
 
 app.UseHttpsRedirection();
+
 app.UseCors("AllowFrontend"); // Enable CORS Policy
+
 app.UseAuthentication(); // Ensure Authentication
+
 app.UseAuthorization();  // Ensure Authorization
+
 app.MapControllers();
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

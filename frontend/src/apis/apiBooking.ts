@@ -260,3 +260,23 @@ export const apiCheckParentVaccine = async (vaccineIds: number[]) => {
     }
   }
 };
+
+
+export const apiGetVaccineRecordByBookingId = async (bookingDetailId : number)=> {
+  try{
+    const response = await axiosInstance.get(`/api/VaccineRecord/bookingDetail/${bookingDetailId}`);
+    return response.data
+  }catch (err){
+    // console.log(err);
+    throw err;
+  }
+}
+
+export const apiGetVaccineRecordByBookingDetailId = async (bookingDetailId : number) => {
+  try {
+    const response = await  axiosInstance.get(`/api/VaccineRecord/bookingDetail/${bookingDetailId}`);
+    return response.data;
+  }catch (err){
+    throw  err;
+  }
+}

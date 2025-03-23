@@ -26,7 +26,7 @@ export interface AccountDetailResponse {
     address: string;
     dateOfBirth: Date;
     isActive: boolean;
-    // imageUrl: string,
+    imageUrl: string,
     id: string;
     userName: string;
     normalizedUserName: string;
@@ -41,11 +41,25 @@ export interface AccountDetailResponse {
     twoFactorEnabled: boolean;
     lockoutEnabled: boolean;
     accessFailedCount: number;
+    roles: string;
 }
 
 export interface LoginRequest {
     username: string;
     password: string;
+}
+
+export interface LoginGoogleRequest {
+    idToken: string;
+}
+
+export interface LoginGoogleResponse {
+    statusCode: string;
+    isSuccess: boolean;
+    errorMessages: string[],
+    result: {
+        token: string;
+    }
 }
 
 
@@ -145,6 +159,7 @@ export interface RefundListUser {
     createAt: string;
     processAt: string | null;
 }
+
 
 
 

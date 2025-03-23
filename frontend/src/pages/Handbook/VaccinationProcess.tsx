@@ -3,6 +3,7 @@ import "./Handbook.scss"
 import { Link } from "react-router-dom";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
 import Footer from "../../components/Footer/Footer.tsx";
+import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
 
 const VaccinationProcess: React.FC = () => {
     return (
@@ -91,6 +92,7 @@ const VaccinationProcess: React.FC = () => {
                 </div>
             </div>
             <Footer/>
+            <FloatingButtons/>
         </>
     );
 };

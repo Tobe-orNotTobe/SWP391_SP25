@@ -15,7 +15,6 @@ export const useVaccineComboForm = () => {
     const isEditMode = Boolean(id);
 
 
-
     const [initialEditorContent, setInitialEditorContent] = useState("");
 
 
@@ -26,25 +25,25 @@ export const useVaccineComboForm = () => {
     const { vaccineDetail } = useVaccineDetail();
     const { comboVaccineDetail } = useComboVaccineDetailById(Number(id));
 
+    console.log(comboVaccineDetail)
+
     useEffect(() => {
         if (isEditMode && comboVaccineDetail) {
-            const uniqueVaccineIds = [...new Set(comboVaccineDetail.vaccines.map((v) => v.vaccineId))];
-
-            // Set the initial editor content for TinyMCE
             setInitialEditorContent(comboVaccineDetail.description || "");
 
-            // Set the editor content state
             setEditorContent({
                 description: comboVaccineDetail.description || ""
             });
 
-            // Set other form fields
             form.setFieldsValue({
                 comboName: comboVaccineDetail.comboName,
                 totalPrice: comboVaccineDetail.totalPrice,
                 isActive: comboVaccineDetail.isActive,
-                vaccineIds: uniqueVaccineIds,
-                // We don't set description here since it's managed by TinyMCE
+                vaccines: comboVaccineDetail.vaccines.map((v, index) => ({
+                    vaccineId: v.vaccine.id,
+                    order: v.order ?? index + 1,
+                    intervalDays: v.intervalDays ?? 0,
+                })),
             });
         }
     }, [comboVaccineDetail, form, isEditMode]);
@@ -63,12 +62,16 @@ export const useVaccineComboForm = () => {
 
     const onFinish = async (values: PostVaccineComboDetail) => {
         // Use the content from TinyMCE editor stored in our state
-        const payload: PostVaccineComboDetail = {
+        const payload = {
             comboName: values.comboName,
-            description: editorContent.description,
+            ...editorContent,
             totalPrice: values.totalPrice,
             isActive: values.isActive,
-            vaccineIds: values.vaccineIds,
+            vaccines: values.vaccines.map((vaccine: any, index: number) => ({
+                vaccineId: vaccine.vaccineId,
+                order: vaccine.order ?? index + 1, // Nếu không có, đặt mặc định theo thứ tự
+                intervalDays: vaccine.intervalDays ?? 0,
+            })),
         };
 
         try {

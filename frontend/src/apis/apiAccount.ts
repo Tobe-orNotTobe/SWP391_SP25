@@ -1,5 +1,10 @@
 import AxiosInstance from "../utils/axiosInstance.ts";
-import {AccountDetailResponse, AccountRequest, UpdateAccountRequest} from "../interfaces/Account.ts";
+import {
+    AccountDetailResponse,
+    AccountRequest,
+    LoginGoogleRequest,
+    UpdateAccountRequest
+} from "../interfaces/Account.ts";
 import {
     ConfirmEmailRequest,
     ForgotPasswordRequest,
@@ -114,7 +119,7 @@ export const apiRegister = async (data: RegisterRequest) => {
         const response = await axiosInstance.post("/api/Auth/register", data);
         return response.data;
     } catch (error) {
-        console.error("API Register Error:", error);
+        // console.error("API Register Error:", error);
         throw error;
     }
 };
@@ -124,7 +129,17 @@ export const apiLogIn = async (data: LoginRequest) => {
         const response = await axiosInstance.post("/api/Auth/login", data);
         return response.data;
     } catch (error) {
-        console.error("API Login Error:", error);
+        // console.error("API Login Error:", error);
+        throw error;
+    }
+};
+
+export const apiLogInGoogle = async (idToken: LoginGoogleRequest) => {
+    try {
+        const response = await axiosInstance.post("/api/Auth/login-google", idToken);
+        return response.data;
+    } catch (error) {
+        // console.error("API Login Error:", error);
         throw error;
     }
 };
@@ -134,7 +149,7 @@ export const apiConfirmEmail = async (data: ConfirmEmailRequest) => {
         const response = await axiosInstance.post("/api/Auth/confirm-email", data);
         return response.data;
     } catch (error) {
-        console.error("API Confirm Email Error:", error);
+        // console.error("API Confirm Email Error:", error);
         throw error;
     }
 };
@@ -144,7 +159,7 @@ export const apiForgotPassword = async (data: ForgotPasswordRequest) => {
         const response = await axiosInstance.post("/api/Auth/forget-password", data);
         return response.data;
     } catch (error) {
-        console.error("API Forgot Password Error:", error);
+        // console.error("API Forgot Password Error:", error);
         throw error;
     }
 };
@@ -154,7 +169,7 @@ export const apiResetPassword = async (data: ResetPasswordRequest) => {
         const response = await axiosInstance.post("/api/Auth/reset-password", data);
         return response.data;
     } catch (error) {
-        console.error("API Reset Password Error:", error);
+        // console.error("API Reset Password Error:", error);
         throw error;
     }
 };
@@ -167,7 +182,7 @@ export const apiRefreshToken = async (refreshToken: string | null) => {
         );
         return response.data;
     } catch (error) {
-        console.error("API Refresh Error:", error);
+        // console.error("API Refresh Error:", error);
         throw error;
     }
 };
@@ -179,7 +194,7 @@ export const apiGetProfileUser = async () => {
         const  response = await axiosInstance.get("/api/user/profile");
         return response.data;
     }catch (err){
-        console.error("API GetProfileUser Error:", err);
+        // console.error("API GetProfileUser Error:", err);
         throw err;
     }
 }
@@ -189,7 +204,7 @@ export const apiUpdateProfileUser = async (data : UserProfileUpdate ) => {
         const response = await  axiosInstance.put("/api/user/profile", data);
         return response.data;
     }catch (err){
-        console.log(err);
+        // console.log(err);
         throw err;
     }
 }
@@ -199,20 +214,19 @@ export const apiChangePassword = async (data : ResetPasswordUserProfile)=> {
         const response = await  axiosInstance.post("/api/user/change-password", data);
         return response.data;
     }catch (err){
-        console.log(err);
+        // console.log(err);
         throw err;
     }
 }
-
 export const apiGetUserWallet = async () => {
     try {
         const response = await axiosInstance.get("/api/Wallet/user");
         return response.data;
-    }catch (err){
-        console.error("API GetUserWallet Error:", err);
-        throw err;
+    } catch (err) {
+
+        return { isSuccess: false, result: { balance: 0 } };
     }
-}
+};
 
 
 

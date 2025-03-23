@@ -8,13 +8,13 @@ import { FaTelegramPlane } from "react-icons/fa";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="footerContainer">
+    <footer className="footerContainer" id="footer">
       <div className="footerContent">
         <div className="footerSection">
           <h3 className="footerSectionTitle">Về Side_Effect</h3>
           <ul className="footerList">
             <li className="footerListItem">CÔNG TY CỔ PHẦN Children Vaccination</li>
-            <li className="footerListItem">Email: ChildVaccaSWP391_SP25@gmail.com</li>
+            <li className="footerListItem">Email: childvaccinesystem25@gmail.com</li>
             <li className="footerListItem">Chịu trách nhiệm nội dung: TEAM SWP391_SP25</li>
             <li className="footerListItem">Bản quyền ©2024 thuộc về TEAM SWP391_SP25</li>
           </ul>
@@ -23,9 +23,6 @@ const Footer: React.FC = () => {
         <div className="footerSection contactSection">
           <h3 className="footerSectionTitle">Liên hệ với chúng tôi</h3>
           <ul className="footerList">
-            <li className="footerListItem">
-              <span>Hotline: Koikungcenter@gmail.com</span>
-            </li>
             <li className="footerListItem">
               <span>Số điện thoại: 091 222 4434</span>
             </li>

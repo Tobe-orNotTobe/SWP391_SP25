@@ -1,0 +1,179 @@
+.notification-btn {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  margin-right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #2A388F;
+  
+  &:hover {
+    color: #FFB400;
+  }
+}
+
+.notification-dropdown-overlay {
+  min-width: 350px;
+  max-width: 400px;
+}
+
+.notification-dropdown-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  max-height: 500px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  //
+  //position: fixed;
+  //top: 50px;
+}
+
+
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e8e8e8;
+  background-color: #2A388F;
+  color: white;
+  
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+  }
+}
+
+.notification-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 350px;
+}
+
+.notification-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  
+  &:hover {
+    background-color: #f5f5f5;
+  }
+  
+  &.unread {
+    background-color: #e6f7ff;
+    border-left: 3px solid #2A388F;
+
+    &:hover {
+      background-color: #d6f0ff;
+    }
+    
+    .notification-title {
+      font-weight: 600;
+    }
+  }
+}
+
+.notification-title {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+  position: relative;
+  padding-right: 15px; 
+  
+  .unread-dot {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #2A388F;
+    margin: 5px;
+  }
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #999;
+  
+  .anticon {
+    margin-right: 4px;
+  }
+}
+
+.notification-action-btn {
+  font-size: 14px;
+  color: #999;
+  
+  &:hover {
+    color: #2A388F;
+  }
+}
+
+.notification-loading {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.notification-footer {
+  padding: 8px;
+  text-align: center;
+  border-top: 1px solid #e8e8e8;
+  
+  .view-all-btn {
+    color: #2A388F;
+    
+    &:hover {
+      color: #FFB400;
+    }
+  }
+}
+
+/* Ant Design Tabs customization */
+.notification-dropdown-content {
+
+  .ant-tabs-nav {
+    margin-bottom: 0;
+    
+    .ant-tabs-tab {
+      padding: 8px 12px;
+      
+      &.ant-tabs-tab-active .ant-tabs-tab-btn {
+        color: #2A388F;
+        font-weight: 500;
+      }
+    }
+    
+    .ant-tabs-ink-bar {
+      background-color: #2A388F;
+    }
+  }
+  
+  .ant-tabs-content {
+    padding: 0;
+  }
+}
+
+.ant-list-item-action {
+  margin-inline-start: 0 !important;
+}
+
+.ant-list-item-meta-avatar {
+  margin-inline-start: 8px !important;
+  margin-inline-end: 8px !important;
+}
+
+.anticon-info-circle {
+    color: white !important;
+}

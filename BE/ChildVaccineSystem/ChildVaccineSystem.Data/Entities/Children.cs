@@ -27,7 +27,8 @@ namespace ChildVaccineSystem.Data.Entities
         [ForeignKey("User")]
         public string UserId { get; set; }
         public User User { get; set; }
-    }
+		public ICollection<VaccinationRecord> VaccinationRecords { get; set; }
+	}
 
 
 }

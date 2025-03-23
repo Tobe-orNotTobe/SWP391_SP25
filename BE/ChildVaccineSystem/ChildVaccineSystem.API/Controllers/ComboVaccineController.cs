@@ -47,7 +47,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
-                _response.ErrorMessages.Add("Combo Vaccine not found");
+                _response.ErrorMessages.Add("Không tìm thấy vắc xin kết hợp");
                 return NotFound(_response);
             }
 
@@ -62,11 +62,11 @@ namespace ChildVaccineSystem.API.Controllers
         {
             var response = new APIResponse();
 
-            if (comboDto.VaccineIds.Distinct().Count() != comboDto.VaccineIds.Count)
+            if (comboDto.Vaccines.Distinct().Count() != comboDto.Vaccines.Count)
             {
                 response.IsSuccess = false;
                 response.StatusCode = HttpStatusCode.BadRequest;
-                response.ErrorMessages.Add("Combo Vaccine cannot contain duplicate vaccines. Please remove duplicate entries and try again.");
+                response.ErrorMessages.Add("Vắc-xin kết hợp không thể chứa vắc-xin trùng lặp. Vui lòng xóa các mục trùng lặp và thử lại.");
                 return BadRequest(response);
             }
 
@@ -76,7 +76,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 response.IsSuccess = false;
                 response.StatusCode = HttpStatusCode.BadRequest;
-                response.ErrorMessages.Add("Failed to create Combo Vaccine. Please check your input data and try again.");
+                response.ErrorMessages.Add("Không tạo được vắc-xin kết hợp. Vui lòng kiểm tra dữ liệu đầu vào của bạn và thử lại.");
                 return BadRequest(response);
             }
 
@@ -111,7 +111,7 @@ namespace ChildVaccineSystem.API.Controllers
                 {
                     response.IsSuccess = false;
                     response.StatusCode = HttpStatusCode.NotFound;
-                    response.ErrorMessages.Add("Combo Vaccine not found or no new vaccines added.");
+                    response.ErrorMessages.Add("Không tìm thấy vắc xin kết hợp hoặc không bổ sung vắc xin mới.");
                     return NotFound(response);
                 }
 
@@ -141,13 +141,13 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 response.IsSuccess = false;
                 response.StatusCode = HttpStatusCode.NotFound;
-                response.ErrorMessages.Add("Combo Vaccine not found or already deleted.");
+                response.ErrorMessages.Add("Combo Vắc xin không được tìm thấy hoặc đã bị xóa.");
                 return NotFound(response);
             }
 
             response.IsSuccess = true;
             response.StatusCode = HttpStatusCode.OK;
-            response.Result = "Combo Vaccine has been deactivated successfully.";
+            response.Result = "Combo Vắc-xin đã được vô hiệu hóa thành công.";
 
             return Ok(response);
         }

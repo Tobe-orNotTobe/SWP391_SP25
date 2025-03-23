@@ -1,15 +1,20 @@
-
-import {apiGetBookingUser} from "../../../apis/apiBooking.ts";
+import {VaccineRecordUser} from "../../../interfaces/VaccineRecord.ts";
+import {
+    apiGetBookingUser,
+    apiGetVaccineRecordByBookingDetailId,
+    apiGetVaccineRecordByBookingId
+} from "../../../apis/apiBooking.ts";
 import { useState, useMemo, useEffect } from "react";//Dùng useMemo() giúp tránh tính toán lại khi các thông tin  không thay đổi.
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { BookingUser } from "../../../interfaces/VaccineRegistration.ts";
+import {BookingDetailResponse, BookingUser} from "../../../interfaces/VaccineRegistration.ts";
 import { apiCancelBooking, apiDeleteFeedBack, apiPostFeedBack, apiUpdateFeedback } from "../../../apis/apiBooking.ts";
 import { useFeedBackDetailByBookingId } from "../../../hooks/useFeedBack.ts";
 import {useNavigate} from "react-router-dom";
 import {apiPostRefundRequest} from "../../../apis/apiTransaction.ts";
+
 
 
 export const useBookingUser = () => {
@@ -43,6 +48,7 @@ export const STATUS_COLORS: Record<string, string> = {
     Completed: "#52c41a",
     Cancelled: "#ff4d4f",
     RequestRefund : "#FD7E14",
+    Skipped : "#B0B0B0",
 };
 
 export const useBookingHistoryPage = (bookings: BookingUser[]) => {
@@ -51,7 +57,7 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [visible, setVisible] = useState<boolean>(false);
     const [feedbackModalVisible, setFeedbackModalVisible] = useState<boolean>(false);
-    const [selectedBooking, setSelectedBooking] = useState<BookingUser | null>(null);
+    const [selectedBooking, setSelectedBooking] = useState<BookingUser>();
 
     const [calendarValue, setCalendarValue] = useState<Dayjs>(dayjs());
     const [comment, setComment] = useState<string>("");
@@ -66,6 +72,8 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
     const [reason, setReason] = useState<string>("");
 
     const navigate = useNavigate();
+
+
 
     const { feedbackBookingId } = useFeedBackDetailByBookingId(Number(selectedBooking?.bookingId));
 
@@ -127,17 +135,21 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         );
     }, [sortedBookings, selectedYear]);
 
-    // Create booking maps
-    const bookingMap: Record<string, BookingUser[]> = useMemo(() => {
-        const map: Record<string, BookingUser[]> = {};
-        bookingsByYear.forEach((booking) => {
-            const dateKey = dayjs(booking.bookingDate).format("YYYY-MM-DD");
-            if (!map[dateKey]) {
-                map[dateKey] = [];
-            }
-            map[dateKey].push(booking);
-        });
-        return map;
+    const bookingMap: Record<string, BookingDetailResponse[]> = useMemo(() => {
+        return bookingsByYear.reduce<Record<string, BookingDetailResponse[]>>((map, booking) => {
+            booking.bookingDetails.forEach((detail) => {
+                const dateKey = dayjs(detail.bookingDate).format("YYYY-MM-DD");
+                if (!map[dateKey]) {
+                    map[dateKey] = [];
+                }
+                map[dateKey].push({
+                    ...detail,
+                    childName: booking.childName,
+                    status: detail.status,
+                });
+            });
+            return map;
+        }, {});
     }, [bookingsByYear]);
 
     //Tư
@@ -300,12 +312,11 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
     };
 
     const openFeedbackModal = (editMode = false) => {
-
         setIsEditMode(editMode);
         setFeedbackModalVisible(true);
     };
 
-    const handleTransactionPedingStatus  = async (bookingId: number) => {
+    const handleTransactionPendingStatus  = async (bookingId: number) => {
 
         navigate(`/payment/${bookingId}`);
     }
@@ -335,6 +346,7 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         setRefundModalVisible,
 
 
+
         // Derived data
         bookingMap,
         bookingsByMonth,
@@ -351,11 +363,71 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         openFeedbackModal,
         openRefundModal,
         closeRefundModal,
-        handleTransactionPedingStatus,
-        handleRefundRequest
+        handleTransactionPendingStatus,
+        handleRefundRequest,
+
     };
 };
 
 
+export const useVaccineRecordByBookingId  = (bookingId : number)=> {
+    const [vaccineRecord, setVaccineRecord] = useState<VaccineRecordUser | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
+    useEffect(() => {
+        const fetchVaccineRecord = async () => {
+
+            if (!bookingId) {
+                setLoading(false);
+                return;
+            }
+            try {
+                const data = await apiGetVaccineRecordByBookingId(bookingId);
+                if (data.isSuccess) {
+                    setVaccineRecord(data.result);
+                }
+            }catch (err){
+                setError("err")
+            }finally {
+                setLoading(false)
+            }
+        };
+        fetchVaccineRecord();
+    },[bookingId])
+
+    return {vaccineRecord, loading, error}
+}
+
+export const useVaccineRecordByBookingDetailId = ( bookingDetailId : number) => {
+    const [vaccineRecordByBookingDetailId, setVaccineRecord] = useState<VaccineRecordUser | null >(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchVaccineRecord = async () => {
+
+            if (!bookingDetailId) {
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await apiGetVaccineRecordByBookingDetailId(bookingDetailId);
+                if(response.isSuccess){
+                    setVaccineRecord(response.result);
+                }
+            }catch (err){
+                setError("err");
+            }finally {
+                setLoading(false);
+            }
+        };
+        fetchVaccineRecord()
+    }, [bookingDetailId])
+
+    return{vaccineRecordByBookingDetailId, loading, error}
+}
 

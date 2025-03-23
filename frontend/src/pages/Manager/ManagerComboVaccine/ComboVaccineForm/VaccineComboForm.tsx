@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Input, Button, Select, Switch, InputNumber} from "antd";
+import {Form, Input, Button, Select, Switch, InputNumber, Space} from "antd";
 import { Editor } from '@tinymce/tinymce-react';
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout";
 import { useVaccineComboForm } from "./useVaccineCombo";
@@ -27,17 +27,13 @@ const VaccineComboForm: React.FC = () => {
                     icon={<ArrowLeftOutlined />}
                     onClick={() => navigate("/manager/combo-vaccines")}
                     className="back-button"
-                    style={{marginBottom: "20px"}}
+                    style={{ marginBottom: "20px" }}
                 >
                     Quay lại danh sách
                 </Button>
 
                 <h1>{isEditMode ? "Chỉnh Sửa Combo Vaccine" : "Thêm Combo Vaccine"}</h1>
-                <Form
-                    form={form}
-                    layout="vertical"
-                    onFinish={onFinish}
-                >
+                <Form form={form} layout="vertical" onFinish={onFinish}>
                     <Form.Item
                         className="form-item"
                         label="Tên Combo"
@@ -84,25 +80,62 @@ const VaccineComboForm: React.FC = () => {
                         className="form-item"
                         label="Tổng giá tiền"
                         name="totalPrice"
-                        rules={[{ required: true, message: "Vui lòng nhập  giá tiền cho combo" }]}
+                        rules={[{ required: true, message: "Vui lòng nhập giá tiền cho combo!" }]}
                     >
-                        <InputNumber placeholder="Nhập Giá Tiền của combo"></InputNumber>
-
+                        <InputNumber placeholder="Nhập Giá Tiền của combo" style={{ width: "100%" }} />
                     </Form.Item>
 
-                    <Form.Item
-                        className="form-item"
-                        label="Danh sách vaccine"
-                        name="vaccineIds"
-                    >
-                        <Select mode="multiple" showSearch placeholder="Chọn vaccine" optionFilterProp="children">
-                            {[...new Map(vaccineDetail.map(v => [v.vaccineId, v])).values()].map((vaccine) => (
-                                <Option key={vaccine.vaccineId} value={vaccine.vaccineId}>
-                                    {vaccine.name} ({vaccine.price})
-                                </Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
+                    <Form.List name="vaccines">
+                        {(fields, { add, remove }) => (
+                            <>
+                                {fields.map(({ key, name, ...restField }, index) => (
+                                    <Space key={key} align="baseline" style={{ display: "flex", width: "100%" }}>
+                                        <span>{index + 1}</span> {/* 🔹 Tự động đánh số thứ tự */}
+
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, "vaccineId"]}
+                                            label="Chọn Vaccine"
+                                            rules={[{ required: true, message: "Vui lòng chọn vaccine!" }]}
+                                        >
+                                            <Select placeholder="Chọn vaccine" style={{ width: 200 }}>
+                                                {vaccineDetail.map((vaccine) => (
+                                                    <Option key={vaccine.vaccineId} value={vaccine.vaccineId}>
+                                                        {vaccine.name} ({vaccine.price})
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, "order"]}
+                                            label="Thứ tự"
+                                            initialValue={index + 1} // 🔹 Đặt thứ tự mặc định
+                                            rules={[{ required: true, message: "Vui lòng nhập thứ tự!" }]}
+                                        >
+                                            <InputNumber min={1} style={{ width: 80 }} />
+                                        </Form.Item>
+
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, "intervalDays"]}
+                                            label="Khoảng cách ngày"
+                                            rules={[{ required: true, message: "Vui lòng nhập khoảng cách ngày!" }]}
+                                        >
+                                            <InputNumber min={0} style={{ width: 100 }} />
+                                        </Form.Item>
+
+                                        <Button type="text" danger onClick={() => remove(name)} />
+                                    </Space>
+                                ))}
+
+                                <Button type="dashed" onClick={() => add()} block>
+                                    + Thêm Vaccine
+                                </Button>
+                            </>
+                        )}
+                    </Form.List>
 
                     <Form.Item
                         className="form-item"

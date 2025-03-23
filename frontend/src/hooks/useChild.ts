@@ -33,6 +33,29 @@ export const useMyChilds = () => {
     return { myChilds, loading, error, refetch: fetchMyChilds };
 };
 
+export const useGetChildsByUserId = () => {
+    const [childs, setChilds] = useState<ChildDetailResponse[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    const fetchChilds = async (userId: string) => {
+        setLoading(true);
+
+        const response = await apiGetMyChilds(userId);
+
+        if (!response.isSuccess) {
+            setError(response.errorMessages.length > 0 ? response.errorMessages[0] : "Unknown error");
+        } else if (response.result) {
+            setChilds(response.result);
+        } else {
+            setChilds([]);
+        }
+        setLoading(false);
+    };
+
+    return { childs, loading, error, fetchChilds };
+}
+
 export const useChildDetail = (childId: number) => {
     const [childDetail, setChildDetail] = useState<ChildDetailResponse>();
     const [loading, setLoading] = useState(false);
@@ -133,6 +156,14 @@ export const useChildForm = (refetch: () => void) => {
             if (form.selectedImage) {
                 imageUrl = await uploadImageToCloudinary(form.selectedImage);
                 if (!imageUrl) throw new Error("Lỗi tải ảnh lên");
+            }else {
+                if (!imageUrl) {
+                    if (form.selectedGender?.value === "Male") {
+                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742345394/mhkyilwl3aa6qmabesvr.jpg";
+                    }else {
+                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742345393/zwofzhjeyyoif4vlibav.jpg";
+                    }
+                }
             }
 
             const requestData: ChildDetailRequest = {

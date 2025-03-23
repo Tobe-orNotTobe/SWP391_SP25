@@ -32,7 +32,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
-                _response.ErrorMessages.Add("No children found.");
+                _response.ErrorMessages.Add("Không tìm thấy trẻ em.");
                 return NotFound(_response);
             }
 
@@ -50,7 +50,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
-                _response.ErrorMessages.Add("Child not found.");
+                _response.ErrorMessages.Add("Không tìm thấy trẻ.");
                 return NotFound(_response);
             }
 
@@ -68,7 +68,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
-                _response.ErrorMessages.Add("No children found for this user.");
+                _response.ErrorMessages.Add("Không tìm thấy trẻ em cho người dùng này.");
                 return NotFound(_response);
             }
 
@@ -85,7 +85,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessages.Add("Invalid data.");
+                _response.ErrorMessages.Add("Dữ liệu không hợp lệ.");
                 return BadRequest(_response);
             }
 
@@ -106,7 +106,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessages.Add("Invalid data.");
+                _response.ErrorMessages.Add("Dữ liệu không hợp lệ.");
                 return BadRequest(_response);
             }
 
@@ -115,7 +115,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
-                _response.ErrorMessages.Add("Child not found.");
+                _response.ErrorMessages.Add("Không tìm thấy trẻ.");
                 return NotFound(_response);
             }
 
@@ -133,7 +133,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
-                _response.ErrorMessages.Add("Child not found.");
+                _response.ErrorMessages.Add("Không tìm thấy trẻ.");
                 return NotFound(_response);
             }
 
@@ -159,7 +159,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
-                _response.ErrorMessages.Add("No relation-to-user options found.");
+                _response.ErrorMessages.Add("Không tìm thấy tùy chọn liên quan đến người dùng.");
                 return NotFound(_response);
             }
 
@@ -185,7 +185,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
-                _response.ErrorMessages.Add("No gender options found.");
+                _response.ErrorMessages.Add("Không tìm thấy tùy chọn giới tính.");
                 return NotFound(_response);
             }
 

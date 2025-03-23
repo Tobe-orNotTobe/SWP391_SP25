@@ -30,12 +30,14 @@ namespace ChildVaccineSystem.Service.Services
 		public async Task<IEnumerable<TransactionDTO>> GetTransactionsByUserAsync(string userId)
 		{
 			var transactions = await _unitOfWork.Transactions.GetAllAsync(t => t.UserId == userId);
+
 			return _mapper.Map<List<TransactionDTO>>(transactions);
 		}
 
 		public async Task<IEnumerable<TransactionDTO>> GetTransactionsByBookingAsync(int bookingId)
 		{
 			var transactions = await _unitOfWork.Transactions.GetAllAsync(t => t.BookingId == bookingId);
+
 			return _mapper.Map<IEnumerable<TransactionDTO>>(transactions);
 		}
 
@@ -43,7 +45,7 @@ namespace ChildVaccineSystem.Service.Services
 		{
 			var transaction = _mapper.Map<Transaction>(transactionDto);
 			transaction.CreatedAt = DateTime.UtcNow;
-			transaction.Status = "Pending";
+			transaction.Status = "Đang chờ xử lý";
 
 			await _unitOfWork.Transactions.AddAsync(transaction);
 			await _unitOfWork.CompleteAsync();
@@ -56,7 +58,7 @@ namespace ChildVaccineSystem.Service.Services
 			var transaction = await _unitOfWork.Transactions.GetAsync(t => t.TransactionId == transactionId);
 
 			if (transaction == null)
-				throw new ArgumentException($"Transaction with ID {transactionId} not found");
+				throw new ArgumentException($"Không tìm thấy giao dịch!");
 
 			transaction.Status = status;
 			transaction.UpdatedAt = DateTime.UtcNow;
@@ -93,7 +95,7 @@ namespace ChildVaccineSystem.Service.Services
             return last10DaysRevenue;
         }
 
-        public async Task<decimal> GetTotalRevenueByDateAsync(DateTime date)
+        public async Task<RevenueByDateDTO> GetTotalRevenueByDateAsync(DateTime date)
         {
             // Get all transactions for a specific date
             var transactions = await _unitOfWork.Transactions.GetAllAsync(
@@ -101,8 +103,15 @@ namespace ChildVaccineSystem.Service.Services
                 includeProperties: "Booking"
             );
 
-            // Calculate the total revenue for that date
-            return transactions.Sum(t => t.Amount);
+            // Create the result with date and total revenue
+            var result = new RevenueByDateDTO
+            {
+                Date = date.Date,
+                TotalRevenue = transactions.Sum(t => t.Amount)
+            };
+
+            return result;
         }
+
     }
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Menu, Button } from "antd";
-import { AppstoreOutlined, MedicineBoxOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, MedicineBoxOutlined,LogoutOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./AdminLayout.scss";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully.ts";
@@ -9,6 +9,8 @@ import { GoPackage } from "react-icons/go";
 import {MdOutlineCalendarToday, MdOutlineChangeCircle} from "react-icons/md";
 import { MdOutlineInventory2 } from "react-icons/md";
 import {CiUser} from "react-icons/ci";
+import {IoWalletOutline} from "react-icons/io5";
+import {RiAdminLine} from "react-icons/ri";
 
 const { Header, Sider, Content } = Layout;
 
@@ -46,6 +48,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             label: <Link to="/admin/profile">Thông tin cá nhân</Link>
         },
         {
+            key: 'admin-wallet',
+            icon: <IoWalletOutline/>,
+            label: <Link to="/admin/wallet">Quản lý Ví Admin</Link>
+        },
+        {
             key: 'account',
             icon: <GoPackage />,
             label: <Link to="/admin/account">Quản lý Account</Link>
@@ -68,7 +75,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         {
             key: 'vaccine-schedule',
             icon: <MdOutlineCalendarToday/>,
-            label: <Link to="/admin/schedule-vaccines">Quản lý Lịch Tiêm Cho Vaccine</Link>
+            label: <Link to="/admin/booking">Quản lý Lịch Tiêm</Link>
         },
         {
             key: 'feedback',
@@ -85,7 +92,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 </Link>
 
                 <div className="header-right">
-                    <UserOutlined className="user-icon" />
+                    <RiAdminLine className="user-icon" />
                     <span className="user-info">Xin chào {role} {username}</span>
                     <Button
                         type="primary"

@@ -1,7 +1,7 @@
 import { useState, useEffect , useRef} from "react"
 
 import {
-    GetVaccineComboDetail,
+    GetVaccineComboDetail, TopUseVaccine,
     VaccinationSchedule,
     VaccineDetail,
     VaccineIntro,
@@ -17,6 +17,7 @@ import {
     apiGetVaccinationScheduleById,
     apiGetVaccineInventoryStock, apiGetStockByVaccineInventoryId
 } from "../apis/apiVaccine";
+import {apiTopUseVaccine} from "../apis/apiAdmin.ts";
 
 export const useVaccineIntro = () =>{
     const[vaccineIntro, setVaccineIntro] = useState<VaccineIntro[]>([]);
@@ -274,3 +275,29 @@ export const useVaccineInventoryDetailByVaccineInventoryId = (vaccineId: number 
 
     return{vaccineInventoryDetailById, loading, error};
 }
+export const useTopUsedVaccine =  () => {
+    const [topUseVaccine, setTopUseVaccine] = useState<TopUseVaccine[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchTopUseVaccine = async () => {
+            setLoading(true);
+            setError(null);
+            try{
+                const response = await apiTopUseVaccine();
+                if (response && Array.isArray(response.result)) {
+                    setTopUseVaccine(response.result)
+                }
+            }catch (err){
+                console.error(err);
+                setError("Err")
+            }finally {
+                setLoading(false)
+            }
+        }
+        fetchTopUseVaccine();
+    },[])
+    return{topUseVaccine, loading, error}
+}
+

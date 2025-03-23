@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import {
   BookingDetail,
   BookingResponse,
-  Vaccine,
 } from "../../interfaces/VaccineRegistration.ts";
 import { apiGetAllDoctors } from "../../apis/apiAdmin";
 import { Doctor } from "../../interfaces/Doctor";

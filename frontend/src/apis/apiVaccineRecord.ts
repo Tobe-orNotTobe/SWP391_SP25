@@ -50,3 +50,13 @@ export const apiUpdateVaccineRecord = async (id: number, data: UpdateVaccineReco
       throw error;
     }
   };
+
+
+export const apiVaccineRecordByBookingId =  async  ( bookingId: number) => {
+  try{
+    const response = await axiosInstance.get(`/api/VaccineRecord/booking/${bookingId}`);
+    return response.data ;
+  }catch (err){
+    throw err;
+  }
+}

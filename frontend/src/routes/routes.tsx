@@ -15,9 +15,9 @@ export const PublicRoute: React.FC<{ children: ReactNode }> = ({ children }) => 
     useEffect(() => {
         if (token) {
             const redirectMap: { [key: string]: string } = {
-                Staff: "/",
+                Staff: "/staff/assignDoctor",
                 Manager: "/manager/dashboard",
-                Doctor: "/",
+                Doctor: "/doctor/vaccination-schedule",
             };
             if (role && redirectMap[role]) {
                 navigate(redirectMap[role]);
@@ -39,8 +39,8 @@ export const NoAuthRoute: React.FC<{ children: ReactNode }> = ({ children }) => 
                 Customer: "/homepage",
                 Admin: "/homepage",
                 Manager: "/manager/dashboard",
-                Staff: "/",
-                Doctor: "/",
+                Staff: "/staff/assignDoctor",
+                Doctor: "/doctor/vaccination-schedule",
             };
             if (role && redirectMap[role]) {
                 navigate(redirectMap[role]);

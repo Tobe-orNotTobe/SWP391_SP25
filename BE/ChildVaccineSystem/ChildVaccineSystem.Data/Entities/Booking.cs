@@ -38,8 +38,12 @@ namespace ChildVaccineSystem.Data.Entities
         public PricingPolicy PricingPolicy { get; set; }
 
         public ICollection<BookingDetail> BookingDetails { get; set; }
-        public ICollection<DoctorWorkSchedule> DoctorWorkSchedules { get; set; }
 
+        [ForeignKey("DoctorWorkSchedule")]
+        public int? DoctorWorkScheduleId { get; set; }
+        public DoctorWorkSchedule DoctorWorkSchedule { get; set; }
 
-    }
+		public Feedback Feedback { get; set; }
+        public RefundRequest RefundRequest { get; set; }
+	}
 }

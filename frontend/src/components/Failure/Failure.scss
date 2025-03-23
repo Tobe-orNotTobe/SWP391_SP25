@@ -1,0 +1,78 @@
+.failure-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 8px;
+  background-color: #fff;
+
+  .failure-status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+
+    &__icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+
+      &--spin {
+        animation: spin 1.5s linear infinite;
+      }
+    }
+
+    // Make all text look the same for loading, error and success
+    span,
+    &__message {
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.5;
+      max-width: 400px;
+    }
+
+    &--loading {
+      color: #3498db;
+    }
+
+    &--success {
+      color: #2ecc71;
+    }
+
+    &--error {
+      color: #e74c3c;
+    }
+  }
+
+  // Add refresh suggestion for error state
+  .failure-status--error {
+    span,
+    .failure-status__message {
+      margin-bottom: 1rem;
+    }
+
+    &:after {
+      content: "Nhấn F5 để thử lại";
+      display: block;
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #7f8c8d;
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

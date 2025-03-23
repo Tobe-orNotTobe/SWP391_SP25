@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {Button, Table, Tabs} from "antd";
+import {Button, Input, Select, Table, Tabs} from "antd";
 import {TbListDetails} from "react-icons/tb";
 import {FiEdit2} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
 import {IoMdAdd} from "react-icons/io";
-import {useDeleteBlog, useUpdateBlogActive} from "../useAdminBlog.ts";
+import {useDeleteBlog, useUpdateBlogIsActive} from "../useAdminBlog.ts";
 import {useGetAllBlog} from "../../../../hooks/useBlog.ts"
 import dayjs from "dayjs";
 import {BlogResponse} from "../../../../interfaces/Blog.ts";
 import "./AdminBlog.scss"
 import {useNavigate} from "react-router-dom";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
+import {ColumnsType} from "antd/es/table";
 
 const { TabPane } = Tabs;
 
@@ -24,30 +25,73 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
     const {blogs, loading, error, fetchAllBlog} = useGetAllBlog();
     const [detailBlog, setDetailBlog] = useState<BlogResponse | null>(null);
     const {handleDelete} = useDeleteBlog();
-    const {handleUpdateActive} = useUpdateBlogActive();
-
-    // const [searchText, setSearchText] = useState<string>("");
-    // const [sortColumn, setSortColumn] = useState<string | null>(null);
-    // const [sortOrder, setSortOrder] = useState<"ascend" | "descend" | null>(null);
-
+    const {handleUpdateActive} = useUpdateBlogIsActive();
+    const [blogType, setBlogType] = useState<string>("all");
 
     useEffect(() => {
-        fetchAllBlog(isActive);
+        fetchAllBlog(isActive, "all").then();
     }, []);
 
-    const columns = [
-        { title: "ID", dataIndex: "id", key: "id" },
+    useEffect(() => {
+        fetchAllBlog(isActive, blogType).then();
+    }, [blogType]);
+
+    const [searchText, setSearchText] = useState("");
+    const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+
+    const filteredBlog = blogs.filter((blog) =>
+        Object.values(blog).some(
+            (value) =>
+                typeof value === "string" &&
+                value.toLowerCase().includes(searchText.trim().toLowerCase())
+        )
+    );
+
+    const columns: ColumnsType<BlogResponse> = [
+        {
+            title: "",
+            key: "action-column",
+            width: 50,
+            render: (_: undefined, record: BlogResponse) => (
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        transition: "opacity 0.1s ease-in-out",
+                        opacity: hoveredRow === record.blogPostId.toString() ? 1 : 0
+                    }}
+                >
+                    {isActive && (
+                        <Button
+                            type="text"
+                            danger
+                            icon={<MdDeleteOutline style={{fontSize: "24px"}}/>}
+                            onClick={() => handleDelete(record.blogPostId).then(() => fetchAllBlog(isActive, blogType))}
+                        />
+                    )}
+
+                </div>
+            ),
+        },
+        {
+            title: "ID",
+            dataIndex: "id",
+            key: "id",
+            sorter: (a, b) => a.blogPostId.toString().localeCompare(b.blogPostId.toString()),
+        },
         {
             title: "Đề mục",
             dataIndex: "title",
             key: "title",
+            sorter: (a, b) => a.title.localeCompare(b.title),
             render: (title: string) => title.length > 10 ? `${title.slice(0, 15)}...` : title
         },
         {
-            title: "Nội dung",
-            dataIndex: "content",
-            key: "content",
-            render: (content: string) => content.length > 20 ? `${content.slice(0, 20)}...` : content
+            title: "Loại",
+            dataIndex: "type",
+            key: "type",
+            sorter: (a, b) => a.type.localeCompare(b.type),
+            render: (type: string) => type.length > 10 ? `${type.slice(0, 15)}...` : type
         },
         {
             title: "Hình minh họa",
@@ -67,12 +111,15 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
             title: "Ngày tạo",
             dataIndex: "createdAt",
             key: "createdAt",
-            render: (date: any) => date ? dayjs(date).format("DD/MM/YYYY HH:mm") : "Chưa có dữ liệu"
+            render: (date: string | null) =>
+                date ? dayjs(date).format("DD/MM/YYYY HH:mm") : "Chưa có dữ liệu",
+            sorter: (a, b) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf(),
         },
         {
             title: "Tác giả",
             dataIndex: "authorName",
             key: "authorName",
+            sorter: (a, b) => a.authorName.localeCompare(b.authorName),
             render: (authorName: string) => authorName.length > 10 ? `${authorName.slice(0, 15)}...` : authorName
         },
         {
@@ -83,24 +130,29 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                     <Button className="detail-button" onClick={() => openDetailPopup(record)}>
                         <TbListDetails/>Chi tiết
                     </Button>
-                    {!isActive ? (
-                        <Button className="edit-button" onClick={() => handleUpdateActive(record).then(() => fetchAllBlog(isActive))}>
-                            <FiEdit2/>Duyệt
+                    {isActive && (
+                        <Button className="edit-button" onClick={() => navigate(`/admin/blog/edit/${record.blogPostId}`)}>
+                            <FiEdit2/>Chỉnh sửa
                         </Button>
-                    ): (
-                        <div>
-                            <Button className="edit-button" onClick={() => navigate(`/admin/blog/edit/${record.blogPostId}`)}>
-                                <FiEdit2/>Chỉnh sửa
-                            </Button>
-
-                            <Button className="delete-button" onClick={() =>
-                                handleDelete(record.blogPostId).then(() => fetchAllBlog(isActive))
-                            }>
-                                <MdDeleteOutline/> Xóa
-                            </Button>
-
-                        </div>
                     )}
+
+                    <Button
+                        className="edit-button"
+                        style={{ backgroundColor: isActive ? "#dc3545" : "" }}
+                        onClick={() => handleUpdateActive(record, isActive).then(() => fetchAllBlog(isActive, blogType))}
+                    >
+
+                        {isActive ? (
+                            <>
+                                <MdDeleteOutline /> Tắt
+                            </>
+                        ) : (
+                            <>
+                                <FiEdit2 /> Duyệt
+                            </>
+                        )}
+
+                    </Button>
 
 
                 </div>
@@ -128,34 +180,45 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                     </div>
                     {error && ("Lỗi tải danh sách blog.")}
                     {loading && ("Loading...")}
+                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <Input
+                            placeholder="🔍 Tìm kiếm..."
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            style={{ marginBottom: 16, width: 300 }}
+                        />
 
-                    {/*<Select*/}
-                    {/*    placeholder="Chọn cột"*/}
-                    {/*    // value={sortColumn}*/}
-                    {/*    // onChange={setSortColumn}*/}
-                    {/*    style={{width: 150}}*/}
-                    {/*>*/}
-                    {/*    <Select.Option value="comboId">Số thứ tự</Select.Option>*/}
-                    {/*    <Select.Option value="comboName">Gói combo</Select.Option>*/}
-                    {/*    <Select.Option value="description">Giới thiệu</Select.Option>*/}
-                    {/*    <Select.Option value="totalPrice">Tổng giá</Select.Option>*/}
-                    {/*</Select>*/}
+                        <Select
+                            style={{marginRight: "26px", width: "90px"}}
+                            placeholder="Chọn loại"
+                            defaultValue="all"
+                            onChange={(value) => { setBlogType(value) }}
+                        >
+                            <Select.Option value="all">Tất cả</Select.Option>
+                            <Select.Option value="blog">Blog</Select.Option>
+                            <Select.Option value="news">News</Select.Option>
+                        </Select>
+
+                    </div>
 
 
                     <Table
                         columns={columns}
-                        dataSource={Array.isArray(blogs) ? blogs.map(blog => ({
+                        dataSource={filteredBlog.map((blog => ({
                             ...blog,
                             id: blog.blogPostId || Math.random().toString(), // Đảm bảo có `id`
                             title: blog.title || "Chưa có dữ liệu",
-                            content: blog.content || "Chưa có dữ liệu",
                             imageUrl: blog.imageUrl || "Chưa có dữ liệu",
                             createdAt: blog.createdAt || "",
                             authorName: blog.authorName || "Chưa có dữ liệu"
-                        })) : []}
+                        })))}
                         rowKey="id"
                         pagination={{pageSize: 8, showSizeChanger: false}}
                         className="account-table"
+                        onRow={(record) => ({
+                            onMouseEnter: () => setHoveredRow(record.blogPostId.toString()),
+                            onMouseLeave: () => setHoveredRow(null),
+                        })}
                     />
 
                     {detailBlog && (
@@ -174,9 +237,6 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                                             <div className="blog-detail-popups-right">
                                                 <p><strong style={{paddingRight: "2px"}}>Đề mục:
                                                 </strong> {detailBlog.title || "Chưa có dữ liệu"}
-                                                </p>
-                                                <p><strong style={{paddingRight: "2px"}}>Nội dung:</strong>
-                                                    {detailBlog.content || "Chưa có dữ liệu."}
                                                 </p>
                                                 <p><strong style={{paddingRight: "2px"}}>Ngày đăng:
                                                 </strong> {dayjs(detailBlog.createdAt).format("DD/MM/YYYY HH:mm") || "Chưa có dữ liệu"}

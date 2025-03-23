@@ -42,25 +42,33 @@ const VaccineInventoryList: React.FC = () => {
             title: "Vaccine ID",
             dataIndex: "vaccineId",
             key: "vaccineId",
+            sorter: (a: VaccineInventoryStock, b: VaccineInventoryStock) => a.vaccineId - b.vaccineId,
         },
         {
             title: "Tên Vaccine",
             dataIndex: "name",
             key: "name",
+            sorter: (a : VaccineInventoryStock, b :VaccineInventoryStock) => a.name.localeCompare(b.name),
         },
         {
             title: "Nơi Sản Xuất",
             dataIndex: "manufacturer",
             key: "manufacturer",
+            sorter: (a :VaccineInventoryStock, b :VaccineInventoryStock) => a.manufacturer.localeCompare(b.manufacturer),
         },
         {
             title: "Trạng Thái",
             dataIndex: "status",
             key: "status",
-            render: (status: boolean) => (
+            filters: [
+                { text: "Còn hàng", value: true },
+                { text: "Hết hàng", value: false },
+            ],
+            onFilter: (value :boolean | React.Key, record : VaccineInventoryStock) => record.status === value,
+            render: (status : boolean) => (
                 <span className={status ? "status-active" : "status-inactive"}>
-                    {status ? "Còn hàng" : "Hết hàng"}
-                </span>
+                {status ? "Còn hàng" : "Hết hàng"}
+            </span>
             ),
         },
         {
@@ -111,11 +119,13 @@ const VaccineInventoryList: React.FC = () => {
             title: "Số lượng ban đầu",
             dataIndex: "initialQuantity",
             key: "initialQuantity",
+            render: (initialQuantity: number) => initialQuantity.toLocaleString("vi-VN")
         },
         {
             title: "Số hàng trong kho",
             dataIndex: "quantityInStock",
             key: "quantityInStock",
+            render: (quantityInStock: number) => quantityInStock.toLocaleString("vi-VN")
         },
         {
             title: "Thao Tác",

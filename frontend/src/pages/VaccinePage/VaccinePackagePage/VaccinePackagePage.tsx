@@ -13,44 +13,12 @@ import {
 import "./VaccinePackagePage.scss";
 import {GetVaccineComboDetail, VaccineScheduleDetail} from "../../../interfaces/Vaccine.ts";
 import { apiGetComboVaccineDetail } from "../../../apis/apiVaccine.ts";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { FaSortAlphaDown, FaSortAlphaUp, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { Select, Button, Tooltip } from "antd";
 import DOMPurify from "dompurify";
 import { useVaccinationScheduleDetail } from "../../../hooks/useVaccine.ts";
 
-const columns = [
-    {
-        header: "Số thứ tự",
-        accessorKey: "comboId",
-    },
-    {
-        header: "Gói combo",
-        accessorKey: "comboName",
-    },
-    {
-        header: "Giới thiệu",
-        accessorKey: "description",
-    },
-    {
-        header: "Tổng giá (VNĐ)",
-        accessorKey: "totalPrice",
-        cell: (info: any) => new Intl.NumberFormat("vi-VN").format(info.getValue()),
-    },
-    {
-        header: "Vaccines",
-        accessorKey: "vaccines",
-        cell: (info: any) => (
-            <div className="vaccine-buttons">
-                {info.getValue().map((vaccine: any, index: number) => (
-                    <button key={index} className="vaccine-button">
-                        {vaccine.name}
-                    </button>
-                ))}
-            </div>
-        ),
-    },
-];
 
 const ageColumns = [
     { month: 0, label: 'Sơ sinh\n0 tháng' },
@@ -64,7 +32,52 @@ const ageColumns = [
 ];
 
 const VaccinePackagePage: React.FC = () => {
-    const [comboVaccines, setComboVaccines] = useState<GetVaccineComboDetail[]>([]);
+
+    const navigate = useNavigate();
+
+    const columns = [
+        {
+            header: "Số thứ tự",
+            accessorKey: "comboId",
+        },
+        {
+            header: "Gói combo",
+            accessorKey: "comboName",
+        },
+        {
+            header: "Giới thiệu",
+            accessorKey: "description",
+        },
+        {
+            header: "Tổng giá (VNĐ)",
+            accessorKey: "totalPrice",
+            cell: (info: any) => new Intl.NumberFormat("vi-VN").format(info.getValue()),
+        },
+        {
+            header: "Vaccines",
+            accessorKey: "vaccines",
+            cell: (info: any) => {
+                const vaccines = info.getValue();
+                return (
+                    <div>
+                        {vaccines.map((vaccineObj: any, index : number) => (
+                            <div className="vaccine-buttons">
+                                <button key={index} className="vaccine-button"
+                                        onClick={() => navigate(`/vaccines-list/${vaccineObj.vaccine.id}`)}>
+                                    ({vaccineObj.order}) {vaccineObj.vaccine.name} (tiêm
+                                    sau {vaccineObj.intervalDays} ngày)
+                                </button>
+                            </div>
+                            ))}
+                    </div>
+                );
+            },
+            },
+
+            ];
+
+            const [comboVaccines, setComboVaccines] = useState<GetVaccineComboDetail[]>([]);
+
     const [sorting, setSorting] = useState<SortingState>([]);
     const [sortColumn, setSortColumn] = useState<string>("comboId");
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
@@ -154,6 +167,8 @@ const VaccinePackagePage: React.FC = () => {
         onGlobalFilterChange: setFiltering,
     });
 
+
+    // Cái hàm này dùng để lấy danh sách vaccine dựa trên vaccinationschedule để không bị trùng lặp
     const getAllVaccines = () => {
         const vaccines: VaccineScheduleDetail[] = [];
 
@@ -169,8 +184,10 @@ const VaccinePackagePage: React.FC = () => {
         return vaccines;
     };
 
+    //Gọi 1 biến để sử dụng hàm ở trên
     const allVaccines = getAllVaccines();
 
+    //hàm này sử dụng để tìm thông tin mũi tiêm ở 1 độ tuổi cụ thể
     const findInjection = (vaccineId: number, month: number) => {
         for (const schedule of vaccinationSchedule) {
             const vaccineDetail = schedule.vaccineScheduleDetails.find(
@@ -191,6 +208,8 @@ const VaccinePackagePage: React.FC = () => {
         return null;
     };
 
+
+    //Cái này kiểm tra xem vaccine nó có bắt buộc hay khong để hiển thị trên cột
     const isVaccineRequired = (vaccineId: number): boolean => {
         for (const schedule of vaccinationSchedule) {
             const vaccine = schedule.vaccineScheduleDetails.find(v => v.vaccineId === vaccineId);
@@ -337,7 +356,7 @@ const VaccinePackagePage: React.FC = () => {
                                     </th>
                                 ))}
                             </tr>
-                            </thead>
+                        </thead>
                             <tbody>
                             {allVaccines.map((vaccine) => (
                                 <tr key={vaccine.vaccineId}>
@@ -362,7 +381,7 @@ const VaccinePackagePage: React.FC = () => {
                                             <td key={`${vaccine.vaccineId}-${col.month}`} className="dose-cell">
                                                 {injection && (
                                                     <div className="dose-number">
-                                                        {injection.doseNumber}
+                                                        {injection.injectionNumber}
                                                     </div>
                                                 )}
                                             </td>

@@ -1,15 +1,16 @@
 import React from "react";
-import {BlogResponse} from "../../interfaces/Blog.ts";
+
 // import {useGetAllBlog} from "../../hooks/useBlog.ts";
 // import {BlogResponse} from "../../interfaces/Blog.ts";
 import "./NewsPost.scss"
 import {useNavigate} from "react-router-dom";
+import {NewsResponse} from "../../interfaces/Blog.ts";
 
-const NewsPost: React.FC<{ news: BlogResponse | null}> = ({ news }) => {
+const NewsPost: React.FC<{ news: NewsResponse | null}> = ({ news }) => {
     if (!news) return null;
     const navigate = useNavigate();
     return (
-        <div className="blog-card" onClick={() => {navigate(`/blog/${news.blogPostId}`)}}>
+        <div className="blog-card" onClick={() => {navigate(`/news/${news.blogPostId}`)}}>
             <img src={news.imageUrl} alt={news.title} className="blog-image"/>
 
             <div className="blog-content">

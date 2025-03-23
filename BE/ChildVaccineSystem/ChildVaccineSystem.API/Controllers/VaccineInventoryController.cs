@@ -62,7 +62,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Internal Server Error: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi máy chủ nội bộ: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
@@ -93,7 +93,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Internal Server Error: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi máy chủ nội bộ: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
@@ -115,25 +115,25 @@ namespace ChildVaccineSystem.API.Controllers
         /// <summary>
         /// Xuất vaccine khỏi kho
         /// </summary>
-        //[HttpPost("export/{id}")]
-        //public async Task<IActionResult> ExportVaccine(int id, [FromBody] int quantity)
-        //{
-        //    try
-        //    {
-        //        await _vaccineInventoryService.ExportVaccineAsync(id, quantity);
-        //        _response.Result = "Vaccine issued successfully";
-        //        _response.StatusCode = HttpStatusCode.OK;
-        //        _response.IsSuccess = true;
-        //        return Ok(_response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _response.StatusCode = HttpStatusCode.BadRequest;
-        //        _response.IsSuccess = false;
-        //        _response.ErrorMessages.Add(ex.Message);
-        //        return BadRequest(_response);
-        //    }
-        //}
+        [HttpPost("export/{id}")]
+        public async Task<IActionResult> ExportVaccine(int id, [FromBody] int quantity)
+        {
+            try
+            {
+                await _vaccineInventoryService.ExportVaccineAsync(id, quantity);
+                _response.Result = "Vaccine issued successfully";
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(ex.Message);
+                return BadRequest(_response);
+            }
+        }
 
         /// <summary>
         /// Hoàn trả vaccine về kho
@@ -144,7 +144,7 @@ namespace ChildVaccineSystem.API.Controllers
             try
             {
                 await _vaccineInventoryService.ReturnVaccineAsync(id, quantity);
-                _response.Result = "Vaccine returned successfully";
+                _response.Result = "Vắc-xin đã được trả về thành công";
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
                 return Ok(_response);

@@ -14,6 +14,6 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
 
         Task<IEnumerable<RevenueByDateDTO>> GetTotalRevenueLast10DaysAsync();  // Calculate revenue per day for the last 10 days
 
-        Task<decimal> GetTotalRevenueByDateAsync(DateTime date);  // Calculate total revenue for a specific date
+        Task<RevenueByDateDTO> GetTotalRevenueByDateAsync(DateTime date);
     }
 }

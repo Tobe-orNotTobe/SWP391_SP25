@@ -35,6 +35,14 @@ export interface UpdateVaccineRecordRequest {
   notes: string;
 }
 
+export interface VaccineRecordUser {
+    bookingId : number;
+    fullName : string;
+    dateOfBirth : string;
+    height: number;
+    weight: number;
+    vaccineRecords: VaccineRecord[];
+}
 
 export interface CreateVaccineRecordResponse {
   statusCode: string; // Mã trạng thái phản hồi (VD: "OK", "ERROR")

@@ -27,11 +27,11 @@ namespace ChildVaccineSystem.Service.Services
 			_mapper = mapper;
 		}
 
-			public async Task<List<VaccinationScheduleDTO>> GetAllSchedulesAsync()
-			{
-				var schedules = await _unitOfWork.VaccinationSchedules.GetAllAsync(includeProperties: "VaccineScheduleDetails.Vaccine,VaccineScheduleDetails.InjectionSchedules");
-				return _mapper.Map<List<VaccinationScheduleDTO>>(schedules);
-			}
+		public async Task<List<VaccinationScheduleDTO>> GetAllSchedulesAsync()
+		{
+			var schedules = await _unitOfWork.VaccinationSchedules.GetAllAsync(includeProperties: "VaccineScheduleDetails.Vaccine,VaccineScheduleDetails.InjectionSchedules");
+			return _mapper.Map<List<VaccinationScheduleDTO>>(schedules);
+		}
 
 		public async Task<VaccinationScheduleDTO> GetScheduleByIdAsync(int id)
 		{
@@ -42,17 +42,25 @@ namespace ChildVaccineSystem.Service.Services
 
 		public async Task<VaccinationScheduleDTO> CreateScheduleAsync(CreateVaccinationScheduleDTO scheduleDto)
 		{
+
+			var conflictSchedule = await _unitOfWork.VaccinationSchedules.GetAsync(vs =>
+				vs.AgeRangeStart == scheduleDto.AgeRangeStart || vs.AgeRangeEnd == scheduleDto.AgeRangeEnd);
+			if (conflictSchedule != null)
+			{
+				throw new InvalidOperationException("Đã có lịch tiêm chủng này trong hệ thống!");
+			}
+
 			// Validate age range
 			if (scheduleDto.AgeRangeEnd <= scheduleDto.AgeRangeStart)
 			{
-				throw new ArgumentException("Age range end must be greater than age range start");
+				throw new ArgumentException("Độ tuổi kết thúc phải lớn hơn độ tuổi bắt đầu!");
 			}
 
 			// Validate duplicate vaccines
 			var uniqueVaccineIds = scheduleDto.VaccineScheduleDetails.Select(vs => vs.VaccineId).Distinct().ToList();
 			if (uniqueVaccineIds.Count != scheduleDto.VaccineScheduleDetails.Count)
 			{
-				throw new ArgumentException("Duplicate vaccines are not allowed in the schedule");
+				throw new InvalidOperationException("Không được phép trùng vắc-xin trong lịch tiêm chủng này!");
 			}
 
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
@@ -82,7 +90,7 @@ namespace ChildVaccineSystem.Service.Services
 					var vaccine = await _unitOfWork.Vaccines.GetAsync(v => v.VaccineId == vaccineDetail.VaccineId);
 					if (vaccine == null)
 					{
-						throw new KeyNotFoundException($"Vaccine with ID {vaccineDetail.VaccineId} not found");
+						throw new KeyNotFoundException($"Không tìm thấy vắc-xin ID {vaccineDetail.VaccineId}!");
 					}
 
 					var vaccineScheduleDetail = new VaccineScheduleDetail
@@ -101,27 +109,28 @@ namespace ChildVaccineSystem.Service.Services
 						InjectionSchedules = new List<InjectionScheduleDTO>()
 					};
 
-					var doseNumbers = vaccineDetail.InjectionSchedules.Select(x => x.DoseNumber).ToList();
-					if (doseNumbers.Distinct().Count() != doseNumbers.Count)
+					var injectionMonths = vaccineDetail.InjectionSchedules.Select(x => x.InjectionNumber).ToList();
+
+					if (injectionMonths.Distinct().Count() != injectionMonths.Count)
 					{
-						throw new ArgumentException($"Duplicate dose numbers found for vaccine {vaccineDetail.VaccineId}");
+						throw new InvalidOperationException($"Bị trùng lặp số mũi của vắc-xin ID {vaccineDetail.VaccineId}!");
 					}
 
 					foreach (var injection in vaccineDetail.InjectionSchedules)
 					{
-						if (injection.InjectionMonth < scheduleDto.AgeRangeStart ||
-							injection.InjectionMonth > scheduleDto.AgeRangeEnd)
+						if (injection.InjectionMonth < scheduleDto.AgeRangeStart * 12 ||
+							injection.InjectionMonth > scheduleDto.AgeRangeEnd * 12)
 						{
 							throw new ArgumentException(
-								$"Injection month {injection.InjectionMonth} must be between {scheduleDto.AgeRangeStart} " +
-								$"and {scheduleDto.AgeRangeEnd} months for vaccine {vaccineDetail.VaccineId}"
+								$"Mũi tháng {injection.InjectionMonth} của vắc-xin ID {vaccineDetail.VaccineId} đã nằm ngoài độ tuổi {scheduleDto.AgeRangeStart} ({scheduleDto.AgeRangeStart * 12} tháng) " +
+								$"- {scheduleDto.AgeRangeEnd} ({scheduleDto.AgeRangeStart * 12} tháng)!"
 							);
 						}
 
 						var injectionSchedule = new InjectionSchedule
 						{
 							VaccineScheduleDetailId = createdVaccineDetail.VaccineScheduleDetailId,
-							DoseNumber = injection.DoseNumber,
+							InjectionNumber = injection.InjectionNumber,
 							InjectionMonth = injection.InjectionMonth,
 							IsRequired = injection.IsRequired,
 							Notes = injection.Notes ?? string.Empty
@@ -131,7 +140,7 @@ namespace ChildVaccineSystem.Service.Services
 
 						var injectionDTO = new InjectionScheduleDTO
 						{
-							DoseNumber = createdInjection.DoseNumber,
+							InjectionNumber = createdInjection.InjectionNumber,
 							InjectionMonth = createdInjection.InjectionMonth,
 							IsRequired = createdInjection.IsRequired,
 							Notes = createdInjection.Notes
@@ -158,49 +167,59 @@ namespace ChildVaccineSystem.Service.Services
 		public async Task<VaccinationScheduleDTO> UpdateScheduleAsync(int id, UpdateVaccinationScheduleDTO scheduleDto)
 		{
 			var existingSchedule = await _unitOfWork.VaccinationSchedules.GetAsync(v => v.ScheduleId == id, includeProperties: "VaccineScheduleDetails.InjectionSchedules");
+
 			if (existingSchedule == null)
 			{
-				throw new ArgumentException($"Schedule with ID {id} not found");
+				throw new KeyNotFoundException($"Không tìm thấy lịch tiêm chủng!");
 			}
 
 
 			if (scheduleDto.AgeRangeEnd <= scheduleDto.AgeRangeStart)
 			{
-				throw new ArgumentException("Age range end must be greater than age range start");
+				throw new ArgumentException("Độ tuổi kết thúc phải lớn hơn độ tuổi bắt đầu!");
 			}
 
 			var existingVaccines = await _unitOfWork.Vaccines.GetAllAsync();
+
 			var requestedVaccineIds = scheduleDto.VaccineScheduleDetails.Select(v => v.VaccineId).ToList();
+
 			var invalidVaccineIds = requestedVaccineIds.Except(existingVaccines.Select(v => v.VaccineId)).ToList();
 
+			var duplicateVaccineIds = requestedVaccineIds.GroupBy(id => id)
+				.Where(g => g.Count() > 1)
+				.Select(g => g.Key)
+				.ToList();
+
+			if (duplicateVaccineIds.Any())
+			{
+				throw new InvalidOperationException($"Không được phép trùng vắc-xin trong lịch tiêm chủng này!");
+			}
 
 			if (invalidVaccineIds.Any())
 			{
-				throw new ArgumentException($"Invalid vaccine IDs: {string.Join(", ", invalidVaccineIds)}");
+				throw new KeyNotFoundException($"IDs vắc-xin không tìm thấy: {string.Join(", ", invalidVaccineIds)}");
 			}
+
+
 
 			foreach (var detail in scheduleDto.VaccineScheduleDetails)
 			{
-				var vaccine = existingVaccines.First(v => v.VaccineId == detail.VaccineId);
-				if (detail.InjectionSchedules.Count != vaccine.InjectionsCount)
+
+				var injectionMonths = detail.InjectionSchedules.Select(x => x.InjectionNumber).ToList();
+				if (injectionMonths.Distinct().Count() != injectionMonths.Count)
 				{
-					throw new ArgumentException(
-						$"Number of injections for vaccine {vaccine.Name} ({detail.InjectionSchedules.Count}) " +
-						$"does not match required count ({vaccine.InjectionsCount})");
+					throw new InvalidOperationException($"Bị trùng lặp số mũi của vắc-xin ID {detail.VaccineId}!");
 				}
-			}
 
-			foreach (var detail in scheduleDto.VaccineScheduleDetails)
-			{
 				foreach (var injection in detail.InjectionSchedules)
 				{
-					if (injection.InjectionMonth < scheduleDto.AgeRangeStart ||
-						injection.InjectionMonth > scheduleDto.AgeRangeEnd)
+					if (injection.InjectionMonth < scheduleDto.AgeRangeStart * 12 ||
+						injection.InjectionMonth > scheduleDto.AgeRangeEnd * 12)
 					{
 						var vaccine = existingVaccines.First(v => v.VaccineId == detail.VaccineId);
 						throw new ArgumentException(
-							$"Injection month {injection.InjectionMonth} for vaccine {vaccine.Name} " +
-							$"is outside schedule age range ({scheduleDto.AgeRangeStart}-{scheduleDto.AgeRangeEnd} months)");
+							$"Mũi ở tháng {injection.InjectionMonth} của vắc-xin {vaccine.VaccineId} " +
+							$"đã nằm ngoài độ tuổi {scheduleDto.AgeRangeStart} ({scheduleDto.AgeRangeStart * 12} tháng) - {scheduleDto.AgeRangeEnd} ({scheduleDto.AgeRangeStart * 12} tháng)");
 					}
 				}
 			}
@@ -253,7 +272,7 @@ namespace ChildVaccineSystem.Service.Services
 						var injection = new InjectionSchedule
 						{
 							VaccineScheduleDetailId = addedDetail.VaccineScheduleDetailId,
-							DoseNumber = injectionDto.DoseNumber,
+							InjectionNumber = injectionDto.InjectionNumber,
 							InjectionMonth = injectionDto.InjectionMonth,
 							Notes = injectionDto.Notes
 						};
@@ -310,17 +329,20 @@ namespace ChildVaccineSystem.Service.Services
 		{
 			var children = await _unitOfWork.Children.GetAsync(c => c.ChildId == childrenId);
 			if (children == null)
-				throw new KeyNotFoundException($"Not found children with id: {childrenId}");
+				throw new KeyNotFoundException($"Không tìm thấy ID trẻ: {childrenId}");
 
 			var today = DateTime.Today;
-			var ageInMonths = ((today.Year - children.DateOfBirth.Year) * 12) + today.Month - children.DateOfBirth.Month;
-			if (today.Day < children.DateOfBirth.Day)
-				ageInMonths--;
+			int age = (today - children.DateOfBirth).Days / 365;
+			if (today < children.DateOfBirth.AddYears(age))
+				age--;
 
 			var schedules = await _unitOfWork.VaccinationSchedules.GetAllAsync(
-				s => s.AgeRangeStart <= ageInMonths && s.AgeRangeEnd >= ageInMonths,
+				s => s.AgeRangeStart <= age && s.AgeRangeEnd > age,
 				includeProperties: "VaccineScheduleDetails.Vaccine"
 			);
+
+			if (schedules.Count() == 0)
+				throw new KeyNotFoundException($"Không tìm thấy lịch phù hợp cho trẻ này!");
 
 			var schedule = schedules.FirstOrDefault();
 
@@ -344,6 +366,7 @@ namespace ChildVaccineSystem.Service.Services
 			foreach (var combo in allCombos)
 			{
 				var vaccineIdsInCombo = combo.ComboDetails.Select(cd => cd.VaccineId).ToList();
+
 				if (vaccineIdsInCombo.Intersect(eligibleVaccineIds).Any())
 				{
 					eligibleCombos.Add(combo);

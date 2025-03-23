@@ -1,17 +1,16 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "antd";
-import {useImgCarousel, useBriefContent, useBlogIntro} from "./useHomePage.ts";
-import { useNewsIntro } from "./useHomePage.ts";
+import {useImgCarousel, useBriefContent, useBlogIntro, useNewIntro} from "./useHomePage.ts";
+
 import { useVaccineIntro } from "../../hooks/useVaccine";
 import { useVaccineServiceIntro } from "./useHomePage.ts";
 import CustomerNavbar from "../../components/Navbar/CustomerNavbar/CustomerNavbar";
 import { ServiceCard, VaccineCard, NewsCard} from "../../components/Card/Card";
+
 import Footer from "../../components/Footer/Footer.tsx"
 import "./HomePage.scss"
 import FloatingButtons from "../../components/FloatingButton/FloatingButtons.tsx";
-import {useGetAllBlog} from "../../hooks/useBlog.ts";
-import BlogPost from "../../components/Blog/BlogPost.tsx";
 
 
 const HomePage : React.FC  = () => {
@@ -20,24 +19,14 @@ const HomePage : React.FC  = () => {
     const { briefContent } = useBriefContent();
     const { vaccineIntro } = useVaccineIntro();
     const { vaccineServiceIntro } = useVaccineServiceIntro();
-    const { newsIntro } = useNewsIntro();
-    const { blogs, fetchAllBlog} = useGetAllBlog();
+    const { news } = useNewIntro();
+
+
     const {blogs : blogsIntro} = useBlogIntro()
-
-    console.log(blogsIntro)
-    const firstBlog = blogs.length > 0 ? blogs[0] : null;
-    const secondBlog = blogs.length > 1 ? blogs[1] : null;
-    const thirdBlog = blogs.length > 2 ? blogs[2] : null;
-    const fourBlog = blogs.length > 3 ? blogs[3] : null;
-
-    useEffect(() => {
-        fetchAllBlog(true);
-    }, []);
 
     return(
         <>
         <CustomerNavbar/>
-            <div>
                 <div className="homeContainer">
                     <div className="carouselContainer">
                         <Carousel autoplay>
@@ -75,10 +64,6 @@ const HomePage : React.FC  = () => {
                 </div>
 
                 <div style={{display: "flex", paddingLeft: "40px", paddingRight: "40px", width: "100%"}}>
-                    <div>
-                        <BlogPost key={firstBlog?.blogPostId} blog={firstBlog}/>
-                        <BlogPost key={thirdBlog?.blogPostId} blog={thirdBlog}/>
-                    </div>
                     <div className="homeContainer">
                         <div className="vaccineListContainer">
                             <div className="titleHeader">
@@ -131,8 +116,9 @@ const HomePage : React.FC  = () => {
                         <div className="newsListContainer">
                             <div className="titleHeader">
                                 <h2>Tin Tức</h2>
+                                <span><Link to="/news">Xem Tất Cả</Link></span>
                             </div>
-                            <hr/>
+                            <hr style={{borderColor: "black"}}></hr>
                             <Carousel
                                 autoplay
                                 dots={false}
@@ -144,18 +130,28 @@ const HomePage : React.FC  = () => {
                                     {breakpoint: 480, settings: {slidesToShow: 1, slidesToScroll: 1}}
                                 ]}
                             >
-                                {newsIntro.map((news) => (
-                                    <NewsCard key={news.id} id={news.id} title={news.title} image={news.image}
-                                              briefContent={news.briefContent}/>
+                                {news.map((newsItem) => (
+                                    <Link
+                                        key={newsItem.blogPostId}
+                                        to={`/blog/${newsItem.blogPostId}`}
+                                        style={{ textDecoration: "none" }}
+                                    >
+                                       <NewsCard
+                                           blogPostId={newsItem.blogPostId}
+                                           title={newsItem.title}
+                                           imageUrl={newsItem.imageUrl}
+                                           type={newsItem.type}
+                                       />
+                                    </Link>
                                 ))}
                             </Carousel>
                         </div>
                         <div className="newsListContainer">
                             <div className="titleHeader">
                                 <h2>Blog</h2>
-                                <span><Link to="/blogs">Xem Tất Cả</Link></span>
+                                <span><Link to="/blog">Xem Tất Cả</Link></span>
                             </div>
-                            <hr/>
+                            <hr style={{borderColor: "black"}}/>
                             <Carousel
                                 autoplay
                                 dots={false}
@@ -168,27 +164,21 @@ const HomePage : React.FC  = () => {
                                 ]}
                             >
                                 {blogsIntro.map((blog) => (
-                                    <Link key={blog.blogPostId} to={`/blogs/${blog.blogPostId}`} style={{textDecoration: "none"}}>
+                                    <Link key={blog.blogPostId} to={`/blog/${blog.blogPostId}`}
+                                          style={{textDecoration: "none"}}>
                                         <NewsCard
-                                            id={blog.blogPostId}
+                                            blogPostId={blog.blogPostId}
                                             title={blog.title}
-                                            image={blog.imageUrl}
-                                            briefContent=""
+                                            imageUrl={blog.imageUrl}
+                                            type={blog.type}
                                         />
                                     </Link>
                                 ))}
                             </Carousel>
                         </div>
                     </div>
-
-                    <div>
-                        <BlogPost key={secondBlog?.blogPostId} blog={secondBlog}/>
-                        <BlogPost key={fourBlog?.blogPostId} blog={fourBlog}/>
-                    </div>
                 </div>
 
-
-            </div>
             <FloatingButtons/>
             <Footer/>
         </>

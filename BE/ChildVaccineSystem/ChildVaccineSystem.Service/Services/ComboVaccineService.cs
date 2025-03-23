@@ -31,23 +31,22 @@ namespace ChildVaccineSystem.Service.Services
         {
             var combo = await _unitOfWork.ComboVaccines.GetById(id);
             if (combo == null)
-                throw new Exception("ComboVaccine not found.");
+                throw new Exception("ComboVaccine không tìm thấy.");
             return _mapper.Map<ComboVaccineDTO>(combo);
         }
 
         public async Task<ComboVaccineDTO> CreateAsync(CreateComboVaccineDTO comboDto)
         {
-            comboDto.VaccineIds = comboDto.VaccineIds.Distinct().ToList();
-
             var combo = _mapper.Map<ComboVaccine>(comboDto);
 
-            combo.ComboDetails = comboDto.VaccineIds
-                .Select(vaccineId => new ComboDetail
+            combo.ComboDetails = comboDto.Vaccines
+                .Select(vaccine => new ComboDetail
                 {
                     ComboId = combo.ComboId,
-                    VaccineId = vaccineId
-                })
-                .ToList();
+                    VaccineId = vaccine.VaccineId,
+                    Order = vaccine.Order,
+                    IntervalDays = vaccine.IntervalDays
+                }).ToList();
 
             var createdCombo = await _unitOfWork.ComboVaccines.AddAsync(combo);
             await _unitOfWork.CompleteAsync();
@@ -57,38 +56,22 @@ namespace ChildVaccineSystem.Service.Services
         }
 
 
+
         public async Task<ComboVaccineDTO> UpdateAsync(int id, UpdateComboVaccineDTO comboDto)
         {
             var existingCombo = await _unitOfWork.ComboVaccines.GetById(id);
             if (existingCombo == null) return null;
 
-            if (comboDto.VaccineIds != null && comboDto.VaccineIds.Distinct().Count() != comboDto.VaccineIds.Count)
-            {
-                throw new Exception("Combo Vaccine cannot contain duplicate vaccines. Please remove duplicate entries and try again.");
-            }
+            _unitOfWork.ComboDetails.RemoveRange(existingCombo.ComboDetails);
 
-            var existingVaccineIds = existingCombo.ComboDetails.Select(cd => cd.VaccineId).ToList();
-
-            if (comboDto.VaccineIds != null)
-            {
-                var duplicates = comboDto.VaccineIds.Intersect(existingVaccineIds).ToList();
-                if (duplicates.Any())
+            existingCombo.ComboDetails = comboDto.Vaccines
+                .Select(vaccine => new ComboDetail
                 {
-                    throw new Exception($"The following vaccine IDs already exist in the combo: {string.Join(", ", duplicates)}. Please remove them and try again.");
-                }
-
-                var comboDetailsToDelete = existingCombo.ComboDetails.ToList();
-                _unitOfWork.ComboDetails.RemoveRange(comboDetailsToDelete);
-
-                foreach (var vaccineId in comboDto.VaccineIds)
-                {
-                    existingCombo.ComboDetails.Add(new ComboDetail
-                    {
-                        ComboId = existingCombo.ComboId,
-                        VaccineId = vaccineId
-                    });
-                }
-            }
+                    ComboId = existingCombo.ComboId,
+                    VaccineId = vaccine.VaccineId,
+                    Order = vaccine.Order,
+                    IntervalDays = vaccine.IntervalDays
+                }).ToList();
 
             _mapper.Map(comboDto, existingCombo);
 

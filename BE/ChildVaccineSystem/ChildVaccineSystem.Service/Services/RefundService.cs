@@ -23,15 +23,17 @@ namespace ChildVaccineSystem.Service.Services
 		public async Task<List<RefundRequestDTO>> GetAllRefundRequestsAsync()
 		{
 			var refundRequests = await _unitOfWork.RefundRequests.GetAllAsync();
+
 			return _mapper.Map<List<RefundRequestDTO>>(refundRequests);
 		}
 
 		public async Task<RefundRequestDTO> GetRefundRequestByIdAsync(int id)
 		{
 			var refundRequest = await _unitOfWork.RefundRequests.GetByIdAsync(id);
+
 			if (refundRequest == null)
 			{
-				throw new KeyNotFoundException($"Refund request with ID {id} not found.");
+				throw new KeyNotFoundException($"Không tìm thấy yêu cầu hoàn tiền!");
 			}
 
 			return _mapper.Map<RefundRequestDTO>(refundRequest);
@@ -40,6 +42,7 @@ namespace ChildVaccineSystem.Service.Services
 		public async Task<List<RefundRequestDTO>> GetUserRefundRequestsAsync(string userId)
 		{
 			var refundRequests = await _unitOfWork.RefundRequests.GetByUserIdAsync(userId);
+
 			return _mapper.Map<List<RefundRequestDTO>>(refundRequests);
 		}
 
@@ -49,51 +52,47 @@ namespace ChildVaccineSystem.Service.Services
 			var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == createDto.BookingId);
 			if (booking == null)
 			{
-				throw new KeyNotFoundException($"Booking with ID {createDto.BookingId} not found.");
+				throw new KeyNotFoundException($"Không tìm thấy lịch hẹn này!");
 			}
 
 			// Check if the booking belongs to this user
 			if (booking.UserId != userId)
 			{
-				throw new UnauthorizedAccessException("You are not authorized to request a refund for this booking.");
+				throw new UnauthorizedAccessException("Bạn không được phép yêu cầu hoàn lại tiền cho đơn đặt lịch này!");
 			}
 
 			// Check booking status - only allow refunds for certain statuses
 			if (booking.Status != BookingStatus.Confirmed)
 			{
-				throw new InvalidOperationException($"Cannot request refund for booking in {booking.Status} status.");
+				throw new InvalidOperationException($"Không thể yêu cầu hoàn tiền cho đơn đặt lịch có trạng thái {booking.Status}!");
 			}
 
 			// Check if there's already a pending refund request
 			if (await _unitOfWork.RefundRequests.HasExistingRequestForBookingAsync(createDto.BookingId))
 			{
-				throw new InvalidOperationException("There is already a pending refund request for this booking.");
+				throw new InvalidOperationException("Đã có yêu cầu hoàn tiền cho đơn đặt lịch này.");
 			}
 
 			// Tính toán số tiền hoàn lại dựa trên số ngày trước lịch tiêm
 			var daysUntilAppointment = (booking.BookingDate - DateTime.Now).Days;
+
 			decimal refundAmount = 0;
+
 			string refundPolicy = "";
 
 			if (daysUntilAppointment >= 7)
 			{
 				refundAmount = booking.TotalPrice;
-				refundPolicy = "Full refund (100%) - Cancelled 7 or more days before appointment";
+				refundPolicy = "Hoàn tiền đầy đủ (100%) - Hủy trước 7 ngày hoặc hơn so với lịch hẹn";
 			}
 			else if (daysUntilAppointment >= 3 && daysUntilAppointment <= 6)
 			{
 				refundAmount = booking.TotalPrice * 0.5m;
-				refundPolicy = "Partial refund (50%) - Cancelled 3-6 days before appointment";
+				refundPolicy = "Hoàn tiền một phần (50%) - Hủy trước 3-6 ngày so với lịch hẹn";
 			}
 			else
 			{
-				refundAmount = 0;
-				refundPolicy = "No refund - Cancelled less than 3 days before appointment";
-			}
-
-			if (refundAmount <= 0)
-			{
-				throw new InvalidOperationException($"No refund is available for this booking. {refundPolicy}");
+				throw new InvalidOperationException("Không thể yêu cầu hoàn tiền trước 2 ngày!");
 			}
 
 			// Create new refund request
@@ -103,8 +102,8 @@ namespace ChildVaccineSystem.Service.Services
 				UserId = userId,
 				Reason = createDto.Reason,
 				Amount = refundAmount,
-				Status = "Pending",
-				AdminNote = $"Auto-calculated refund: {refundPolicy}",
+				Status = "Đang chờ xử lý",
+				AdminNote = $"Tự động tính toán: {refundPolicy}",
 				CreatedAt = DateTime.UtcNow
 			};
 
@@ -119,14 +118,15 @@ namespace ChildVaccineSystem.Service.Services
 		public async Task<RefundRequestDTO> ApproveRefundRequestAsync(int id, string adminId)
 		{
 			var refundRequest = await _unitOfWork.RefundRequests.GetByIdAsync(id);
+
 			if (refundRequest == null)
 			{
-				throw new KeyNotFoundException($"Refund request with ID {id} not found.");
+				throw new KeyNotFoundException($"Không tìm thấy yêu cầu hoàn tiền với ID {id}!");
 			}
 
-			if (refundRequest.Status != "Pending")
+			if (refundRequest.Status != "Đang chờ xử lý")
 			{
-				throw new InvalidOperationException($"Cannot approve refund request that is in {refundRequest.Status} status.");
+				throw new InvalidOperationException($"Không thể chấp thuận yêu cầu hoàn tiền có trạng thái  {refundRequest.Status}!");
 			}
 
 			// Không cho phép điều chỉnh số tiền hoàn lại - sử dụng số tiền đã tính tự động
@@ -136,7 +136,7 @@ namespace ChildVaccineSystem.Service.Services
 			{
 				try
 				{
-					refundRequest.Status = "Approved";
+					refundRequest.Status = "Đã chấp nhận";
 					refundRequest.ProcessedById = adminId;
 					refundRequest.ProcessedAt = DateTime.UtcNow;
 
@@ -165,23 +165,25 @@ namespace ChildVaccineSystem.Service.Services
 		public async Task<RefundRequestDTO> RejectRefundRequestAsync(int id, string adminId, ProcessRefundRequestDTO processDto)
 		{
 			var refundRequest = await _unitOfWork.RefundRequests.GetByIdAsync(id);
+
 			if (refundRequest == null)
 			{
-				throw new KeyNotFoundException($"Refund request with ID {id} not found.");
+				throw new KeyNotFoundException($"Không tìm thấy yêu cầu hoàn tiền!");
 			}
 
-			if (refundRequest.Status != "Pending")
+			if (refundRequest.Status != "Đang chờ xử lý")
 			{
-				throw new InvalidOperationException($"Cannot reject refund request that is in {refundRequest.Status} status.");
+				throw new InvalidOperationException($"Không thể từ chối yêu cầu hoàn tiền có trạng thái {refundRequest.Status}!");
 			}
 
 			// Update refund request
-			refundRequest.Status = "Rejected";
+			refundRequest.Status = "Bị từ chối";
 			refundRequest.ProcessedById = adminId;
 			refundRequest.ProcessedAt = DateTime.UtcNow;
 			refundRequest.AdminNote = processDto.AdminNote;
 
 			await _unitOfWork.RefundRequests.UpdateAsync(refundRequest);
+
 			return _mapper.Map<RefundRequestDTO>(refundRequest);
 		}
 	}

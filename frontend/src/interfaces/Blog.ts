@@ -1,6 +1,6 @@
 
 export interface BlogIntro {
-    blogPostId: string;
+    blogPostId: number;
     title: string;
     imageUrl : string;
     type : string;
@@ -26,5 +26,35 @@ export interface UpdateBlogRequest {
     content: string;
     imageUrl: string;
     type: string;
+    isActive: boolean;
+}
+
+export interface NewsIntro {
+    blogPostId: number;
+    title: string;
+    imageUrl: string;
+    category: string;
+}
+
+export interface NewsResponse extends NewsIntro {
+    content: string;
+    createdAt: Date;
+    authorName: string;
+    isActive: boolean;
+}
+
+export interface NewsRequest {
+    title: string;
+    content: string;
+    imageUrl: string;
+    authorName: string;
+    category: string;
+}
+
+export interface UpdateNewsRequest {
+    title: string;
+    content: string;
+    imageUrl: string;
+    category: string;
     isActive: boolean;
 }

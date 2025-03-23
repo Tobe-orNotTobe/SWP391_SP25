@@ -1,11 +1,12 @@
 import React from "react";
 import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNavbar";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
-import { useLogin, useLoginGoogle } from "./useLogin";
+import {useAuthGoogle, useLogin} from "./useLogin";
 import "../Auth.scss"
 import LoadingRedirect from "../../../components/Loading/LoadingRedirect";
+import {FcGoogle} from "react-icons/fc";
 
 const Login : React.FC = () => {
 
@@ -22,10 +23,10 @@ const Login : React.FC = () => {
         isRedirecting
     } = useLogin();
 
-    const {handleGoogleLogin} = useLoginGoogle();
+    const {isGoogleLoading, isGoogleRedirecting, googleError, handleLoginGoogle} = useAuthGoogle();
 
-    if (isRedirecting) {
-        return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng..." delay={5000} to="/homepage" />;
+    if (isRedirecting || isGoogleRedirecting) {
+        return <LoadingRedirect message="Đăng nhập thành công! Đang chuyển hướng..." delay={2000} to="/homepage" />;
     }
 
     return (
@@ -60,7 +61,7 @@ const Login : React.FC = () => {
                             </span>
                         </div>
 
-                        {error && <p className="errorText">{error}</p>}
+                        {error || googleError && <p className="errorText">{error}</p>}
                         <button type="submit" className="authButton"  disabled={isLoading}>
                            Đăng Nhập
                         </button>
@@ -71,7 +72,7 @@ const Login : React.FC = () => {
                     </div>
 
                     <div className="authSocialContainer">
-                        <button type="button" className="googleButton" onClick={handleGoogleLogin}>
+                        <button type="button" className="googleButton" onClick={handleLoginGoogle} disabled={isGoogleLoading}>
                             <FcGoogle className="googleIcon" />
                             Đăng nhập với Google
                         </button>

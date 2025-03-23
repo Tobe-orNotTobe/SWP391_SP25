@@ -16,7 +16,7 @@ const BlogPage: React.FC = () => {
     const blogsPerPage = 9;
 
     useEffect(() => {
-        fetchAllBlog(true).then();
+        fetchAllBlog(true, "blog").then();
     }, []);
 
 
