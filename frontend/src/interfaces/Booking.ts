@@ -26,13 +26,16 @@ export interface BookingUser {
 }
 
 export interface BookingResponse {
-  bookingDetailId: number;
+  bookingId: number;
+  userId: string;
+  childId: number;
   childName: string;
-  bookingDate: string;
   bookingType: string;
-  totalPrice: string;
-  note: string;
+  bookingDate: string;
+  totalPrice: number;
+  notes: string;
   status: string;
+  bookingDetails: BookingDetailResponse[];
 }
 
 export interface BookingDetailResponse {
@@ -43,6 +46,10 @@ export interface BookingDetailResponse {
   price: string;
   note: string;
   status: string;
+  vaccineId: number | null;
+  comboVaccineId: number | null;
+  vaccineName: string | null;
+  comboVaccineName: string | null;
 }
 
 export interface BookingResult {

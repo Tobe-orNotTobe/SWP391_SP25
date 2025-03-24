@@ -1,4 +1,4 @@
-import {Button, Descriptions, Input, Table, Tabs} from "antd";
+import {Button, Descriptions, Input, List, Modal, Table, Tabs, Tag} from "antd";
 import React, {useEffect, useState} from "react";
 import {TbListDetails} from "react-icons/tb";
 // import {FiEdit2} from "react-icons/fi";
@@ -10,6 +10,11 @@ import {BookingResponse} from "../../../../interfaces/Booking.ts";
 import dayjs from "dayjs";
 import "../AdminBooking.scss"
 import {ColumnsType} from "antd/es/table";
+import {
+    STATUS_COLORS,
+    useVaccineRecordByBookingDetailId,
+    useVaccineRecordByBookingId
+} from "../../../Customer/BookingHistory/useBookingHistoryPage.ts";
 
 const { TabPane } = Tabs;
 
@@ -17,7 +22,15 @@ const AdminBookingPage: React.FC = () => {
 
     const { bookings, loading, error, fetchAllBookings } = useGetAllBooking();
     const [searchText, setSearchText] = useState("");
-    const { vaccineRecord, fetchVaccineRecordByBookingId } = useGetVaccineRecordByBookingId();
+
+    const {fetchVaccineRecordByBookingId } = useGetVaccineRecordByBookingId();
+
+    const [bkid, setBkId] = useState<number>(0);
+    const [bkDetailid, setBkDetailid] = useState<number>(0);
+    const [vaccineRecordModal,setVaccineRecordModal] = useState<boolean>(false);
+    const {vaccineRecord} =  useVaccineRecordByBookingId(bkid)
+    const {vaccineRecordByBookingDetailId} = useVaccineRecordByBookingDetailId(bkDetailid)
+    const selectedRecord = vaccineRecord || vaccineRecordByBookingDetailId;
 
     const filteredBooking = bookings.filter((booking) =>
         Object.values(booking).some(
@@ -173,83 +186,158 @@ const AdminBookingPage: React.FC = () => {
 
                     {detailBooking && (
                         <div className="popup-overlay" onClick={closeDetailPopup}>
-                            <div className="popup" style={{width: "fit-content"}} onClick={(e) => e.stopPropagation()}>
+                            <div className="popup" onClick={(e) => e.stopPropagation()}>
                                 <button className="closeButton" onClick={closeDetailPopup}>×</button>
-                                <h2 style={{fontWeight: "bold", fontSize: "18px", position: "absolute", top: "20px"}}>Chi tiết người dùng</h2>
-
+                                <h2 style={{fontWeight: "bold", fontSize: "18px", position: "absolute", top: "10px"}}>Thông tin lịch đặt</h2>
                                 <Tabs defaultActiveKey="1">
                                     <TabPane tab="Thông tin người dùng" key="1">
-                                        <div className="vaccine-detail-mananger-popups">
-                                            <div className="vaccine-detail-mananger-popups-left">
+                                        <div className="vaccination-schedule-section">
                                                 <p><strong
-                                                    style={{paddingRight: "2px"}}>Id:</strong> {detailBooking.bookingId}
+                                                    style={{paddingRight: "2px", color: "#2a388f"}}>Id:</strong> {detailBooking.bookingId}
                                                 </p>
-                                                <p><strong style={{paddingRight: "2px"}}>Id người dùng:
+                                                <p><strong style={{paddingRight: "2px", color: "#2a388f"}}>Id người dùng:
                                                 </strong> {detailBooking.userId}</p>
-                                                <p><strong style={{paddingRight: "2px"}}>Id trẻ:
+                                                <p><strong style={{paddingRight: "2px", color: "#2a388f"}}>Id trẻ:
                                                 </strong> {detailBooking.childId}</p>
-                                                <p><strong style={{paddingRight: "2px"}}>Loại booking:
+                                                <p><strong style={{paddingRight: "2px", color: "#2a388f"}}>Loại booking:
                                                 </strong> {detailBooking.bookingType}</p>
-
-                                            </div>
-
-                                            <div className="vaccine-detail-mananger-popups-right">
-                                                <p><strong style={{paddingRight: "4px"}}>Ngày đặt:</strong>
+                                                <p><strong style={{paddingRight: "4px", color: "#2a388f"}}>Ngày đặt:</strong>
                                                     {new Date(detailBooking.bookingDate).toLocaleDateString()}</p>
-                                                <p><strong style={{paddingRight: "2px"}}>Tổng chi phí:
+                                                <p><strong style={{paddingRight: "2px", color: "#2a388f"}}>Tổng chi phí:
                                                 </strong> {detailBooking.totalPrice}</p>
 
-                                                <p><strong style={{paddingRight: "2px"}}>Trạng thái:
+                                                <p><strong style={{paddingRight: "2px", color: "#2a388f"}}>Trạng thái:
                                                 </strong>{detailBooking.status}</p>
-                                            </div>
                                         </div>
                                     </TabPane>
-                                    {detailBooking.status === "Completed" && (
-                                        <TabPane tab="Lịch sử tiêm chủng" key="2">
-                                            <div className="vaccination-schedule-section">
-                                                {vaccineRecord ? (
-                                                    <>
-                                                        <Descriptions title="Thông Tin Cá Nhân" bordered column={2}>
-                                                            <Descriptions.Item label="Mã Đặt Lịch">{vaccineRecord.bookingId}</Descriptions.Item>
-                                                            <Descriptions.Item label="Họ Tên">{vaccineRecord.fullName}</Descriptions.Item>
-                                                            <Descriptions.Item label="Ngày Sinh">{vaccineRecord.dateOfBirth}</Descriptions.Item>
-                                                            <Descriptions.Item label="Chiều Cao">{vaccineRecord.height} cm</Descriptions.Item>
-                                                            <Descriptions.Item label="Cân Nặng">{vaccineRecord.weight} kg</Descriptions.Item>
-                                                        </Descriptions>
+                                    <TabPane tab="Thông tin lich tiêm chủng" key="2">
+                                        <div className="vaccination-schedule-section">
+                                            <List
+                                                dataSource={detailBooking.bookingDetails}
+                                                renderItem={(detail) => (
+                                                    <List.Item key={detail.bookingDetailId} className="booking-list-item">
+                                                        <div className="booking-details">
+                                                            <div>
+                                                                <p>
+                                                                    <span className="label">Mã đặt lịch chi tiết:</span>
+                                                                    <span className="value">{detail.bookingDetailId}</span>
+                                                                </p>
+                                                                <p>
+                                                                    <span className="label">Tên trẻ:</span>
+                                                                    <span className="value">{detail.childName}</span>
+                                                                </p>
+                                                                <p>
+                                                                    <span className="label">Loại đặt lịch:</span>
+                                                                    <span className="value">
+                                                                {detail.comboVaccineId && detail.comboVaccineName
+                                                                    ? `Đặt ${detail.comboVaccineName}`
+                                                                    : "Đặt lẻ Vaccine"}
+                                                            </span>
+                                                                </p>
+                                                                <p>
+                                                                    <span className="label">Tên Vaccine:</span>
+                                                                    <span className="value">
+                                                                {detail.vaccineName}
+                                                            </span>
+                                                                </p>
+                                                                <p>
+                                                                    <span className="label">Ngày tiêm:</span>
+                                                                    <span
+                                                                        className="value">{dayjs(detail.bookingDate).format("DD/MM/YYYY")}</span>
+                                                                </p>
+                                                                <p>
+                                                                    <span className="label">Giá:</span>
+                                                                    <span className="value">
+                                                                {new Intl.NumberFormat("vi-VN", {
+                                                                    style: "currency",
+                                                                    currency: "VND"
+                                                                }).format(Number(detail.price))}
+                                                            </span>
+                                                                </p>
+                                                                <p>
+                                                                    <span className="label">Trạng thái:</span>
+                                                                    <Tag
+                                                                        color={STATUS_COLORS[detail.status]}>{detail.status}</Tag>
 
-                                                        <h3 style={{ marginTop: 16 }}>Lịch Sử Tiêm Chủng</h3>
-                                                        <Table
-                                                            dataSource={vaccineRecord.vaccineRecords}
-                                                            rowKey="vaccinationRecordId"
-                                                            pagination={false}
-                                                            bordered
-                                                        >
-                                                            <Table.Column title="Mã booking" dataIndex="vaccinationRecordId" key="id" />
-                                                            <Table.Column title="Tên Vaccine" dataIndex="vaccineName" key="vaccineName" />
-                                                            <Table.Column title="Liều Lượng (ml)" dataIndex="doseAmount" key="doseAmount" />
-                                                            <Table.Column
-                                                                title="Giá (VNĐ)"
-                                                                dataIndex="price"
-                                                                key="price"
-                                                                render={(price) => new Intl.NumberFormat("vi-VN").format(price) + " VND"}
-                                                            />
-                                                            <Table.Column title="Ngày Tiêm Kế Tiếp" dataIndex="nextDoseDate" key="nextDoseDate" />
-                                                            <Table.Column title="Lô Vaccine" dataIndex="batchNumber" key="batchNumber" />
-                                                            <Table.Column title="Trạng Thái" dataIndex="status" key="status" />
-                                                            <Table.Column title="Ghi Chú" dataIndex="notes" key="notes" />
-                                                        </Table>
-                                                    </>
-                                                ) : (
-                                                    <p>Không có dữ liệu</p>
-                                                )}
-                                            </div>
-                                        </TabPane>
-                                    )}
+                                                                </p>
+
+                                                                <div className="booking-actions">
+                                                                    {detail.status === "Completed" && (
+                                                                        <>
+                                                                            <Button
+                                                                                type="primary"
+                                                                                className="vaccine-record-button"
+                                                                                onClick={() => {
+                                                                                    setBkDetailid(detail.bookingDetailId)
+                                                                                    setVaccineRecordModal(true);
+                                                                                    setDetailBooking(null);
+                                                                                }}
+                                                                            >
+                                                                                Xem Vaccine Record
+                                                                            </Button>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </List.Item>
+                                                )
+                                                }
+                                            />
+                                        </div>
+                                    </TabPane>
+
+
 
                                 </Tabs>
                             </div>
                         </div>
                     )}
+
+                    <Modal
+                        title="Chi Tiết Hồ Sơ Tiêm Chủng"
+                        open={vaccineRecordModal}
+                        onCancel={() => setVaccineRecordModal(false)}
+                        footer={null}
+                        width={1000}
+                    >
+                        {selectedRecord ? (
+                            <>
+                                <Descriptions title="Thông Tin Cá Nhân" bordered column={2}>
+                                    <Descriptions.Item label="Mã Đặt Lịch">{selectedRecord.bookingId}</Descriptions.Item>
+                                    <Descriptions.Item label="Họ Tên">{selectedRecord.fullName}</Descriptions.Item>
+                                    <Descriptions.Item label="Ngày Sinh">{selectedRecord.dateOfBirth}</Descriptions.Item>
+                                    <Descriptions.Item label="Chiều Cao">{selectedRecord.height} cm</Descriptions.Item>
+                                    <Descriptions.Item label="Cân Nặng">{selectedRecord.weight} kg</Descriptions.Item>
+                                </Descriptions>
+
+                                <h3 style={{marginTop: 16}}>Lịch Sử Tiêm Chủng</h3>
+                                <Table
+                                    dataSource={selectedRecord.vaccineRecords}
+                                    rowKey="vaccinationRecordId"
+                                    pagination={false}
+                                    bordered
+                                >
+                                    <Table.Column title="Mã booking" dataIndex="vaccinationRecordId" key="id"/>
+                                    <Table.Column title="Tên Vaccine" dataIndex="vaccineName" key="vaccineName"/>
+                                    <Table.Column title="Liều Lượng (ml)" dataIndex="doseAmount" key="doseAmount"/>
+                                    <Table.Column
+                                        title="Giá (VNĐ)"
+                                        dataIndex="price"
+                                        key="price"
+                                        render={(price) => new Intl.NumberFormat("vi-VN").format(price) + " VND"}
+                                    />
+                                    <Table.Column title="Ngày Tiêm Kế Tiếp" dataIndex="nextDoseDate" key="nextDoseDate"/>
+                                    <Table.Column title="Lô Vaccine" dataIndex="batchNumber" key="batchNumber"/>
+                                    <Table.Column title="Trạng Thái" dataIndex="status" key="status"/>
+                                    <Table.Column title="Ghi Chú" dataIndex="notes" key="notes"/>
+                                </Table>
+                            </>
+                        ) : (
+                            <p>Không có dữ liệu</p>
+                        )}
+                    </Modal>
+
                 </div>
             </AdminLayout>
         </>
