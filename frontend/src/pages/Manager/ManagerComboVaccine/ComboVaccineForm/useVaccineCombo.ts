@@ -25,7 +25,7 @@ export const useVaccineComboForm = () => {
     const { vaccineDetail } = useVaccineDetail();
     const { comboVaccineDetail } = useComboVaccineDetailById(Number(id));
 
-    console.log(comboVaccineDetail)
+    // console.log(comboVaccineDetail)
 
     useEffect(() => {
         if (isEditMode && comboVaccineDetail) {

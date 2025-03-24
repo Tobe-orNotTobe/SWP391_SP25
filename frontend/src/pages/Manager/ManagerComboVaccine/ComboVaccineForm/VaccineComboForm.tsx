@@ -82,7 +82,11 @@ const VaccineComboForm: React.FC = () => {
                         name="totalPrice"
                         rules={[{ required: true, message: "Vui lòng nhập giá tiền cho combo!" }]}
                     >
-                        <InputNumber placeholder="Nhập Giá Tiền của combo" style={{ width: "100%" }} />
+                        <InputNumber
+                            placeholder="Nhập Giá Tiền của combo"
+                            style={{ width: "100%" }}
+                            formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        />
                     </Form.Item>
 
                     <Form.List name="vaccines">
@@ -101,7 +105,7 @@ const VaccineComboForm: React.FC = () => {
                                             <Select placeholder="Chọn vaccine" style={{ width: 200 }}>
                                                 {vaccineDetail.map((vaccine) => (
                                                     <Option key={vaccine.vaccineId} value={vaccine.vaccineId}>
-                                                        {vaccine.name} ({vaccine.price})
+                                                        {vaccine.name} ({new Intl.NumberFormat('vi-VN').format(vaccine.price)} VNĐ)
                                                     </Option>
                                                 ))}
                                             </Select>
@@ -121,9 +125,12 @@ const VaccineComboForm: React.FC = () => {
                                             {...restField}
                                             name={[name, "intervalDays"]}
                                             label="Khoảng cách ngày"
-                                            rules={[{ required: true, message: "Vui lòng nhập khoảng cách ngày!" }]}
+                                            rules={[
+                                                { required: true, message: "Vui lòng nhập khoảng cách ngày!" },
+                                                { type: "number", max: 365, message: "Khoảng cách ngày không được quá 365!" }
+                                            ]}
                                         >
-                                            <InputNumber min={0} style={{ width: 100 }} />
+                                            <InputNumber min={0} max={365} style={{ width: 100 }} />
                                         </Form.Item>
 
                                         <Button type="text" danger onClick={() => remove(name)} />
@@ -147,7 +154,7 @@ const VaccineComboForm: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item className="buttons">
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" style={{marginRight : "10px"}}>
                             {isEditMode ? "Cập Nhật" : "Thêm Mới"}
                         </Button>
                         <Button onClick={() => navigate("/manager/combo-vaccines")}>

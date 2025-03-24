@@ -1,5 +1,5 @@
-import React from "react";
-import { Table, Button, Modal } from "antd";
+import React, {useState} from "react";
+import { Table, Button, Modal, Input } from "antd";
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout";
 import { GetVaccineComboDetail } from "../../../../interfaces/Vaccine";
 import { useComboVaccineList } from "./useVaccineComboList";
@@ -13,6 +13,8 @@ import "./VaccineComboList.scss"
 const VaccineComboList: React.FC = () => {
 
     const {comboVaccineDetail} = useComboVaccineDetail();
+
+    const [searchText, setSearchText] = useState<string>("");
 
     // console.log(comboVaccineDetail);
     const {
@@ -92,11 +94,25 @@ const VaccineComboList: React.FC = () => {
         },
     ];
 
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(e.target.value.toLowerCase());
+    };
+
+    const comboVaccinedetailCheck  = Array.isArray(comboVaccineDetail) ? comboVaccineDetail : [];
+
+    const filteredData = comboVaccinedetailCheck.filter(
+        (item: GetVaccineComboDetail) =>
+            item.comboName.toLowerCase().includes(searchText) ||
+            item.description.toLowerCase().includes(searchText)
+    );
+
+
     return (
         <ManagerLayout>
             <div className="manager-vaccine-page-container">
                 <div className="page-header">
                     <h1>Quản lý Combo Vaccine</h1>
+
                     <Button
                         type="primary"
                         icon={<TiPlusOutline />}
@@ -106,9 +122,15 @@ const VaccineComboList: React.FC = () => {
                         Thêm Combo Vaccine
                     </Button>
                 </div>
+
+                <Input.Search
+                    placeholder="Tìm kiếm theo tên hoặc mô tả"
+                    onChange={handleSearch}
+                    style={{ marginBottom: 16, width: 300 }}
+                />
                 <Table
                     columns={columns}
-                    dataSource={Array.isArray(comboVaccineDetail) ? comboVaccineDetail : []}
+                    dataSource={filteredData}
                     rowKey="comboId"
                     pagination={{ pageSize: 8, showSizeChanger: false }}
                     className="vaccine-table"
