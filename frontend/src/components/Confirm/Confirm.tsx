@@ -33,6 +33,9 @@ export const ConfirmEmail: React.FC = () => {
                 if (!response.isSuccess) {
                     console.log(response.result);
                     setStatus(response.result.message);
+                    setStatusType("error"); // Đặt lại thành "error" nếu thất bại
+                } else {
+                    setStatus("Xác nhận email thành công!");
                     setStatusType("success");
                 }
             } catch (error) {
@@ -43,7 +46,16 @@ export const ConfirmEmail: React.FC = () => {
         };
 
         confirmEmail();
-    }, [email, token]);
+
+        // Reload trang nếu sau 4 giây vẫn đang ở trạng thái loading
+        if (statusType === "loading") {
+            const reloadTimeout = setTimeout(() => {
+                window.location.reload();
+            }, 4000);
+
+            return () => clearTimeout(reloadTimeout);
+        }
+    }, [statusType]); // Chỉ chạy khi `statusType` là "loading"
 
     if (statusType === "success") {
         return <LoadingRedirect message={status} delay={3000} to="/login" />;
@@ -66,6 +78,7 @@ export const ConfirmEmail: React.FC = () => {
         </div>
     );
 };
+
 
 export const PaymentSuccess: React.FC = () => {
     const [searchParams] = useSearchParams();

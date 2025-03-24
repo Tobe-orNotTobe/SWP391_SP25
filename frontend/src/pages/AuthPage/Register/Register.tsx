@@ -109,7 +109,9 @@ const Register : React.FC  = () => {
                                     type="date"
                                     value={register.dateOfBirth}
                                     onChange={(e) => register.handleDoBChange(e.target.value)}
-                                    className="authInput"/>
+                                    className="authInput"
+                                    max={new Date().toISOString().split("T")[0]} // Chặn ngày lớn hơn hôm nay
+                                />
                                 {register.errorDoB && <p className="errorText">{register.errorDoB}</p>}
                             </div>
                         </div>
