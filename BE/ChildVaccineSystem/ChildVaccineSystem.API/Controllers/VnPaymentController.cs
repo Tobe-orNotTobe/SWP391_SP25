@@ -101,7 +101,8 @@ namespace ChildVaccineSystem.API.Controllers
 
 				if (paymentSuccess)
 				{
-					successUrl += $"?orderId={vnpayData["vnp_TxnRef"]}&amount={vnpayData["vnp_Amount"]}";
+					var amount = Convert.ToDecimal(vnpayData["vnp_Amount"]) / 100;
+					successUrl += $"?orderId={vnpayData["vnp_TxnRef"]}&amount={amount}";
 					return Redirect(successUrl);
 				}
 				else

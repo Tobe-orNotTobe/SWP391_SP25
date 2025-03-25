@@ -274,14 +274,6 @@ namespace ChildVaccineSystem.Data.Models
 				.HasForeignKey<RefundRequest>(r => r.BookingId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			// WalletTransaction 
-			modelBuilder.Entity<WalletTransaction>()
-				.HasOne(t => t.RefundRequest)
-				.WithMany()
-				.HasForeignKey(t => t.RefundRequestId)
-				.IsRequired(false)
-				.OnDelete(DeleteBehavior.Restrict);
-
 			//VaccinationReminder
 			modelBuilder.Entity<VaccinationReminder>()
 				.HasOne(vr => vr.User)

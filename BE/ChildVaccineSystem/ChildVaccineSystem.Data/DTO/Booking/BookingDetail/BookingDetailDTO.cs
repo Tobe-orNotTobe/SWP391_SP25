@@ -8,6 +8,7 @@ namespace ChildVaccineSystem.Data.DTO.Booking.BookingDetail
 {
     public class BookingDetailDTO
     {
+        public int BookingId { get; set; }
         public int BookingDetailId { get; set; } // ✅ Thay vì BookingId, dùng BookingDetailId
         public int? VaccineId { get; set; }
         public string VaccineName { get; set; } = string.Empty;

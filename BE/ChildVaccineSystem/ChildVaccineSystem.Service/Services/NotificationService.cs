@@ -104,11 +104,11 @@ namespace ChildVaccineSystem.Service.Services
 			var booking = await _unitOfWork.Bookings.GetAsync(b => b.BookingId == bookingId);
 			if (booking == null)
 			{
-				_logger.LogWarning("Cannot send reminder for non-existent booking: {BookingId}", bookingId);
+				_logger.LogWarning($"Cannot send reminder for non-existent booking: {bookingId}", bookingId);
 				return;
 			}
 
-			var reminderMessage = $"Nhắc nhở: Bạn có lịch tiêm chủng cho bé {childName} vào ngày {booking.BookingDate.ToString("dd/MM/yyyy")} lúc {booking.BookingDate.ToString("HH:mm")}. Vui lòng đưa bé đến đúng giờ.";
+			var reminderMessage = $"Nhắc nhở: Bạn có lịch tiêm chủng cho bé {childName} vào ngày {booking.BookingDate.ToString("dd/MM/yyyy")}. Vui lòng đưa bé đến đúng ngày.";
 
 			var notificationDto = new SendNotificationDTO
 			{

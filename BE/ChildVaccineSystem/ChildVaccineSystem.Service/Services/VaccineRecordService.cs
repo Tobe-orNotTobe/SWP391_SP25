@@ -76,7 +76,8 @@ namespace ChildVaccineSystem.Service.Services
                 else if (detail.ComboVaccineId.HasValue)
                 {
                     // ✅ Lấy danh sách vaccine trong combo
-                    var comboDetails = await _unitOfWork.ComboDetails.GetAllAsync(cd => cd.ComboId == detail.ComboVaccineId.Value);
+                    var comboDetails = await _unitOfWork.ComboDetails
+                        .GetAllAsync(cd => cd.ComboId == detail.ComboVaccineId.Value);
 
                     foreach (var comboDetail in comboDetails)
                     {
@@ -134,6 +135,26 @@ namespace ChildVaccineSystem.Service.Services
                 await _unitOfWork.BookingDetails.UpdateAsync(detail);
                 await _unitOfWork.CompleteAsync();
 
+                // 🔥 🔥 🔥 FIX: Cập nhật trạng thái của booking nếu tất cả các mũi trong combo đã hoàn thành
+                var remainingDoses = await _unitOfWork.BookingDetails
+                    .GetAllAsync(bd => bd.BookingId == booking.BookingId &&
+                                       bd.ComboVaccineId == detail.ComboVaccineId &&
+                                       bd.Status != BookingDetailStatus.Completed);
+
+                if (!remainingDoses.Any())
+                {
+                    // ✅ Nếu không còn mũi nào trong combo → Cập nhật trạng thái booking thành COMPLETED
+                    booking.Status = BookingStatus.Completed;
+                }
+                else
+                {
+                    // ✅ Nếu vẫn còn mũi → Giữ trạng thái là InProgress
+                    booking.Status = BookingStatus.InProgress;
+                }
+
+                await _unitOfWork.Bookings.UpdateAsync(booking);
+                await _unitOfWork.CompleteAsync();
+
                 return new VaccineRecordDTO
                 {
                     BookingId = booking.BookingId,
@@ -150,6 +171,7 @@ namespace ChildVaccineSystem.Service.Services
                 throw new Exception($"Lỗi khi lưu dữ liệu: {ex.Message}", ex);
             }
         }
+
 
         public async Task ProcessVaccineRecord(BookingDetail detail, Booking booking, List<VaccineRecordDetailDTO> vaccineRecords)
         {

@@ -19,7 +19,6 @@ namespace ChildVaccineSystem.Repository.Repositories
 			return await _context.RefundRequests
 				.Include(r => r.User)
 				.Include(r => r.Booking)
-				.Include(r => r.ProcessedBy)
 				.FirstOrDefaultAsync(r => r.RefundRequestId == id);
 		}
 
@@ -28,7 +27,6 @@ namespace ChildVaccineSystem.Repository.Repositories
 			var query = _context.RefundRequests
 				.Include(r => r.User)
 				.Include(r => r.Booking)
-				.Include(r => r.ProcessedBy)
 				.AsQueryable();
 
 			return await query.OrderByDescending(r => r.CreatedAt).ToListAsync();
