@@ -40,6 +40,7 @@ import {
 import { apiGetVaccineRecordByBookingId } from "../../apis/apiVaccineRecord.ts";
 import { VaccineRecordResponse } from "../../interfaces/VaccineRecord.ts";
 import moment from "moment";
+import dayjs, { Dayjs } from "dayjs";
 
 const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
@@ -63,7 +64,7 @@ function AssignPage() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [filterDate, setFilterDate] = useState<moment.Moment | null>(null);
+  const [filterDate, setFilterDate] = useState<string | null>(null);
   const [filterRange, setFilterRange] = useState<
     [moment.Moment, moment.Moment] | null
   >(null);
@@ -109,14 +110,43 @@ function AssignPage() {
     fetchUnassignedBookings();
   }, [bookings]);
 
+  // const handleDateChange = (date, dateString) => {
+  //  setFilterDate(date ? moment(date).format() : null); // Giữ nguyên định dạng ISO
+  //  //2013-02-04T22:44:30.652Z
+  //   console.log(moment(date).format('YYYY-MM-DDTHH:mm:sssZ'));
+  //   console.log(dateString);
+  //   console.log(moment(date));
+  //   setFilterRange(null);
+  //   setFilterType("custom");
+  // };
+
   const handleDateChange = (date: moment.Moment | null) => {
-    setFilterDate(date);
+    console.log("Raw date:", date);
+
+    if (!date) {
+      console.log("No date selected");
+      return;
+    }
+
+    const momentDate = moment(date.toDate()); // Chuyển Day.js thành Date rồi sang Moment
+    setFilterDate(momentDate.format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
     setFilterRange(null);
     setFilterType("custom");
+    console.log(
+      "Converted moment date:",
+      momentDate.format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+    );
   };
 
-  const handleRangeChange = (dates: [moment.Moment, moment.Moment] | null) => {
-    setFilterRange(dates);
+  const handleRangeChange = (
+    dates: [Dayjs | null, Dayjs | null] | null,
+    dateStrings: [string, string]
+  ) => {
+    if (dates && dates[0] && dates[1]) {
+      setFilterRange([moment(dates[0].toDate()), moment(dates[1].toDate())]); // Chuyển Dayjs -> Moment
+    } else {
+      setFilterRange(null);
+    }
     setFilterDate(null);
     setFilterType("custom");
   };
@@ -147,6 +177,8 @@ function AssignPage() {
         moment(booking.bookingDate).isSame(moment(), "year")
       );
     } else if (filterDate) {
+      console.log(filteredBookings);
+      console.log(filterDate);
       filteredBookings = filteredBookings.filter((booking) =>
         moment(booking.bookingDate).isSame(filterDate, "day")
       );
@@ -407,9 +439,74 @@ function AssignPage() {
       title: "Ngày Đặt",
       dataIndex: "bookingDate",
       key: "bookingDate",
-      render: (date: string) => new Date(date).toLocaleDateString(),
+      render: (date: string) => dayjs(date).format("DD/MM/YYYY"), // Chuyển từ moment -> dayjs
       sorter: (a: BookingResponse, b: BookingResponse) =>
-        new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime(),
+        dayjs(a.bookingDate).valueOf() - dayjs(b.bookingDate).valueOf(),
+
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: FilterDropdownProps) => (
+        <div style={{ padding: 8 }}>
+          <RangePicker
+            format="DD/MM/YYYY"
+            value={
+              selectedKeys.length === 2
+                ? [
+                    dayjs(selectedKeys[0] as string),
+                    dayjs(selectedKeys[1] as string),
+                  ]
+                : null
+            }
+            onChange={(dates: [Dayjs | null, Dayjs | null] | null) => {
+              if (dates && dates[0] && dates[1]) {
+                setSelectedKeys([
+                  dates[0].toISOString(),
+                  dates[1].toISOString(),
+                ]);
+              } else {
+                setSelectedKeys([]);
+              }
+              confirm({ closeDropdown: false });
+            }}
+            style={{ marginBottom: 8, display: "block" }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => confirm()}
+              icon={<SearchOutlined />}
+              size="small"
+            >
+              Lọc
+            </Button>
+            <Button
+              onClick={() => {
+                clearFilters?.();
+                setSelectedKeys([]);
+                confirm();
+              }}
+              size="small"
+            >
+              Đặt lại
+            </Button>
+          </Space>
+        </div>
+      ),
+
+      onFilter: (value: any, record: BookingResponse) => {
+        if (!value || value.length !== 2) return true;
+
+        const [startDate, endDate] = value as [string, string];
+        const bookingDate = dayjs(record.bookingDate).toISOString();
+
+        return (
+          bookingDate >= dayjs(startDate).toISOString() &&
+          bookingDate <= dayjs(endDate).toISOString()
+        );
+      },
     },
     {
       title: "Loại Tiêm",
@@ -532,13 +629,13 @@ function AssignPage() {
         {filterType === "custom" && (
           <div style={{ marginTop: 16 }}>
             <DatePicker
-              value={filterDate}
+              format="DD/MM/YYYY"
               onChange={handleDateChange}
               style={{ marginRight: 8 }}
               placeholder="Chọn ngày"
             />
             <RangePicker
-              value={filterRange}
+              format="DD/MM/YYYY"
               onChange={handleRangeChange}
               placeholder={["Từ ngày", "Đến ngày"]}
             />
@@ -548,28 +645,26 @@ function AssignPage() {
 
       <div>
         <Title level={3}>Chưa phân công</Title>
-        {filteredUnassignBookings.length > 0 ? (
-          <Table
-            dataSource={filteredUnassignBookings}
-            columns={columns}
-            rowKey="bookingId"
-          />
-        ) : (
-          <p>Không có lịch tiêm chủng chưa phân công.</p>
-        )}
+        <Table
+          dataSource={filteredUnassignBookings}
+          columns={columns}
+          rowKey="bookingId"
+          locale={{
+            emptyText: "Không có dữ liệu",
+          }}
+        />
       </div>
 
       <div style={{ marginTop: "40px" }}>
         <Title level={3}>Đã phân công</Title>
-        {filteredAssignedBookings.length > 0 ? (
-          <Table
-            dataSource={filteredAssignedBookings}
-            columns={columns}
-            rowKey="bookingId"
-          />
-        ) : (
-          <p>Không có lịch tiêm chủng đã phân công.</p>
-        )}
+        <Table
+          dataSource={filteredAssignedBookings}
+          columns={columns}
+          rowKey="bookingId"
+          locale={{
+            emptyText: "Không có dữ liệu",
+          }}
+        />
       </div>
 
       {/* Modal phân công bác sĩ */}
@@ -585,48 +680,44 @@ function AssignPage() {
             Chọn bác sĩ muốn phân công
           </Title>
           <Row gutter={[16, 16]} className="doctor-grid">
-            {doctors.length > 0 ? (
-              doctors.map((doctor) => (
-                <Col key={doctor.id} xs={24} sm={12} md={8} lg={6}>
-                  <Card className="doctor-card">
-                    <Avatar
-                      size={120}
-                      icon={<UserOutlined />}
-                      src={doctor?.imageUrl || "/default-avatar.png"}
-                      alt={doctor.fullName}
-                      className="avatar"
-                    />
-                    <Title level={4} className="doctor-name">
-                      {doctor.fullName}
-                    </Title>
-                    <Text type="secondary">@{doctor.userName}</Text>
-                    <Text type="secondary">{doctor.email}</Text>
-                    <Text type="secondary">{doctor.phoneNumber}</Text>
-                    <Text type="secondary">{doctor.address}</Text>
-                    <Tag color={doctor.isActive ? "green" : "red"}>
-                      {doctor.isActive
-                        ? "Đang hoạt động"
-                        : "Đang không hoạt động"}
-                    </Tag>
-                    <Button
-                      type="primary"
-                      block
-                      className="detail-btn"
-                      onClick={() =>
-                        handleAssignDoctor(
-                          doctor.id.toString(),
-                          selectedBooking!.bookingId.toString()
-                        )
-                      }
-                    >
-                      Phân công
-                    </Button>
-                  </Card>
-                </Col>
-              ))
-            ) : (
-              <Text className="no-doctor">Không có bác sĩ nào.</Text>
-            )}
+            {doctors.map((doctor) => (
+              <Col key={doctor.id} xs={24} sm={12} md={8} lg={6}>
+                <Card className="doctor-card">
+                  <Avatar
+                    size={120}
+                    icon={<UserOutlined />}
+                    src={doctor?.imageUrl || "/default-avatar.png"}
+                    alt={doctor.fullName}
+                    className="avatar"
+                  />
+                  <Title level={4} className="doctor-name">
+                    {doctor.fullName}
+                  </Title>
+                  <Text type="secondary">@{doctor.userName}</Text>
+                  <Text type="secondary">{doctor.email}</Text>
+                  <Text type="secondary">{doctor.phoneNumber}</Text>
+                  <Text type="secondary">{doctor.address}</Text>
+                  <Tag color={doctor.isActive ? "green" : "red"}>
+                    {doctor.isActive
+                      ? "Đang hoạt động"
+                      : "Đang không hoạt động"}
+                  </Tag>
+                  <Button
+                    type="primary"
+                    block
+                    className="detail-btn"
+                    onClick={() =>
+                      handleAssignDoctor(
+                        doctor.id.toString(),
+                        selectedBooking!.bookingId.toString()
+                      )
+                    }
+                  >
+                    Phân công
+                  </Button>
+                </Card>
+              </Col>
+            ))}
           </Row>
         </div>
       </Modal>
@@ -654,7 +745,7 @@ function AssignPage() {
                   </p>
                   <p>
                     <strong>Ngày Đặt:</strong>{" "}
-                    {new Date(selectedBooking.bookingDate).toLocaleDateString()}
+                    {moment(selectedBooking.bookingDate).format("DD/MM/YYYY")}
                   </p>
                   <p>
                     <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
