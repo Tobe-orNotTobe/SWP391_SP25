@@ -12,6 +12,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: fixed; // Giữ nguyên vị trí khi cuộn
+    top: 0;
+    left: 0;
+    height: 100vh; // Đảm bảo chiều cao full màn hình
+    overflow-y: auto; // Cuộn nếu nội dung dài quá
 
     .sidebarlogo {
       text-align: center;
@@ -115,6 +120,7 @@
   }
 
   .main {
+    margin-left: 250px;
     display: flex;
     flex-direction: column;
     flex: 1;
