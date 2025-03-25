@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
 import {Button, Form, Input, Select, Table, Tabs} from "antd";
-import {useDeleteUser, useGetAllUser, useUpdateUserIsActive} from "../useAdminAccount.ts";
+import {useDeleteUser, useGetAllUser, useGetUserById, useUpdateUserIsActive} from "../useAdminAccount.ts";
 import {IoMdAdd} from "react-icons/io";
 import "./AdminAccount.scss"
 import {TbListDetails} from "react-icons/tb";
 import {FiEdit2} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
-import {AccountDetailResponse} from "../../../../interfaces/Account.ts";
+import {AccountResponse, AccountDetailResponse} from "../../../../interfaces/Account.ts";
 import {useNavigate} from "react-router-dom";
 import {ColumnsType} from "antd/es/table";
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -20,8 +20,9 @@ const AdminAccountPage: React.FC = () => {
     const {handleDelete} = useDeleteUser();
     const {handleUpdateIsActive} = useUpdateUserIsActive();
     const {users, loading, error, fetchAllUser} = useGetAllUser();
+    const {user, fetchUserById} = useGetUserById();
     const {handleSendNotification} = useSendNotification();
-
+    const [hoveredRow, setHoveredRow] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,7 +30,7 @@ const AdminAccountPage: React.FC = () => {
     }, []);
 
     const [searchText, setSearchText] = useState("");
-    const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+
 
     // Lọc dữ liệu trước khi truyền vào Table
     const filteredUsers = users.filter((user) =>
@@ -40,12 +41,12 @@ const AdminAccountPage: React.FC = () => {
         )
     );
 
-    const columns: ColumnsType<AccountDetailResponse> = [
+    const columns: ColumnsType<AccountResponse> = [
         {
             title: "",
             key: "action-column",
             width: 50, // Đặt độ rộng cố định
-            render: (_: undefined, record: AccountDetailResponse) => (
+            render: (_: undefined, record: AccountResponse) => (
                 <div
                     style={{
                         display: "flex",
@@ -114,7 +115,7 @@ const AdminAccountPage: React.FC = () => {
         {
             title: "Hành động",
             key: "actions",
-            render: (_: undefined, record: AccountDetailResponse) => (
+            render: (_: undefined, record: AccountResponse) => (
                 <div className="account-action-buttons">
                     <Button onClick={() => openDetailPopup(record)} className="detail-button">
                         <TbListDetails/>Chi tiết
@@ -135,18 +136,18 @@ const AdminAccountPage: React.FC = () => {
 
     const [detailUser, setDetailUser] = useState<AccountDetailResponse | null>(null);
 
-    const [sendNotificationUser, setSendNotificationUser] = useState<AccountDetailResponse | null>(null);
+    const [sendNotificationUser, setSendNotificationUser] = useState<AccountResponse | null>(null);
 
-    const openDetailPopup = (user: AccountDetailResponse) => {
-        setDetailUser(user);
+    const openDetailPopup = (selectedUser: AccountResponse) => {
+        fetchUserById(selectedUser.id).then(() => {setDetailUser(user)})
     }
 
     const closeDetailPopup = () => {
         setDetailUser(null);
     }
 
-    const openNotificationPopup = (user: AccountDetailResponse) => {
-        setSendNotificationUser(user);
+    const openNotificationPopup = (selectedUser: AccountResponse) => {
+        setSendNotificationUser(selectedUser);
     }
 
     const closeNotificationPopup = () => {
@@ -171,25 +172,29 @@ const AdminAccountPage: React.FC = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         style={{ marginBottom: 16, width: 300 }}
                     />
-                    <Table
-                        columns={columns}
-                        dataSource={filteredUsers.map((user) => ({
-                            ...user,
-                            id: user.id || Math.random().toString(),
-                            fullName: user.fullName || "Chưa có dữ liệu",
-                            userName: user.userName || "Chưa có dữ liệu",
-                            email: user.email || "Chưa có dữ liệu",
-                            phoneNumber: user.phoneNumber || "Chưa có dữ liệu",
-                            isActive: user.isActive ?? false,
-                        }))}
-                        rowKey="id"
-                        pagination={{ pageSize: 8, showSizeChanger: false }}
-                        className="account-table"
-                        onRow={(record) => ({
-                            onMouseEnter: () => setHoveredRow(record.id),
-                            onMouseLeave: () => setHoveredRow(null),
-                        })}
-                    />
+
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="Tất cả" key="1">
+                            {FilterTable(columns, filteredUsers, setHoveredRow)}
+                        </TabPane>
+                        <TabPane tab="Người dùng" key="2">
+                            {FilterTable(columns, filteredUsers.filter(user => user.roles[0] === "Customer"), setHoveredRow)}
+                        </TabPane>
+                        <TabPane tab="Nhân viên" key="3">
+                            {FilterTable(columns, filteredUsers.filter(user => user.roles[0] === "Staff"), setHoveredRow)}
+                        </TabPane>
+                        <TabPane tab="Bác sĩ" key="4">
+                            {FilterTable(columns, filteredUsers.filter(user => user.roles[0] === "Doctor"), setHoveredRow)}
+                        </TabPane>
+                        <TabPane tab="Quản lý" key="5">
+                            {FilterTable(columns, filteredUsers.filter(user => user.roles[0] === "Manager"), setHoveredRow)}
+                        </TabPane>
+                        <TabPane tab="Admin" key="6">
+                            {FilterTable(columns, filteredUsers.filter(user => user.roles[0] === "Admin"), setHoveredRow)}
+                        </TabPane>
+                    </Tabs>
+
+
 
                     {detailUser || sendNotificationUser ?  (
                         <div className="popupOverlay" onClick={detailUser ? closeDetailPopup : closeNotificationPopup}>
@@ -297,3 +302,32 @@ const AdminAccountPage: React.FC = () => {
 };
 
 export default AdminAccountPage;
+
+const FilterTable = (columns: ColumnsType<AccountResponse>, filteredUsers: AccountResponse[], setHoveredRow: any) => {
+
+
+    return (
+        <>
+            <Table
+                columns={columns}
+                dataSource={filteredUsers.map((user) => ({
+                    ...user,
+                    id: user.id || Math.random().toString(),
+                    fullName: user.fullName || "Chưa có dữ liệu",
+                    userName: user.userName || "Chưa có dữ liệu",
+                    email: user.email || "Chưa có dữ liệu",
+                    phoneNumber: user.phoneNumber || "Chưa có dữ liệu",
+                    isActive: user.isActive ?? false,
+                }))}
+                rowKey="id"
+                pagination={{ pageSize: 8, showSizeChanger: false }}
+                className="account-table"
+                onRow={(record) => ({
+                    onMouseEnter: () => setHoveredRow(record.id),
+                    onMouseLeave: () => setHoveredRow(null),
+                })}
+            />
+        </>
+    );
+
+}

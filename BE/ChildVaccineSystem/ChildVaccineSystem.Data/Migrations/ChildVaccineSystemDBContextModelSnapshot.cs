@@ -467,10 +467,6 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<DateTime?>("ProcessedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ProcessedById")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -487,8 +483,6 @@ namespace ChildVaccineSystem.Data.Migrations
 
                     b.HasIndex("BookingId")
                         .IsUnique();
-
-                    b.HasIndex("ProcessedById");
 
                     b.HasIndex("UserId");
 
@@ -964,9 +958,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RefundRequestId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -979,8 +970,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("WalletTransactionId");
-
-                    b.HasIndex("RefundRequestId");
 
                     b.HasIndex("WalletId");
 
@@ -1291,12 +1280,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ChildVaccineSystem.Data.Entities.User", "ProcessedBy")
-                        .WithMany()
-                        .HasForeignKey("ProcessedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ChildVaccineSystem.Data.Entities.User", "User")
                         .WithMany("RefundRequests")
                         .HasForeignKey("UserId")
@@ -1304,8 +1287,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Booking");
-
-                    b.Navigation("ProcessedBy");
 
                     b.Navigation("User");
                 });
@@ -1463,18 +1444,11 @@ namespace ChildVaccineSystem.Data.Migrations
 
             modelBuilder.Entity("ChildVaccineSystem.Data.Entities.WalletTransaction", b =>
                 {
-                    b.HasOne("ChildVaccineSystem.Data.Entities.RefundRequest", "RefundRequest")
-                        .WithMany()
-                        .HasForeignKey("RefundRequestId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ChildVaccineSystem.Data.Entities.Wallet", "Wallet")
                         .WithMany("Transactions")
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("RefundRequest");
 
                     b.Navigation("Wallet");
                 });

@@ -41,7 +41,19 @@ export interface AccountDetailResponse {
     twoFactorEnabled: boolean;
     lockoutEnabled: boolean;
     accessFailedCount: number;
-    roles: string;
+    roles: string[];
+}
+
+export interface AccountResponse {
+    id: string;
+    userName: string;
+    fullName: string;
+    email: string;
+    address: string;
+    dateOfBirth: string;
+    isActive: boolean;
+    phoneNumber: string;
+    roles: string[];
 }
 
 export interface LoginRequest {

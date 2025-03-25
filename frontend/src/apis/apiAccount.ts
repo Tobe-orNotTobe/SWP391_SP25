@@ -1,6 +1,7 @@
 import AxiosInstance from "../utils/axiosInstance.ts";
 import {
     AccountDetailResponse,
+    AccountResponse,
     AccountRequest,
     LoginGoogleRequest,
     UpdateAccountRequest
@@ -15,9 +16,9 @@ import {
 import axiosInstance from "../utils/axiosInstance";
 import {ApiResponse} from "../interfaces/Layout.ts";
 
-export const apiGetAllUser = async (): Promise<ApiResponse<AccountDetailResponse[]>> => {
+export const apiGetAllUser = async (): Promise<ApiResponse<AccountResponse[]>> => {
     try {
-        const response = await AxiosInstance.get<ApiResponse<AccountDetailResponse[]>>("/api/Admin/getAllUsers");
+        const response = await AxiosInstance.get<ApiResponse<AccountResponse[]>>("/api/Admin/getAllUsers");
         return response.data;
     }catch(err: any | undefined) {
         return {
