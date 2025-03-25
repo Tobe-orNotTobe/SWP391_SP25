@@ -199,6 +199,16 @@ export const apiGetProfileUser = async () => {
     }
 }
 
+export const apiFindUser = async (keyword: string) => {
+    try{
+        const  response = await axiosInstance.get(`/api/user/search?keyword=${keyword}`);
+        return response.data;
+    }catch (err){
+        // console.error("API GetProfileUser Error:", err);
+        throw err;
+    }
+}
+
 export const apiUpdateProfileUser = async (data : UserProfileUpdate ) => {
     try {
         const response = await  axiosInstance.put("/api/user/profile", data);
