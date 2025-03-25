@@ -235,10 +235,20 @@ const BookingForm = () => {
   // Handle selecting a vaccine
   const handleSelectVaccine = (vaccineId: string) => {
     setSelectedVaccines((prevSelected) => {
-      if (prevSelected.includes(vaccineId)) {
-        return prevSelected.filter((id) => id !== vaccineId);
+      if (vaccineType === "Gói") {
+        // Nếu là chọn combo, chỉ cho phép chọn 1 combo
+        if (prevSelected.includes(vaccineId)) {
+          return []; // Bỏ chọn nếu đã chọn
+        } else {
+          return [vaccineId]; // Chỉ giữ lại combo mới chọn
+        }
       } else {
-        return [...prevSelected, vaccineId];
+        // Nếu là vaccine lẻ, cho phép chọn nhiều
+        if (prevSelected.includes(vaccineId)) {
+          return prevSelected.filter((id) => id !== vaccineId);
+        } else {
+          return [...prevSelected, vaccineId];
+        }
       }
     });
   };
