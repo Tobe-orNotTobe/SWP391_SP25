@@ -403,3 +403,218 @@
   color: #d97706;
   margin-bottom: 10px;
 }
+
+.vaccine-item-container {
+  margin-bottom: 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 12px;
+  
+  .vaccine-date-picker {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #e8e8e8;
+    
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    
+    input[type="date"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+    }
+  }
+}
+
+/* Thêm vào cuối file SCSS */
+
+.selected-vaccines-section {
+  margin-top: 20px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+
+  h3 {
+    font-size: 18px;
+    color: #2a388f;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .selected-vaccines-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+
+    .selected-vaccine-item {
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      margin-bottom: 12px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .vaccine-info {
+        margin-bottom: 10px;
+
+        h4 {
+          margin: 0 0 5px 0;
+          font-size: 16px;
+          color: #333;
+        }
+
+        .price {
+          margin: 0;
+          color: #d35400;
+          font-weight: bold;
+          font-size: 14px;
+        }
+      }
+
+      .vaccine-date-picker {
+        margin-bottom: 8px;
+
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-size: 14px;
+          color: #666;
+          font-weight: 500;
+        }
+
+        input[type="date"] {
+          width: 100%;
+          padding: 8px 12px;
+          border: 1px solid #ccc;
+          border-radius: 20px;
+          font-size: 14px;
+          transition: 0.3s ease;
+
+          &:focus {
+            border-color: #2a388f;
+            box-shadow: 0px 0px 5px rgba(42, 56, 143, 0.5);
+            outline: none;
+          }
+        }
+      }
+
+      .remove-vaccine-btn {
+        align-self: flex-end;
+        padding: 5px 12px;
+        background-color: #ff4d4f;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        margin-top: 5px;
+
+        &:hover {
+          background-color: #ff7875;
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
+}
+
+/* Cập nhật vaccine card */
+.vaccine-card {
+  position: relative;
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px rgba(125, 127, 129, 0.5);
+  padding: 12px;
+  width: calc((100% / 2) - 10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+
+  &.selected {
+    border: 2px solid #2a388f;
+    background-color: #f0f3ff;
+    box-shadow: 0px 0px 10px rgba(42, 56, 143, 0.3);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .vaccine-info {
+    margin-left: 10px;
+    width: 100%;
+
+    h4 {
+      margin: 0 0 5px 0;
+      color: #333;
+      font-size: 15px;
+    }
+
+    .description {
+      font-size: 13px;
+      color: #666;
+      margin: 5px 0;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #d35400;
+      margin: 5px 0 0 0;
+      font-size: 14px;
+    }
+  }
+
+  input[type="checkbox"] {
+    margin-right: 10px;
+    margin-top: 3px;
+  }
+
+  .recommendation-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background-color: #28a745;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: bold;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .vaccination-form-splited .split-form {
+    flex-direction: column;
+
+    .splited-part {
+      width: 100%;
+      padding: 20px;
+
+      &:first-child {
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+      }
+    }
+  }
+
+  .vaccine-card {
+    width: 100%;
+  }
+}
