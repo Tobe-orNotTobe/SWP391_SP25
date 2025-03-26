@@ -43,6 +43,7 @@ namespace ChildVaccineSystem.Data.Entities
         public DateTime BookingDate { get; set; }
         // Quan hệ 1-N với VaccinationRecords
         public virtual ICollection<VaccinationRecord> VaccinationRecords { get; set; } = new List<VaccinationRecord>();
+        public DateTime InjectionDate { get; set; }
 
     }
 }

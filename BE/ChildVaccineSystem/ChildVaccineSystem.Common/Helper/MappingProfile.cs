@@ -154,7 +154,8 @@ namespace ChildVaccineSystem.Common.Helper
                            opt => opt.MapFrom(src => src.Vaccine != null ? src.Vaccine.Name : null))
                 .ForMember(dest => dest.ComboVaccineName,
                            opt => opt.MapFrom(src => src.ComboVaccine != null ? src.ComboVaccine.ComboName : null));
-
+            CreateMap<BookingDetail, BookingDetailDTO>()
+    .ForMember(dest => dest.InjectionDate, opt => opt.MapFrom(src => src.InjectionDate));
             CreateMap<Booking, BookingDTO>();
             // ✅ Mapping cho Vaccine đơn lẻ
             CreateMap<BookingDetail, BookingDetailDTO>()

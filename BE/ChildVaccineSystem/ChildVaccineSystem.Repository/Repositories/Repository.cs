@@ -81,5 +81,9 @@ namespace ChildVaccineSystem.Repository.Repositories
 		{
 			return await dbSet.AnyAsync(predicate);
 		}
-	}
+        public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await dbSet.CountAsync(predicate);
+        }
+    }
 }
