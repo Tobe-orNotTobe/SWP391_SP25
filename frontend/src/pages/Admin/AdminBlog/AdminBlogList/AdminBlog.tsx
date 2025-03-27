@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Input, Select, Table, Tabs} from "antd";
+import {Button, Input, Table, Tabs} from "antd";
 import {TbListDetails} from "react-icons/tb";
 import {FiEdit2} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
@@ -26,15 +26,15 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
     const [detailBlog, setDetailBlog] = useState<BlogResponse | null>(null);
     const {handleDelete} = useDeleteBlog();
     const {handleUpdateActive} = useUpdateBlogIsActive();
-    const [blogType, setBlogType] = useState<string>("all");
+    // const [blogType, setBlogType] = useState<string>("all");
 
     useEffect(() => {
         fetchAllBlog(isActive, "all").then();
     }, []);
 
-    useEffect(() => {
-        fetchAllBlog(isActive, blogType).then();
-    }, [blogType]);
+    // useEffect(() => {
+    //     fetchAllBlog(isActive, blogType).then();
+    // }, [blogType]);
 
     const [searchText, setSearchText] = useState("");
     const [hoveredRow, setHoveredRow] = useState<string | null>(null);
@@ -66,7 +66,7 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                             type="text"
                             danger
                             icon={<MdDeleteOutline style={{fontSize: "24px"}}/>}
-                            onClick={() => handleDelete(record.blogPostId).then(() => fetchAllBlog(isActive, blogType))}
+                            onClick={() => handleDelete(record.blogPostId).then(() => fetchAllBlog(isActive, "all"))}
                         />
                     )}
 
@@ -126,32 +126,31 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
             title: "Hành động",
             key: "actions",
             render: (_: undefined, record: BlogResponse) => (
-                <div className="vaccine-action-buttons">
-                    <Button className="detail-button" onClick={() => openDetailPopup(record)}>
+                <div className="blog-action-buttons">
+                    <Button className="detail-button" onClick={() => openDetailPopup(record)}  style={{width: "138px"}}>
                         <TbListDetails/>Chi tiết
                     </Button>
                     {isActive && (
-                        <Button className="edit-button" onClick={() => navigate(`/admin/blog/edit/${record.blogPostId}`)}>
+                        <Button className="edit-button" onClick={() => navigate(`/admin/blog/edit/${record.blogPostId}`)} style={{width: "138px"}}>
                             <FiEdit2/>Chỉnh sửa
                         </Button>
                     )}
 
+                    <br/>
                     <Button
-                        className="edit-button"
-                        style={{ backgroundColor: isActive ? "#dc3545" : "" }}
-                        onClick={() => handleUpdateActive(record, isActive).then(() => fetchAllBlog(isActive, blogType))}
+                        className={isActive ? "turn-off-button" : "turn-on-button"}
+                        style={{width: "138px"}}
+                        onClick={() => handleUpdateActive(record, isActive).then(() => fetchAllBlog(isActive, "all"))}
                     >
-
                         {isActive ? (
                             <>
-                                <MdDeleteOutline /> Tắt
+                                <MdDeleteOutline/> Tắt
                             </>
                         ) : (
                             <>
-                                <FiEdit2 /> Duyệt
+                                <FiEdit2/> Duyệt
                             </>
                         )}
-
                     </Button>
 
 
@@ -178,48 +177,26 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
                             <IoMdAdd/> Thêm Blog.
                         </button>
                     </div>
+                    <Input
+                        placeholder="🔍 Tìm kiếm..."
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        style={{ marginBottom: 16, width: 300 }}
+                    />
                     {error && ("Lỗi tải danh sách blog.")}
                     {loading && ("Loading...")}
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <Input
-                            placeholder="🔍 Tìm kiếm..."
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                            style={{ marginBottom: 16, width: 300 }}
-                        />
 
-                        <Select
-                            style={{marginRight: "26px", width: "90px"}}
-                            placeholder="Chọn loại"
-                            defaultValue="all"
-                            onChange={(value) => { setBlogType(value) }}
-                        >
-                            <Select.Option value="all">Tất cả</Select.Option>
-                            <Select.Option value="blog">Blog</Select.Option>
-                            <Select.Option value="news">News</Select.Option>
-                        </Select>
-
-                    </div>
-
-
-                    <Table
-                        columns={columns}
-                        dataSource={filteredBlog.map((blog => ({
-                            ...blog,
-                            id: blog.blogPostId || Math.random().toString(), // Đảm bảo có `id`
-                            title: blog.title || "Chưa có dữ liệu",
-                            imageUrl: blog.imageUrl || "Chưa có dữ liệu",
-                            createdAt: blog.createdAt || "",
-                            authorName: blog.authorName || "Chưa có dữ liệu"
-                        })))}
-                        rowKey="id"
-                        pagination={{pageSize: 8, showSizeChanger: false}}
-                        className="account-table"
-                        onRow={(record) => ({
-                            onMouseEnter: () => setHoveredRow(record.blogPostId.toString()),
-                            onMouseLeave: () => setHoveredRow(null),
-                        })}
-                    />
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="Tất cả" key="1">
+                            {FilterTable(columns, filteredBlog, setHoveredRow)}
+                        </TabPane>
+                        <TabPane tab="Blog" key="2">
+                            {FilterTable(columns, filteredBlog.filter(blog => blog.type === "Blog"), setHoveredRow)}
+                        </TabPane>
+                        <TabPane tab="News" key="3">
+                            {FilterTable(columns, filteredBlog.filter(blog => blog.type === "News"), setHoveredRow)}
+                        </TabPane>
+                    </Tabs>
 
                     {detailBlog && (
                         <div className="popupOverlay" onClick={closeDetailPopup}>
@@ -259,3 +236,30 @@ const AdminBlogPage: React.FC<AdminBlogProps> = ({isActive = true}) => {
 }
 
 export default AdminBlogPage;
+
+const FilterTable = (columns: ColumnsType<BlogResponse>, filteredBlog: BlogResponse[], setHoveredRow: any) => {
+
+    return (
+        <>
+            <Table
+                columns={columns}
+                dataSource={filteredBlog.map((blog => ({
+                    ...blog,
+                    id: blog.blogPostId || Math.random().toString(), // Đảm bảo có `id`
+                    title: blog.title || "Chưa có dữ liệu",
+                    imageUrl: blog.imageUrl || "Chưa có dữ liệu",
+                    createdAt: blog.createdAt || "",
+                    authorName: blog.authorName || "Chưa có dữ liệu"
+                })))}
+                rowKey="id"
+                pagination={{pageSize: 8, showSizeChanger: false}}
+                className="account-table"
+                onRow={(record) => ({
+                    onMouseEnter: () => setHoveredRow(record.blogPostId.toString()),
+                    onMouseLeave: () => setHoveredRow(null),
+                })}
+            />
+        </>
+    );
+
+}

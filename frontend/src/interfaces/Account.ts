@@ -20,6 +20,7 @@ export interface UpdateAccountRequest {
     address: string;
     dateOfBirth: Date;
     isActive: boolean;
+    role: string;
 }
 
 export interface AccountDetailResponse {

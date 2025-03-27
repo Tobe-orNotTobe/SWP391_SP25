@@ -90,8 +90,8 @@
 
 }
 
-.vaccine-action-buttons{
-  display: flex;
+.blog-action-buttons{
+  //display: flex;
 
   .detail-button{
     color: white;
@@ -109,6 +109,26 @@
     color: white;
     background-color: #dc3545;
     margin-left: 10px;
+  }
+
+  .turn-off-button{
+    color: white;
+    background-color: #dc3545;
+    margin-left: 10px;
+
+    &:hover {
+      background-color: white;
+    }
+  }
+
+  .turn-on-button {
+    color: white;
+    background-color: #28a745;
+    margin-left: 10px;
+
+    &:hover {
+      background-color: white;
+    }
   }
 
 }

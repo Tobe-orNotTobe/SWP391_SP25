@@ -132,7 +132,7 @@ const AdminAccountFormPage: React.FC = () => {
                                 <Input placeholder="Address" />
                             </Form.Item>
 
-                            <Form.Item name="role" label="Quyền:">
+                            <Form.Item name="roles" label="Quyền:">
                                 <Select placeholder="Chọn quyền" defaultValue="Customer" onChange={(value) => setShowCertificateUpload(value === "Doctor")}>
                                     <Select.Option value="Customer">Customer</Select.Option>
                                     <Select.Option value="Doctor">Doctor</Select.Option>

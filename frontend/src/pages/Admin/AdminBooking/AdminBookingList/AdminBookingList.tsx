@@ -121,7 +121,7 @@ const AdminBookingPage: React.FC = () => {
             key: "actions",
             render: (_: undefined, record: BookingResponse) => (
                 <div className="account-action-buttons">
-                    <Button onClick={() => openDetailPopup(record)} className="detail-button">
+                    <Button onClick={() => openDetailPopup(record)} className="detail-button" style={{width: "138px"}}>
                         <TbListDetails/>Chi tiết
                     </Button>
                 </div>
