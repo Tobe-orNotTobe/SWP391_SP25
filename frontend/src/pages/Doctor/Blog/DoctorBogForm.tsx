@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom";
 import {TinyMCEE_API_KEY} from "../../../config/cloudinaryConfig.ts"
 
 
-const DoctorBogForm: React.FC = () => {
+const DoctorBlogForm: React.FC = () => {
     const { form, isEditMode, handleSubmit, loading, editorContent, setEditorContent, imageUrl } = useBlogForm();
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -206,4 +206,4 @@ const DoctorBogForm: React.FC = () => {
     );
 };
 
-export default DoctorBogForm;
+export default DoctorBlogForm;

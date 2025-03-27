@@ -10,7 +10,7 @@ export const useDeleteBlog = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleDelete = async (blogId: string) => {
+    const handleDelete = async (blogId: number) => {
         try {
             setError(null);
             setIsLoading(true);
@@ -68,7 +68,7 @@ export const useBlogForm = () => {
                 const updateBlogData: UpdateBlogRequest = {
                     ...values,
                 };
-                const response = await apiUpdateBlog(id, updateBlogData);
+                const response = await apiUpdateBlog(Number(id), updateBlogData);
                 if (!response.isSuccess) throw new Error(response.errorMessages || "Lỗi cập nhật blog");
                 notification.success({ message: "Cập nhật thành công!" });
             } else {
