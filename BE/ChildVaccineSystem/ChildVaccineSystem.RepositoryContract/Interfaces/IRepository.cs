@@ -15,6 +15,6 @@ namespace ChildVaccineSystem.RepositoryContract.Interfaces
         Task<T> UpdateAsync(T entity);
         Task<T> DeleteAsync(T entity);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
-
-	}
+        Task<int> CountAsync(Expression<Func<T, bool>> predicate);
+    }
 }
