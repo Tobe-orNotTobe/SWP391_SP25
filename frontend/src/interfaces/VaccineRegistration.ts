@@ -94,6 +94,7 @@ export interface BookingDetailResponse {
   bookingDetailId: number;
   childName: string;
   bookingDate: string;
+  injectionDate : string;
   bookingType: string;
   price: number;
   note: string;

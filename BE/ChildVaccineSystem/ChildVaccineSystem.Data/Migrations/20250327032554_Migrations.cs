@@ -35,6 +35,7 @@ namespace ChildVaccineSystem.Data.Migrations
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CertificateImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -371,6 +372,30 @@ namespace ChildVaccineSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WalletTransactions",
+                columns: table => new
+                {
+                    WalletTransactionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WalletId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TransactionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WalletTransactions", x => x.WalletTransactionId);
+                    table.ForeignKey(
+                        name: "FK_WalletTransactions_Wallets_WalletId",
+                        column: x => x.WalletId,
+                        principalTable: "Wallets",
+                        principalColumn: "WalletId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ComboDetails",
                 columns: table => new
                 {
@@ -464,7 +489,8 @@ namespace ChildVaccineSystem.Data.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     BookingType = table.Column<int>(type: "int", nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    InjectionDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -536,19 +562,12 @@ namespace ChildVaccineSystem.Data.Migrations
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AdminNote = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProcessedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProcessedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RefundRequests", x => x.RefundRequestId);
-                    table.ForeignKey(
-                        name: "FK_RefundRequests_AspNetUsers_ProcessedById",
-                        column: x => x.ProcessedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RefundRequests_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -682,37 +701,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         column: x => x.VaccineId,
                         principalTable: "Vaccines",
                         principalColumn: "VaccineId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WalletTransactions",
-                columns: table => new
-                {
-                    WalletTransactionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    WalletId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TransactionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RefundRequestId = table.Column<int>(type: "int", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WalletTransactions", x => x.WalletTransactionId);
-                    table.ForeignKey(
-                        name: "FK_WalletTransactions_RefundRequests_RefundRequestId",
-                        column: x => x.RefundRequestId,
-                        principalTable: "RefundRequests",
-                        principalColumn: "RefundRequestId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_WalletTransactions_Wallets_WalletId",
-                        column: x => x.WalletId,
-                        principalTable: "Wallets",
-                        principalColumn: "WalletId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -871,11 +859,6 @@ namespace ChildVaccineSystem.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RefundRequests_ProcessedById",
-                table: "RefundRequests",
-                column: "ProcessedById");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RefundRequests_UserId",
                 table: "RefundRequests",
                 column: "UserId");
@@ -967,11 +950,6 @@ namespace ChildVaccineSystem.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WalletTransactions_RefundRequestId",
-                table: "WalletTransactions",
-                column: "RefundRequestId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_WalletTransactions_WalletId",
                 table: "WalletTransactions",
                 column: "WalletId");
@@ -1002,6 +980,9 @@ namespace ChildVaccineSystem.Data.Migrations
                 name: "Reactions");
 
             migrationBuilder.DropTable(
+                name: "RefundRequests");
+
+            migrationBuilder.DropTable(
                 name: "Transactions");
 
             migrationBuilder.DropTable(
@@ -1021,9 +1002,6 @@ namespace ChildVaccineSystem.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "VaccinationRecords");
-
-            migrationBuilder.DropTable(
-                name: "RefundRequests");
 
             migrationBuilder.DropTable(
                 name: "Wallets");

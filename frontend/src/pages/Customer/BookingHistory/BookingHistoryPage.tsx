@@ -320,11 +320,11 @@ const BookingHistory: React.FC = () => {
             },
             {
                 title: "Ngày Tiêm",
-                dataIndex: "bookingDate",
-                key: "bookingDate",
+                dataIndex: "injectionDate",
+                key: "injectionDate",
                 sorter: (a: BookingDetailResponse, b: BookingDetailResponse) =>
-                    new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime(),
-                render: (bookingDate: string) => new Date(bookingDate).toLocaleDateString("vi-VN"),
+                    new Date(a.injectionDate).getTime() - new Date(b.injectionDate).getTime(),
+                render: (injectionDate: string) => new Date(injectionDate).toLocaleDateString("vi-VN"),
             },
             {
                 title: "Trạng Thái",
@@ -367,6 +367,81 @@ const BookingHistory: React.FC = () => {
                       pagination={false}/>;
     };
 
+    const tabItems = [
+        {
+            key: '1',
+            label: 'Đơn Tiêm Chủng',
+            children: (
+                <>
+                    <div style={{textAlign: "left"}} className="introductionTitle">
+                        <h1 className="gt-title">Đơn Tiêm Chủng Của Bạn</h1>
+                    </div>
+                    <p style={{
+                        textAlign: "justify",
+                        margin: "0 0 10px",
+                        fontSize: "17px",
+                        color: "#6D6E70",
+                        lineHeight: "1.42857143",
+                        paddingBottom: "5px"
+                    }}>
+                        Đây chính là lịch tiêm chủng mà bạn đã đặt trước, giúp bạn dễ dàng theo dõi và quản lý các mốc thời
+                        gian quan trọng để đảm bảo sức khỏe tốt nhất.
+                    </p>
+                    <StatusLegend/>
+                    <Search
+                        placeholder="Nhập từ khóa tìm kiếm..."
+                        onSearch={handleSearch}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        style={{ marginBottom: 16, width: 300 }}
+                    />
+                    <Table
+                        columns={columns}
+                        dataSource={filteredBookings}
+                        rowKey="bookingId"
+                        expandable={{ expandedRowRender }}
+                        pagination={{ pageSize: 10 }}
+                    />
+                </>
+            ),
+        },
+        {
+            key: '2',
+            label: 'Lịch Tiêm Chủng',
+            children: (
+                <>
+                    <div style={{textAlign: "left"}} className="introductionTitle">
+                        <h1 className="gt-title">Lịch tiêm chủng cho đơn mà bạn đã đặt</h1>
+                    </div>
+                    <p style={{
+                        textAlign: "justify",
+                        margin: "0 0 10px",
+                        fontSize: "17px",
+                        color: "#6D6E70",
+                        lineHeight: "1.42857143",
+                        paddingBottom: "5px"
+                    }}>
+                        Không chỉ vậy, tôi còn hỗ trợ bạn xem trước các lịch tiêm trong tương lai, giúp bạn luôn chủ động
+                        sắp xếp thời gian và không bỏ lỡ bất kỳ mũi tiêm quan trọng nào.
+                    </p>
+                    <StatusLegend/>
+                    <Calendar
+                        value={calendarValue}
+                        cellRender={(current, info) => {
+                            if (info.type === "date") {
+                                return dateCellRender(current);
+                            }
+                            if (info.type === "month") {
+                                return monthCellRender(current);
+                            }
+                        }}
+                        onSelect={handleSelectDate}
+                        onChange={(value) => setCalendarValue(value)}
+                    />
+                </>
+            ),
+        }
+    ];
+
     return (
         <>
             <CustomerNavbar/>
@@ -379,61 +454,10 @@ const BookingHistory: React.FC = () => {
                   <span className="last">Tổng các đặt đơn tiêm chủng của bạn</span>
                 </span>
 
-                <div style={{paddingTop: "20px", textAlign: "left"}} className="introductionTitle">
-                    <h1 className="gt-title">Đơn Tiêm Chủng Của Bạn</h1>
-                </div>
-                <p style={{
-                    textAlign: "justify",
-                    margin: "0 0 10px",
-                    fontSize: "17px",
-                    color: "#6D6E70",
-                    lineHeight: "1.42857143",
-                    paddingBottom: "5px"
-                }}>
-                    Đây chính là lịch tiêm chủng mà bạn đã đặt trước, giúp bạn dễ dàng theo dõi và quản lý các mốc thời
-                    gian quan trọng để đảm bảo sức khỏe tốt nhất.
-                </p>
-                <StatusLegend/>
-                <Search
-                    placeholder="Nhập từ khóa tìm kiếm..."
-                    onSearch={handleSearch}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    style={{ marginBottom: 16, width: 300 , paddingTop: "20px" }}
-                />
-                <Table
-                    columns={columns}
-                    dataSource={filteredBookings}
-                    rowKey="bookingId"
-                    expandable={{ expandedRowRender }}
-                    pagination={{ pageSize: 7 }}
-                />
-                <div style={{paddingTop: "20px", textAlign: "left"}} className="introductionTitle">
-                    <h1 className="gt-title">Lịch tiêm chủng cho đơn mà bạn đã đặt</h1>
-                </div>
-                <p style={{
-                    textAlign: "justify",
-                    margin: "0 0 10px",
-                    fontSize: "17px",
-                    color: "#6D6E70",
-                    lineHeight: "1.42857143",
-                    paddingBottom: "5px"
-                }}>
-                    Không chỉ vậy, tôi còn hỗ trợ bạn xem trước các lịch tiêm trong tương lai, giúp bạn luôn chủ động
-                    sắp xếp thời gian và không bỏ lỡ bất kỳ mũi tiêm quan trọng nào.
-                </p>
-                <StatusLegend/>
-                <Calendar
-                    value={calendarValue}
-                    cellRender={(current, info) => {
-                        if (info.type === "date") {
-                            return dateCellRender(current);
-                        }
-                        if (info.type === "month") {
-                            return monthCellRender(current);
-                        }
-                    }}
-                    onSelect={handleSelectDate}
-                    onChange={(value) => setCalendarValue(value)}
+                <Tabs
+                    defaultActiveKey="1"
+                    style={{ marginTop: '20px' }}
+                    items={tabItems}
                 />
 
                 <Modal

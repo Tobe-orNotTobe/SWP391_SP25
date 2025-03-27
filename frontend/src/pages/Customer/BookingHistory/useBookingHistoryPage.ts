@@ -138,7 +138,7 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
     const bookingMap: Record<string, BookingDetailResponse[]> = useMemo(() => {
         return bookingsByYear.reduce<Record<string, BookingDetailResponse[]>>((map, booking) => {
             booking.bookingDetails.forEach((detail) => {
-                const dateKey = dayjs(detail.bookingDate).format("YYYY-MM-DD");
+                const dateKey = dayjs(detail.injectionDate).format("YYYY-MM-DD");
                 if (!map[dateKey]) {
                     map[dateKey] = [];
                 }
