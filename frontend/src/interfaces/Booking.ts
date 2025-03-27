@@ -9,6 +9,7 @@ export interface BookingDetail {
   comboVaccineId: number | null;
   vaccineName: string | null;
   comboVaccineName: string | null;
+  price: string | null;
   injectionDate: string | null
 }
 
