@@ -12,6 +12,7 @@ namespace ChildVaccineSystem.Data.Entities
         public bool IsActive { get; set; } = true;
         public string? RefreshToken { get; set; }
         public string? ImageUrl { get; set; }
+        public string? CertificateImageUrl { get; set; }
         public ICollection<Children> Children { get; set; }
 
         public ICollection<Booking> Bookings { get; set; }
