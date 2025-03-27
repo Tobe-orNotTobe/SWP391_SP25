@@ -44,6 +44,7 @@ namespace ChildVaccineSystem.API.Controllers
             }
         }
 
+
         // Add feedback
         [HttpPost]
         [Authorize(AuthenticationSchemes = "Bearer")]
@@ -54,7 +55,8 @@ namespace ChildVaccineSystem.API.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var userName = User.FindFirstValue(ClaimTypes.Name); // Get logged-in user's ID
+                var userName = User.FindFirstValue(ClaimTypes.Name);
+
                 var createdFeedback = await _feedbackService.AddFeedbackAsync(createFeedbackDto, userId, userName);
 
                 _response.StatusCode = HttpStatusCode.Created;
@@ -62,6 +64,14 @@ namespace ChildVaccineSystem.API.Controllers
                 _response.Result = createdFeedback;
 
                 return Ok(_response);
+            }
+            catch (ArgumentException ex)
+            {
+                // Trả về lỗi 400 khi dữ liệu không hợp lệ (như feedback đã tồn tại)
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Dữ liệu không hợp lệ: {ex.Message}");
+                return BadRequest(_response);
             }
             catch (Exception ex)
             {
