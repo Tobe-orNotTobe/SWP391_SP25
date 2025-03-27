@@ -164,19 +164,6 @@ const VaccinationSchedulePage: React.FC = () => {
           booking.bookingDetailId
         );
       } catch (error: any) {
-        if (error.response?.status === 400) {
-          const createResponse = await apiCreateVaccineRecord(
-            booking.bookingDetailId
-          );
-          if (createResponse && createResponse?.isSuccess) {
-            existingRecord = await apiGetVaccineRecordByBookingDetailId(
-              booking.bookingDetailId
-            );
-          } else {
-          }
-        } else {
-          throw error;
-        }
       }
 
       if (existingRecord?.isSuccess) {
@@ -324,9 +311,9 @@ const VaccinationSchedulePage: React.FC = () => {
         Number(a.bookingDetailId) - Number(b.bookingDetailId),
     },
     {
-      title: "Ngày Đặt",
-      dataIndex: "bookingDate",
-      key: "bookingDate",
+      title: "Ngày Tiêm",
+      dataIndex: "injectionDate",
+      key: "injectionDate",
       render: (date: string) => dayjs(date).format("DD/MM/YYYY"), // Chuyển từ moment -> dayjs
       sorter: (a: BookingResponse, b: BookingResponse) =>
         dayjs(a.bookingDate).valueOf() - dayjs(b.bookingDate).valueOf(),
