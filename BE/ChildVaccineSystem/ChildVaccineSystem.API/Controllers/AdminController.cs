@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using ChildVaccineSystem.Data.DTO.User;
 using ChildVaccineSystem.ServiceContract.Interfaces;
+using ChildVaccineSystem.Service.Services;
 
 namespace ChildVaccineSystem.API.Controllers
 {
@@ -21,64 +22,37 @@ namespace ChildVaccineSystem.API.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly IWalletService _walletService;
 		private readonly APIResponse _response;
+        private readonly IUserService _userService;
 
-        public AdminController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IWalletService walletService, APIResponse response)
+        public AdminController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IWalletService walletService, APIResponse response, IUserService userService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _walletService = walletService;
             _response = response;
+            _userService = userService;
         }
 
         [HttpPost("create-account")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> CreateAccount([FromBody] RegisterAccountDTO model)
         {
-            if (model == null || string.IsNullOrEmpty(model.Password))
+            var (success, message, errors) = await _userService.CreateUserAsync(model);
+
+            var response = new APIResponse();
+
+            if (!success)
             {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Dữ liệu người dùng không hợp lệ.");
-                return BadRequest(_response);
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.IsSuccess = false;
+                response.ErrorMessages = errors ?? new List<string> { message ?? "Lỗi không xác định." };
+                return BadRequest(response);
             }
 
-            if (!await _roleManager.RoleExistsAsync(model.Role))
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Vai trò '{model.Role}' không tồn tại.");
-                return BadRequest(_response);
-            }
-
-            var user = new User
-            {
-                UserName = model.UserName,
-                Email = model.Email,
-                FullName = model.FullName,
-                Address = model.Address,
-                PhoneNumber = model.PhoneNumber,
-                DateOfBirth = model.DateOfBirth,
-                EmailConfirmed = true,
-                IsActive = true
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages = result.Errors.Select(e => e.Description).ToList();
-                return BadRequest(_response);
-            }
-
-			if(model.Role == "Customer")
-				await _walletService.CreateWalletAsync(user.Id, isAdminWallet: false);
-
-			await _userManager.AddToRoleAsync(user, model.Role);
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            _response.Result = $"Tài khoản đã được tạo thành công với vai trò '{model.Role}'";
-            return Ok(_response);
+            response.StatusCode = HttpStatusCode.OK;
+            response.IsSuccess = true;
+            response.Result = message;
+            return Ok(response);
         }
 
         [HttpGet("getAllUsers")]
