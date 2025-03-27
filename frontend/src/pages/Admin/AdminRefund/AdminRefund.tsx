@@ -259,7 +259,7 @@ const AdminRefund: React.FC = () => {
                                     </Col>
                                     <Col span={12}>
                                         <div className="detail-item">
-                                            <strong>Amount:</strong> ${selectedRecord.amount}
+                                            <strong>Amount:</strong> {selectedRecord.amount.toLocaleString('vi-VN')}
                                         </div>
                                     </Col>
                                     <Col span={12}>
