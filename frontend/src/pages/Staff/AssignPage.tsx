@@ -41,16 +41,17 @@ import { apiGetVaccineRecordByBookingId } from "../../apis/apiVaccineRecord.ts";
 import { VaccineRecordResponse } from "../../interfaces/VaccineRecord.ts";
 import moment from "moment";
 import dayjs, { Dayjs } from "dayjs";
+import { BookingResult } from "../../interfaces/Booking.ts";
 
 const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
 
 function AssignPage() {
-  const [bookings, setBookings] = useState<BookingResponse[]>([]);
-  const [unassignBookings, setUnassignBookings] = useState<BookingResponse[]>(
+  const [bookings, setBookings] = useState<BookingResult[]>([]);
+  const [unassignBookings, setUnassignBookings] = useState<BookingResult[]>(
     []
   );
-  const [assignedBookings, setAssignedBookings] = useState<BookingResponse[]>(
+  const [assignedBookings, setAssignedBookings] = useState<BookingResult[]>(
     []
   );
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -58,7 +59,7 @@ function AssignPage() {
   const [vaccineRecordDetails, setVaccineRecordDetails] =
     useState<VaccineRecordResponse>();
   const [selectedBooking, setSelectedBooking] =
-    useState<BookingResponse | null>(null);
+    useState<BookingResult | null>(null);
   const [vaccineDetails, setVaccineDetails] = useState<any[]>([]);
   const [comboDetails, setComboDetails] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -268,7 +269,7 @@ function AssignPage() {
     }
   };
 
-  const openModal = async (booking: BookingResponse) => {
+  const openModal = async (booking: BookingResult) => {
     setVaccineDetails([]);
     setComboDetails([]);
     setSelectedBooking(booking);
@@ -333,7 +334,7 @@ function AssignPage() {
     setModalIsOpen(false);
   };
 
-  const openDoctorModal = (booking: BookingResponse) => {
+  const openDoctorModal = (booking: BookingResult) => {
     setSelectedBooking(booking);
     setDoctorModalIsOpen(true);
   };
@@ -570,7 +571,7 @@ function AssignPage() {
     {
       title: "Hành động",
       key: "action",
-      render: (_: undefined, record: BookingResponse) => {
+      render: (_: undefined, record: BookingResult) => {
         const isAssigned = !unassignBookings.some(
           (unassignBooking) => unassignBooking.bookingId === record.bookingId
         );
@@ -751,7 +752,7 @@ function AssignPage() {
                     <strong>Loại Tiêm:</strong> {selectedBooking.bookingType}
                   </p>
                   <p>
-                    <strong>Ghi Chú:</strong> {selectedBooking.note}
+                    <strong>Ghi Chú:</strong> {selectedBooking.notes}
                   </p>
                   <p>
                     <strong>Trạng Thái:</strong>{" "}
@@ -785,13 +786,16 @@ function AssignPage() {
                   </p>
                 </div>
 
-                {vaccineDetails.length > 0 && comboDetails.length === 0 && (
+                {selectedBooking.bookingDetails.length > 0 && comboDetails.length === 0 && (
                   <div className="combo-section">
                     <h3>Chi Tiết Vaccine</h3>
-                    {vaccineDetails.map((vaccine) => (
+                    {selectedBooking.bookingDetails.map((vaccine) => (
                       <div key={vaccine.vaccineId} className="vaccine-item">
                         <p>
-                          <strong>Tên Vaccine:</strong> {vaccine.name}
+                          <strong>Tên Vaccine:</strong> {vaccine.vaccineName}
+                        </p>
+                        <p>
+                          <strong>Ngày tiêm:</strong> {moment(vaccine.injectionDate).format("DD/MM/YYYY")}
                         </p>
                         <p>
                           <strong>Giá:</strong>{" "}
