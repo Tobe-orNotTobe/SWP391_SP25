@@ -281,7 +281,7 @@ namespace ChildVaccineSystem.Service.Services
             }
 
             var description = $"Thanh toán cho lịch hẹn #{bookingId}";
-            return await TransferFundsAsync(userId, adminWallet.UserId, amount, "Thanh toán lịch hẹn", description);
+            return await TransferFundsAsync(userId, adminWallet.UserId, amount, "Thanh toán lịch hẹn", $"Thanh toán cho lịch hẹn #{bookingId}");
         }
     }
 }
