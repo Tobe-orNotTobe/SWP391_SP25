@@ -1,38 +1,40 @@
 import React from "react";
 import StaffLayout from "../StaffLayout";
-import {FaClipboardList, FaNewspaper} from "react-icons/fa";
+import { FaCalendarCheck, FaUserMd, FaEdit, FaListAlt } from "react-icons/fa";
 
 const groups = [
   {
-    title: "Tiêm chủng",
+    title: "Lịch tiêm chủng",
     items: [
-     // { label: "Ghi nhận tiêm chủng", path: "/doctor/service" },
-      { label: "Lịch tiêm chủng", path: "/doctor/vaccination-schedule" },
-    ],
-  },
-
-    {
-        title: "Thông tin cá nhân",
-        items: [
-            // { label: "Ghi nhận tiêm chủng", path: "/doctor/service" },
-            { label: "Thông tin của bác sĩ", path: "/doctor/profile" },
-        ],
-    },
-  {
-    title: "Bài đăng",
-    items: [
-      // { label: "Ghi nhận tiêm chủng", path: "/doctor/service" },
-      { label: "Thông tin của bác sĩ", path: "/doctor/profile" },
+      { 
+        label: "Xem lịch tiêm", 
+        path: "/doctor/vaccination-schedule",
+        icon: <FaCalendarCheck />
+      },
     ],
   },
   {
-    title: "Đăng bài",
+    title: "Hồ sơ bác sĩ",
     items: [
-      { label: "Đăng bài", path: "/doctor/blogPost", icon: <FaClipboardList /> },
+      { 
+        label: "Thông tin cá nhân", 
+        path: "/doctor/profile", 
+        icon: <FaUserMd />
+      },
+    ],
+  },
+  {
+    title: "Quản lý bài viết",
+    items: [
+      { 
+        label: "Tạo bài viết", 
+        path: "/doctor/blogPost", 
+        icon: <FaEdit /> 
+      },
       {
-        label: "Quản lý bài đăng",
+        label: "Danh sách bài viết",
         path: "/doctor/blogManager",
-        icon: <FaNewspaper />,
+        icon: <FaListAlt />,
       },
     ],
   },
