@@ -131,6 +131,9 @@ namespace ChildVaccineSystem.Data.Migrations
                     b.Property<int?>("ComboVaccineId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("InjectionDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -536,6 +539,9 @@ namespace ChildVaccineSystem.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CertificateImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")

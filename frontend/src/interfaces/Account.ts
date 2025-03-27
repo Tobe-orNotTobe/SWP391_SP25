@@ -8,6 +8,7 @@ export interface AccountRequest {
     dateOfBirth: Date;
     password: string;
     role: string;
+    certificateImageUrl: string;
 }
 
 export interface UpdateAccountRequest {

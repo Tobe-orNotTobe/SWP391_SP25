@@ -117,16 +117,16 @@ const AdminAccountPage: React.FC = () => {
             key: "actions",
             render: (_: undefined, record: AccountResponse) => (
                 <div className="account-action-buttons">
-                    <Button onClick={() => openDetailPopup(record)} className="detail-button">
+                    <Button onClick={() => openDetailPopup(record)} className="detail-button" style={{width: "138px"}}>
                         <TbListDetails/>Chi tiết
                     </Button>
-                    <Button className="edit-button" onClick={() => navigate(`/admin/account/edit/${record.id}`)}>
+                    <Button className="edit-button" onClick={() => navigate(`/admin/account/edit/${record.id}`)} style={{width: "138px"}}>
                         <FiEdit2/>Chỉnh sửa
                     </Button> <br/>
-                    <Button className="send-notification-button"  onClick={() => openNotificationPopup(record)}>
+                    <Button className="send-notification-button"  onClick={() => openNotificationPopup(record)} style={{width: "138px"}}>
                         <IoMdNotificationsOutline/>Gửi thông báo
                     </Button>
-                    <Button className={record.isActive ? "deactive-button" : "active-button"} onClick={() => {handleUpdateIsActive(record.isActive, record.id).then(() => fetchAllUser())}}>
+                    <Button className={record.isActive ? "deactive-button" : "active-button"} onClick={() => {handleUpdateIsActive(record.isActive, record.id).then(() => fetchAllUser())}} style={{width: "138px"}}>
                         <MdDeleteOutline/> {record.isActive ? "Deactive" : "Active"}
                     </Button>
                 </div>

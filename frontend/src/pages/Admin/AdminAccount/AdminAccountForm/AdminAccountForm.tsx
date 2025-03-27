@@ -1,35 +1,39 @@
 import React, { useState } from "react";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import {Button, Form, Input, Select, Switch} from "antd";
+import {Button, Form, Input, Select, Switch, Upload} from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import "./AdminAccountForm.scss";
 import { useNavigate } from "react-router-dom";
 import { useAdminAccountForm } from "../useAdminAccount.ts";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-// import {uploadImageToCloudinary} from "../../../../utils/cloudinary.ts";
+import {toast} from "react-toastify";
+import {uploadImageToCloudinary} from "../../../../utils/cloudinary.ts";
 
 const AdminAccountFormPage: React.FC = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
     const { form, dateOfBirth, setDateOfBirth, isEditMode, handleSubmit } = useAdminAccountForm();
     // const [imageFile, setImageFile] = useState<File | null>(null);
-    // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [certificateFile, setCertificateFile] = useState<File | null>(null);
+    const [showCertificateUpload, setShowCertificateUpload] = useState(false);
 
     const handleShowPassword = () => setShowPassword(!showPassword);
 
     const onFinish = async (values: any) => {
 
-        // let imageUrl = values.imageUrl;
-        // if (imageFile) {
-        //     try {
-        //         imageUrl = await uploadImageToCloudinary(imageFile);
-        //     } catch (error) {
-        //         notification.error({ message: "Lỗi", description: "Tải ảnh thất bại." });
-        //         return;
-        //     }
-        // }
+        let imageUrl;
 
-        const formData = { ...values };
+        if (certificateFile) {
+            try {
+                imageUrl = await uploadImageToCloudinary(certificateFile);
+            } catch (error) {
+                toast.error("Tải ảnh thất bại.");
+                return;
+            }
+        }
+
+        const formData = { ...values, certificateImageUrl: imageUrl };
         await handleSubmit(formData);
     };
 
@@ -129,7 +133,7 @@ const AdminAccountFormPage: React.FC = () => {
                             </Form.Item>
 
                             <Form.Item name="role" label="Quyền:">
-                                <Select placeholder="Chọn quyền" defaultValue="Customer">
+                                <Select placeholder="Chọn quyền" defaultValue="Customer" onChange={(value) => setShowCertificateUpload(value === "Doctor")}>
                                     <Select.Option value="Customer">Customer</Select.Option>
                                     <Select.Option value="Doctor">Doctor</Select.Option>
                                     <Select.Option value="Staff">Staff</Select.Option>
@@ -137,7 +141,26 @@ const AdminAccountFormPage: React.FC = () => {
                                     <Select.Option value="Admin">Admin</Select.Option>
                                 </Select>
                             </Form.Item>
-                            
+
+                            {showCertificateUpload && (
+                                <Form.Item name="certificate" label="Tải chứng chỉ:">
+                                    <Upload
+                                        // listType={"picture-card"}
+                                        beforeUpload={(file) => {
+                                            setCertificateFile(file);
+                                            setPreviewUrl(URL.createObjectURL(file));
+                                            return false;
+                                        }}
+                                    >
+                                        {previewUrl ? (
+                                            <img src={previewUrl} alt="Xem trước" style={{width: "100px", maxHeight: "100px", objectFit: "cover" }} />
+                                        ) : (
+                                            "+ Upload"
+                                        )}
+                                    </Upload>
+                                </Form.Item>
+
+                            )}
 
                         </div>
 

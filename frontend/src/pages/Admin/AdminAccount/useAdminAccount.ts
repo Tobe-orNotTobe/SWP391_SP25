@@ -176,6 +176,7 @@ export const useAdminAccountForm = () => {
             const newAccountData: AccountRequest = {
                 ...values,
                 role: values.role ?? "Customer",
+                certificateImageUrl: values.certificateImageUrl ?? null,
             };
             const response = await apiCreateAccount(newAccountData);
             if (!response.isSuccess) {
