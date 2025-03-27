@@ -1,5 +1,10 @@
-import {useEffect, useRef, useState} from "react";
-import {AccountDetailResponse, AccountRequest, UpdateAccountRequest} from "../../../interfaces/Account.ts";
+import {useEffect, useState} from "react";
+import {
+    AccountDetailResponse,
+    AccountRequest,
+    AccountResponse,
+    UpdateAccountRequest
+} from "../../../interfaces/Account.ts";
 import {
     apiActiveAccount,
     apiCreateAccount, apiDeactivateAccount,
@@ -14,7 +19,7 @@ import dayjs from "dayjs";
 import {toast} from "react-toastify";
 
 export const useGetAllUser = () => {
-    const [users, setUsers] = useState<AccountDetailResponse[]>([]);
+    const [users, setUsers] = useState<AccountResponse[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
@@ -37,36 +42,28 @@ export const useGetAllUser = () => {
     return { users, loading, error, fetchAllUser };
 };
 
-export const useGetUserById = (accountId: string) => {
+export const useGetUserById = () => {
     const [user, setUser] = useState<AccountDetailResponse | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
-    const hasFetched = useRef(false); // Biến kiểm tra đã gọi API hay chưa
 
-    useEffect(() => {
-        if (hasFetched.current) return; // Nếu đã gọi API trước đó thì không gọi lại
-
-        const fetchUserById = async () => {
-            setLoading(true);
-            try {
-                const response = await apiGetUserById(accountId);
-                if (response && response.result) {
-                    console.log("cac: " + response)
-                    setUser(response.result);
-                }
-            } catch (err) {
-                console.error(err);
-                setError("Error Fetching All User Data");
-            } finally {
-                setLoading(false);
+    const fetchUserById = async (accountId: string) => {
+        setLoading(true);
+        try {
+            const response = await apiGetUserById(accountId);
+            if (response && response.result) {
+                console.log("cac: " + response)
+                setUser(response.result);
             }
-        };
+        } catch (err) {
+            console.error(err);
+            setError("Error Fetching All User Data");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        fetchUserById();
-        hasFetched.current = true; // Đánh dấu là đã gọi API
-    }, []);
-
-    return {user, loading, error};
+    return {user, loading, error, fetchUserById};
 }
 
 // export const createUser = async (account: AccountRequest) => {

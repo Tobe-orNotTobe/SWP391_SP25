@@ -25,10 +25,12 @@ const AdminBookingPage: React.FC = () => {
 
     const {fetchVaccineRecordByBookingId } = useGetVaccineRecordByBookingId();
 
-    const [bkid, setBkId] = useState<number>(0);
     const [bkDetailid, setBkDetailid] = useState<number>(0);
     const [vaccineRecordModal,setVaccineRecordModal] = useState<boolean>(false);
-    const {vaccineRecord} =  useVaccineRecordByBookingId(bkid)
+
+    // const [vaccineRecord, setVaccineRecord] = useState<boolean>(false);
+
+    const {vaccineRecord} =  useVaccineRecordByBookingId(0)
     const {vaccineRecordByBookingDetailId} = useVaccineRecordByBookingDetailId(bkDetailid)
     const selectedRecord = vaccineRecord || vaccineRecordByBookingDetailId;
 

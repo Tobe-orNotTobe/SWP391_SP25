@@ -24,7 +24,6 @@ export const useGetAllBlog = () => {
             if (response && response.result) {
                 if (blogType === "news") {
                     setNews(response.result);
-
                 }else {
                     setBlogs(response.result);
                 }
