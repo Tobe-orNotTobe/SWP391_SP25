@@ -79,7 +79,7 @@ const AdminFeedbackListPage: React.FC = () => {
             key: "actions",
             render: (_: undefined, record: FeedbackResponse) => (
                 <div className="vaccine-action-buttons">
-                    <Button  className="detail-button" onClick={() => openDetailPopup(record)}>
+                    <Button  className="detail-button" onClick={() => openDetailPopup(record)} style={{width: "138px"}}>
                         <TbListDetails/>Chi tiết
                     </Button>
                     {/*<Button className="delete-button">*/}

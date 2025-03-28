@@ -1,7 +1,13 @@
 import React, {useEffect, useState} from "react";
 import AdminLayout from "../../../../components/Layout/AdminLayout/AdminLayout.tsx";
 import {Button, Form, Input, Select, Table, Tabs} from "antd";
-import {useDeleteUser, useGetAllUser, useGetUserById, useUpdateUserIsActive} from "../useAdminAccount.ts";
+import {
+    useDeleteUser,
+    useGetAllUser,
+    useGetCurrentAdmin,
+    useGetUserById,
+    useUpdateUserIsActive
+} from "../useAdminAccount.ts";
 import {IoMdAdd} from "react-icons/io";
 import "./AdminAccount.scss"
 import {TbListDetails} from "react-icons/tb";
@@ -24,17 +30,19 @@ const AdminAccountPage: React.FC = () => {
     const {handleSendNotification} = useSendNotification();
     const [hoveredRow, setHoveredRow] = useState<string | null>(null);
     const navigate = useNavigate();
+    const {currentAdminId, getCurrentAdminId} = useGetCurrentAdmin();
+
 
     useEffect(() => {
-        fetchAllUser().then();
+        fetchAllUser().then(getCurrentAdminId);
     }, []);
 
     const [searchText, setSearchText] = useState("");
 
-
     // Lọc dữ liệu trước khi truyền vào Table
-    const filteredUsers = users.filter((user) =>
-        Object.values(user).some(
+    const filteredUsers = users
+        // .filter((user) => user.id !== currentAdminId)
+        .filter((user) => Object.values(user).some(
             (value) =>
                 typeof value === "string" &&
                 value.toLowerCase().includes(searchText.trim().toLowerCase())
@@ -55,12 +63,14 @@ const AdminAccountPage: React.FC = () => {
                         opacity: hoveredRow === record.id ? 1 : 0
                     }}
                 >
-                    <Button
-                        type="text"
-                        danger
-                        icon={<MdDeleteOutline style={{fontSize: "24px"}}/>}
-                        onClick={() => handleDelete(record.id).then(() => fetchAllUser())}
-                    />
+                    {record.id !== currentAdminId ? (
+                        <Button
+                            type="text"
+                            danger
+                            icon={<MdDeleteOutline style={{fontSize: "24px"}}/>}
+                            onClick={() => handleDelete(record.id).then(() => fetchAllUser())}
+                        />
+                    ) : null}
                 </div>
             ),
         },
@@ -117,18 +127,22 @@ const AdminAccountPage: React.FC = () => {
             key: "actions",
             render: (_: undefined, record: AccountResponse) => (
                 <div className="account-action-buttons">
-                    <Button onClick={() => openDetailPopup(record)} className="detail-button">
+                    <Button onClick={() => openDetailPopup(record)} className="detail-button" style={{width: "138px"}}>
                         <TbListDetails/>Chi tiết
                     </Button>
-                    <Button className="edit-button" onClick={() => navigate(`/admin/account/edit/${record.id}`)}>
+                    <Button className="edit-button" onClick={() => navigate(`/admin/account/edit/${record.id}`)} style={{width: "138px"}}>
                         <FiEdit2/>Chỉnh sửa
                     </Button> <br/>
-                    <Button className="send-notification-button"  onClick={() => openNotificationPopup(record)}>
-                        <IoMdNotificationsOutline/>Gửi thông báo
-                    </Button>
-                    <Button className={record.isActive ? "deactive-button" : "active-button"} onClick={() => {handleUpdateIsActive(record.isActive, record.id).then(() => fetchAllUser())}}>
-                        <MdDeleteOutline/> {record.isActive ? "Deactive" : "Active"}
-                    </Button>
+                    {record.roles[0] === "Customer" ? (
+                        <Button className="send-notification-button"  onClick={() => openNotificationPopup(record)} style={{width: "138px"}}>
+                            <IoMdNotificationsOutline/>Gửi thông báo
+                        </Button>
+                        ): null}
+                    {record.id !== currentAdminId ? (
+                        <Button className={record.isActive ? "deactive-button" : "active-button"} onClick={() => {handleUpdateIsActive(record.isActive, record.id).then(() => fetchAllUser())}} style={{width: "138px"}}>
+                            <MdDeleteOutline/> {record.isActive ? "Deactive" : "Active"}
+                        </Button>
+                    ): null}
                 </div>
             ),
         },

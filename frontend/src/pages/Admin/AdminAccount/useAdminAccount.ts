@@ -17,6 +17,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useForm} from "antd/es/form/Form";
 import dayjs from "dayjs";
 import {toast} from "react-toastify";
+import {decodeToken} from "../../../utils/decodeToken.ts";
 
 export const useGetAllUser = () => {
     const [users, setUsers] = useState<AccountResponse[]>([]);
@@ -141,10 +142,12 @@ export const useAdminAccountForm = () => {
                             dateOfBirth: response.result.dateOfBirth
                                 ? dayjs(response.result.dateOfBirth).format("YYYY-MM-DD")
                                 : undefined,
+                            roles: response.result.roles[0],
                         });
                         if (response.result.imageUrl) {
                             setImageUrl(response.result.imageUrl);
                         }
+                        // toast.success("Roles: " + response.result.roles[0]);
                     }
                 })
                 .catch(() => {
@@ -162,7 +165,7 @@ export const useAdminAccountForm = () => {
                 ...values,
                 isActive: values.isActive ?? true, // Nếu thiếu thì mặc định là true
                 imageUrl: "/null",
-                role: values.role,
+                role: values.roles,
             };
             const response = await apiUpdateAccount(updateAccountData);
             if (!response.isSuccess) {
@@ -175,7 +178,8 @@ export const useAdminAccountForm = () => {
         } else {
             const newAccountData: AccountRequest = {
                 ...values,
-                role: values.role ?? "Customer",
+                role: values.roles ?? "Customer",
+                certificateImageUrl: values.certificateImageUrl ?? null,
             };
             const response = await apiCreateAccount(newAccountData);
             if (!response.isSuccess) {
@@ -192,3 +196,14 @@ export const useAdminAccountForm = () => {
     };
     return { form, imageUrl, dateOfBirth, setDateOfBirth, isEditMode, handleSubmit, loading };
 };
+
+export const useGetCurrentAdmin = () => {
+
+    const [currentAdminId, setCurrentAdminId] = useState<string | null>(null);
+
+    const getCurrentAdminId = () => {
+        const result = decodeToken(localStorage.getItem("token"))?.sub;
+        setCurrentAdminId(result ? result : null);
+    }
+    return {currentAdminId, getCurrentAdminId};
+}
