@@ -162,7 +162,6 @@ const BookingHistory: React.FC = () => {
         }
     };
 
-
     const handleSelectDate = (date: Dayjs, selectInfo: SelectInfo) => {
         if (selectInfo.source === "date" && bookingMap[date.format("YYYY-MM-DD")]) {
             const selectedBooking = bookingMap[date.format("YYYY-MM-DD")][0]; // Select first booking of the day
