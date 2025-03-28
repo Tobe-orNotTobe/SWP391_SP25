@@ -10,8 +10,7 @@ import type { Dayjs } from "dayjs";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import {BookingDetailResponse, BookingUser} from "../../../interfaces/VaccineRegistration.ts";
-import { apiCancelBooking, apiDeleteFeedBack, apiPostFeedBack, apiUpdateFeedback } from "../../../apis/apiBooking.ts";
-import { useFeedBackDetailByBookingId } from "../../../hooks/useFeedBack.ts";
+import { apiCancelBooking } from "../../../apis/apiBooking.ts";
 import {useNavigate} from "react-router-dom";
 import {apiPostRefundRequest} from "../../../apis/apiTransaction.ts";
 
@@ -53,29 +52,16 @@ export const STATUS_COLORS: Record<string, string> = {
 
 export const useBookingHistoryPage = (bookings: BookingUser[]) => {
 
-
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [visible, setVisible] = useState<boolean>(false);
-    const [feedbackModalVisible, setFeedbackModalVisible] = useState<boolean>(false);
     const [selectedBooking, setSelectedBooking] = useState<BookingUser>();
-
     const [calendarValue, setCalendarValue] = useState<Dayjs>(dayjs());
-    const [comment, setComment] = useState<string>("");
-    const [rating, setRating] = useState<number>(0);
-    const [isEditMode, setIsEditMode] = useState<boolean>(false);
     const [latestDate, setLatestDate] = useState<string | null>(null);
-
     const [bkId, setBKId] = useState<number>(0);
-
     const [refundModalVisible, setRefundModalVisible] = useState<boolean>(false);
-
     const [reason, setReason] = useState<string>("");
-
     const navigate = useNavigate();
 
-
-
-    const { feedbackBookingId } = useFeedBackDetailByBookingId(Number(selectedBooking?.bookingId));
 
     //sắp xếp lại mảng dựa vào BookingID lớn nhất ( cái này để người dùng hình dung là khi họ đăng kí đơn, naviaate tới trang lịch sử thì họ sẽ thấy đơn mình vừa đặt đầu tiên
     const latestBooking = useMemo(() => {
@@ -86,7 +72,6 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         );
     }, [bookings]);
 
-    //cái này là cập nhật liên tục cho calendar về cái booking mới nhất thôi
     useEffect(() => {
         if (latestBooking && latestBooking.bookingDate !== latestDate) {
             setLatestDate(latestBooking.bookingDate);
@@ -96,22 +81,6 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         }
     }, [latestBooking, latestDate]);
 
-    //Modal đóng thì reset lại thông tin trống
-    useEffect(() => {
-        if (!feedbackModalVisible) {
-            setComment("");
-            setRating(0);
-            setIsEditMode(false);
-        }
-    }, [feedbackModalVisible]);
-
-    // cái này dùng để thẻ hiện dữ liệu để người dùng có thể dễ dàng update
-    useEffect(() => {
-        if (isEditMode && feedbackBookingId) {
-            setComment(feedbackBookingId.comment || "");
-            setRating(feedbackBookingId.rating || 0);
-        }
-    }, [isEditMode, feedbackBookingId]);
 
     //gọi cái này để không phải gọi lại api khi truy cập ( trừ trường hợp có thay đổi)
     const defaultSelectedDate = useMemo(() => {
@@ -202,73 +171,6 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         }
     };
 
-    const handleSubmitFeedback = async () => {
-        if (!selectedBooking) return;
-
-        try {
-            let response;
-
-            if (isEditMode && feedbackBookingId) {
-
-                const formatedDataUpdate = {
-                    rating: Number(rating),
-                    comment: comment,
-                };
-
-                response = await apiUpdateFeedback(feedbackBookingId.feedbackId, formatedDataUpdate);
-                if (response.isSuccess) {
-                    toast.success("Cập nhật Feedback thành công");
-                }
-            } else {
-                // Add new feedback
-                const formatedDataAdd = {
-                    bookingId: selectedBooking.bookingId,
-                    rating: Number(rating),
-                    comment: comment,
-                };
-
-                response = await apiPostFeedBack(formatedDataAdd);
-                if (response.isSuccess) {
-                    toast.success("Đã thêm Feedback thành công");
-                }
-            }
-
-            setFeedbackModalVisible(false);
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        } catch (error: unknown) {
-            console.error("Error:", error);
-            if (error instanceof AxiosError) {
-                if (error.response && error.response.data && error.response.data.errorMessages) {
-                    toast.error(`${error.response.data.errorMessages}`);
-                } else {
-                    toast.error("Lỗi không xác định");
-                }
-            } else {
-                toast.error("Lỗi không xác định");
-            }
-        }
-    };
-
-    const handleDeleteFeedback = async (feedBackId: number) => {
-        try {
-            const response = await apiDeleteFeedBack(feedBackId);
-            if (response.isSuccess) {
-                toast.success("Xóa Feedback thành công")
-            }
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        } catch (err: unknown) {
-            if (err instanceof AxiosError) {
-                toast.error(`${err.response?.data?.errorMessages}`)
-            } else {
-                toast.error("Lỗi không xác định")
-            }
-        }
-    };
-
     const handleRefundRequest = async () => {
 
         const formatedData = {
@@ -311,10 +213,6 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         setBKId(0);
     };
 
-    const openFeedbackModal = (editMode = false) => {
-        setIsEditMode(editMode);
-        setFeedbackModalVisible(true);
-    };
 
     const handleTransactionPendingStatus  = async (bookingId: number) => {
 
@@ -328,24 +226,15 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         setSelectedDate,
         visible,
         setVisible,
-        feedbackModalVisible,
-        setFeedbackModalVisible,
+
         selectedBooking,
         setSelectedBooking,
         calendarValue,
         setCalendarValue,
-        comment,
-        setComment,
-        rating,
-        setRating,
-        isEditMode,
-        feedbackBookingId,
         reason,
         setReason,
         refundModalVisible,
         setRefundModalVisible,
-
-
 
         // Derived data
         bookingMap,
@@ -355,12 +244,8 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
         selectedYear,
 
 
-
         // Actions
         handleCancelBooking,
-        handleSubmitFeedback,
-        handleDeleteFeedback,
-        openFeedbackModal,
         openRefundModal,
         closeRefundModal,
         handleTransactionPendingStatus,
@@ -430,4 +315,3 @@ export const useVaccineRecordByBookingDetailId = ( bookingDetailId : number) => 
 
     return{vaccineRecordByBookingDetailId, loading, error}
 }
-

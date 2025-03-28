@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Calendar,
     Modal,
@@ -9,7 +9,6 @@ import {
     Input,
     Rate,
     Tabs,
-    Popconfirm,
     Flex,
     Descriptions,
     Table,
@@ -29,78 +28,140 @@ import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNa
 import Footer from "../../../components/Footer/Footer.tsx";
 import { Link } from "react-router-dom";
 import FloatingButtons from "../../../components/FloatingButton/FloatingButtons.tsx";
-import {FiEdit2} from "react-icons/fi";
-import {MdDeleteOutline} from "react-icons/md";
+
 import {BookingDetailResponse, BookingUser} from "../../../interfaces/VaccineRegistration.ts";
+import {useFeedBackDetailByBookingId} from "../../../hooks/useFeedBack.ts";
+import {toast} from "react-toastify";
+import {apiDeleteFeedBack, apiPostFeedBack, apiUpdateFeedback} from "../../../apis/apiBooking.ts";
+import {AxiosError} from "axios";
 
 const { Search } = Input;
 
 const BookingHistory: React.FC = () => {
     const { bookings } = useBookingUser();
 
+    const {
+        selectedDate,
+        setSelectedDate,
+        visible,
+        setVisible,
+        setSelectedBooking,
+        calendarValue,
+        setCalendarValue,
+        reason,
+        setReason,
+        refundModalVisible,
+        bookingMap,
+        handleCancelBooking,
+        handleTransactionPendingStatus,
+        handleRefundRequest,
+        closeRefundModal,
+        openRefundModal,
+    } = useBookingHistoryPage(bookings);
+
     const [searchText, setSearchText] = useState<string>("");
-
-    const handleSearch = (value  : any) => {
-        setSearchText(value.toLowerCase());
-    };
-
     const filteredBookings = bookings.filter((item) =>
         item.childName.toLowerCase().includes(searchText) ||
         item.bookingType.toLowerCase().includes(searchText) ||
         item.status.toLowerCase().includes(searchText) ||
         item.totalPrice.toString().includes(searchText)
     );
-
+    const handleSearch = (value  : any) => {
+        setSearchText(value.toLowerCase());
+    };
     // console.log(bookings);
+
     const [bkid, setBkId] = useState<number>(0);
     const [bkDetailid, setBkDetailid] = useState<number>(0);
 
-
     const [vaccineRecordModal,setVaccineRecordModal] = useState<boolean>(false);
-
     const {vaccineRecord} =  useVaccineRecordByBookingId(bkid)
-
     const {vaccineRecordByBookingDetailId} = useVaccineRecordByBookingDetailId(bkDetailid)
-
-    // console.log(vaccineRecordByBookingDetailId)
-
     const selectedRecord = vaccineRecord || vaccineRecordByBookingDetailId;
 
-    const {
-        // State
-        selectedDate,
-        setSelectedDate,
-        visible,
-        setVisible,
-        feedbackModalVisible,
-        setFeedbackModalVisible,
-        selectedBooking,
-        setSelectedBooking,
-        calendarValue,
-        setCalendarValue,
-        comment,
-        setComment,
-        rating,
-        setRating,
-        isEditMode,
-        feedbackBookingId,
-        reason,
-        setReason,
-        refundModalVisible,
+    const [isEditMode, setIsEditMode] = useState<boolean>(false);
+    const [feedbackModalVisible, setFeedBackModalVisible] =  useState<boolean>(false);
+    const [comment, setComment] = useState<string>("");
+    const [rating, setRating] = useState<number>(0);
 
-        // Derived data
-        bookingMap,
-        // Actions
-        handleCancelBooking,
-        handleSubmitFeedback,
-        handleDeleteFeedback,
-        openFeedbackModal,
-        handleTransactionPendingStatus,
-        handleRefundRequest,
-        closeRefundModal,
-        openRefundModal,
+    const {feedbackBookingId} = useFeedBackDetailByBookingId(bkid)
 
-    } = useBookingHistoryPage(bookings);
+    useEffect(() => {
+        if (feedbackBookingId) {
+            setIsEditMode(true);
+            setComment(feedbackBookingId.comment || "");
+            setRating(feedbackBookingId.rating || 0);
+        } else {
+            setIsEditMode(false);
+            setComment("");
+            setRating(0);
+        }
+    }, [feedbackBookingId]);
+
+
+    const handleSubmitFeedback = async () => {
+        try {
+            let response;
+            if (isEditMode && feedbackBookingId) {
+                const formatedDataUpdate = {
+                    rating: Number(rating),
+                    comment: comment,
+                };
+
+                response = await apiUpdateFeedback(feedbackBookingId.feedbackId, formatedDataUpdate);
+                if (response.isSuccess) {
+                    toast.success("Cập nhật Feedback thành công");
+                }
+            } else {
+                // Add new feedback
+                const formatedDataAdd = {
+                    bookingId: bkid,
+                    rating: Number(rating),
+                    comment: comment,
+                };
+
+                response = await apiPostFeedBack(formatedDataAdd);
+                if (response.isSuccess) {
+                    toast.success("Đã thêm Feedback thành công");
+                }
+            }
+
+            setFeedBackModalVisible(false);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 1000);
+        } catch (error: unknown) {
+            console.error("Error:", error);
+            if (error instanceof AxiosError) {
+                if (error.response && error.response.data && error.response.data.errorMessages) {
+                    toast.error(`${error.response.data.errorMessages}`);
+                } else {
+                    toast.error("Lỗi không xác định");
+                }
+            } else {
+                toast.error("Lỗi không xác định");
+            }
+        }
+    };
+
+    const handleDeleteFeedback = async (feedBackId: number) => {
+        try {
+            const response = await apiDeleteFeedBack(feedBackId);
+            if (response.isSuccess) {
+                toast.success("Xóa Feedback thành công")
+            }
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } catch (err: unknown) {
+            if (err instanceof AxiosError) {
+                toast.error(`${err.response?.data?.errorMessages}`)
+            } else {
+                toast.error("Lỗi không xác định")
+            }
+        }
+    };
+
 
     const handleSelectDate = (date: Dayjs, selectInfo: SelectInfo) => {
         if (selectInfo.source === "date" && bookingMap[date.format("YYYY-MM-DD")]) {
@@ -275,11 +336,17 @@ const BookingHistory: React.FC = () => {
                     )}
                     {record.status === "Completed" && (
                         <>
-                            {!feedbackBookingId && (
-                                <Button type="primary" className= "feedback-button" onClick={() => openFeedbackModal()}>
-                                    Nhập Feedback
-                                </Button>
-                            )}
+                            <Button
+                                type="primary"
+                                className="feedback-button"
+                                onClick={() => {
+                                    setBkId(record.bookingId);
+                                    setFeedBackModalVisible(true);
+                                }}
+                            >
+                                Xem Feedback
+                            </Button>
+
                             <Button
                                 type="primary"
                                 className="vaccine-record-button"
@@ -461,6 +528,7 @@ const BookingHistory: React.FC = () => {
                     items={tabItems}
                 />
 
+                {/*Xem chi tiết của lịch booking có id chi tiết */}
                 <Modal
                     className="booking-details-modal"
                     title={`Chi tiết đặt lịch ngày ${selectedDate?.format("DD/MM/YYYY")}`}
@@ -468,197 +536,124 @@ const BookingHistory: React.FC = () => {
                     onCancel={() => setVisible(false)}
                     footer={null}
                 >
-                    <Tabs defaultActiveKey="1" items={[
-                        {
-                            label: "Thông tin đặt lịch",
-                            key: "1",
-                            children: (
-                                <List
-                                    dataSource={selectedDate ? bookingMap[selectedDate.format("YYYY-MM-DD")] ?? [] : []}
-                                    renderItem={(detail) => (
-                                        <List.Item key={detail.bookingDetailId} className="booking-list-item">
-                                            <div className="booking-details">
-                                                <div>
-                                                    <p>
-                                                        <span className="label">Mã đặt lịch chi tiết:</span>
-                                                        <span className="value">{detail.bookingDetailId}</span>
-                                                    </p>
-                                                    <p>
-                                                        <span className="label">Tên trẻ:</span>
-                                                        <span className="value">{detail.childName}</span>
-                                                    </p>
-                                                    <p>
-                                                        <span className="label">Loại đặt lịch:</span>
-                                                        <span className="value">
-                                                                {detail.comboVaccineId && detail.comboVaccineName
-                                                                    ? `Đặt ${detail.comboVaccineName}`
-                                                                    : "Đặt lẻ Vaccine"}
-                                                            </span>
-                                                    </p>
-                                                    <p>
-                                                        <span className="label">Tên Vaccine:</span>
-                                                        <span className="value">
-                                                                {detail.vaccineName}
-                                                            </span>
-                                                    </p>
-                                                    <p>
-                                                        <span className="label">Ngày tiêm:</span>
-                                                        <span
-                                                            className="value">{dayjs(detail.bookingDate).format("DD/MM/YYYY")}</span>
-                                                    </p>
-                                                    <p>
-                                                        <span className="label">Giá:</span>
-                                                        <span className="value">
-                                                                {new Intl.NumberFormat("vi-VN", {
-                                                                    style: "currency",
-                                                                    currency: "VND"
-                                                                }).format(detail.price)}
-                                                            </span>
-                                                    </p>
-                                                    <p>
-                                                        <span className="label">Trạng thái:</span>
-                                                        <Tag
-                                                            color={STATUS_COLORS[detail.status]}>{detail.status}</Tag>
-
-                                                    </p>
-
-                                                    <div className="booking-actions">
-                                                        {detail.status === "Completed" && (
-                                                            <>
-                                                                <Button
-                                                                    type="primary"
-                                                                    className="vaccine-record-button"
-                                                                    onClick={() => {
-                                                                        setBkDetailid(detail.bookingDetailId)
-                                                                        setVaccineRecordModal(true);
-                                                                        setVisible(false)
-                                                                    }}
-                                                                >
-                                                                    Xem Vaccine Record
-                                                                </Button>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </List.Item>
-                                    )
-                                    }
-                                />
-                            ),
-                        },
-                        {
-                            label: "Feedback của người dùng",
-                            key: "2",
-                            children: feedbackBookingId && (
-                                <div className="feedback-container">
-                                    {/* Rating Section */}
-
-                                    <p style={{
-                                        textAlign: "left",
-                                        fontSize: "15px", color: "#1890FF", marginBottom: "20px"
-                                    }}> Mã FeedBack: {feedbackBookingId.feedbackId}</p>
-
-                                    <div className="feedback-container__rating">
-                                        <Rate
-                                            disabled
-                                            value={feedbackBookingId?.rating}
-                                            className="feedback-container__rating-icon"
-                                            style={{color: "#FFD700"}}
-                                        />
-                                    </div>
-
-                                    <p className="feedback-container__comment-label">
-                                        Bình Luận:
-                                    </p>
-
-                                    {/* Comment Section */}
-                                    <div className="feedback-container__comment-section">
-                                        <p className="feedback-container__comment-section-text">
-                                            {feedbackBookingId?.comment || 'Không có bình luận'}
+                    <List
+                        dataSource={selectedDate ? bookingMap[selectedDate.format("YYYY-MM-DD")] ?? [] : []}
+                        renderItem={(detail) => (
+                            <List.Item key={detail.bookingDetailId} className="booking-list-item">
+                                <div className="booking-details">
+                                    <div>
+                                        <p>
+                                            <span className="label">Mã đặt lịch chi tiết:</span>
+                                            <span className="value">{detail.bookingDetailId}</span>
                                         </p>
-                                    </div>
-
-                                    {/* Feedback Date Section */}
-                                    <div className="feedback-container__date-section">
-                                        <p className="feedback-container__date-section-label">
-                                            Ngày:
+                                        <p>
+                                            <span className="label">Tên trẻ:</span>
+                                            <span className="value">{detail.childName}</span>
                                         </p>
-                                        <p className="feedback-container__date-section-value">
-                                            {feedbackBookingId?.dateSubmitted || 'Chưa có ngày'}
+                                        <p>
+                                            <span className="label">Loại đặt lịch:</span>
+                                            <span className="value">
+                                {detail.comboVaccineId && detail.comboVaccineName
+                                    ? `Đặt ${detail.comboVaccineName}`
+                                    : "Đặt lẻ Vaccine"}
+                            </span>
                                         </p>
-                                    </div>
-
-                                    <div className="feedback-container__actions">
-                                        <Button
-                                            type="primary"
-                                            className="update-feedback-button"
-                                            onClick={() => openFeedbackModal(true)}
-                                        >
-                                            <FiEdit2/> Chỉnh sửa
-                                        </Button>
-
-                                        <Popconfirm
-                                            title="Xóa feedback"
-                                            description="Bạn có chắc chắn muốn xóa feedback này không?"
-                                            onConfirm={() => handleDeleteFeedback(feedbackBookingId.feedbackId)}
-                                            okText="Xóa"
-                                            cancelText="Hủy"
-                                        >
-                                            <Button
-                                                type="primary"
-                                                danger
-                                                className="delete-feedback-button"
-                                            >
-                                                <MdDeleteOutline/> Xóa Feedback
-                                            </Button>
-                                        </Popconfirm>
+                                        <p>
+                                            <span className="label">Tên Vaccine:</span>
+                                            <span className="value">{detail.vaccineName}</span>
+                                        </p>
+                                        <p>
+                                            <span className="label">Ngày tiêm:</span>
+                                            <span className="value">{dayjs(detail.bookingDate).format("DD/MM/YYYY")}</span>
+                                        </p>
+                                        <p>
+                                            <span className="label">Giá:</span>
+                                            <span className="value">
+                                                {new Intl.NumberFormat("vi-VN", {
+                                                    style: "currency",
+                                                    currency: "VND"
+                                                }).format(detail.price)}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span className="label">Trạng thái:</span>
+                                            <Tag color={STATUS_COLORS[detail.status]}>{detail.status}</Tag>
+                                        </p>
+                                        <div className="booking-actions">
+                                            {detail.status === "Completed" && (
+                                                <Button
+                                                    type="primary"
+                                                    className="vaccine-record-button"
+                                                    onClick={() => {
+                                                        setBkDetailid(detail.bookingDetailId);
+                                                        setVaccineRecordModal(true);
+                                                        setVisible(false);
+                                                    }}
+                                                >
+                                                    Xem Vaccine Record
+                                                </Button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                            ),
-                        },
-                    ]}/>
+                            </List.Item>
+                        )}
+                    />
                 </Modal>
 
-                {/* Dành cho việc sửa và thêm feedback */}
+                 {/*Dành cho việc sửa và thêm feedback */}
                 <Modal
                     title={isEditMode ? "Chỉnh sửa Feedback" : "Nhập Feedback"}
                     open={feedbackModalVisible}
-                    onCancel={() => setFeedbackModalVisible(false)}
+                    onCancel={() => setFeedBackModalVisible(false)}
                     onOk={handleSubmitFeedback}
                     okText={isEditMode ? "Cập nhật" : "Gửi"}
+                    footer={[
+                        isEditMode && (
+                            <Button
+                                key="delete"
+                                danger
+                                onClick={() => handleDeleteFeedback((Number(feedbackBookingId?.bookingId)))}
+                            >
+                                Xoá
+                            </Button>
+                        ),
+                        <Button key="cancel" onClick={() => setFeedBackModalVisible(false)}>
+                            Huỷ
+                        </Button>,
+                        <Button key="submit" type="primary" onClick={handleSubmitFeedback}>
+                            {isEditMode ? "Cập nhật" : "Gửi"}
+                        </Button>,
+                    ]}
                 >
                     <Form layout="vertical">
                         <Form.Item label="Mã đơn hàng">
-                            <Input
-                                value={selectedBooking?.bookingId}
-                                disabled
-                            />
+                            <Input value={bkid} disabled />
                         </Form.Item>
-                        {isEditMode && feedbackBookingId && (
+
+                        {isEditMode && feedbackBookingId?.feedbackId && (
                             <Form.Item label="Mã Feedback">
-                                <Input value={feedbackBookingId.feedbackId} disabled/>
+                                <Input value={feedbackBookingId.feedbackId} disabled />
                             </Form.Item>
                         )}
-                        <Form.Item label="Bình luận">
+
+                        <Form.Item label="Nội dung Feedback">
                             <Input.TextArea
+                                rows={4}
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
-                                placeholder="Nhập bình luận của bạn..."
-                                rows={4}
+                                placeholder="Nhập nội dung feedback..."
                             />
                         </Form.Item>
-                        <Form.Item label="Đánh giá">
+
+                        <Form.Item label="Đánh giá (sao)">
                             <Rate
                                 value={rating}
                                 onChange={(value) => setRating(value)}
                             />
                         </Form.Item>
                     </Form>
-
-                </Modal
-
-                >
+                </Modal>
 
                 {/* */}
                 <Modal
