@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AdminLayout from "../../../components/Layout/AdminLayout/AdminLayout.tsx";
-import {Button, Table, Modal, Row, Col, Tag, InputNumber} from "antd";
+import {Button, Table, Modal, Row, Col, Tag, InputNumber, Tabs} from "antd";
 import { IoMdAdd } from "react-icons/io";
 import "./AdminRefund.scss";
 import { useRefundUserListAdmin } from "./useAdminRefund.ts";
@@ -30,6 +30,8 @@ const AdminRefund: React.FC = () => {
 
     const [adminAmount, setAdminAmount]= useState<number>(0);
     const [modalAddFund, setModalAddFund] = useState<boolean>(false);
+    const [activeTab, setActiveTab] = useState<string>("all");
+
 
 
     const showDetailModal = (record: RefundUserList) => {
@@ -135,6 +137,19 @@ const AdminRefund: React.FC = () => {
         return <Tag color={color}>{status}</Tag>;
     };
 
+    const getFilteredRefundList = () => {
+        switch (activeTab) {
+            case "pending":
+                return refundUserList.filter(item => item.status === "Đang chờ xử lý");
+            case "approved":
+                return refundUserList.filter(item => item.status === "Đã chấp nhận");
+            case "rejected":
+                return refundUserList.filter(item => item.status === "Bị từ chối");
+            default:
+                return refundUserList;
+        }
+    };
+
     const columns = [
         {
             title: "Refund Id",
@@ -197,6 +212,54 @@ const AdminRefund: React.FC = () => {
         },
     ];
 
+    const tabItems = [
+        {
+            key: "all",
+            label: "Tất cả",
+            children: (
+                <Table
+                    dataSource={getFilteredRefundList()}
+                    columns={columns}
+                    rowKey="refundRequestId"
+                />
+            )
+        },
+        {
+            key: "pending",
+            label: "Đang chờ xử lý",
+            children: (
+                <Table
+                    dataSource={getFilteredRefundList()}
+                    columns={columns}
+                    rowKey="refundRequestId"
+                />
+            )
+        },
+        {
+            key: "approved",
+            label: "Đã chấp nhận",
+            children: (
+                <Table
+                    dataSource={getFilteredRefundList()}
+                    columns={columns}
+                    rowKey="refundRequestId"
+                />
+            )
+        },
+        {
+            key: "rejected",
+            label: "Bị từ chối",
+            children: (
+                <Table
+                    dataSource={getFilteredRefundList()}
+                    columns={columns}
+                    rowKey="refundRequestId"
+                />
+            )
+        }
+    ];
+
+
     return (
         <>
             <AdminLayout>
@@ -220,7 +283,12 @@ const AdminRefund: React.FC = () => {
                             </Button>
                         </div>
                     </div>
-                    <Table dataSource={refundUserList} columns={columns} rowKey="refundRequestId"/>
+
+                    <Tabs
+                        defaultActiveKey="all"
+                        items={tabItems}
+                        onChange={(key) => setActiveTab(key)}
+                    />
 
                     {/* Using Ant Design Modal */}
                     <Modal
@@ -259,7 +327,7 @@ const AdminRefund: React.FC = () => {
                                     </Col>
                                     <Col span={12}>
                                         <div className="detail-item">
-                                            <strong>Amount:</strong> {selectedRecord.amount.toLocaleString('vi-VN')}
+                                            <strong>Amount:</strong> {selectedRecord.amount.toLocaleString('vi-VN')} VNĐ
                                         </div>
                                     </Col>
                                     <Col span={12}>

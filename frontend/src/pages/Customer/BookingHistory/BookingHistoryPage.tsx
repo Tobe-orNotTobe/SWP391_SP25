@@ -276,12 +276,13 @@ const BookingHistory: React.FC = () => {
                     {record.status === "Completed" && (
                         <>
                             {!feedbackBookingId && (
-                                <Button type="primary" onClick={() => openFeedbackModal()}>
+                                <Button type="primary" className= "feedback-button" onClick={() => openFeedbackModal()}>
                                     Nhập Feedback
                                 </Button>
                             )}
                             <Button
                                 type="primary"
+                                className="vaccine-record-button"
                                 onClick={() => {
                                     setBkId(record.bookingId);
                                     setVaccineRecordModal(true);
@@ -392,7 +393,7 @@ const BookingHistory: React.FC = () => {
                         placeholder="Nhập từ khóa tìm kiếm..."
                         onSearch={handleSearch}
                         onChange={(e) => handleSearch(e.target.value)}
-                        style={{ marginBottom: 16, width: 300 }}
+                        style={{ marginBottom: 16, width: 300 , marginTop : 10}}
                     />
                     <Table
                         columns={columns}

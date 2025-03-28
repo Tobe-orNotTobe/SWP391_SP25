@@ -124,7 +124,7 @@ export const useWalletLogic = () => {
         switch (type) {
             case 'Nạp tiền':
                 return 'green';
-            case 'Chuyển khoản':
+            case 'Hoàn tiền':
                 return amount < 0 ? 'red' : 'green';
             default:
                 return 'default';
