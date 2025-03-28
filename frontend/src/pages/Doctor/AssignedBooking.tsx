@@ -423,9 +423,11 @@ const VaccinationSchedulePage: React.FC = () => {
       key: "action",
       render: (_: undefined, record: BookingDetailResponse) => (
         <Space size="middle">
+          {record.status === "Hoàn thành" && (
           <Button type="primary" onClick={() => openModal(record)}>
             Chi tiết
           </Button>
+          )}
           {record.status === "Chưa hoàn thành" && (
             <Button
               type="primary"
