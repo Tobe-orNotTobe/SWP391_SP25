@@ -53,12 +53,12 @@ export interface VaccinePackage {
   vaccines: [Vaccine];
 }
 
-export interface Booking {
-  childId: number;
-  bookingDate: string;
-  notes: string;
-  bookingDetails: BookingDetail[];
-}
+// export interface Booking {
+//   childId: number;
+//   bookingDate: string;
+//   notes: string;
+//   bookingDetails: BookingDetail[];
+// }
 
 export interface BookingUser {
   bookingId: number;
@@ -73,12 +73,12 @@ export interface BookingUser {
   bookingDetails: BookingDetailResponse[];
 }
 
-export interface BookingDetail {
-  vaccineId: number | null;
-  comboVaccineId: number | null;
-  vaccineName: string | null;
-  comboVaccineName: string | null;
-}
+// export interface BookingDetail {
+//   vaccineId: number | null;
+//   comboVaccineId: number | null;
+//   vaccineName: string | null;
+//   comboVaccineName: string | null;
+// }
 
 export interface BookingResponse {
   bookingId: number;
@@ -111,15 +111,15 @@ export interface Feedback {
   comment: string;
 }
 
-export interface BookingResult {
-  bookingId: number;
-  userId: string;
-  childId: number;
-  childName: string;
-  bookingType: string;
-  bookingDate: string;
-  totalPrice: number;
-  notes: string;
-  status: string;
-  bookingDetails: BookingDetail[];
-}
+// export interface BookingResult {
+//   bookingId: number;
+//   userId: string;
+//   childId: number;
+//   childName: string;
+//   bookingType: string;
+//   bookingDate: string;
+//   totalPrice: number;
+//   notes: string;
+//   status: string;
+//   bookingDetails: BookingDetail[];
+// }

@@ -3,6 +3,7 @@
 export interface GroupItem {
     label: string;
     path: string;
+    icon: JSX.Element
   }
   
 export  interface Group {

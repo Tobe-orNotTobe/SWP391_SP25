@@ -5,7 +5,7 @@ import StaffBlog from "../StaffBlog.tsx";
 const StaffBlogManagePage: React.FC = () => {
     return(
       <>
-          <StaffBlog isActive={true} />
+          <StaffBlog/>
       </>
     );
 

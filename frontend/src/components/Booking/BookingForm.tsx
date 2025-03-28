@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spin, Modal } from "antd";
 import "./BookingForm.scss";
@@ -28,6 +28,12 @@ interface SelectedVaccine {
   date: string | null;
   price?: number;
   type: "single" | "combo";
+}
+
+interface ParentVaccineCheck {
+  vaccineId: string;
+  messages: string[];
+  checked: boolean;
 }
 
 const BookingForm = () => {
@@ -65,6 +71,9 @@ const BookingForm = () => {
   // State for suggested vaccines and combos
   const [suggestedVaccines, setSuggestedVaccines] = useState<string[]>([]);
   const [suggestedCombos, setSuggestedCombos] = useState<string[]>([]);
+
+  // Track last added vaccine to prevent duplicate checks
+  const [parentVaccineChecks, setParentVaccineChecks] = useState<ParentVaccineCheck[]>([]);
 
   // Fetch parent and children info
   useEffect(() => {
@@ -141,35 +150,31 @@ const BookingForm = () => {
     }
   }, [selectedChild]);
 
-  // Check ParentVaccine when selectedVaccines change
-  useEffect(() => {
-    const checkParentVaccines = async (newVaccineId: string) => {
-      try {
-        const vaccineId = Number(newVaccineId);
-        const response = await apiCheckParentVaccine([vaccineId]);
+  const isChecking = useRef(false);
+  const checkParentVaccineForSelection = async (vaccineId: string) => {
+    if (isChecking.current) return; // Ngăn chặn gọi lại
+    isChecking.current = true;
+
+    try {
+        const response = await apiCheckParentVaccine([Number(vaccineId)]);
         if (response.result && response.result.length > 0) {
-          setParentVaccineMessages(response.result);
-          showConfirmationModal(response.result, newVaccineId);
-        } else {
-          setParentVaccineMessages([]);
+            setParentVaccineChecks(prev => [
+                ...prev,
+                { vaccineId, messages: response.result, checked: false }
+            ]);
+            showConfirmationModal(response.result, vaccineId);
         }
-      } catch (error) {
+    } catch (error) {
         console.error("Error checking parent vaccine:", error);
         toast.error("Không thể kiểm tra vaccine yêu cầu trước đó.");
-      }
-    };
-
-    if (selectedVaccines.length > 0 && vaccineType === "Lẻ") {
-      const lastSelectedVaccineId =
-        selectedVaccines[selectedVaccines.length - 1].id;
-      checkParentVaccines(lastSelectedVaccineId);
-    } else {
-      setParentVaccineMessages([]);
+    } finally {
+        isChecking.current = false; // Reset flag sau khi hoàn tất
     }
-  }, [selectedVaccines, vaccineType]);
+};
+  
 
   // Show confirmation modal
-  const showConfirmationModal = (messages: string[], newVaccineId: string) => {
+  const showConfirmationModal = (messages: string[], vaccineId: string) => {
     Modal.confirm({
       title: "Xác nhận tiêm chủng trước đó",
       content: (
@@ -182,11 +187,18 @@ const BookingForm = () => {
       okText: "Đã tiêm",
       cancelText: "Chưa tiêm",
       onOk: () => {
-        setParentVaccineMessages([]);
+        setParentVaccineChecks(prev =>
+          prev.map(check =>
+            check.vaccineId === vaccineId ? { ...check, checked: true } : check
+          )
+        );
       },
       onCancel: () => {
-        setSelectedVaccines((prevSelected) =>
-          prevSelected.filter((item) => item.id !== newVaccineId)
+        setSelectedVaccines(prev =>
+          prev.filter(item => item.id !== vaccineId)
+        );
+        setParentVaccineChecks(prev =>
+          prev.filter(check => check.vaccineId !== vaccineId)
         );
         toast.warning("Vui lòng tiêm vaccine yêu cầu trước khi tiếp tục.");
       },
@@ -198,6 +210,7 @@ const BookingForm = () => {
     setSelectedChild(child);
     setIsFormSplit(!!child);
     setSelectedVaccines([]);
+    setParentVaccineMessages([]);
   };
 
   // Handle adding a new child
@@ -234,9 +247,9 @@ const BookingForm = () => {
   const handleVaccineTypeChange = (type: "Gói" | "Lẻ") => {
     setVaccineType(type);
     setSelectedVaccines([]);
+    setParentVaccineMessages([]);
   };
 
-  // Handle selecting a vaccine
   const handleSelectVaccine = (
     vaccineId: string,
     vaccineName: string,
@@ -244,25 +257,24 @@ const BookingForm = () => {
     price?: number
   ) => {
     setSelectedVaccines((prevSelected) => {
-      if (type === "combo") {
-        // Nếu là chọn combo, chỉ cho phép chọn 1 combo
-        if (prevSelected.some((item) => item.id === vaccineId)) {
-          return []; // Bỏ chọn nếu đã chọn
-        } else {
-          return [
-            { id: vaccineId, name: vaccineName, date: null, type, price },
-          ]; // Chỉ giữ lại combo mới chọn
-        }
+      const isAlreadySelected = prevSelected.some(item => item.id === vaccineId);
+      
+      if (isAlreadySelected) {
+        // Khi bỏ chọn, xóa cả thông tin kiểm tra parent nếu có
+        setParentVaccineChecks(prev => prev.filter(check => check.vaccineId !== vaccineId));
+        return prevSelected.filter(item => item.id !== vaccineId);
       } else {
-        // Nếu là vaccine lẻ, cho phép chọn nhiều
-        if (prevSelected.some((item) => item.id === vaccineId)) {
-          return prevSelected.filter((item) => item.id !== vaccineId);
-        } else {
-          return [
-            ...prevSelected,
-            { id: vaccineId, name: vaccineName, date: null, type, price },
-          ];
+        const newSelection = [
+          ...prevSelected,
+          { id: vaccineId, name: vaccineName, date: null, type, price },
+        ];
+        
+        // Chỉ kiểm tra parent vaccine nếu là vaccine đơn
+        if (type === "single") {
+          checkParentVaccineForSelection(vaccineId);
         }
+        
+        return newSelection;
       }
     });
   };
@@ -278,9 +290,8 @@ const BookingForm = () => {
 
   // Remove a selected vaccine
   const handleRemoveVaccine = (vaccineId: string) => {
-    setSelectedVaccines((prevSelected) =>
-      prevSelected.filter((item) => item.id !== vaccineId)
-    );
+    setSelectedVaccines(prev => prev.filter(item => item.id !== vaccineId));
+    setParentVaccineChecks(prev => prev.filter(check => check.vaccineId !== vaccineId));
   };
 
   // Validate date
@@ -311,6 +322,8 @@ const BookingForm = () => {
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    // Kiểm tra xem có vaccine nào chưa xác nhận parent không
 
     if (!selectedChild || bookingDetails.length === 0) {
       toast.warning("Vui lòng chọn ít nhất một vaccine.");

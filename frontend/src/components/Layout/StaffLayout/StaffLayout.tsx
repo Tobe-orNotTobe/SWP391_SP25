@@ -6,6 +6,9 @@ import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { DownOutlined } from "@ant-design/icons";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully";
 import { Group } from "../../../interfaces/Layout";
+import { AccountDetailResponse, UserProfile } from "../../../interfaces/Account";
+import { apiGetProfileUser, apiGetUserById } from "../../../apis/apiAccount";
+
 
 interface CustomLayoutProps {
   children: React.ReactNode;
@@ -19,14 +22,30 @@ interface OpenGroupsState {
 const StaffLayout: React.FC<CustomLayoutProps> = ({ children, groups }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { username } = IsLoginSuccessFully();
+  const {sub,username } = IsLoginSuccessFully();
 
   // Cập nhật trạng thái active tab theo URL
   const [activeTab, setActiveTab] = useState<string>(location.pathname);
+  const [userProfile, setUserProfile] = useState<UserProfile>();
 
   useEffect(() => {
     setActiveTab(location.pathname);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+        try {
+            const userProfileResponse = await apiGetProfileUser();
+            const userProfile = userProfileResponse.result
+
+            setUserProfile(userProfile);
+        } catch (error) {
+            console.error("Error fetching user:", error);
+        }
+    };
+
+    fetchUser();
+}, [sub]);
 
   const initializeOpenGroups = () => {
     const initialState: OpenGroupsState = {};
@@ -107,7 +126,7 @@ const StaffLayout: React.FC<CustomLayoutProps> = ({ children, groups }) => {
       </aside>
 
       <main className="main">
-        <AdminNavBar username={username} avatarUrl={""} />
+        <AdminNavBar username={username} avatarUrl={userProfile?.imageUrl} />
         <div className="content">{children}</div>
       </main>
     </div>

@@ -47,7 +47,7 @@ export const useBlogByAuthor = (author: string) => {
     const fetchAllBlog = async () => {
         setLoading(true);
         try {
-            const response = await apiGetAll(true);
+            const response = await apiGetAll();
             if (response && response.result) {
                 const filteredBlogs = response.result.filter(
                     (blog: BlogResponse) => blog.authorName === author
