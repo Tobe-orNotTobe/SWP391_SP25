@@ -112,27 +112,27 @@ const VaccinationSchedulePage: React.FC = () => {
 
     if (filterType === "today") {
       filteredBookings = filteredBookings.filter((booking) =>
-        moment(booking.bookingDate).isSame(moment(), "day")
+        moment(booking.injectionDate).isSame(moment(), "day")
       );
     } else if (filterType === "thisWeek") {
       filteredBookings = filteredBookings.filter((booking) =>
-        moment(booking.bookingDate).isSame(moment(), "week")
+        moment(booking.injectionDate).isSame(moment(), "week")
       );
     } else if (filterType === "thisMonth") {
       filteredBookings = filteredBookings.filter((booking) =>
-        moment(booking.bookingDate).isSame(moment(), "month")
+        moment(booking.injectionDate).isSame(moment(), "month")
       );
     } else if (filterType === "thisYear") {
       filteredBookings = filteredBookings.filter((booking) =>
-        moment(booking.bookingDate).isSame(moment(), "year")
+        moment(booking.injectionDate).isSame(moment(), "year")
       );
     } else if (filterDate) {
       filteredBookings = filteredBookings.filter((booking) =>
-        moment(booking.bookingDate).isSame(filterDate, "day")
+        moment(booking.injectionDate).isSame(filterDate, "day")
       );
     } else if (filterRange) {
       filteredBookings = filteredBookings.filter((booking) =>
-        moment(booking.bookingDate).isBetween(
+        moment(booking.injectionDate).isBetween(
           filterRange[0],
           filterRange[1],
           "day",
@@ -315,8 +315,8 @@ const VaccinationSchedulePage: React.FC = () => {
       dataIndex: "injectionDate",
       key: "injectionDate",
       render: (date: string) => dayjs(date).format("DD/MM/YYYY"), // Chuyển từ moment -> dayjs
-      sorter: (a: BookingResponse, b: BookingResponse) =>
-        dayjs(a.bookingDate).valueOf() - dayjs(b.bookingDate).valueOf(),
+      sorter: (a: BookingDetailResponse, b: BookingDetailResponse) =>
+        dayjs(a.injectionDate).valueOf() - dayjs(b.injectionDate).valueOf(),
 
       filterDropdown: ({
         setSelectedKeys,
