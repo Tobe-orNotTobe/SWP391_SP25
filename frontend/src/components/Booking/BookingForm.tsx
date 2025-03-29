@@ -152,6 +152,7 @@ const BookingForm = () => {
 
   const isChecking = useRef(false);
   const checkParentVaccineForSelection = async (vaccineId: string) => {
+    
     if (isChecking.current) return; // Ngăn chặn gọi lại
     isChecking.current = true;
 
