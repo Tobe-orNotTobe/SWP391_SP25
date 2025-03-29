@@ -14,7 +14,7 @@ const AdminAccountFormPage: React.FC = () => {
     const navigate = useNavigate();
     const { form, dateOfBirth, setDateOfBirth, isEditMode, handleSubmit } = useAdminAccountForm();
     // const [imageFile, setImageFile] = useState<File | null>(null);
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [certificateFile, setCertificateFile] = useState<File | null>(null);
     const [showCertificateUpload, setShowCertificateUpload] = useState(false);
 
@@ -145,18 +145,16 @@ const AdminAccountFormPage: React.FC = () => {
                             {showCertificateUpload && (
                                 <Form.Item name="certificate" label="Tải chứng chỉ:">
                                     <Upload
-                                        // listType={"picture-card"}
                                         beforeUpload={(file) => {
                                             setCertificateFile(file);
-                                            setPreviewUrl(URL.createObjectURL(file));
                                             return false;
                                         }}
+                                        showUploadList={true}
                                     >
-                                        {previewUrl ? (
-                                            <img src={previewUrl} alt="Xem trước" style={{width: "100px", maxHeight: "100px", objectFit: "cover" }} />
-                                        ) : (
-                                            "+ Upload"
-                                        )}
+                                        <Button>Tải lên chứng chỉ</Button>
+                                        {/*{previewUrl ? (*/}
+                                        {/*    <img src={previewUrl} alt="Xem trước" style={{ width: "100%" }} />*/}
+                                        {/*) : null}*/}
                                     </Upload>
                                 </Form.Item>
 
