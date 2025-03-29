@@ -103,7 +103,7 @@ export const useFeedbackDetail = () =>{
 }
 
 export const useRevenueBydate = (date: string) => {
-    const [revenueByDate, setRevenueByDate] = useState<Revenue[]>([]);
+    const [revenueByDate, setRevenueByDate] = useState<Revenue | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -127,8 +127,6 @@ export const useRevenueBydate = (date: string) => {
             };
             fetchRevenuteByDate();
         } else {
-
-            setRevenueByDate([]);
             setLoading(false);
             setError(null);
         }

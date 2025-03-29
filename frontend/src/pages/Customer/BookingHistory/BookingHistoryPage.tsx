@@ -34,6 +34,7 @@ import {useFeedBackDetailByBookingId} from "../../../hooks/useFeedBack.ts";
 import {toast} from "react-toastify";
 import {apiDeleteFeedBack, apiPostFeedBack, apiUpdateFeedback} from "../../../apis/apiBooking.ts";
 import {AxiosError} from "axios";
+import {ColumnType} from "antd/es/table";
 
 const { Search } = Input;
 
@@ -243,12 +244,12 @@ const BookingHistory: React.FC = () => {
         </Flex>
     );
 
-    const columns = [
+    const columns: ColumnType<BookingUser>[] = [
         {
             title: "Mã Lịch Tiêm",
             dataIndex: "bookingId",
             key: "bookingId",
-            sorter: (a : BookingUser, b: BookingUser) => a.bookingId - b.bookingId,
+            sorter: (a: BookingUser, b: BookingUser) => a.bookingId - b.bookingId,
         },
         {
             title: "Tên Trẻ",
@@ -263,7 +264,7 @@ const BookingHistory: React.FC = () => {
                 { text: "Combo Vaccine", value: "comboVaccine" },
                 { text: "Single Vaccine", value: "singleVaccine" },
             ],
-            onFilter: (value: string, record: BookingUser) => record.bookingType === value,
+            onFilter: (value, record: BookingUser) => record.bookingType === value.toString(),
         },
         {
             title: "Ngày Đặt Lịch",
@@ -276,19 +277,24 @@ const BookingHistory: React.FC = () => {
                 { text: "Tuần này", value: "thisWeek" },
                 { text: "Tháng này", value: "thisMonth" },
             ],
-            onFilter: (value: string, record: BookingUser) => {
+            onFilter: (value, record: BookingUser) => {
                 const today = new Date();
                 const bookingDate = new Date(record.bookingDate);
-                if (value === "today") {
+                const valueStr = value.toString();
+
+                if (valueStr === "today") {
                     return bookingDate.toDateString() === today.toDateString();
                 }
-                if (value === "thisWeek") {
-                    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+                if (valueStr === "thisWeek") {
+                    const startOfWeek = new Date(today);
+                    startOfWeek.setDate(today.getDate() - today.getDay());
                     return bookingDate >= startOfWeek;
                 }
-                if (value === "thisMonth") {
-                    return bookingDate.getMonth() === today.getMonth() && bookingDate.getFullYear() === today.getFullYear();
+                if (valueStr === "thisMonth") {
+                    return bookingDate.getMonth() === today.getMonth() &&
+                        bookingDate.getFullYear() === today.getFullYear();
                 }
+                return false; // Default case to satisfy return type
             },
             render: (bookingDate: string) => new Date(bookingDate).toLocaleDateString("vi-VN"),
         },
@@ -296,8 +302,8 @@ const BookingHistory: React.FC = () => {
             title: "Tổng Giá",
             dataIndex: "totalPrice",
             key: "totalPrice",
-            render: (totalPrice : number) => `${totalPrice.toLocaleString()} VND`,
-            sorter: (a : BookingUser, b: BookingUser) => a.totalPrice - b.totalPrice,
+            render: (totalPrice: number) => `${totalPrice.toLocaleString()} VND`,
+            sorter: (a: BookingUser, b: BookingUser) => a.totalPrice - b.totalPrice,
         },
         {
             title: "Trạng Thái",
@@ -311,26 +317,26 @@ const BookingHistory: React.FC = () => {
                 { text: "Cancelled", value: "Cancelled" },
                 { text: "RefundRequest", value: "RefundRequest" },
             ],
-            onFilter: (value : string, record : BookingUser) => record.status === value,
-            render: (status : string) => <Tag color={STATUS_COLORS[status] || "default"}>{status}</Tag>,
+            onFilter: (value, record: BookingUser) => record.status === value.toString(),
+            render: (status: string) => <Tag color={STATUS_COLORS[status] || "default"}>{status}</Tag>,
         },
         {
             title: "Hành Động",
             key: "action",
-            render: (_ : undefined, record : BookingUser) => (
+            render: (_: undefined, record: BookingUser) => (
                 <div className="booking-actions">
                     {record.status === "Pending" && (
                         <>
-                            <Button type="primary" onClick={() => handleTransactionPendingStatus(record.bookingId)}  className="Pending-Button">
+                            <Button type="primary" onClick={() => handleTransactionPendingStatus(record.bookingId)} className="Pending-Button">
                                 Thanh Toán
                             </Button>
-                            <Button onClick={() => handleCancelBooking(record.bookingId)}  className="Cancel-button">
+                            <Button onClick={() => handleCancelBooking(record.bookingId)} className="Cancel-button">
                                 Hủy Lịch
                             </Button>
                         </>
                     )}
                     {record.status === "Confirmed" && (
-                        <Button type="primary" onClick={() => openRefundModal(record.bookingId)}   className="Refund-button">
+                        <Button type="primary" onClick={() => openRefundModal(record.bookingId)} className="Refund-button">
                             Hủy Đơn và Yêu Cầu Hoàn Tiền
                         </Button>
                     )}

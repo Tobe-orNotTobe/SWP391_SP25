@@ -54,7 +54,7 @@ export const useBookingHistoryPage = (bookings: BookingUser[]) => {
 
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [visible, setVisible] = useState<boolean>(false);
-    const [selectedBooking, setSelectedBooking] = useState<BookingUser>();
+    const [selectedBooking, setSelectedBooking] = useState<BookingDetailResponse | undefined>(undefined);
     const [calendarValue, setCalendarValue] = useState<Dayjs>(dayjs());
     const [latestDate, setLatestDate] = useState<string | null>(null);
     const [bkId, setBKId] = useState<number>(0);

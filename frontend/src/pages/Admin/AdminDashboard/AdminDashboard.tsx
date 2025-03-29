@@ -51,9 +51,6 @@ const AdminDashboardPage: React.FC = () => {
         return date.toISOString().split("T")[0];
     };
 
-
-
-
     useEffect(() => {
         if (chartRef.current) {
             // Destroy previous chart instance if it exists
@@ -62,9 +59,11 @@ const AdminDashboardPage: React.FC = () => {
             }
 
             const revenueData: Revenue[] = selectedDate && revenueByDate ? [revenueByDate] : revenue;
+
             if (!revenueData || revenueData.length === 0) {
                 return;
             }
+
 
             const labels = revenueData.map(item => formatDateString(item.date));
             const data = revenueData.map(item => item.totalRevenue);
