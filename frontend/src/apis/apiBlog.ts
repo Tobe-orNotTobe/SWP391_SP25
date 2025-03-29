@@ -1,5 +1,5 @@
 import axiosInstance from "../utils/axiosInstance.ts";
-import { BlogRequest, UpdateBlogRequest } from "../interfaces/Blog.ts";
+import { BlogRequest, NewsResponse, UpdateBlogRequest } from "../interfaces/Blog.ts";
 import axios from "axios";
 
 export const apiGetAll = async (onlyActive?: boolean) => {
@@ -54,12 +54,15 @@ export const apiGetAllBlog = async (onlyActive: boolean) => {
   }
 };
 
-export const apiGetAllNews = async (onlyActive: boolean) => {
+export const apiGetAllNews = async () => {
   try {
-    const response = await axiosInstance.get(
-      `/api/Blog/type/news?onlyActive=${onlyActive}`
-    );
-    // console.log(response.data)
+    const response = await axiosInstance.get(`/api/Blog/type/news`);
+    
+    // Kiểm tra nếu có dữ liệu và lọc các bài viết có isActive === true
+    if (response.data?.isSuccess && Array.isArray(response.data.result)) {
+      response.data.result = response.data.result.filter((news:NewsResponse) => news.isActive === true);
+    }
+
     return response.data;
   } catch (err: any | undefined) {
     return {
@@ -70,6 +73,7 @@ export const apiGetAllNews = async (onlyActive: boolean) => {
     };
   }
 };
+
 export const apiGetNewsById = async (onlyActive: boolean) => {
   try {
     const response = await axiosInstance.get(

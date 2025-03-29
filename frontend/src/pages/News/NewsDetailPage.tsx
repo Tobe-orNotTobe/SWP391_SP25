@@ -23,11 +23,11 @@ const NewsDetailPage :React.FC = () => {
     }, [id]);
 
     useEffect(() => {
-        const fiveNews = handleGetRandomNews(5, news);
+        const fiveNews = handleGetRandomNews(3, news);
         console.log("Blogs received from handleGetRandomBlogs:", news);
 
         const filteredNews = fiveNews.filter((b) => b.blogPostId !== Number(id));
-        setRandomNews(filteredNews.slice(0, 3));
+        setRandomNews(filteredNews.slice(0, 2));
     }, [news]);
 
     useEffect(() => {

@@ -134,6 +134,7 @@ export const useRandomBlogs = () => {
         while (result.size < num && news.length > 0) {
             const randomIndex = Math.floor(Math.random() * news.length);
             result.add(news[randomIndex]);
+            console.log(result)
         }
         return Array.from(result);
     }
