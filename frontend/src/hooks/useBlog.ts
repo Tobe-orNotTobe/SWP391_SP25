@@ -19,7 +19,7 @@ export const useGetAllBlog = () => {
             }else if (blogType === "blog") {
                 response = await apiGetAllBlog(isActive);
             }else {
-                response = await apiGetAllNews(isActive);
+                response = await apiGetAllNews();
             }
             if (response && response.result) {
                 if (blogType === "news") {
