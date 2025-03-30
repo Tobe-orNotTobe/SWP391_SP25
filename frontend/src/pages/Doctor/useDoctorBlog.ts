@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {apiCreateBlog, apiDeleteBlog, apiGetBlogById, apiUpdateBlog} from "../../apis/apiBlog.ts";
-import {BlogRequest, BlogResponse, UpdateBlogRequest} from "../../interfaces/Blog.ts";
+import {BlogRequest, UpdateBlogRequest} from "../../interfaces/Blog.ts";
 import {notification} from "antd";
 import {useForm} from "antd/es/form/Form";
 import {useNavigate, useParams} from "react-router-dom";

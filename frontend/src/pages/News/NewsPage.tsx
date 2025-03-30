@@ -16,7 +16,6 @@ const NewsPage: React.FC = () => {
 
     useEffect(() => {
         fetchAllBlog(true, "news").then();
-        // console.log(news)
     }, []);
 
 
