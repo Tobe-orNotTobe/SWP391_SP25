@@ -262,6 +262,7 @@ export const useVaccineInventoryDetailByVaccineInventoryId = (vaccineId: number 
                 const data= await apiGetStockByVaccineInventoryId(vaccineId);
                 if(data.isSuccess && data.result){
                     setVaccineInventoryDetailById(data.result);
+                    // console.log(data.result)
                 }
             }catch (err){
                 console.error(err);
