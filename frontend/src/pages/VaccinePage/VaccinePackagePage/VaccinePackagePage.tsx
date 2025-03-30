@@ -51,7 +51,8 @@ const VaccinePackagePage: React.FC = () => {
         {
             header: "Tổng giá (VNĐ)",
             accessorKey: "totalPrice",
-            cell: (info: any) => new Intl.NumberFormat("vi-VN").format(info.getValue()),
+            cell: (info: any) =>
+                new Intl.NumberFormat("vi-VN").format(info.getValue()),
         },
         {
             header: "Vaccines",
@@ -60,21 +61,22 @@ const VaccinePackagePage: React.FC = () => {
                 const vaccines = info.getValue();
                 return (
                     <div>
-                        {vaccines.map((vaccineObj: any, index : number) => (
-                            <div className="vaccine-buttons">
-                                <button key={index} className="vaccine-button"
-                                        onClick={() => navigate(`/vaccines-list/${vaccineObj.vaccine.id}`)}>
-                                    ({vaccineObj.order}) {vaccineObj.vaccine.name} (tiêm
-                                    sau {vaccineObj.intervalDays} ngày)
-                                </button>
-                            </div>
-                            ))}
+                        {vaccines.map((vaccineObj: any, index: number) => {
+                            const { vaccine, order, intervalDays } = vaccineObj;
+                            return (
+                                <div key={`${vaccine.id}-${index}`} className="vaccine-buttons">
+                                    <button className="vaccine-button"
+                                            onClick={() => navigate(`/vaccines-list/${vaccine.id}`)}>
+                                        ({order}) {vaccine.name} (tiêm sau {intervalDays} ngày)
+                                    </button>
+                                </div>
+                            );
+                        })}
                     </div>
                 );
             },
-            },
-
-            ];
+        },
+    ];
 
             const [comboVaccines, setComboVaccines] = useState<GetVaccineComboDetail[]>([]);
 
