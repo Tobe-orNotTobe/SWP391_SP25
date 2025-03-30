@@ -230,7 +230,6 @@ namespace ChildVaccineSystem.Service.Services
                         };
 
                         booking.BookingDetails.Add(bookingDetail);
-                        totalPrice += vaccine.Price;
 
                         // ✅ Tính ngày tiêm kế tiếp theo khoảng cách intervalDays
                         nextInjectionDate = nextInjectionDate.AddDays(comboDetail.IntervalDays);
