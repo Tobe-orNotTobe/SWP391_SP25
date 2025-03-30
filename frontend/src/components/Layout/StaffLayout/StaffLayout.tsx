@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./StaffLayout.scss";
 import AdminNavBar from "../../Navbar/AdminNavbar/AdminNavbar";
 import logo from "../../../assets/navbar/Logo_Navbar.png";
 import { DownOutlined } from "@ant-design/icons";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully";
 import { Group } from "../../../interfaces/Layout";
-import { AccountDetailResponse, UserProfile } from "../../../interfaces/Account";
-import { apiGetProfileUser, apiGetUserById } from "../../../apis/apiAccount";
+import { UserProfile } from "../../../interfaces/Account";
+import { apiGetProfileUser } from "../../../apis/apiAccount";
 
 
 interface CustomLayoutProps {
@@ -25,12 +25,7 @@ const StaffLayout: React.FC<CustomLayoutProps> = ({ children, groups }) => {
   const {sub,username } = IsLoginSuccessFully();
 
   // Cập nhật trạng thái active tab theo URL
-  const [activeTab, setActiveTab] = useState<string>(location.pathname);
   const [userProfile, setUserProfile] = useState<UserProfile>();
-
-  useEffect(() => {
-    setActiveTab(location.pathname);
-  }, [location.pathname]);
 
   useEffect(() => {
     const fetchUser = async () => {

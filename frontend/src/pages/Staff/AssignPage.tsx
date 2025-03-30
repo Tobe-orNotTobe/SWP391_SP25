@@ -7,10 +7,6 @@ import {
   apiUnAssignDoctor,
 } from "../../apis/apiBooking";
 import { toast } from "react-toastify";
-import {
-  BookingDetail,
-  BookingResponse,
-} from "../../interfaces/VaccineRegistration.ts";
 import { apiGetAllDoctors } from "../../apis/apiAdmin";
 import { Doctor } from "../../interfaces/Doctor";
 import "./DoctorList.scss";
@@ -41,7 +37,8 @@ import { apiGetVaccineRecordByBookingId } from "../../apis/apiVaccineRecord.ts";
 import { VaccineRecordResponse } from "../../interfaces/VaccineRecord.ts";
 import moment from "moment";
 import dayjs, { Dayjs } from "dayjs";
-import { BookingResult } from "../../interfaces/Booking.ts";
+import { BookingDetail, BookingResult } from "../../interfaces/Booking.ts";
+import { ColumnType } from 'antd/es/table';
 
 const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
@@ -60,7 +57,6 @@ function AssignPage() {
     useState<VaccineRecordResponse>();
   const [selectedBooking, setSelectedBooking] =
     useState<BookingResult | null>(null);
-  const [vaccineDetails, setVaccineDetails] = useState<any[]>([]);
   const [comboDetails, setComboDetails] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchText, setSearchText] = useState("");
@@ -99,7 +95,7 @@ function AssignPage() {
         const assigned = bookings.filter(
           (booking) =>
             !data.result.some(
-              (unassigned: BookingResponse) =>
+              (unassigned: BookingResult) =>
                 unassigned.bookingId === booking.bookingId
             )
         );
@@ -111,21 +107,12 @@ function AssignPage() {
     fetchUnassignedBookings();
   }, [bookings]);
 
-  // const handleDateChange = (date, dateString) => {
-  //  setFilterDate(date ? moment(date).format() : null); // Giữ nguyên định dạng ISO
-  //  //2013-02-04T22:44:30.652Z
-  //   console.log(moment(date).format('YYYY-MM-DDTHH:mm:sssZ'));
-  //   console.log(dateString);
-  //   console.log(moment(date));
-  //   setFilterRange(null);
-  //   setFilterType("custom");
-  // };
-
   const handleDateChange = (date: moment.Moment | null) => {
-    console.log("Raw date:", date);
-
     if (!date) {
       console.log("No date selected");
+      setFilterDate(null); 
+      setFilterRange(null); 
+      setFilterType("custom"); 
       return;
     }
 
@@ -141,7 +128,6 @@ function AssignPage() {
 
   const handleRangeChange = (
     dates: [Dayjs | null, Dayjs | null] | null,
-    dateStrings: [string, string]
   ) => {
     if (dates && dates[0] && dates[1]) {
       setFilterRange([moment(dates[0].toDate()), moment(dates[1].toDate())]); // Chuyển Dayjs -> Moment
@@ -205,6 +191,7 @@ function AssignPage() {
   );
   const filteredAssignedBookings = filteredBookings.filter((booking) =>
     assignedBookings.some((assign) => assign.bookingId === booking.bookingId)
+    &&( booking.status === "Pending"|| booking.status === "Completed")
   );
 
   const handleAssignDoctor = async (doctorId: string, bookingId: string) => {
@@ -222,9 +209,9 @@ function AssignPage() {
       if (updatedUnassignedBookings?.isSuccess) {
         setUnassignBookings(updatedUnassignedBookings.result);
         const assigned = updatedBookings.result.filter(
-          (booking: BookingResponse) =>
+          (booking: BookingResult) =>
             !updatedUnassignedBookings.result.some(
-              (unassigned: BookingResponse) =>
+              (unassigned: BookingResult) =>
                 unassigned.bookingId === booking.bookingId
             )
         );
@@ -253,9 +240,9 @@ function AssignPage() {
       if (updatedUnassignedBookings?.isSuccess) {
         setUnassignBookings(updatedUnassignedBookings.result);
         const assigned = updatedBookings.result.filter(
-          (booking: BookingResponse) =>
+          (booking: BookingResult) =>
             !updatedUnassignedBookings.result.some(
-              (unassigned: BookingResponse) =>
+              (unassigned: BookingResult) =>
                 unassigned.bookingId === booking.bookingId
             )
         );
@@ -270,7 +257,6 @@ function AssignPage() {
   };
 
   const openModal = async (booking: BookingResult) => {
-    setVaccineDetails([]);
     setComboDetails([]);
     setSelectedBooking(booking);
     setModalIsOpen(true);
@@ -279,9 +265,8 @@ function AssignPage() {
       const bookingDetailsResponse = await apiGetBookingById(booking.bookingId);
       if (bookingDetailsResponse?.isSuccess) {
         const bookingDetails = bookingDetailsResponse.result.bookingDetails;
-        const { vaccineDetails, comboDetails } =
+        const {comboDetails } =
           await getVaccineAndComboDetails(bookingDetails);
-        setVaccineDetails(vaccineDetails);
         setComboDetails(comboDetails);
       }
 
@@ -359,7 +344,66 @@ function AssignPage() {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex: string) => ({
+  // const getColumnSearchProps = (dataIndex: string) => ({
+  //   filterDropdown: ({
+  //     setSelectedKeys,
+  //     selectedKeys,
+  //     confirm,
+  //     clearFilters,
+  //   }: FilterDropdownProps) => (
+  //     <div style={{ padding: 8 }}>
+  //       <Input
+  //         ref={searchInput}
+  //         placeholder={`Search ${dataIndex}`}
+  //         value={selectedKeys[0]}
+  //         onChange={(e) =>
+  //           setSelectedKeys(e.target.value ? [e.target.value] : [])
+  //         }
+  //         onPressEnter={() =>
+  //           handleSearch(selectedKeys as string[], confirm, dataIndex)
+  //         }
+  //         style={{ marginBottom: 8, display: "block" }}
+  //       />
+  //       <Space>
+  //         <Button
+  //           type="primary"
+  //           onClick={() =>
+  //             handleSearch(selectedKeys as string[], confirm, dataIndex)
+  //           }
+  //           icon={<SearchOutlined />}
+  //           size="small"
+  //           style={{ width: 90 }}
+  //         >
+  //           Tìm Kiếm
+  //         </Button>
+  //         <Button
+  //           onClick={() => clearFilters && handleReset(clearFilters)}
+  //           size="small"
+  //           style={{ width: 90 }}
+  //         >
+  //           Reset
+  //         </Button>
+  //       </Space>
+  //     </div>
+  //   ),
+  //   filterIcon: (filtered: boolean) => (
+  //     <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+  //   ),
+  //   onFilter: (value: any, record: any) =>
+  //     record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  //   render: (text: string) =>
+  //     searchedColumn === dataIndex ? (
+  //       <Highlighter
+  //         highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+  //         searchWords={[searchText]}
+  //         autoEscape
+  //         textToHighlight={text ? text.toString() : ""}
+  //       />
+  //     ) : (
+  //       text
+  //     ),
+  // });
+  const getColumnSearchProps = (dataIndex: keyof BookingResult) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -389,7 +433,7 @@ function AssignPage() {
             size="small"
             style={{ width: 90 }}
           >
-            Tìm Kiếm
+            Search
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
@@ -404,8 +448,15 @@ function AssignPage() {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
-    onFilter: (value: any, record: any) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilter: (value: React.Key | boolean, record: BookingResult) => {
+      const recordValue = record[dataIndex];
+      return recordValue
+        ? recordValue
+            .toString()
+            .toLowerCase()
+            .includes((value as string).toLowerCase())
+        : false;
+    },
     render: (text: string) =>
       searchedColumn === dataIndex ? (
         <Highlighter
@@ -418,14 +469,13 @@ function AssignPage() {
         text
       ),
   });
-
-  const columns = [
+  const columns: ColumnType<BookingResult>[] = [
     {
       title: "Mã đơn",
       dataIndex: "bookingId",
       key: "bookingId",
       ...getColumnSearchProps("bookingId"),
-      sorter: (a: BookingResponse, b: BookingResponse) =>
+      sorter: (a: BookingResult, b: BookingResult) =>
         Number(a.bookingId) - Number(b.bookingId),
     },
     {
@@ -433,7 +483,7 @@ function AssignPage() {
       dataIndex: "childName",
       key: "childName",
       ...getColumnSearchProps("childName"),
-      sorter: (a: BookingResponse, b: BookingResponse) =>
+      sorter: (a: BookingResult, b: BookingResult) =>
         a.childName.localeCompare(b.childName),
     },
     {
@@ -441,7 +491,7 @@ function AssignPage() {
       dataIndex: "bookingDate",
       key: "bookingDate",
       render: (date: string) => dayjs(date).format("DD/MM/YYYY"), // Chuyển từ moment -> dayjs
-      sorter: (a: BookingResponse, b: BookingResponse) =>
+      sorter: (a: BookingResult, b: BookingResult) =>
         dayjs(a.bookingDate).valueOf() - dayjs(b.bookingDate).valueOf(),
 
       filterDropdown: ({
@@ -497,7 +547,7 @@ function AssignPage() {
         </div>
       ),
 
-      onFilter: (value: any, record: BookingResponse) => {
+      onFilter: (value: any, record: BookingResult) => {
         if (!value || value.length !== 2) return true;
 
         const [startDate, endDate] = value as [string, string];
@@ -518,7 +568,7 @@ function AssignPage() {
         { text: "Loại 1", value: "Loại 1" },
         { text: "Loại 2", value: "Loại 2" },
       ],
-      onFilter: (value: any, record: BookingResponse) =>
+      onFilter: (value: any, record: BookingResult) =>
         record.bookingType.includes(value),
     },
     {
@@ -526,7 +576,7 @@ function AssignPage() {
       dataIndex: "totalPrice",
       key: "totalPrice",
       render: (price: number) => `${price.toLocaleString()} VNĐ`,
-      sorter: (a: BookingResponse, b: BookingResponse) =>
+      sorter: (a: BookingResult, b: BookingResult) =>
         Number(a.totalPrice) - Number(b.totalPrice),
     },
     {
@@ -541,7 +591,7 @@ function AssignPage() {
         { text: "Đã hủy", value: "Cancelled" },
         { text: "Yêu cầu hoàn tiền", value: "RequestRefund" },
       ],
-      onFilter: (value: any, record: BookingResponse) =>
+      onFilter: (value: any, record: BookingResult) =>
         record.status === value,
       render: (status: string) => {
         const statusLabels: { [key: string]: string } = {

@@ -4,8 +4,6 @@ import { notification, Spin, Modal } from "antd";
 import {
   Parent,
   Child,
-  BookingDetail,
-  Booking,
   Vaccine,
   VaccinePackage,
 } from "../../interfaces/VaccineRegistration.ts";
@@ -23,6 +21,7 @@ import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { apiGetVaccinationScheduleByChildrenId } from "../../apis/apiVaccine.ts";
 import { apiFindUser } from "../../apis/apiAccount.ts";
+import { Booking, BookingDetail } from "../../interfaces/Booking.ts";
 
 interface SelectedVaccine {
   id: string;
@@ -32,11 +31,11 @@ interface SelectedVaccine {
   type: "single" | "combo";
 }
 
-interface ParentVaccineCheck {
-  vaccineId: string;
-  messages: string[];
-  checked: boolean;
-}
+// interface ParentVaccineCheck {
+//   vaccineId: string;
+//   messages: string[];
+//   checked: boolean;
+// }
 
 const BookingForStaff = () => {
   const navigate = useNavigate();
@@ -60,9 +59,9 @@ const BookingForStaff = () => {
   );
   const [notes, setNotes] = useState<string>("");
   const [bookingDetails, setBookingDetails] = useState<BookingDetail[]>([]);
-  const [parentVaccineChecks, setParentVaccineChecks] = useState<
-    ParentVaccineCheck[]
-  >([]);
+  // const [parentVaccineChecks, setParentVaccineChecks] = useState<
+  //   ParentVaccineCheck[]
+  // >([]);
   const [parentVaccineMessages, setParentVaccineMessages] = useState<string[]>(
     []
   );
@@ -156,10 +155,10 @@ const isChecking = useRef(false);
     try {
       const response = await apiCheckParentVaccine([Number(vaccineId)]);
       if (response.result && response.result.length > 0) {
-        setParentVaccineChecks(prev => [
-          ...prev,
-          { vaccineId, messages: response.result, checked: false }
-        ]);
+        // setParentVaccineChecks(prev => [
+        //   ...prev,
+        //   { vaccineId, messages: response.result, checked: false }
+        // ]);
         showConfirmationModal(response.result, vaccineId);
         console.log("Checking");
         }
@@ -184,19 +183,19 @@ const isChecking = useRef(false);
       okText: "Đã tiêm",
       cancelText: "Chưa tiêm",
       onOk: () => {
-        setParentVaccineChecks((prev) =>
-          prev.map((check) =>
-            check.vaccineId === vaccineId ? { ...check, checked: true } : check
-          )
-        );
+        // setParentVaccineChecks((prev) =>
+        //   prev.map((check) =>
+        //     check.vaccineId === vaccineId ? { ...check, checked: true } : check
+        //   )
+        // );
       },
       onCancel: () => {
         setSelectedVaccines((prev) =>
           prev.filter((item) => item.id !== vaccineId)
         );
-        setParentVaccineChecks((prev) =>
-          prev.filter((check) => check.vaccineId !== vaccineId)
-        );
+        // setParentVaccineChecks((prev) =>
+        //   prev.filter((check) => check.vaccineId !== vaccineId)
+        // );
         toast.warning("Vui lòng tiêm vaccine yêu cầu trước khi tiếp tục.");
       },
     });
@@ -270,9 +269,9 @@ const isChecking = useRef(false);
       );
 
       if (isAlreadySelected) {
-        setParentVaccineChecks((prev) =>
-          prev.filter((check) => check.vaccineId !== vaccineId)
-        );
+        // setParentVaccineChecks((prev) =>
+        //   prev.filter((check) => check.vaccineId !== vaccineId)
+        // );
         return prevSelected.filter((item) => item.id !== vaccineId);
       } else {
         const newSelection = [
@@ -300,9 +299,9 @@ const isChecking = useRef(false);
 
   const handleRemoveVaccine = (vaccineId: string) => {
     setSelectedVaccines((prev) => prev.filter((item) => item.id !== vaccineId));
-    setParentVaccineChecks((prev) =>
-      prev.filter((check) => check.vaccineId !== vaccineId)
-    );
+    // setParentVaccineChecks((prev) =>
+    //   prev.filter((check) => check.vaccineId !== vaccineId)
+    // );
   };
 
   const validateDate = (date: Date) => {

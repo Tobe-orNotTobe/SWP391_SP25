@@ -9,9 +9,6 @@ import {
   // Thêm API để lấy thông tin booking theo ID
 } from "../../apis/apiVaccine";
 import {
-  Booking,
-  BookingDetail,
-  BookingResult,
   Vaccine,
   VaccinePackage,
 } from "../../interfaces/VaccineRegistration.ts";
@@ -23,14 +20,15 @@ import { toast } from "react-toastify";
 
 import { apiGetBookingById } from "../../apis/apiBooking.ts";
 import { AxiosError } from "axios";
+import { BookingDetail, BookingResult } from "../../interfaces/Booking.ts";
 
 const Payment: React.FC = () => {
   const location = useLocation();
   const { bookingResult } = location.state || {};
 
   const [totalPrice, setTotalPrice] = useState(0);
-  const [vaccineDetails, setVaccineDetails] = useState([]);
-  const [comboDetails, setComboDetails] = useState([]);
+  const [vaccineDetails, setVaccineDetails] = useState<Vaccine[] >([]);
+  const [comboDetails, setComboDetails] = useState<VaccinePackage[] >([]);
   const [selectedMethod, setSelectedMethod] = useState<string>("VNPay");
   const [currentBookingResult, setCurrentBookingResult] =
     useState<BookingResult | null>(null);
@@ -51,7 +49,8 @@ const Payment: React.FC = () => {
         isPedingFromHistoryPage && bookingId
           ? Number(bookingId)
           : bookingResult.bookingId;
-
+console.log(bookingID);
+console.log(bookingResult);
       if (method === "VNPay") {
         paymentResponse = await apiPostVNPayTransaction(bookingID);
       } else if (method === "Wallet") {
@@ -79,7 +78,7 @@ const Payment: React.FC = () => {
   };
 
   // Hàm tính tổng tiền
-  const calculateTotalPrice = async (bookingDetails: Booking) => {
+  const calculateTotalPrice = async (bookingDetails: BookingDetail[]) => {
     let total = 0;
 
     for (const detail of bookingDetails) {
