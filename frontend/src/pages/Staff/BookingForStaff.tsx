@@ -264,27 +264,33 @@ const isChecking = useRef(false);
     price?: number
   ) => {
     setSelectedVaccines((prevSelected) => {
-      const isAlreadySelected = prevSelected.some(
-        (item) => item.id === vaccineId
-      );
+      const isAlreadySelected = prevSelected.some(item => item.id === vaccineId);
+      let newSelection: SelectedVaccine[];
 
       if (isAlreadySelected) {
-        // setParentVaccineChecks((prev) =>
-        //   prev.filter((check) => check.vaccineId !== vaccineId)
-        // );
-        return prevSelected.filter((item) => item.id !== vaccineId);
+        // Remove vaccine and update parent checks
+        // setParentVaccineChecks(prev => prev.filter(check => check.vaccineId !== vaccineId));
+        newSelection = prevSelected.filter(item => item.id !== vaccineId);
       } else {
-        const newSelection = [
+        // Add new vaccine
+        newSelection = [
           ...prevSelected,
           { id: vaccineId, name: vaccineName, date: null, type, price },
         ];
-
         if (type === "single") {
           checkParentVaccineForSelection(vaccineId);
         }
-
-        return newSelection;
       }
+
+      // Immediately update bookingDetails based on the new selection
+      const newBookingDetails = newSelection.map((item) => ({
+        vaccineId: item.type === "single" ? Number(item.id) : null,
+        comboVaccineId: item.type === "combo" ? Number(item.id) : null,
+        injectionDate: item.date || new Date().toISOString(),
+      }));
+      setBookingDetails(newBookingDetails as any); // Update bookingDetails synchronously
+
+      return newSelection;
     });
   };
 
