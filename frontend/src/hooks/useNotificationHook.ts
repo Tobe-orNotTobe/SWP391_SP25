@@ -159,8 +159,7 @@ export const useNotificationHook = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
-    
-    // Start the connection
+
     const startConnection = async () => {
       try {
         await notificationService.startConnection();
@@ -173,62 +172,40 @@ export const useNotificationHook = () => {
 
     startConnection();
 
-    // Set up listener for new notifications
     const unsubscribe = notificationService.addListener((notification) => {
-      // Add the new notification to the appropriate list
       setNotifications(prev => [notification, ...prev]);
-      
-      // Add to the appropriate category
+
       if (notification.type === 'Reminder' && notification.relatedEntityType === 'Booking') {
         setReminderNotifications(prev => [notification, ...prev]);
       } else {
         setOtherNotifications(prev => [notification, ...prev]);
       }
-      
-      // Increment unread count
-      setUnreadCount(prev => prev + 1);
-      
-      // Show a notification toast
-      if (notification.type === 'Reminder') {
-        // Use a more prominent notification for reminders
-        message.info({
-          content: `Nhắc lịch hẹn tiêm chủng: ${notification.message}`,
-          duration: 10,
-          style: {
-            marginTop: '50px',
-            backgroundColor: '#f0f7ff',
-            border: '1px solid #2A388F',
-            borderRadius: '4px'
-          },
-          onClick: () => handleNotificationClick(notification)
-        });
-      } else {
-        // Standard notification for other types
-        message.info({
-          content: notification.message,
-          duration: 5,
-          style: {
-            marginTop: '50px'
-          }
-        });
-      }
 
-    // Initial fetch
+      setUnreadCount(prev => prev + 1);
+
+      message.info({
+        content: notification.type === 'Reminder'
+            ? `Nhắc lịch hẹn tiêm chủng: ${notification.message}`
+            : notification.message,
+        duration: notification.type === 'Reminder' ? 10 : 5,
+        style: { marginTop: '50px' },
+        onClick: () => handleNotificationClick(notification)
+      });
+    });
+
     refreshNotifications();
 
-    // Check connection status periodically
     const connectionCheckInterval = setInterval(() => {
       const state = notificationService.getConnectionState();
       setConnectionStatus(state?.toString() || 'disconnected');
     }, 10000);
 
-    // Clean up on unmount
     return () => {
       unsubscribe();
       notificationService.stopConnection();
       clearInterval(connectionCheckInterval);
     };
-  }, [handleNotificationClick, refreshNotifications])});
+  }, [handleNotificationClick, refreshNotifications]);
 
   // Make sure to return all the needed values
   return {
