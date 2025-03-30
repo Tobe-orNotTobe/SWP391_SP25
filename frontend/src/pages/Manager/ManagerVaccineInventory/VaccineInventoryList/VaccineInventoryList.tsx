@@ -5,7 +5,6 @@ import {useVaccineInventoryStockDetail} from "../../../../hooks/useVaccine.ts";
 import {useVaccineInventoryList} from "./useVaccineInventoryList.ts";
 import "./VaccineInventoryList.scss";
 import {VaccineInventoryStock} from "../../../../interfaces/Vaccine.ts";
-import {TbListDetails} from "react-icons/tb";
 import { FaPlus } from "react-icons/fa6";
 import { SearchOutlined } from "@ant-design/icons";
 import {FiEdit2} from "react-icons/fi";
@@ -18,7 +17,6 @@ const VaccineInventoryList: React.FC = () => {
     const {
         form,
         selectedVaccine,
-        modalVisible,
         addBatchModalVisible,
         searchKeyword,
         isSearching,
@@ -30,8 +28,6 @@ const VaccineInventoryList: React.FC = () => {
         handleCreateBatch,
         handleEditBatch,
         handleDeleteBatch,
-        handleOpenModal,
-        handleCloseModal,
         handleOpenAddBatchModal,
         setAddBatchModalVisible,
         handleAddVaccineInventory
@@ -76,9 +72,6 @@ const VaccineInventoryList: React.FC = () => {
             key: "action",
             render: (_: unknown, record: GroupedVaccine) => (
                 <div className="vaccine-action-buttons">
-                    <Button onClick={() => handleOpenModal(record)} className="detail-button">
-                        <TbListDetails/>Chi tiết
-                    </Button>
                     <Button onClick={() => handleOpenAddBatchModal(record)} className="add-button">
                         <FaPlus/>Thêm Lô Vaccine
                     </Button>
@@ -143,6 +136,22 @@ const VaccineInventoryList: React.FC = () => {
         }
     ];
 
+    // Expandable row render function
+    const expandedRowRender = (record: GroupedVaccine) => {
+        return (
+            <div className="vaccine-batch-details">
+                <h3>Chi tiết lô vaccine: {record.name}</h3>
+                <Table
+                    dataSource={record.batches}
+                    columns={batchColumns}
+                    rowKey="batchNumber"
+                    pagination={false}
+                    bordered
+                />
+            </div>
+        );
+    };
+
     return (
         <ManagerLayout>
             <div className="vaccine-inventory-list-container">
@@ -196,24 +205,12 @@ const VaccineInventoryList: React.FC = () => {
                     pagination={{ pageSize: 10 }}
                     bordered
                     scroll={{ x: true }}
+                    expandable={{
+                        expandedRowRender,
+                        expandRowByClick: true,
+                    }}
                     locale={{ emptyText: searchPerformed ? "Không tìm thấy kết quả phù hợp" : "Không có dữ liệu" }}
                 />
-
-                <Modal
-                    title={`Chi tiết Vaccine: ${selectedVaccine?.name || ""}`}
-                    open={modalVisible}
-                    onCancel={handleCloseModal}
-                    footer={null}
-                    width={1400}
-                >
-                    <Table
-                        dataSource={selectedVaccine?.batches || []}
-                        columns={batchColumns}
-                        rowKey="batchNumber"
-                        pagination={false}
-                        bordered
-                    />
-                </Modal>
 
                 <Modal
                     title={`Thêm Lô Mới - ${selectedVaccine?.name || ""}`}

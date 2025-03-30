@@ -6,6 +6,7 @@ import {apiAddVaccineInventory, apiUpdateVaccineInventory} from "../../../../api
 import { AxiosError } from "axios";
 import {VaccineInventory} from "../../../../interfaces/Vaccine.ts";
 import {toast} from "react-toastify";
+import dayjs from "dayjs";
 
 export const useVaccineInventoryForm = () => {
 
@@ -19,14 +20,18 @@ export const useVaccineInventoryForm = () => {
     const { vaccineDetail: vaccineDetailById } = useVaccineDetailById(Number(2));
 
     useEffect(() => {
-        if (isEditMode && vaccineInventoryDetailById) {
+        // console.log("Dữ liệu từ API:", vaccineInventoryDetailById);
+
+        if (isEditMode && Array.isArray(vaccineInventoryDetailById) && vaccineInventoryDetailById.length > 0) {
+            const vaccineData = vaccineInventoryDetailById[0];
+
             form.setFieldsValue({
-                vaccineId: vaccineInventoryDetailById.vaccineId,
-                batchNumber: vaccineInventoryDetailById.batchNumber,
-                manufacturingDate: vaccineInventoryDetailById.manfacturingDate,
-                expiryDate: vaccineInventoryDetailById.expiryDate,
-                initialQuantity: vaccineInventoryDetailById.initialQuantity,
-                supplier: vaccineInventoryDetailById.supplier,
+                vaccineId: vaccineData.vaccineId,
+                batchNumber: vaccineData.batchNumber,
+                manufacturingDate: vaccineData.manufacturingDate ? dayjs(vaccineData.manufacturingDate) : null,
+                expiryDate: vaccineData.expiryDate ? dayjs(vaccineData.expiryDate) : null,
+                initialQuantity: vaccineData.initialQuantity,
+                supplier: vaccineData.supplier,
             });
         }
     }, [isEditMode, vaccineInventoryDetailById, form]);

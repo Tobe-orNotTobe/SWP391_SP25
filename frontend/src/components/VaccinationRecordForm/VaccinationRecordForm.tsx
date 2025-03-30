@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import {
   BookingDetailResponse,
-  BookingResponse,
 } from "../../interfaces/VaccineRegistration.ts";
 
 const { Option } = Select;

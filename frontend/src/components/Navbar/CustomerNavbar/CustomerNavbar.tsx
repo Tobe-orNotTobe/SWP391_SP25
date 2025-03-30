@@ -67,13 +67,33 @@ const CustomerNavbar: React.FC = () => {
                 <nav className="mainNavbarContainer">
                     <ul className="cusNavbarLink">
                         <li><Link to="/homepage" className="cusNavItem">Trang Chủ</Link></li>
-                        <li><Link to="/introduction" className="cusNavItem">Giới thiệu</Link></li>
+
+                        {/* Dropdown for Giới thiệu */}
+                        <li className="cusNavDropdown">
+                            <Link to="/introduction" className="cusNavItem">Giới thiệu</Link>
+                            <ul className="cusNavDropdown-menu">
+                                <li><Link to="/introduction/about-us" className="cusNavDropdown-link">Về chúng tôi</Link></li>
+                                <li><Link to="/vision" className="cusNavDropdown-link">Lịch sử phát triển</Link></li>
+                                <li><Link to="/our-team" className="cusNavDropdown-link">Đội ngũ bác sĩ</Link></li>
+                            </ul>
+                        </li>
+
                         <li><Link to="/vaccines-list" className="cusNavItem">Vaccine</Link></li>
                         <li><Link to="/vaccine-packages" className="cusNavItem">Gói Vaccine</Link></li>
                         <li><Link to="/blog" className="cusNavItem">Blog</Link></li>
                         <li><Link to="/news" className="cusNavItem">Tin Tức</Link></li>
-                        <li><Link to="#" className="cusNavItem">Cẩm Nang</Link></li>
-                        <li><Link to="#" className="cusNavItem">Điều Khoản và Dịch Vụ</Link></li>
+
+                        {/* Dropdown for Cẩm Nang */}
+                        <li className="cusNavDropdown">
+                            <Link to="/handbook" className="cusNavItem">Cẩm Nang</Link>
+                            <ul className="cusNavDropdown-menu">
+                                <li><Link to="/handbook/before" className="cusNavDropdown-link">Trước Khi Tiêm Chủng</Link></li>
+                                <li><Link to="/handbook/process" className="cusNavDropdown-link">Quy trình tiêm chủng</Link></li>
+                                <li><Link to="/handbook/after" className="cusNavDropdown-link">Sau Khi Tiêm Chủng</Link></li>
+                            </ul>
+                        </li>
+
+                        <li><Link to="/terms" className="cusNavItem">Điều Khoản và Dịch Vụ</Link></li>
                     </ul>
                     <div className="authButtonLink">
                         {username ? (

@@ -128,10 +128,9 @@ class NotificationService {
       .catch(err => console.error('Error restarting connection:', err));
   }
 
-  public addListener(callback: (notification: NotificationType) => void, p0?: ((notification: NotificationType) => Promise<void>)[]): () => void {
+  public addListener(callback: (notification: NotificationType) => void): () => void {
     this.listeners.push(callback);
-    
-    // Return function to remove this listener
+
     return () => {
       this.listeners = this.listeners.filter(listener => listener !== callback);
     };

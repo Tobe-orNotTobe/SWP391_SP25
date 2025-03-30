@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Modal, Avatar } from "antd";
 import {
-  BellOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import "./adminNavBar.scss";

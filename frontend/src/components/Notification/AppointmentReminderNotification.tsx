@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button, Card, Typography, Space, Avatar, Tooltip } from 'antd';
 import { NotificationType } from '../../interfaces/Notification';
-import { CalendarOutlined, ClockCircleOutlined, UserOutlined, MedicineBoxOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ClockCircleOutlined, MedicineBoxOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import './AppointmentReminderNotification.scss';
@@ -47,13 +47,13 @@ const AppointmentReminderNotification: React.FC<AppointmentReminderProps> = ({
     }
   };
   
-  const handleConfirm = async () => {
-    // Mark notification as read
-    await onMarkAsRead(notification.notificationId);
-    
-    // You could also call an API to confirm the appointment if needed
-    // For now, we'll just mark it as read
-  };
+  // const handleConfirm = async () => {
+  //   // Mark notification as read
+  //   await onMarkAsRead(notification.notificationId);
+  //
+  //   // You could also call an API to confirm the appointment if needed
+  //   // For now, we'll just mark it as read
+  // };
   
   return (
     <Card 

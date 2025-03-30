@@ -83,7 +83,7 @@ export interface VaccineInventoryStock {
     name: string;
     manufacturer: string;
     batchNumber: string;
-    manfacturingDate : Date;
+    manufacturingDate : Date;
     expiryDate : Date;
     supplier: string;
     initialQuantity : number;

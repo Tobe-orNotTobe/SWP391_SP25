@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Button, Table, Tabs, Tag, Input, Space, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Table, Tabs,  Input} from "antd";
 import { TbListDetails } from "react-icons/tb";
 import { IoMdAdd } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { BlogResponse } from "../../../interfaces/Blog.ts";
 import Staff1Layout from "../../../components/Layout/StaffLayout/Stafff1Layout/Staff1Layout.tsx";
 import "./StaffBlog.scss";
 import { IsLoginSuccessFully } from "../../../validations/IsLogginSuccessfully.ts";
-import type { ColumnsType, FilterDropdownProps } from "antd/es/table/interface";
+import type { ColumnsType} from "antd/es/table/interface";
 import { useDeleteBlog } from "../useStaffBlog.ts";
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit2 } from "react-icons/fi";
@@ -25,7 +25,7 @@ const StaffBlog: React.FC = () => {
 
   // const [searchText, setSearchText] = useState("");
   // const [searchedColumn, setSearchedColumn] = useState("");
-  const searchInput = useRef<any>(null);
+  // const searchInput = useRef<any>(null);
 
   useEffect(() => {
     fetchAllBlog(); // Chỉ lấy blog của user đó (active)

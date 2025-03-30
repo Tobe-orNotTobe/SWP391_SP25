@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { notification, Form } from 'antd';
+import { Form } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
@@ -19,7 +19,6 @@ export const useVaccineInventoryList = (vaccineInventoryStockDetail: VaccineInve
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [selectedVaccine, setSelectedVaccine] = useState<GroupedVaccine | null>(null);
-    const [modalVisible, setModalVisible] = useState(false);
     const [addBatchModalVisible, setAddBatchModalVisible] = useState(false);
 
     const [searchKeyword, setSearchKeyword] = useState("");
@@ -73,10 +72,7 @@ export const useVaccineInventoryList = (vaccineInventoryStockDetail: VaccineInve
             }
         } catch (error) {
             console.error("Search error:", error);
-            notification.error({
-                message: "Lỗi khi tìm kiếm vaccine",
-                description: "Đã xảy ra lỗi trong quá trình tìm kiếm. Vui lòng thử lại sau.",
-            });
+            toast.error("Lỗi tìm kiếm vaccine")
         } finally {
             setIsSearching(false);
         }
@@ -86,17 +82,6 @@ export const useVaccineInventoryList = (vaccineInventoryStockDetail: VaccineInve
         setSearchKeyword("");
         setSearchResults([]);
         setSearchPerformed(false);
-    };
-
-    // Modal handling
-    const handleOpenModal = (record: GroupedVaccine) => {
-        setSelectedVaccine(record);
-        setModalVisible(true);
-    };
-
-    const handleCloseModal = () => {
-        setModalVisible(false);
-        setSelectedVaccine(null);
     };
 
     const handleOpenAddBatchModal = (record: GroupedVaccine) => {
@@ -133,8 +118,6 @@ export const useVaccineInventoryList = (vaccineInventoryStockDetail: VaccineInve
             } else {
                 toast.error("Lỗi không xác định");
             }
-        } finally {
-            setModalVisible(false);
         }
     };
 
@@ -154,13 +137,19 @@ export const useVaccineInventoryList = (vaccineInventoryStockDetail: VaccineInve
             const response = await apiAddVaccineInventory(batchData);
 
             if (response.isSuccess) {
-               toast.success("Thêm Lô Vaccine Thành Công")
+                toast.success("Thêm Lô Vaccine Thành Công")
+
+                // Close modal and refresh data
+                setAddBatchModalVisible(false);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
         } catch (error: unknown) {
             if (error instanceof AxiosError) {
                 toast.error(`${error.response?.data?.errorMessages}`);
             } else {
-               toast.error("Lỗi không xác định");
+                toast.error("Lỗi không xác định");
             }
         }
     };
@@ -169,7 +158,6 @@ export const useVaccineInventoryList = (vaccineInventoryStockDetail: VaccineInve
         // State
         form,
         selectedVaccine,
-        modalVisible,
         addBatchModalVisible,
         searchKeyword,
         isSearching,
@@ -184,8 +172,6 @@ export const useVaccineInventoryList = (vaccineInventoryStockDetail: VaccineInve
         handleCreateBatch,
         handleEditBatch,
         handleDeleteBatch,
-        handleOpenModal,
-        handleCloseModal,
         handleOpenAddBatchModal,
         setAddBatchModalVisible,
         handleAddVaccineInventory

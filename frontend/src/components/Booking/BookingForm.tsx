@@ -30,11 +30,11 @@ interface SelectedVaccine {
   type: "single" | "combo";
 }
 
-interface ParentVaccineCheck {
-  vaccineId: string;
-  messages: string[];
-  checked: boolean;
-}
+// interface ParentVaccineCheck {
+//   vaccineId: string;
+//   messages: string[];
+//   checked: boolean;
+// }
 
 const BookingForm = () => {
   const navigate = useNavigate();
@@ -73,7 +73,7 @@ const BookingForm = () => {
   const [suggestedCombos, setSuggestedCombos] = useState<string[]>([]);
 
   // Track last added vaccine to prevent duplicate checks
-  const [parentVaccineChecks, setParentVaccineChecks] = useState<ParentVaccineCheck[]>([]);
+  //const [parentVaccineChecks, setParentVaccineChecks] = useState<ParentVaccineCheck[]>([]);
 
   // Fetch parent and children info
   useEffect(() => {
@@ -156,22 +156,21 @@ const BookingForm = () => {
     isChecking.current = true;
 
     try {
-        const response = await apiCheckParentVaccine([Number(vaccineId)]);
-        if (response.result && response.result.length > 0) {
-            setParentVaccineChecks(prev => [
-                ...prev,
-                { vaccineId, messages: response.result, checked: false }
-            ]);
-            showConfirmationModal(response.result, vaccineId);
-        }
+      const response = await apiCheckParentVaccine([Number(vaccineId)]);
+      if (response.result && response.result.length > 0) {
+        // setParentVaccineChecks(prev => [
+        //     ...prev,
+        //     { vaccineId, messages: response.result, checked: false }
+        // ]);
+        showConfirmationModal(response.result, vaccineId);
+      }
     } catch (error) {
-        console.error("Error checking parent vaccine:", error);
-        toast.error("Không thể kiểm tra vaccine yêu cầu trước đó.");
+      console.error("Error checking parent vaccine:", error);
+      toast.error("Không thể kiểm tra vaccine yêu cầu trước đó.");
     } finally {
-        isChecking.current = false; // Reset flag sau khi hoàn tất
+      isChecking.current = false; // Reset flag sau khi hoàn tất
     }
-};
-  
+  };
 
   // Show confirmation modal
   const showConfirmationModal = (messages: string[], vaccineId: string) => {
@@ -187,19 +186,19 @@ const BookingForm = () => {
       okText: "Đã tiêm",
       cancelText: "Chưa tiêm",
       onOk: () => {
-        setParentVaccineChecks(prev =>
-          prev.map(check =>
-            check.vaccineId === vaccineId ? { ...check, checked: true } : check
-          )
-        );
+        // setParentVaccineChecks(prev =>
+        //   prev.map(check =>
+        //     check.vaccineId === vaccineId ? { ...check, checked: true } : check
+        //   )
+        // );
       },
       onCancel: () => {
-        setSelectedVaccines(prev =>
-          prev.filter(item => item.id !== vaccineId)
+        setSelectedVaccines((prev) =>
+          prev.filter((item) => item.id !== vaccineId)
         );
-        setParentVaccineChecks(prev =>
-          prev.filter(check => check.vaccineId !== vaccineId)
-        );
+        // setParentVaccineChecks(prev =>
+        //   prev.filter(check => check.vaccineId !== vaccineId)
+        // );
         toast.warning("Vui lòng tiêm vaccine yêu cầu trước khi tiếp tục.");
       },
     });
@@ -234,6 +233,7 @@ const BookingForm = () => {
       };
 
       const status = await apiBooking(parentInfo.customerCode, bookingData);
+      console.log(status.result);
       navigate("/payment", { state: { bookingResult: status.result } });
     } catch (error: any) {
       console.error("Error submitting booking:", error);
@@ -257,25 +257,37 @@ const BookingForm = () => {
     price?: number
   ) => {
     setSelectedVaccines((prevSelected) => {
-      const isAlreadySelected = prevSelected.some(item => item.id === vaccineId);
-      
+      const isAlreadySelected = prevSelected.some(
+        (item) => item.id === vaccineId
+      );
+      let newSelection: SelectedVaccine[];
+
       if (isAlreadySelected) {
-        // Khi bỏ chọn, xóa cả thông tin kiểm tra parent nếu có
-        setParentVaccineChecks(prev => prev.filter(check => check.vaccineId !== vaccineId));
-        return prevSelected.filter(item => item.id !== vaccineId);
+        // Remove vaccine and update parent checks
+        // setParentVaccineChecks((prev) =>
+        //   prev.filter((check) => check.vaccineId !== vaccineId)
+        // );
+        newSelection = prevSelected.filter((item) => item.id !== vaccineId);
       } else {
-        const newSelection = [
+        // Add new vaccine
+        newSelection = [
           ...prevSelected,
           { id: vaccineId, name: vaccineName, date: null, type, price },
         ];
-        
-        // Chỉ kiểm tra parent vaccine nếu là vaccine đơn
         if (type === "single") {
           checkParentVaccineForSelection(vaccineId);
         }
-        
-        return newSelection;
       }
+
+      // Immediately update bookingDetails based on the new selection
+      const newBookingDetails = newSelection.map((item) => ({
+        vaccineId: item.type === "single" ? Number(item.id) : null,
+        comboVaccineId: item.type === "combo" ? Number(item.id) : null,
+        injectionDate: item.date || new Date().toISOString(),
+      }));
+      setBookingDetails(newBookingDetails as any); // Update bookingDetails synchronously
+
+      return newSelection;
     });
   };
 
@@ -290,8 +302,8 @@ const BookingForm = () => {
 
   // Remove a selected vaccine
   const handleRemoveVaccine = (vaccineId: string) => {
-    setSelectedVaccines(prev => prev.filter(item => item.id !== vaccineId));
-    setParentVaccineChecks(prev => prev.filter(check => check.vaccineId !== vaccineId));
+    setSelectedVaccines((prev) => prev.filter((item) => item.id !== vaccineId));
+    //setParentVaccineChecks(prev => prev.filter(check => check.vaccineId !== vaccineId));
   };
 
   // Validate date
@@ -317,6 +329,7 @@ const BookingForm = () => {
       injectionDate: item.date || new Date().toISOString(), // Default to today if no date selected
     }));
     setBookingDetails(newBookingDetails as any);
+    console.log(bookingDetails);
   }, [selectedVaccines]);
 
   // Handle form submission
