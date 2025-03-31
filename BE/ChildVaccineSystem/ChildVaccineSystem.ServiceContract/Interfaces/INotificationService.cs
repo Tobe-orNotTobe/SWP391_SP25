@@ -15,5 +15,9 @@ namespace ChildVaccineSystem.ServiceContract.Interfaces
 		Task<bool> DeleteNotificationAsync(int notificationId, string userId);
 		Task<NotificationDTO> SendNotificationAsync(SendNotificationDTO notificationDto);
 		Task SendBookingReminderAsync(int bookingId, string userId, string childName);
+		Task<IEnumerable<AdminNotificationDTO>> GetAdminSentNotificationsAsync();
+		Task<NotificationDTO> GetNotificationByIdAsync(int id);
+		Task<bool> UpdateNotificationAsync(int id, UpdateNotificationDTO updateDto);
+		Task<bool> DeleteNotificationByAdminAsync(int id);
 	}
 }

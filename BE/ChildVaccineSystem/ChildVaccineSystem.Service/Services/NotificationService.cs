@@ -122,6 +122,83 @@ namespace ChildVaccineSystem.Service.Services
 			await SendNotificationAsync(notificationDto);
 		}
 
-		
+		public async Task<IEnumerable<AdminNotificationDTO>> GetAdminSentNotificationsAsync()
+		{
+			var notifications = await _unitOfWork.Notifications.GetAllAsync(includeProperties: "User");
+
+			var notificationDtos = new List<AdminNotificationDTO>();
+			foreach (var notification in notifications)
+			{
+				var user = notification.User;
+				notificationDtos.Add(new AdminNotificationDTO
+				{
+					NotificationId = notification.NotificationId,
+					UserId = notification.UserId,
+					UserName = user?.UserName ?? "Unknown",
+					UserEmail = user?.Email ?? "Unknown",
+					Message = notification.Message,
+					CreatedAt = notification.CreatedAt,
+					IsRead = notification.IsRead,
+					Type = notification.Type,
+					RelatedEntityType = notification.RelatedEntityType,
+					RelatedEntityId = notification.RelatedEntityId
+				});
+			}
+
+			return notificationDtos.OrderByDescending(n => n.CreatedAt);
+		}
+
+		public async Task<NotificationDTO> GetNotificationByIdAsync(int id)
+		{
+			var notification = await _unitOfWork.Notifications.GetAsync(
+				n => n.NotificationId == id,
+				includeProperties: "User");
+
+			if (notification == null)
+				return null;
+
+			return _mapper.Map<NotificationDTO>(notification);
+		}
+
+		public async Task<bool> UpdateNotificationAsync(int id, UpdateNotificationDTO updateDto)
+		{
+			var notification = await _unitOfWork.Notifications.GetAsync(n => n.NotificationId == id);
+			if (notification == null)
+				return false;
+
+			// Update only the provided fields
+			if (!string.IsNullOrEmpty(updateDto.Message))
+				notification.Message = updateDto.Message;
+
+			if (!string.IsNullOrEmpty(updateDto.Type))
+				notification.Type = updateDto.Type;
+
+			notification.RelatedEntityType = updateDto.RelatedEntityType;
+			notification.RelatedEntityId = updateDto.RelatedEntityId;
+
+			await _unitOfWork.CompleteAsync();
+
+			// Send updated notification via SignalR if recipient has not read it yet
+			if (!notification.IsRead)
+			{
+				var notificationDto = _mapper.Map<NotificationDTO>(notification);
+				await _hubContext.Clients.User(notification.UserId)
+					.SendAsync("ReceiveNotification", notificationDto);
+			}
+
+			return true;
+		}
+
+		public async Task<bool> DeleteNotificationByAdminAsync(int id)
+		{
+			var notification = await _unitOfWork.Notifications.GetAsync(n => n.NotificationId == id);
+			if (notification == null)
+				return false;
+
+			await _unitOfWork.Notifications.DeleteAsync(notification);
+			await _unitOfWork.CompleteAsync();
+
+			return true;
+		}
 	}
 }
