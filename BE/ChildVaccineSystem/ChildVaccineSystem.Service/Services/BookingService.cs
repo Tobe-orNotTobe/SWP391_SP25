@@ -684,8 +684,24 @@ namespace ChildVaccineSystem.Service.Services
             var bookings = await _unitOfWork.Bookings.GetAllAsync(
                 includeProperties: "BookingDetails.Vaccine,BookingDetails.ComboVaccine,Children,User");
 
-            return _mapper.Map<List<BookingDTO>>(bookings);
+            var result = _mapper.Map<List<BookingDTO>>(bookings);
+
+            foreach (var bookingDto in result)
+            {
+                if (bookingDto.ChildId != 0)
+                {
+                    var child = await _unitOfWork.Children.GetAsync(c => c.ChildId == bookingDto.ChildId);
+                    bookingDto.ChildName = child?.FullName ?? "Không xác định";
+                }
+                else
+                {
+                    bookingDto.ChildName = "Không xác định";
+                }
+            }
+
+            return result;
         }
+
         public async Task<bool> UnassignDoctorFromBookingAsync(int bookingId, string userId)
         {
             var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(bookingId);
