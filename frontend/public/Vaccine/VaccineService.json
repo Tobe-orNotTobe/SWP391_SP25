@@ -2,21 +2,21 @@
     {
         "id": "vp01",
         "name": "Tiêm Vaccine Lẻ",
-        "image": "/ChildVaccinesFE/assets/service/Service_1st.jpg"
+        "image": "/assets/service/Service_1st.jpg"
     },
     {
         "id":"vp02",
         "name": "Tiêm Vaccine Trọn Gói",
-        "image": "/ChildVaccinesFE/assets/service/Service_2nd.jpg"
+        "image": "/assets/service/Service_2nd.jpg"
     },
     {
         "id":"vp03",
         "name":"Tiêm Vaccine Theo Yêu Cầu",
-        "image": "/ChildVaccinesFE/assets/service/Service_4th.jpg"
+        "image": "/assets/service/Service_4th.jpg"
     },
     {
         "id": "vp04",
         "name": "Tiêm Vaccine Cá Thể Hóa",
-        "image": "/ChildVaccinesFE/assets/service/Service_3rd.jpg"
+        "image": "/assets/service/Service_3rd.jpg"
     }
 ]
