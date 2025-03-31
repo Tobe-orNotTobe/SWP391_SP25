@@ -404,6 +404,8 @@ function AssignPage() {
   //       text
   //     ),
   // });
+
+  // console.log(selectedBooking);
   const getColumnSearchProps = (dataIndex: keyof BookingResult) => ({
     filterDropdown: ({
       setSelectedKeys,
