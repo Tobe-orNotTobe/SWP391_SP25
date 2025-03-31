@@ -77,6 +77,7 @@ import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
 import StaffBlogPostPage from "./pages/Staff/StaffBlogPost.tsx";
 import StaffBlogManagePage from "./pages/Staff/Blog/StaffBlogManage/StaffBlogManage.tsx";
 import DoctorProfile from "./pages/Doctor/DoctorProfile/DoctorProfile.tsx";
+import TermPage from "./pages/TermPage/TermPage.tsx";
 
 
 function App() {
@@ -107,6 +108,7 @@ function App() {
                 <Route path="/news" element={<PublicRoute><NewsPage/></PublicRoute>} />
                 <Route path="/news/:id" element={<PublicRoute><NewsDetailPage/></PublicRoute>} />
                 <Route path="/blog/:id" element={<PublicRoute><BlogDetailPage/></PublicRoute>} />
+                <Route path="/terms" element={<PublicRoute><TermPage/></PublicRoute>}/>
 
                 {/* Authentication Routes */}
                 <Route path="/login" element={<NoAuthRoute><Login/></NoAuthRoute>} />
@@ -171,7 +173,7 @@ function App() {
                 <Route path="/admin/blog/edit/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBlogFormPage /></ProtectedRoute>} />
                 <Route path="/admin/feedback" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminFeedbackListPage /></ProtectedRoute>} />
                 <Route path="/admin/booking" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBookingPage/></ProtectedRoute>} />
-                <Route path="/admin/wallet"element={<ProtectedRoute allowedRoles={["Admin"]}><AdminRefund/></ProtectedRoute>}/>
+                <Route path="/admin/wallet" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminRefund/></ProtectedRoute>}/>
 
 
 

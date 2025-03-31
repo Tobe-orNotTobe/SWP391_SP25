@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import { toast } from "react-toastify";
+import moment from 'moment';
 
 // Extend the jsPDF type to include the autotable plugin
 declare module 'jspdf' {
@@ -8,7 +9,7 @@ declare module 'jspdf' {
     }
 }
 
-export const exportPDF = (booking: any, combo: any, vaccine: any) => {
+export const exportPDF = (booking: any, vaccineRecordDetails: any) => {
     try {
         // Create a new PDF document
         const doc = new jsPDF();
@@ -38,9 +39,9 @@ export const exportPDF = (booking: any, combo: any, vaccine: any) => {
         const bookingInfo = [
             ['ID:', booking.bookingId?.toString() || ''],
             ['Child Name:', booking.childName || ''],
-            ['Booking Date:', new Date(booking.bookingDate).toLocaleDateString('en-US') || ''],
+            ['Booking Date:', moment(booking.bookingDate).format("MM/DD/YYYY") || ''],
             ['Vaccination Type:', booking.bookingType || ''],
-            ['Notes:', booking.note || 'None'],
+            ['Notes:', booking.notes || 'None'],
             ['Status:', getStatusTextInEnglish(booking.status) || '']
         ];
 
@@ -54,67 +55,107 @@ export const exportPDF = (booking: any, combo: any, vaccine: any) => {
             y += 7;
         });
 
-        // Add combo details if available
-        if (combo && combo.length > 0) {
-            y += 5;
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'bold');
-            doc.text('COMBO DETAILS', 20, y);
-            y += 10;
-
-            combo.forEach((comboItem: any) => {
-                doc.setFontSize(10);
-                doc.setFont('helvetica', 'bold');
-                doc.text(`Combo Name: ${comboItem.comboName || ''}`, 20, y);
-                y += 7;
-                doc.setFont('helvetica', 'normal');
-                doc.text(`Combo Price: ${(comboItem.totalPrice || 0).toLocaleString()} VND`, 20, y);
-                y += 7;
-
-                doc.setFont('helvetica', 'bold');
-                doc.text('Vaccines in Combo:', 20, y);
-                y += 7;
-
-                // List vaccines in the combo
-                if (comboItem.vaccines && Array.isArray(comboItem.vaccines)) {
-                    comboItem.vaccines.forEach((vaccineItem: any) => {
-                        doc.setFont('helvetica', 'normal');
-                        doc.text(`- ${vaccineItem.vaccine?.name || ''}`, 25, y);
-                        y += 7;
-                    });
-                }
-
-                y += 3;
-            });
-        }
-
-        // Add individual vaccine details if available
-        if (vaccine && vaccine.length > 0 && (!combo || combo.length === 0)) {
+        // Add vaccine details if available
+        if (booking.bookingDetails && booking.bookingDetails.length > 0) {
             y += 5;
             doc.setFontSize(12);
             doc.setFont('helvetica', 'bold');
             doc.text('VACCINE DETAILS', 20, y);
             y += 10;
 
-            vaccine.forEach((vaccineItem: any) => {
+            booking.bookingDetails.forEach((vaccineItem: any) => {
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'normal');
-                doc.text(`Vaccine Name: ${vaccineItem.name || ''}`, 20, y);
+                doc.text(`Vaccine Name: ${vaccineItem.vaccineName || ''}`, 20, y);
+                y += 7;
+                doc.text(`Injection Date: ${moment(vaccineItem.injectionDate).format("MM/DD/YYYY") || ''}`, 20, y);
                 y += 7;
                 doc.text(`Price: ${(vaccineItem.price || 0).toLocaleString()} VND`, 20, y);
-                y += 7;
+                y += 10;
             });
         }
 
-        // Add total price
-        let totalPrice = 0;
+        // Add vaccine record details if available
+        if (booking.status === "Completed" && vaccineRecordDetails && vaccineRecordDetails.result && vaccineRecordDetails.result.vaccineRecords) {
+            y += 5;
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('VACCINE RECORD DETAILS', 20, y);
+            y += 10;
 
-        if (combo && combo.length > 0) {
-            combo.forEach((comboItem: any) => {
-                totalPrice += comboItem.totalPrice || 0;
-            });
-        } else if (vaccine && vaccine.length > 0) {
-            vaccine.forEach((vaccineItem: any) => {
+            const records = vaccineRecordDetails.result.vaccineRecords;
+
+            // Create a manual table without autoTable
+            if (records.length > 0) {
+                // Define table headers
+                const headers = [
+                    'Vaccine Name',
+                    'Dose',
+                    'Price',
+                    'Next Dose Date',
+                    'Batch No.',
+                    'Status',
+                    'Notes'
+                ];
+
+                // Draw table headers
+                doc.setFontSize(8);
+                doc.setFont('helvetica', 'bold');
+
+                // Define column positions
+                const colPositions = [20, 60, 80, 105, 130, 150, 170];
+                const rowHeight = 8;
+
+                // Draw header row
+                headers.forEach((header, index) => {
+                    doc.text(header, colPositions[index], y);
+                });
+
+                y += rowHeight;
+                doc.setFont('helvetica', 'normal');
+
+                // Draw horizontal line after headers
+                doc.line(20, y - rowHeight / 2, 190, y - rowHeight / 2);
+
+                // Draw data rows
+                records.forEach((record: any) => {
+                    // Check if we need a new page
+                    if (y > 260) {
+                        doc.addPage();
+                        y = 20;
+                    }
+
+                    doc.text(record.vaccineName || '', colPositions[0], y);
+                    doc.text(`${record.doseAmount || ''} ml`, colPositions[1], y);
+                    doc.text(`${(record.price || 0).toLocaleString()} VND`, colPositions[2], y);
+                    doc.text(record.nextDoseDate ? record.nextDoseDate.split("T")[0] : '', colPositions[3], y);
+                    doc.text(record.batchNumber || '', colPositions[4], y);
+                    doc.text(record.status || '', colPositions[5], y);
+
+                    // Handle long notes with wrapping
+                    const notes = record.notes || '';
+                    if (notes.length > 15) {
+                        doc.text(notes.substring(0, 15), colPositions[6], y);
+                        doc.text(notes.substring(15), colPositions[6], y + rowHeight / 2);
+                        y += rowHeight;
+                    } else {
+                        doc.text(notes, colPositions[6], y);
+                    }
+
+                    y += rowHeight;
+
+                    // Draw horizontal line after each row
+                    doc.line(20, y - rowHeight / 2, 190, y - rowHeight / 2);
+                });
+
+                y += 5;
+            }
+        }
+
+        // Calculate total price
+        let totalPrice = 0;
+        if (booking.bookingDetails && booking.bookingDetails.length > 0) {
+            booking.bookingDetails.forEach((vaccineItem: any) => {
                 totalPrice += vaccineItem.price || 0;
             });
         }
@@ -130,7 +171,7 @@ export const exportPDF = (booking: any, combo: any, vaccine: any) => {
 
         // Date field
         const today = new Date();
-        const formattedDate = `Date: ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+        const formattedDate = `Date: ${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
         doc.text(formattedDate, 105, y, { align: 'center' });
         y += 15;
 
