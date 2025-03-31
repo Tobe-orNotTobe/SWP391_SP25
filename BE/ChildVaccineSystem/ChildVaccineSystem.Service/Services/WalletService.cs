@@ -280,7 +280,7 @@ namespace ChildVaccineSystem.Service.Services
                 throw new InvalidOperationException("Ví quản trị chưa được cấu hình!");
             }
 
-            var description = $"Thanh toán cho lịch hẹn #{bookingId}";
+            var description = $"Thanh toán lịch hẹn";
             return await TransferFundsAsync(userId, adminWallet.UserId, amount, "Thanh toán lịch hẹn", description);
         }
     }

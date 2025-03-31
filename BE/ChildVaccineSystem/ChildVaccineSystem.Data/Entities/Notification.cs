@@ -25,7 +25,7 @@ namespace ChildVaccineSystem.Data.Entities
 		[Required]
 		public string Type { get; set; } = "System";
 
-		public string RelatedEntityType { get; set; }
+		public string? RelatedEntityType { get; set; }
 
 		public int? RelatedEntityId { get; set; }
 
