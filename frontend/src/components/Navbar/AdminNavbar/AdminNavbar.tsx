@@ -3,7 +3,7 @@ import { Button, Modal, Avatar } from "antd";
 import {
   UserOutlined,
 } from "@ant-design/icons";
-import "./adminNavBar.scss";
+import "./AdminNavbar.scss";
 import {Link, useNavigate} from "react-router-dom";
 import { MdLogin, MdLogout } from "react-icons/md";
 import {IsLoginSuccessFully} from "../../../validations/IsLogginSuccessfully.ts";

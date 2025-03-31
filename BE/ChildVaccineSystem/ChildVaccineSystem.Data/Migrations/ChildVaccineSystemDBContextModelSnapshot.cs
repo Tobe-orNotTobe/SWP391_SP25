@@ -379,7 +379,6 @@ namespace ChildVaccineSystem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("RelatedEntityType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")

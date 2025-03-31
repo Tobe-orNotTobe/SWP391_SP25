@@ -33,7 +33,7 @@ const HomePage : React.FC  = () => {
                             {imgCarousel.map((item, index) => (
                                 <img
                                     key={index}
-                                    src={`../../../src/assets/homepage/${item.image}`}
+                                    src={`/assets/homepage${item.image}`}
                                     className="ImgSlider"
                                     alt="Introduction"
                                 />
@@ -55,7 +55,7 @@ const HomePage : React.FC  = () => {
                             </div>
                             <div className="briefContentImage">
                                 <img
-                                    src={`../../../src/assets/homepage/${item.image}`}
+                                    src={`/assets/homepage${item.image}`}
                                     alt={item.title}
                                 />
                             </div>
