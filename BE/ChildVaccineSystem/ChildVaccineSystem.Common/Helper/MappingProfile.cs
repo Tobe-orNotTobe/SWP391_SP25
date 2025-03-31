@@ -267,8 +267,10 @@ namespace ChildVaccineSystem.Common.Helper
 				.ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes));
 
 			CreateMap<Notification, NotificationDTO>();
-
-        }
+			CreateMap<Notification, AdminNotificationDTO>()
+				.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+				.ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.User.Email));
+		}
 	}
 };
 
