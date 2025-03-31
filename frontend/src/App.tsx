@@ -50,7 +50,7 @@ import AdminDashboardPage from "./pages/Admin/AdminDashboard/AdminDashboard.tsx"
 import AdminAccountPage from "./pages/Admin/AdminAccount/AdminAccountList/AdminAcount.tsx";
 import AdminAccountFormPage from "./pages/Admin/AdminAccount/AdminAccountForm/AdminAccountForm.tsx";
 import AdminBlogFormPage from "./pages/Admin/AdminBlog/AdminBlogForm/AdminBogForm.tsx"
-
+import AdminNotificationPage from "./pages/Admin/AdminNotification/AdminNotificationList.tsx";
 
 import CustomerProfile from "./pages/Customer/CustomerProfile/CustomerProfile.tsx";
 import VaccinationSchedulePage from "./pages/Doctor/AssignedBooking.tsx";
@@ -77,6 +77,7 @@ import AdminRefund from "./pages/Admin/AdminRefund/AdminRefund.tsx";
 import StaffBlogPostPage from "./pages/Staff/StaffBlogPost.tsx";
 import StaffBlogManagePage from "./pages/Staff/Blog/StaffBlogManage/StaffBlogManage.tsx";
 import DoctorProfile from "./pages/Doctor/DoctorProfile/DoctorProfile.tsx";
+
 
 
 function App() {
@@ -172,7 +173,7 @@ function App() {
                 <Route path="/admin/feedback" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminFeedbackListPage /></ProtectedRoute>} />
                 <Route path="/admin/booking" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminBookingPage/></ProtectedRoute>} />
                 <Route path="/admin/wallet"element={<ProtectedRoute allowedRoles={["Admin"]}><AdminRefund/></ProtectedRoute>}/>
-
+                <Route path="/admin/notification" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminNotificationPage/></ProtectedRoute>} />
 
 
                 {/* Trang 404 */}
