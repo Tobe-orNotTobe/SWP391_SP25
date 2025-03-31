@@ -293,7 +293,8 @@ namespace ChildVaccineSystem.API.Controllers
                     Address = user.Address,
                     DateOfBirth = user.DateOfBirth,
                     IsActive = user.IsActive,
-                    Role = "Doctor"
+                    Role = "Doctor",
+                    ImageUrl = user.ImageUrl
                 }).ToList();
 
                 _response.StatusCode = HttpStatusCode.OK;
