@@ -38,25 +38,22 @@ import { VaccineRecordResponse } from "../../interfaces/VaccineRecord.ts";
 import moment from "moment";
 import dayjs, { Dayjs } from "dayjs";
 import { BookingDetail, BookingResult } from "../../interfaces/Booking.ts";
-import { ColumnType } from 'antd/es/table';
+import { ColumnType } from "antd/es/table";
 
 const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
 
 function AssignPage() {
   const [bookings, setBookings] = useState<BookingResult[]>([]);
-  const [unassignBookings, setUnassignBookings] = useState<BookingResult[]>(
-    []
-  );
-  const [assignedBookings, setAssignedBookings] = useState<BookingResult[]>(
-    []
-  );
+  const [unassignBookings, setUnassignBookings] = useState<BookingResult[]>([]);
+  const [assignedBookings, setAssignedBookings] = useState<BookingResult[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalDoctorIsOpen, setDoctorModalIsOpen] = useState(false);
   const [vaccineRecordDetails, setVaccineRecordDetails] =
     useState<VaccineRecordResponse>();
-  const [selectedBooking, setSelectedBooking] =
-    useState<BookingResult | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<BookingResult | null>(
+    null
+  );
   const [comboDetails, setComboDetails] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchText, setSearchText] = useState("");
@@ -110,9 +107,9 @@ function AssignPage() {
   const handleDateChange = (date: moment.Moment | null) => {
     if (!date) {
       console.log("No date selected");
-      setFilterDate(null); 
-      setFilterRange(null); 
-      setFilterType("custom"); 
+      setFilterDate(null);
+      setFilterRange(null);
+      setFilterType("custom");
       return;
     }
 
@@ -126,9 +123,7 @@ function AssignPage() {
     );
   };
 
-  const handleRangeChange = (
-    dates: [Dayjs | null, Dayjs | null] | null,
-  ) => {
+  const handleRangeChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
     if (dates && dates[0] && dates[1]) {
       setFilterRange([moment(dates[0].toDate()), moment(dates[1].toDate())]); // Chuyển Dayjs -> Moment
     } else {
@@ -191,7 +186,6 @@ function AssignPage() {
   );
   const filteredAssignedBookings = filteredBookings.filter((booking) =>
     assignedBookings.some((assign) => assign.bookingId === booking.bookingId)
-    &&( booking.status === "Pending"|| booking.status === "Completed")
   );
 
   const handleAssignDoctor = async (doctorId: string, bookingId: string) => {
@@ -250,9 +244,12 @@ function AssignPage() {
       }
 
       setDoctorModalIsOpen(false);
-    } catch (error) {
-      console.error("Lỗi khi hủy phân công bác sĩ:", error);
-      toast.error("Hủy phân công thất bại");
+    } catch (error: any) {
+      console.error(
+        "Lỗi khi hủy phân công bác sĩ:",
+        error.response.data.message
+      );
+      toast.error(error.response.data.message);
     }
   };
 
@@ -265,8 +262,9 @@ function AssignPage() {
       const bookingDetailsResponse = await apiGetBookingById(booking.bookingId);
       if (bookingDetailsResponse?.isSuccess) {
         const bookingDetails = bookingDetailsResponse.result.bookingDetails;
-        const {comboDetails } =
-          await getVaccineAndComboDetails(bookingDetails);
+        const { comboDetails } = await getVaccineAndComboDetails(
+          bookingDetails
+        );
         setComboDetails(comboDetails);
       }
 
@@ -591,8 +589,7 @@ function AssignPage() {
         { text: "Đã hủy", value: "Cancelled" },
         { text: "Yêu cầu hoàn tiền", value: "RequestRefund" },
       ],
-      onFilter: (value: any, record: BookingResult) =>
-        record.status === value,
+      onFilter: (value: any, record: BookingResult) => record.status === value,
       render: (status: string) => {
         const statusLabels: { [key: string]: string } = {
           Pending: "Đang chờ",
@@ -629,6 +626,7 @@ function AssignPage() {
           "Completed",
           "Cancelled",
           "RequestRefund",
+          "Pending",
         ];
         const shouldHideButtons = hiddenButtonStatuses.includes(record.status);
 
@@ -707,7 +705,7 @@ function AssignPage() {
       </div>
 
       <div style={{ marginTop: "40px" }}>
-        <Title level={3}>Đã phân công</Title>
+        <Title level={3}>Đã phân công / các trạng thái khác</Title>
         <Table
           dataSource={filteredAssignedBookings}
           columns={columns}
@@ -836,25 +834,27 @@ function AssignPage() {
                   </p>
                 </div>
 
-                {selectedBooking.bookingDetails.length > 0 && comboDetails.length === 0 && (
-                  <div className="combo-section">
-                    <h3>Chi Tiết Vaccine</h3>
-                    {selectedBooking.bookingDetails.map((vaccine) => (
-                      <div key={vaccine.vaccineId} className="vaccine-item">
-                        <p>
-                          <strong>Tên Vaccine:</strong> {vaccine.vaccineName}
-                        </p>
-                        <p>
-                          <strong>Ngày tiêm:</strong> {moment(vaccine.injectionDate).format("DD/MM/YYYY")}
-                        </p>
-                        <p>
-                          <strong>Giá:</strong>{" "}
-                          {vaccine.price?.toLocaleString()} VNĐ
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                {selectedBooking.bookingDetails.length > 0 &&
+                  comboDetails.length === 0 && (
+                    <div className="combo-section">
+                      <h3>Chi Tiết Vaccine</h3>
+                      {selectedBooking.bookingDetails.map((vaccine) => (
+                        <div key={vaccine.vaccineId} className="vaccine-item">
+                          <p>
+                            <strong>Tên Vaccine:</strong> {vaccine.vaccineName}
+                          </p>
+                          <p>
+                            <strong>Ngày tiêm:</strong>{" "}
+                            {moment(vaccine.injectionDate).format("DD/MM/YYYY")}
+                          </p>
+                          <p>
+                            <strong>Giá:</strong>{" "}
+                            {vaccine.price?.toLocaleString()} VNĐ
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
               </div>
               {selectedBooking.status === "Completed" &&
                 vaccineRecordDetails && (
