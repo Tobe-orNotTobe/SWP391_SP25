@@ -1,0 +1,147 @@
+.wrapedStatusbar {
+  border-bottom: 1px solid #e8e8e8;
+  height: 64px; // Tăng chiều cao để trông thoáng hơn
+  display: flex;
+  align-items: center;
+  padding: 0 24px; // Tăng padding để cân đối
+  background: white;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); // Đổ bóng nhẹ
+  position: sticky;
+  top: 0;
+  z-index: 1000; // Đảm bảo navbar luôn trên cùng
+
+  nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 20px; // Sử dụng gap để tạo khoảng cách giữa các phần tử
+
+    a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease;
+
+      &.underline {
+        position: relative;
+        display: inline-block;
+        padding-bottom: 5px;
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          width: 0;
+          height: 2px;
+          background-color: #2a388f;
+          transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        &:hover {
+          color: #2a388f;
+        }
+
+        &:hover::after {
+          width: 100%;
+          left: 0;
+        }
+      }
+    }
+
+    .notification {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      .bell-icon {
+        font-size: 22px;
+        color: #333;
+      }
+
+      .num {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ff4d4f;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      gap: 10px; // Thêm khoảng cách giữa avatar và username
+
+      .ant-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+        transition: transform 0.2s ease-in-out;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+
+      .username {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+      }
+    }
+
+    .login-btn,
+    .logout-btn {
+      margin-left: 15px;
+      border: none;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease-in-out;
+      display: flex;
+      align-items: center;
+      gap: 8px; // Thêm khoảng cách giữa icon và text
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, #2a388f, #1a237e); // Màu xanh dương
+    }
+
+    .logout-btn {
+      background: linear-gradient(135deg, #ff4d4f, #d9363e); // Màu đỏ
+    }
+  }
+}

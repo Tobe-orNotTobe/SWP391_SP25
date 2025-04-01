@@ -8,7 +8,7 @@ namespace ChildVaccineSystem.Data.DTO.InjectionSchedule
 {
 	public class InjectionScheduleDTO
 	{
-		public int DoseNumber { get; set; }
+		public int InjectionNumber { get; set; }
 		public int InjectionMonth { get; set; }
 
 		public bool IsRequired { get; set; }

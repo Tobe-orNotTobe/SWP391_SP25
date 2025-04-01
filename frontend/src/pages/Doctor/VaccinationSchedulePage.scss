@@ -1,0 +1,197 @@
+.ant-table-thead > tr > th {
+  background-color: rgb(42 56 143) !important;
+  color: white !important; /* Đổi màu chữ nếu cần */
+}
+
+.ant-table-column-sorter,
+.ant-table-filter-trigger {
+  color: white !important;
+}
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.schedule-table th,
+.schedule-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.schedule-table th {
+  background-color: #2a388f;
+  color: white;
+}
+
+.detail-btn {
+  background: #1a22a8;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.detail-btn:hover {
+  background: #0056b3;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.close-btn {
+  background: red;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.close-btn:hover {
+  background: darkred;
+}
+
+/* Custom Modal */
+.custom-modal .ant-modal-content { /* Tăng chiều rộng modal */
+  max-width: 90%; /* Giới hạn chiều rộng tối đa */
+  border-radius: 12px; /* Bo tròn góc */
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+}
+
+.custom-modal .ant-modal-header {
+  background-color: #2a388f; /* Màu nền header */
+  border-radius: 12px 12px 0 0; /* Bo tròn góc trên */
+}
+
+.custom-modal .ant-modal-title {
+  color: white; /* Màu chữ tiêu đề */
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.custom-modal .ant-modal-body {
+  padding: 24px; /* Khoảng cách nội dung */
+}
+
+/* Modal Content */
+.modal-content {
+  font-family: Arial, sans-serif;
+}
+
+.modal-title {
+  color: #2a388f; /* Màu tiêu đề */
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.info-section{
+  display: flex;
+  gap: 40px;
+}
+
+.info-section p {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.info-section strong {
+  color: #2a388f; /* Màu chữ đậm */
+}
+
+.vaccine-section,
+.combo-section {
+  flex: 1;
+  margin-top: 20px;
+}
+
+.vaccine-section h3,
+.combo-section h3 {
+  color: #2a388f; /* Màu tiêu đề section */
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.vaccine-item,
+.combo-item {
+  background-color: #f9f9f9; /* Màu nền item */
+  padding: 12px;
+  border-radius: 8px; /* Bo tròn góc item */
+  margin-bottom: 10px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
+
+.vaccine-item p,
+.combo-item p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+table {
+  margin-bottom: 20px;
+}
+h1{
+  color: #2a388f;
+  margin: 10px;
+}
+h2 {
+  color: #222224;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* Tag trạng thái */
+.ant-tag {
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.vaccine-record-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.vaccine-record-table th,
+.vaccine-record-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.vaccine-record-table th {
+  background-color: #2a388f; /* Màu nền header */
+  color: white; /* Màu chữ header */
+}
+
+.vaccine-record-table td {
+  background-color: #f9f9f9; /* Màu nền các ô dữ liệu */
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Khoảng cách giữa hai cột */
+}

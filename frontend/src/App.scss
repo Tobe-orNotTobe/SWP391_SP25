@@ -1,24 +1,36 @@
 @font-face {
-    font-family: 'MyriadPro';
-    src: url('../src/assets/font/Myriad_Pro_Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: "MyriadPro";
+  src: url("../src/assets/font/Myriad_Pro_Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
-
+// *:not(.blog-detail-container, .blog-detail-container *) {
+//     margin: 0;
+//     padding: 0;
+//     border: 0;
+//     box-sizing: border-box;
+//     font-family: "MyriadPro", "Roboto", serif;
+//     font-optical-sizing: auto;
+//     font-style: normal;
+//   }
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'MyriadPro',"Roboto", serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-      
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+  font-family: "MyriadPro", "Roboto", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
 
-.errorText{
-    color: red;
-    padding-top: 5px;
-    padding-bottom: 10px;
+/* Đặt lại giá trị mặc định cho .blog-detail-container */
+.blog-detail-container,
+.blog-detail-container * {
+  all: revert;
 }
-
+.errorText {
+  color: red;
+  padding-top: 5px;
+  padding-bottom: 10px;
+}

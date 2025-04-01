@@ -1,10 +1,12 @@
-import { useEffect } from "react";
-import { Form, notification } from "antd";
+import { useEffect, useState } from "react";
+import { Form } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useVaccineDetail, useComboVaccineDetailById } from "../../../../hooks/useVaccine";
 import { apiAddComboVaccine, apiUpdateComboVaccine } from "../../../../apis/apiVaccine";
 import { PostVaccineComboDetail } from "../../../../interfaces/Vaccine";
-import {AxiosError} from "axios";
+import { AxiosError } from "axios";
+import {toast} from "react-toastify";
+
 
 export const useVaccineComboForm = () => {
     const [form] = Form.useForm();
@@ -12,29 +14,64 @@ export const useVaccineComboForm = () => {
     const { id } = useParams();
     const isEditMode = Boolean(id);
 
+
+    const [initialEditorContent, setInitialEditorContent] = useState("");
+
+
+    const [editorContent, setEditorContent] = useState({
+        description: ""
+    });
+
     const { vaccineDetail } = useVaccineDetail();
     const { comboVaccineDetail } = useComboVaccineDetailById(Number(id));
 
+    // console.log(comboVaccineDetail)
+
     useEffect(() => {
         if (isEditMode && comboVaccineDetail) {
-            const uniqueVaccineIds = [...new Set(comboVaccineDetail.vaccines.map((v) => v.vaccineId))];
+            setInitialEditorContent(comboVaccineDetail.description || "");
+
+            setEditorContent({
+                description: comboVaccineDetail.description || ""
+            });
+
             form.setFieldsValue({
                 comboName: comboVaccineDetail.comboName,
-                description: comboVaccineDetail.description,
                 totalPrice: comboVaccineDetail.totalPrice,
                 isActive: comboVaccineDetail.isActive,
-                vaccineIds: uniqueVaccineIds,
+                vaccines: comboVaccineDetail.vaccines.map((v, index) => ({
+                    vaccineId: v.vaccine.id,
+                    order: v.order ?? index + 1,
+                    intervalDays: v.intervalDays ?? 0,
+                })),
             });
         }
     }, [comboVaccineDetail, form, isEditMode]);
 
+    const handleEditorChange = (field : string, content: string) => {
+        setEditorContent(prev => ({
+            ...prev,
+            [field]: content
+        }));
+
+        // The form field is set by TinyMCE, we just need to track the content separately
+        form.setFieldsValue({
+            [field]: content
+        });
+    };
+
     const onFinish = async (values: PostVaccineComboDetail) => {
-        const payload: PostVaccineComboDetail = {
+        // Use the content from TinyMCE editor stored in our state
+        const payload = {
             comboName: values.comboName,
-            description: values.description,
+            ...editorContent,
             totalPrice: values.totalPrice,
             isActive: values.isActive,
-            vaccineIds: values.vaccineIds,
+            vaccines: values.vaccines.map((vaccine: any, index: number) => ({
+                vaccineId: vaccine.vaccineId,
+                order: vaccine.order ?? index + 1, // Nếu không có, đặt mặc định theo thứ tự
+                intervalDays: vaccine.intervalDays ?? 0,
+            })),
         };
 
         try {
@@ -45,37 +82,27 @@ export const useVaccineComboForm = () => {
                 response = await apiAddComboVaccine(payload);
             }
 
-            console.log(response)
+            console.log(response);
             if (response.isSuccess) {
-                notification.success({
-                    message: isEditMode ? "Cập nhật thành công" : "Thêm mới thành công",
-                });
+                toast.success(isEditMode ? "Cập nhật thành công" : "Thêm mới thành công")
                 navigate("/manager/combo-vaccines");
             }
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-
-                const errorMessages = error.response?.data?.errorMessages;
-                console.log(errorMessages)
-                const errorMessageText = Array.isArray(errorMessages) && errorMessages.length
-                    ? errorMessages.join(", ")
-                    : "Không thể kết nối với máy chủ. Vui lòng thử lại sau.";
-
-
-                notification.error({
-                    message: "Đăng Nhập Thất Bại",
-                    description: errorMessageText || "Lỗi không xác định từ server",
-                });
+                toast.error(`${error.response?.data?.errorMessages}`);
             } else {
-                console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
+                toast.error("Lỗi Không Xác Định");
             }
         }
     };
 
-
-    return { form, onFinish, vaccineDetail, isEditMode, navigate };
+    return {
+        form,
+        onFinish,
+        vaccineDetail,
+        isEditMode,
+        navigate,
+        handleEditorChange,
+        initialEditorContent
+    };
 };

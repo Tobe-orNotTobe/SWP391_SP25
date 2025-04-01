@@ -394,3 +394,7 @@ frontend/.vscode
 /BE/ChildVaccineSystem/ChildVaccineSystem.API/appsettings.Development.json
 /BE/ChildVaccineSystem/ChildVaccineSystem.API/appsettings.Development.json
 /BE/ChildVaccineSystem/ChildVaccineSystem.API/appsettings.Development.json
+
+
+frontend/.env
+/BE/ChildVaccineSystem/ChildVaccineSystem.API/Config/childvaccinesystem-bfc1e-firebase-adminsdk-fbsvc-c4ad224e52.json

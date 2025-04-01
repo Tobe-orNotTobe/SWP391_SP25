@@ -39,10 +39,11 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving feedback: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi lấy phản hồi: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
+
 
         // Add feedback
         [HttpPost]
@@ -54,7 +55,8 @@ namespace ChildVaccineSystem.API.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var userName = User.FindFirstValue(ClaimTypes.Name); // Get logged-in user's ID
+                var userName = User.FindFirstValue(ClaimTypes.Name);
+
                 var createdFeedback = await _feedbackService.AddFeedbackAsync(createFeedbackDto, userId, userName);
 
                 _response.StatusCode = HttpStatusCode.Created;
@@ -63,11 +65,19 @@ namespace ChildVaccineSystem.API.Controllers
 
                 return Ok(_response);
             }
+            catch (ArgumentException ex)
+            {
+                // Trả về lỗi 400 khi dữ liệu không hợp lệ (như feedback đã tồn tại)
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Dữ liệu không hợp lệ: {ex.Message}");
+                return BadRequest(_response);
+            }
             catch (Exception ex)
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error adding feedback: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi khi thêm phản hồi: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -86,7 +96,7 @@ namespace ChildVaccineSystem.API.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("Feedback not found for the specified booking.");
+                    _response.ErrorMessages.Add("Không tìm thấy phản hồi cho đặt phòng được chỉ định.");
                     return NotFound(_response);
                 }
 
@@ -99,7 +109,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error updating feedback: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi cập nhật phản hồi: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
@@ -118,7 +128,7 @@ namespace ChildVaccineSystem.API.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("Feedback not found for the specified booking.");
+                    _response.ErrorMessages.Add("Không tìm thấy phản hồi cho đặt phòng được chỉ định.");
                     return NotFound(_response);
                 }
 
@@ -131,7 +141,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error deleting feedback: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi xóa phản hồi: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }

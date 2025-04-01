@@ -1,0 +1,115 @@
+.user-profile-background{
+  background-image  : url("../../assets/UserProfile/userprofilebackground.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 200vh;
+}
+
+.user-profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+
+
+  .profile-container {
+    display: flex;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    max-width: 900px;
+    padding: 100px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .profile-left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+  }
+
+  .profile-image {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #ccc;
+  }
+
+  .profile-right {
+    flex: 2;
+    padding-left: 20px;
+  }
+
+  .profile-name {
+    font-size: 40px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+
+  }
+
+  .profile-details {
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    width: 100%;
+
+  }
+
+  .profile-item {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 5px 0;
+    font-size: 20px;
+  }
+
+  .profile-item strong {
+    min-width: 150px; /* Cố định độ rộng của label */
+    text-align: left;
+    font-weight: bold;
+    color: #555;
+  }
+
+  .profile-item span {
+    flex-grow: 1;
+    text-align: left;
+  }
+
+  .profile-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .edit-button, .change-password-button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .edit-button {
+    background-color: #2a388f;
+    color: white;
+  }
+
+  .change-password-button {
+    background-color: #FFB400;
+    color: white;
+  }
+
+  .edit-button:hover {
+    background-color: #1e2566;
+  }
+
+  .change-password-button:hover {
+    background-color: #9d844c;
+  }
+}

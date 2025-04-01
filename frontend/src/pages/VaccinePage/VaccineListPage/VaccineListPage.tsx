@@ -10,7 +10,7 @@ import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNa
 
 const VaccineListPage : React.FC = () => {
 
-    const { vaccineIntro: vaccineList, loading, error } = useVaccineIntro();
+    const { vaccineIntro: vaccineList } = useVaccineIntro();
     
     const [currentPage, setCurrentPage] = useState(1);
     
@@ -18,14 +18,7 @@ const VaccineListPage : React.FC = () => {
     
     const startIndex = (currentPage - 1) * PAGE_SIZE;
     const currentVaccines = vaccineList.slice(startIndex, startIndex + PAGE_SIZE);
-    
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-        
-    if (error) {
-        return <p>Error: {error}</p>;
-    }
+
 
     return (
         <>

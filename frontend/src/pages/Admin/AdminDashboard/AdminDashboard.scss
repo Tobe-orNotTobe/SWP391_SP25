@@ -1,0 +1,62 @@
+.admin-dashboard-container {
+  padding: 20px;
+
+  .title {
+    text-align: center;
+    color: #2A388F;
+  }
+
+  .date-filter {
+    text-align: right;
+    margin-bottom: 20px;
+  }
+
+  .chart-container {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 30px;/* Thêm box shadow */
+    width: 100%;
+    height: 500px;
+  }
+
+  .feedback-cotainer{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    border-radius: 20px;
+  }
+}
+
+.user-statistics {
+  margin-bottom: 16px;
+
+  .stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    height: 100%;
+
+    .stat-icon {
+      font-size: 24px;
+      color: #2A388F;
+      margin-right: 12px;
+    }
+
+    .stat-content {
+      .stat-title {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .stat-value {
+        font-size: 20px;
+        font-weight: bold;
+        color: #2A388F;
+      }
+    }
+  }
+}
+
+

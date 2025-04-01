@@ -1,6 +1,7 @@
 // My Child.
 
 .childPageContainer {
+  min-height: calc(100vh - 300px);
   width: 1200px;
   padding: 40px;
   background: #fff;
@@ -10,9 +11,6 @@
 
   .title {
     font-weight: bold;
-    justify-content: center;
-    display: flex;
-    padding-bottom: 25px;
     font-size: 28px;
   }
 
@@ -24,6 +22,7 @@
     background-color: #007bff;
     color: #fff;
     border: none;
+    height: 40px;
     border-radius: 50px;
     padding: 12px 24px;
     font-size: 16px;
@@ -43,6 +42,23 @@
       background-color: #004085;
       transform: scale(0.95);
     }
+  }
+
+  .error-message {
+    display: grid;
+    justify-content: center;
+    font-size: 20px;
+    padding-top: 10px;
+    align-items: center;
+    color: #939393;
+  }
+
+  .error-icon {
+    margin-top: 70px;
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+    color: #939393;
   }
 
   .pagination {
@@ -81,9 +97,11 @@
       padding: 15px;
       border-radius: 10px;
       text-align: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      //box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       transition: transform 0.3s ease-in-out;
+      margin: 10px;
+
 
       &:hover {
         transform: scale(1.05);
@@ -91,8 +109,8 @@
 
       .childImage {
         width: 180px;
-        //height: 150px;
-        border-radius: 10%;
+        height: 180px;
+        border-radius: 50%;
         object-fit: cover;
       }
 
@@ -104,13 +122,16 @@
 
       .childItem {
         justify-content: left;
+        align-items: center;
         display: flex;
         padding-left: 20px;
         font-size: 18px;
         padding-bottom: 5px;
+        padding-right: 20px;
 
-        .childItemTitle {
-          padding-right: 5px;
+        .childItemIcon {
+          font-size: 30px;
+          padding-right: 8px;
         }
       }
 
@@ -119,28 +140,41 @@
         align-content: space-between;
 
         .childEdit {
+          border: none;
           font-size: 20px;
           padding-left: 2px;
+          transition: transform 0.3s ease-in-out;
+          background-color: #f9f9f9;
 
           &:hover {
             color: #2A388F;
+            transform: scale(1.2);
           }
         }
 
         .childDelete {
           font-size: 23px;
-
+          border: none;
+          transition: transform 0.3s ease-in-out;
+          background-color: #f9f9f9;
 
           &:hover {
             color: #c00;
+            transform: scale(1.2);
           }
         }
       }
     }
   }
+
 }
 
-.editPopupOverlay {
+.childP {
+  font-size: 20px;
+  padding-bottom: 5px;
+}
+
+.popupOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -151,110 +185,128 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-}
 
-.deletePopupOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
+  .editPopup {
+    background: white;
+    padding: 50px;
+    border-radius: 10px;
+    width: 1000px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
 
-.editPopup {
-  background: white;
-  padding: 50px;
-  border-radius: 10px;
-  width: 1000px;
-  max-width: 90%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  position: relative;
-  animation: fadeIn 0.3s ease-in-out;
-}
 
-.deletePopup {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  position: relative;
-  animation: fadeIn 0.3s ease-in-out;
-}
+    .editPopup input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
 
-.deleteTitle {
-  display: flex;
-  justify-content: center;
-}
+    .saveButton {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
 
-.yesButton {
-  width: 30%;
-  padding: 10px;
-  background-color: #df3c3c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  &:hover {
-    background-color: #a02a2a;
   }
-}
 
-.cancleButton {
-  width: 30%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  &:hover {
-    background-color: #0056b3;
+  .deletePopup {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+
+    .deleteTitle {
+      display: flex;
+      justify-content: center;
+    }
+
+
+    .yesButton {
+      width: 30%;
+      padding: 10px;
+      background-color: #df3c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      &:hover {
+        background-color: #a02a2a;
+      }
+    }
+
+    .cancleButton {
+      width: 30%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
   }
-}
 
-.closeButton {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #333;
-  &:hover {
-    color: red;
+  .detailPopup {
+    background: white;
+    padding: 40px;
+    background-clip: padding-box;
+    border-radius: 10px;
+    width: 1000px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+
+    .childImage {
+      width: 100%
+
+    }
+
+    .popupTitle {
+      position: absolute;
+      top: 25px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #c4c4c4;
+      font-size: 20px;
+    }
+
   }
-}
 
-.editPopup input {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.saveButton {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  &:hover {
-    background-color: #0056b3;
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    &:hover {
+      color: red;
+    }
   }
+
 }
 
 @keyframes fadeIn {
@@ -303,7 +355,7 @@
   }
 
   .childP {
-    font-size: 24px;
+    font-size: 30px;
     padding-bottom: 5px;
   }
 

@@ -1,6 +1,7 @@
 ﻿using ChildVaccineSystem.Data.Entities;
 using ChildVaccineSystem.Data.Models;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace ChildVaccineSystem.Repository.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly ChildVaccineSystemDBContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public UserRepository(ChildVaccineSystemDBContext context)
+        public UserRepository(ChildVaccineSystemDBContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<User> GetUserByEmailAsync(string email)
@@ -96,9 +99,42 @@ namespace ChildVaccineSystem.Repository.Repositories
         {
             return await _context.Users.ToListAsync();
         }
+
         public async Task<User> GetAsync(Expression<Func<User, bool>> filter)
         {
             return await _context.Users.FirstOrDefaultAsync(filter);
         }
+        public async Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return false; 
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            return result.Succeeded;
+        }
+
+        public async Task<bool> UpdateUserProfileAsync(User user)
+        {
+            try
+            {
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync(); // Ensure the changes are saved to the database
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        public async Task<User> GetUserByPhoneOrEmailAsync(string keyword)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == keyword.ToLower() ||
+                                          u.PhoneNumber.ToLower() == keyword.ToLower());
+        }
+
     }
 }

@@ -1,0 +1,74 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  .popup {
+    background: white;
+    padding: 50px;
+    border-radius: 10px;
+    width: 600px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+
+    .vaccination-schedule-section {
+      padding: 20px;
+
+      // Booking list item styling
+      .booking-list-item {
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0.1, 0.1, 0.1, 0.4);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        // Typography
+        .booking-details {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          gap: 10px;
+
+          .label {
+            font-weight: 600;
+            color: #2a388f;
+            margin-right: 10px;
+          }
+
+          .value {
+            font-size: 1rem;
+            color: #333;
+          }
+
+          // Special styling for certain fields
+          .booking-id {
+            font-size: 1.1rem;
+            color: #2a388f;
+            font-weight: 700;
+          }
+
+          .total-price {
+            color: #FFB400;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+  }
+
+}

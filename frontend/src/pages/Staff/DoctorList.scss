@@ -1,0 +1,97 @@
+/* Container */
+.doctorList-wraper {
+  .ant-modal-content {
+    text-align: center;
+  }
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+
+  .title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #074c8d;
+  }
+
+  /* Card */
+
+  .ant-card-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .doctor-card {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border: solid 1px #8c949b46;
+    box-shadow: 0 4px 8px rgba(44, 48, 233, 0.3);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      border-color: #0d69ca46;
+      transform: scale(1.05);
+      box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.4);
+    }
+  }
+
+  .avatar {
+    margin-bottom: 15px;
+    border-radius: 50%;
+    border: 3px solid #f0f0f0;
+  }
+
+  .doctor-name {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
+  .username {
+    font-size: 14px;
+    color: #888;
+  }
+
+  .email,
+  .phone,
+  .address {
+    font-size: 14px;
+    display: block;
+    margin: 5px 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Nút Phân công */
+  .detail-btn {
+    font-size: 16px;
+    padding: 12px 0;
+    margin-top: 10px;
+  }
+
+  /* Không có bác sĩ */
+  .no-doctor {
+    font-size: 18px;
+    color: #888;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .doctor-grid {
+      padding: 0 10px;
+    }
+
+    .doctor-card {
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+    }
+  }
+}

@@ -52,8 +52,8 @@ const IntroductionPage: React.FC = () => {
                   </p>
 
                   <p style={{textAlign: "center", paddingBottom: "10px"}}>
-                      <img fetchPriority="high" decoding="async"
-                           src="https://vnvc.vn/wp-content/uploads/2024/12/vnvc-co-mat-tai-55-tinh-thanh.jpg"
+                      <img decoding="async"
+                           src="https://th.bing.com/th/id/OIP.rtOJaLcOP6mZmLWcR6Z6wgHaD4?rs=1&pid=ImgDetMain"
                            alt="vnvc có mặt tại 55 tỉnh thành"/>
                   </p>
 
@@ -135,11 +135,11 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_77882" aria-describedby="caption-attachment-77882"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="size-full wp-image-77882"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/vnvc-luon-cung-ung-day-du-vac-xin.jpg"
+                                                                  src="https://homelandprepnews.com/wp-content/uploads/2018/07/shutterstock_170652599.jpg"
                                                                   alt="vnvc luôn cung ứng đầy đủ vắc xin" width="800"
                                                                   height="532"/>
                       <figcaption id="caption-attachment-77882" className="wp-caption-text"
-                                  style={{fontStyle: "italic", fontSize: "17px"}}>VNVC cam kết cung ứng đầy đủ
+                                  style={{fontStyle: "italic", fontSize: "17px"}}>Side Effect cam kết cung ứng đầy đủ
                           vắc xin cho trẻ em và người lớn chất lượng cao, nhập khẩu chính hãng từ các nhà sản xuất vắc xin
                           hàng đầu Thế giới
                       </figcaption>
@@ -175,23 +175,23 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_78526" aria-describedby="caption-attachment-78526"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="wp-image-78526 size-full"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/kho-lanh-bao-quan-vac-xin-cua-vnvc.jpg"
+                                                                  src="https://th.bing.com/th/id/R.14784a25136a21e476b1284d2860db57?rik=1X9mTJSVExc%2biA&pid=ImgRaw&r=0"
                                                                   alt="kho lạnh bảo quản vắc xin của vnvc" width="800"
                                                                   height="534"/>
                       <figcaption id="caption-attachment-78526" className="wp-caption-text"
                                   style={{fontStyle: "italic", fontSize: "17px"}}>Hệ thống kho bảo quản vắc xin
-                          đạt chuẩn GSP tại VNVC, đảm bảo lưu trữ và bảo quản các loại vắc xin trong điều kiện tối ưu từ
+                          đạt chuẩn đảm bảo lưu trữ và bảo quản các loại vắc xin trong điều kiện tối ưu từ
                           2-8 độ C
                       </figcaption>
                   </figure>
                   <figure id="attachment_78268" aria-describedby="caption-attachment-78268"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="wp-image-78268 size-full"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/he-thong-xe-lanh-chuyen-dung-van-chuyen-vac-xin.jpg"
+                                                                  src="https://www.rpsins.com/-/media/images/rpsins/rpsins/aa_2024_listing-images/46010-rps-us-2024-rpsinscom-oo-1280x720lpgfinal/1200x627.jpg"
                                                                   alt="hệ thống kho lạnh vận chuyển vắc xin" width="800"
                                                                   height="534"/>
                       <figcaption id="caption-attachment-78268" className="wp-caption-text"
-                                  style={{fontStyle: "italic", fontSize: "17px"}}>VNVC sở hữu hệ thống hơn 30 xe
+                                  style={{fontStyle: "italic", fontSize: "17px"}}>Hệ thống hơn 30 xe
                           lạnh chuyên dụng vận chuyển vắc xin, chủ động vận chuyển và cấp phát vắc xin an toàn đến các
                           trung tâm trên toàn quốc
                       </figcaption>
@@ -199,11 +199,11 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_77895" aria-describedby="caption-attachment-77895"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="size-full wp-image-77895"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/tu-lanh-bao-quan-vac-xin-chuyen-dung.jpg"
+                                                                  src="https://th.bing.com/th/id/OIP.i5PKQjpqwLCeJMcWIzS3MQHaE7?rs=1&pid=ImgDetMain"
                                                                   alt="tủ lạnh bảo quản vắc xin chuyên dụng" width="800"
                                                                   height="534"/>
                       <figcaption id="caption-attachment-77895" className="wp-caption-text"
-                                  style={{fontStyle: "italic", fontSize: "17px"}}>100% phòng tiêm tại VNVC được
+                                  style={{fontStyle: "italic", fontSize: "17px"}}>100% phòng tiêm được
                           trang bị tủ bảo quản vắc xin chuyên dụng, vắc xin cuối ngày sẽ được hoàn về kho tổng để bảo quản
                           theo tiêu chuẩn GSP
                       </figcaption>
@@ -241,7 +241,7 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_78525" aria-describedby="caption-attachment-78525"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="size-full wp-image-78525"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/kham-sang-loc-truoc-tiem-chung-cho-be-tai-vnvc.jpg"
+                                                                  src="https://post.healthline.com/wp-content/uploads/2021/03/Male_Covid_Vaccine_1296x728-header-1296x729.jpg"
                                                                   alt="khám sàng lọc trước tiêm chủng cho bé tại vnvc"
                                                                   width="800" height="534"/>
                       <figcaption id="caption-attachment-78525" className="wp-caption-text"
@@ -253,7 +253,7 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_77903" aria-describedby="caption-attachment-77903"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="wp-image-77903 size-full"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/kiem-tra-thong-tin-truoc-tiem-chung.jpg"
+                                                                  src="https://s3.amazonaws.com/cms.ipressroom.com/296/files/202110/202111031705/6182c15fb3aed3197bb0019c_Child+vaccinations+2021/Child+vaccinations+2021_1e96b43a-d3a8-400c-8cf0-bac9ea8ed372-prv.jpg"
                                                                   alt="kiểm tra thông tin trước tiêm chủng" width="800"
                                                                   height="534"/>
                       <figcaption id="caption-attachment-77903" className="wp-caption-text"
@@ -265,12 +265,11 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_78527" aria-describedby="caption-attachment-78527"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="size-full wp-image-78527"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/tiem-ngua-cho-nguoi-lon-tuoi-tai-vnvc.jpg"
+                                                                  src="https://img.freepik.com/premium-photo/medical-doctor-holds-vaccine-patient_255667-21474.jpg"
                                                                   alt="tiêm ngừa cho người lớn tại vnvc" width="800"
                                                                   height="534"/>
                       <figcaption id="caption-attachment-78527" className="wp-caption-text"
-                                  style={{fontStyle: "italic", fontSize: "17px"}}>Đội ngũ điều dưỡng viên tại
-                          VNVC được đào tạo chuyên môn nghiệp vụ chuyên sâu, thành thạo kỹ năng tiêm giảm đau, nhẹ nhàng,
+                                  style={{fontStyle: "italic", fontSize: "17px"}}>Đội ngũ điều dưỡng viên được đào tạo chuyên môn nghiệp vụ chuyên sâu, thành thạo kỹ năng tiêm giảm đau, nhẹ nhàng,
                           tạo tâm lý thoải mái cho Khách hàng
                       </figcaption>
                   </figure>
@@ -304,7 +303,7 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_77907" aria-describedby="caption-attachment-77907"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="wp-image-77907 size-full"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/dong-bao-dan-toc-tiem-chung-tai-vnvc.jpg"
+                                                                  src="https://th.bing.com/th/id/OIP.8sxD7pPsTv7tP9hFahxVEgHaC9?rs=1&pid=ImgDetMain"
                                                                   alt="đồng bào dân tộc tiêm chủng tại vnvc" width="800"
                                                                   height="600"/>
                       <figcaption id="caption-attachment-77907" className="wp-caption-text"
@@ -340,7 +339,7 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_77908" aria-describedby="caption-attachment-77908"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="size-full wp-image-77908"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/khu-vuc-sanh-cho-tiem-vac-xin.jpg"
+                                                                  src="https://d2jx2rerrg6sh3.cloudfront.net/images/news/ImageForNews_717902_16563897845991062.jpg"
                                                                   alt="khu vực sảnh chờ tiêm vắc xin" width="800"
                                                                   height="534"/>
                       <figcaption id="caption-attachment-77908" className="wp-caption-text"
@@ -354,7 +353,7 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_77910" aria-describedby="caption-attachment-77910"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="wp-image-77910 size-full"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/khu-vui-choi-tai-vnvc.jpg"
+                                                                  src="https://www.clinicaladvisor.com/wp-content/uploads/sites/11/2023/05/RSV_Vaccine_G_1265740892.jpg"
                                                                   alt="khu vui chơi tại vnvc" width="800" height="534"/>
                       <figcaption id="caption-attachment-77910" className="wp-caption-text"
                                   style={{fontStyle: "italic", fontSize: "17px"}}>Khu vực vui chơi trong trung
@@ -365,7 +364,7 @@ const IntroductionPage: React.FC = () => {
                   <figure id="attachment_77912" aria-describedby="caption-attachment-77912"
                           style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
                           className="wp-caption aligncenter"><img decoding="async" className="wp-image-77912 size-full"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/khu-vuc-thay-ta-mien-phi.jpg"
+                                                                  src="https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2021/10/9/vaccine-pfizer1-1633659760-width1200height800-1633793841782-16337938420091500516052.jpg"
                                                                   alt="khu vực thay tã miễn phí" width="800"
                                                                   height="533"/>
                       <figcaption id="caption-attachment-77912" className="wp-caption-text"
@@ -374,37 +373,6 @@ const IntroductionPage: React.FC = () => {
                           tại nhà
                       </figcaption>
                   </figure>
-                  <figure id="attachment_77913" aria-describedby="caption-attachment-77913"
-                          style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
-                          className="wp-caption aligncenter"><img decoding="async" className="wp-image-77913 size-full"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/05/phong-theo-doi-phan-ung-sau-tiem.jpg"
-                                                                  alt="phòng theo dõi phản ứng sau tiêm" width="800"
-                                                                  height="534"/>
-                      <figcaption id="caption-attachment-77913" className="wp-caption-text"
-                                  style={{fontStyle: "italic", fontSize: "17px"}}>100% trung tâm tiêm chủng VNVC
-                          đều được trang bị phòng theo dõi phản ứng sau tiêm, xử trí tại chỗ, kịp thời và đảm bảo an toàn
-                          sau tiêm cho Khách hàng
-                      </figcaption>
-                  </figure>
-
-                  <p style={{textAlign: "center", paddingBottom: "10px"}}><img decoding="async"
-                                                                               className="aligncenter size-full wp-image-84784"
-                                                                               src="https://vnvc.vn/wp-content/uploads/2024/08/cho-tiem-vac-xin-tai-tiem-chung-vip.jpg"
-                                                                               alt="chờ tiêm vắc xin tại tiêm chủng vip"
-                                                                               width="800"
-                                                                               height="534"/></p>
-                  <figure id="attachment_84785" aria-describedby="caption-attachment-84785"
-                          style={{width: "800px", margin: "0 auto", textAlign: "center", paddingBottom: "10px"}}
-                          className="wp-caption aligncenter"><img decoding="async" className="size-full wp-image-84785"
-                                                                  src="https://vnvc.vn/wp-content/uploads/2024/08/do-chieu-cao-can-nang.jpg"
-                                                                  alt="đo chiều cao cân nặng" width="800" height="534"/>
-                      <figcaption id="caption-attachment-84785" className="wp-caption-text"
-                                  style={{fontStyle: "italic", fontSize: "17px"}}>Khách hàng muốn sử dụng dịch
-                          vụ Tiêm chủng VIP tại VNVC có thể đặt hẹn qua tổng đài, website, app VNVC hoặc đăng ký trực tiếp
-                          tại trung tâm tiêm chủng.
-                      </figcaption>
-                  </figure>
-
               </div>
           </>
           <FloatingButtons/>

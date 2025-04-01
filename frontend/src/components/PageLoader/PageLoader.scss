@@ -1,0 +1,27 @@
+.page-loader-wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5); // Nền xám mờ
+  z-index: 9999;
+
+  .page-loader-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    min-width: 50px;
+
+    .page-loading-text {
+      margin-top: 15px;
+      font-size: 10px;
+      font-weight: bold;
+      color: #4fa94d;
+    }
+  }
+}

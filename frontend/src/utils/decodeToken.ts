@@ -1,13 +1,12 @@
 import { jwtDecode } from "jwt-decode";
-import { TokenResponse } from "../interfaces/Auth";
+import {TokenDecode} from "../interfaces/Account.ts";
 
-export const decodeToken = (token: string | null) : TokenResponse | null => {
+export const decodeToken = (token: string | null) : TokenDecode | null => {
     if (!token) {
         return null;
     }
     try{
-        const decoded : TokenResponse =jwtDecode(token);
-        return decoded;
+        return jwtDecode(token);
     } catch (error) {
         console.error("Invalid token", error);
         return null;

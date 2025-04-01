@@ -14,10 +14,12 @@ const Register : React.FC  = () => {
         return <LoadingRedirect message="Hãy Kiểm Tra Hòm Thư Email Của Bạn để xác nhận tài khoản!" delay={5000} to="/login" />;
     }
 
+
+
     return (
         <>
             <CustomerNavbar/>
-            <div className="registerBackGround">
+            <div className="authBackGround">
                 <div className="authContainer">
                     <form onSubmit={register.handleRegisterSubmit} className="registerForm">
                         <h1>Trang Đăng Kí</h1>
@@ -107,13 +109,15 @@ const Register : React.FC  = () => {
                                     type="date"
                                     value={register.dateOfBirth}
                                     onChange={(e) => register.handleDoBChange(e.target.value)}
-                                    className="authInput"/>
+                                    className="authInput"
+                                    max={new Date().toISOString().split("T")[0]} // Chặn ngày lớn hơn hôm nay
+                                />
                                 {register.errorDoB && <p className="errorText">{register.errorDoB}</p>}
                             </div>
                         </div>
                         <br/>
                         {register.errorGeneral && <p className="errorText">{register.errorGeneral}</p>}
-                        <button type="submit" className="authButton" >Đăng Kí</button>
+                        <button type="submit" className="authButton" disabled={register.isLoading} >Đăng Kí</button>
 
                         <span>Đã có tài khoản? <Link to="/login">Đăng Nhập</Link></span>
                     </form>

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification } from "antd";
+
 import { VaccineDetail } from "../../../../interfaces/Vaccine";
 import { apiDeleteVaccine } from "../../../../apis/apiVaccine";
+import {toast} from "react-toastify";
+import {AxiosError} from "axios";
 
 export const useVaccineManagement = () => {
     const navigate = useNavigate();
@@ -25,25 +27,17 @@ export const useVaccineManagement = () => {
             const response = await apiDeleteVaccine(vaccineId);
             
             if(response.isSuccess) {
-                notification.success({
-                    message: response.message,
-                    description: "Đã Xóa Thành Công"
-                });
+                toast.success("Đã Xóa Thành Công")
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
-            } else {
-                notification.error({
-                    message: response.message,
-                    description: "Có lỗi xảy ra"
-                });
             }
-        } catch (error) {
-            console.error("Delete error:", error);
-            notification.error({
-                message: "Lỗi xóa dữ liệu",
-                description: "Không thể xóa vaccine. Vui lòng thử lại sau."
-            });
+        } catch (error : unknown) {
+            if (error instanceof AxiosError) {
+                toast.error(`${error.response?.data?.errorMessages}`);
+            } else {
+                toast.error("Lỗi Không Xác Định");
+            }
         } finally {
             setDeletingId(null);
         }

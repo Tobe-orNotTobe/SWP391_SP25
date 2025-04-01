@@ -20,9 +20,9 @@ namespace ChildVaccineSystem.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<BlogPostDTO>> GetAllPostsAsync()
+        public async Task<IEnumerable<BlogPostDTO>> GetAllPostsAsync(bool onlyActive = true)
         {
-            var blogPosts = await _unitOfWork.BlogPosts.GetAllPostsAsync();
+            var blogPosts = await _unitOfWork.BlogPosts.GetAllPostsAsync(onlyActive);  // Pass the flag to repository
             return _mapper.Map<IEnumerable<BlogPostDTO>>(blogPosts);
         }
 
@@ -40,6 +40,8 @@ namespace ChildVaccineSystem.Service.Services
                 Content = createPostDto.Content,
                 ImageUrl = createPostDto.ImageUrl,
                 AuthorName = createPostDto.AuthorName,
+                Type = createPostDto.Type,  // Handling Type field
+                IsActive = false,  // Default value to false for newly created posts
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -54,12 +56,14 @@ namespace ChildVaccineSystem.Service.Services
             var blogPost = await _unitOfWork.BlogPosts.GetPostByIdAsync(id);
             if (blogPost == null)
             {
-                throw new ArgumentException("Blog post not found");
+                throw new ArgumentException("Không tìm thấy bài đăng trên blog\r\n");
             }
 
             blogPost.Title = updatePostDto.Title;
             blogPost.Content = updatePostDto.Content;
             blogPost.ImageUrl = updatePostDto.ImageUrl;
+            blogPost.Type = updatePostDto.Type;  // Handle updating Type field
+            blogPost.IsActive = updatePostDto.IsActive;
 
             await _unitOfWork.CompleteAsync();
 
@@ -71,13 +75,31 @@ namespace ChildVaccineSystem.Service.Services
             var blogPost = await _unitOfWork.BlogPosts.GetPostByIdAsync(id);
             if (blogPost == null)
             {
-                throw new ArgumentException("Blog post not found");
+                throw new ArgumentException("Không tìm thấy bài đăng trên blog");
             }
 
             _unitOfWork.BlogPosts.DeleteAsync(blogPost);
             await _unitOfWork.CompleteAsync();
 
             return true;
+        }
+        public async Task<List<BlogPostBasicDTO>> GetBlogBasicAsync()
+        {
+            var blogs = await _unitOfWork.BlogPosts.GetAllAsync();
+
+            var result = _mapper.Map<List<BlogPostBasicDTO>>(blogs);
+
+            return result;
+        }
+        // ✅ Lấy blog theo type
+        public async Task<List<BlogPostDTO>> GetBlogsByTypeAsync(string type)
+        {
+            var blogs = await _unitOfWork.BlogPosts.GetAllAsync(b => b.Type == type);
+
+            if (blogs == null || !blogs.Any())
+                throw new ArgumentException($"Không tìm thấy blog nào có loại '{type}'");
+
+            return _mapper.Map<List<BlogPostDTO>>(blogs);
         }
     }
 }

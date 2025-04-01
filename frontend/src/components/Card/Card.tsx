@@ -1,7 +1,9 @@
 import React from "react";
 import { VaccineIntro }from "../../interfaces/Vaccine";
 import "./Card.scss"
-import {NewsIntro, VaccineService} from "../../interfaces/Decorative.ts";
+import {BlogIntro} from "../../interfaces/Blog.ts";
+import {VaccineService} from "../../pages/HomePage/useHomePage.ts";
+
 
 
 export const VaccineCard : React.FC<VaccineIntro> = ({id, name, manufacturer, image}) => {
@@ -28,14 +30,13 @@ export const ServiceCard : React.FC<VaccineService> = ({id, name, image}) => {
 }
  
 
-export const NewsCard : React.FC<NewsIntro> = ({id, title, briefContent, image}) => {
+export const NewsCard : React.FC<BlogIntro> = ({blogPostId, title, imageUrl,type}) => {
     return(
         <>
-            <div key={id} className="newsContainer">
-                <img src={image} alt={id} className="cardNewsImg"/>
-                <h3 className="newsTitlte">{title}</h3>
+            <div key={blogPostId} className="newsContainer">
+                <img src={imageUrl} alt={type}  className="cardNewsImg"/>
                 <hr className="newsDivider"></hr>
-                <div className="newsBriefContent">{briefContent}</div>
+                <h3 className="newsTitle" dangerouslySetInnerHTML={{__html: title}}></h3>
             </div>
         </>
     );

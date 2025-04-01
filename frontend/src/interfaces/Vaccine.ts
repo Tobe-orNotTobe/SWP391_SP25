@@ -5,7 +5,6 @@ export interface VaccineIntro{
     image: string;
 }
 
-
 export interface VaccineDetail {
     vaccineId: number;
     name: string;
@@ -21,15 +20,10 @@ export interface VaccineDetail {
     notes: string;
     vaccineInteractions: string;
     undesirableEffects: string;
+    injectionsCount : number
     preserve: string;
-    injectionsCount: number;
-}
-
-export interface GetVaccineResponse {
-    statusCode: number;
-    isSuccess: boolean;
-    errorMessages: string[];
-    result: VaccineDetail[];
+    isParentId: number; // ID của vaccine cha (nếu là vaccine kết hợp)
+    isIncompatibility: boolean; // Vaccine có tương kỵ với loại nào khác không
 }
 
 
@@ -39,7 +33,13 @@ export interface GetVaccineComboDetail {
     description: string;
     totalPrice: number;
     isActive: boolean;
-    vaccines: VaccineDetail[];
+    vaccines: VaccineDetailOnCombo[];
+}
+
+export interface VaccineDetailOnCombo {
+    order: number;
+    intervalDays: number;
+    vaccine: VaccineIntro;
 }
 
 export interface PostVaccineComboDetail {
@@ -47,12 +47,17 @@ export interface PostVaccineComboDetail {
     description: string;
     totalPrice: number;
     isActive: boolean;
-    vaccineIds: number[];
+    vaccines: PostVaccineOnComBo[];
 }
 
+export  interface  PostVaccineOnComBo {
+    vaccineId: number,
+    order: number,
+    intervalDays: number,
+}
 
 export interface InjectionSchedule {
-    doseNumber: number;
+    injectionNumber: number;
     injectionMonth: number;
     isRequired: boolean;
     notes: string;
@@ -73,11 +78,12 @@ export interface VaccinationSchedule {
 }
 
 export interface VaccineInventoryStock {
+    vaccineInventoryId : number;
     vaccineId: number;
     name: string;
     manufacturer: string;
     batchNumber: string;
-    manfacturingDate : Date;
+    manufacturingDate : Date;
     expiryDate : Date;
     supplier: string;
     initialQuantity : number;
@@ -93,6 +99,32 @@ export interface VaccineInventoryResponse {
     result: VaccineInventoryStock[];
 }
 
+export interface  VaccineInventory {
+    vaccineId: number;
+    batchNumber: string;
+    manufacturingDate : string;
+    expiryDate : string;
+    initialQuantity: number;
+    supplier: string;
+}
   
-  
-  
+export interface ExportedVaccine {
+    vaccineId: number;
+    name: string;
+    manufacturer: string;
+    batchNumber: string;
+    manufacturingDate : string;
+    expiryDate : string;
+    supplier: string;
+    initialQuantity: number;
+    quantityInStock : number;
+    returnedQuantity : number;
+    totalQuantity : number
+    status: boolean;
+}
+
+export interface TopUseVaccine {
+    vaccineId: number;
+    vaccineName: string;
+    count :number;
+}

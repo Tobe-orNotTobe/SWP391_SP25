@@ -1,0 +1,85 @@
+.admin-layout {
+  min-height: 100vh;
+
+  .admin-header {
+    background-color: #2A388F !important;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    justify-content: space-between;
+    height: 64px;
+
+    .logo-container {
+      height: 100%;
+
+      .logo {
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    .user-icon {
+      font-size: 30px;
+    }
+
+    .user-info {
+      font-size: 18px;
+    }
+
+    .logout-button {
+      background-color: #FFB400;
+      color: white;
+      border: none;
+      align-items: center;
+      gap: 5px;
+
+      &:hover {
+        background-color: white;
+        color: #FFB400;
+      }
+      svg{
+        padding: 0;
+      }
+    }
+
+    .change-user-button{
+      background-color: #1890ff;
+      color: white;
+      border: none;
+      align-items: center;
+      gap: 5px;
+
+      &:hover {
+        background-color: white;
+        color: #1890ff;
+      }
+      svg{
+        padding: 0;
+      }
+    }
+
+  }
+
+  .content-layout {
+    padding: 20px;
+
+    .content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+    }
+  }
+}
+
+
+
+
+
+

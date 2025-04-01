@@ -18,11 +18,8 @@ namespace ChildVaccineSystem.Data.Entities
         public string UserId { get; set; }
         public User User { get; set; }
 
-        [Required]
-        [ForeignKey("Booking")]
-        public int BookingId { get; set; }
-        public Booking Booking { get; set; }
+		public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-        public DateTime AssignedDate { get; set; } = DateTime.UtcNow;
+		public DateTime AssignedDate { get; set; } = DateTime.UtcNow;
     }
 }

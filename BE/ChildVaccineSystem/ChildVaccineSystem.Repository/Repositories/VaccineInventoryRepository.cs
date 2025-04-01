@@ -113,5 +113,13 @@ namespace ChildVaccineSystem.Repository.Repositories
         {
             return await _context.VaccineInventories.FindAsync(id);
         }
+
+        // Lấy vaccine tồn kho theo ID vaccineInventory
+        public async Task<IEnumerable<VaccineInventory>> GetByVaccineInventoryIdAsync(int vaccineInventoryId)
+        {
+            return await _context.VaccineInventories
+                                 .Where(vi => vi.VaccineInventoryId == vaccineInventoryId)
+                                 .ToListAsync();
+        }
     }
 }

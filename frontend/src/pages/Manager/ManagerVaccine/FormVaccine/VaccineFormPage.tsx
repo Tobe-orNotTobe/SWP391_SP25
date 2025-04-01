@@ -1,10 +1,13 @@
 import React from "react";
-import { Button, Form, Input, InputNumber, Switch, Upload } from "antd";
+import { Button, Form, Input, InputNumber, Switch, Upload, Select } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout.tsx";
 import { useVaccineForm } from "./useManagerVaccine.ts";
 import "./ManagerFormVaccine.scss";
+import {TinyMCEE_API_KEY} from "../../../../config/cloudinaryConfig.ts";
+import {useVaccineDetail} from "../../../../hooks/useVaccine.ts";
+
 
 const VaccineFormPage: React.FC = () => {
     const {
@@ -12,14 +15,13 @@ const VaccineFormPage: React.FC = () => {
         isEditMode,
         form,
         handleSubmit,
-        handleUploadImage,
-        setFile,
-        file,
-        imageUrl,
+        previewUrl,
+        handleFileChange,
         loading,
         handleEditorChange,
     } = useVaccineForm();
 
+    const {vaccineDetail} = useVaccineDetail();
     return (
         <ManagerLayout>
             <div className="vaccine-form-page">
@@ -41,7 +43,6 @@ const VaccineFormPage: React.FC = () => {
                     className="vaccine-form"
                 >
                     <div className="vaccine-form-container">
-                        {/* Left column - Image upload */}
                         <div className="vaccine-form-left">
                             <Form.Item
                                 label="Hình ảnh"
@@ -51,20 +52,29 @@ const VaccineFormPage: React.FC = () => {
                             >
                                 <div className="image-upload">
                                     <Upload
+                                        name="image"
                                         accept="image/*"
                                         showUploadList={false}
-                                        beforeUpload={async (file: File) => {
-                                            setFile(file);
-                                            await handleUploadImage(file);
+                                        beforeUpload={(file: File) => {
+                                            handleFileChange(file);
                                             return false;
                                         }}
                                     >
                                         <Button className="upload-button">Chọn ảnh</Button>
                                     </Upload>
-                                    {file && <p className="file-name">{file.name}</p>}
-                                    {imageUrl && (
+
+                                    {/* Hiển thị ảnh preview */}
+                                    {previewUrl && (
                                         <div className="image-preview">
-                                            <img src={imageUrl} alt="Vaccine" />
+                                            <img
+                                                src={previewUrl}
+                                                alt="Xem trước ảnh"
+                                                style={{
+                                                    maxWidth: "100%",
+                                                    maxHeight: "200px",
+                                                    marginTop: "10px"
+                                                }}
+                                            />
                                         </div>
                                     )}
                                 </div>
@@ -99,7 +109,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập mô tả cho vaccine" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -138,9 +148,9 @@ const VaccineFormPage: React.FC = () => {
                                     className="form-item"
                                 >
                                     <InputNumber
-                                        style={{ width: "100%" }}
+                                        style={{ width: "20%" }}
                                         min={1}
-                                        max={10}
+                                        max={100}
                                         step={1}
                                         precision={0}
                                         controls
@@ -166,7 +176,31 @@ const VaccineFormPage: React.FC = () => {
                                 >
                                     <Switch checkedChildren="Có" unCheckedChildren="Không" />
                                 </Form.Item>
+
+                                <Form.Item
+                                    name="isIncompatibility"
+                                    label="Tương kỵ với vaccine khác"
+                                    valuePropName="checked"
+                                    className="form-item"
+                                >
+                                    <Switch checkedChildren="Có" unCheckedChildren="Không" />
+                                </Form.Item>
                             </div>
+
+                            <Form.Item
+                                name="isParentId"
+                                label="Vaccine cần phải chích trước"
+                                className="form-item"
+                            >
+                                <Select
+                                    placeholder="Chọn vaccine"
+                                    style={{ width: '100%' }}
+                                    options={vaccineDetail?.map((vaccine) => ({
+                                        label: vaccine.name,
+                                        value: vaccine.vaccineId
+                                    }))}
+                                />
+                            </Form.Item>
 
                             <Form.Item
                                 name="diseasePrevented"
@@ -174,7 +208,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập bệnh phòng ngừa của vaccine" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -202,7 +236,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập tác dụng phụ của vaccine" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -250,7 +284,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập tương tác vaccine" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -278,7 +312,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập tác dụng không mong muốn" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,
@@ -299,7 +333,7 @@ const VaccineFormPage: React.FC = () => {
                                 rules={[{ required: true, message: "Vui lòng nhập các lưu ý" }]}
                             >
                                 <Editor
-                                    apiKey="yw625glcnuj1n449ef2pg645jzko61ba57ggx04mkz19tf4n"
+                                    apiKey={TinyMCEE_API_KEY}
                                     initialValue=""
                                     init={{
                                         height: 200,

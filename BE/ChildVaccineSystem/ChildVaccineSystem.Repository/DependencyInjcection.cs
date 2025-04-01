@@ -1,14 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ChildVaccineSystem.Repository.Repositories;
 using ChildVaccineSystem.RepositoryContract.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace ChildVaccineSystem.Repository
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        public static IServiceCollection AddRepository(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+			services.ConfigureDatabase(configuration);
+
+			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IVaccineRepository, VaccineRepository>();
             services.AddTransient<IEmailRepository, EmailRepository>();
             services.AddTransient<IComboVaccineRepository, ComboVaccineRepository>();
@@ -27,9 +30,15 @@ namespace ChildVaccineSystem.Repository
             services.AddTransient<IDoctorWorkScheduleRepository, DoctorWorkScheduleRepository>();
             services.AddTransient<IBlogPostRepository, BlogPostRepository>();
             services.AddTransient<IFeedbackRepository, FeedbackRepository>();
+			services.AddTransient<IWalletRepository, WalletRepository>();
+			services.AddTransient<IRefundRequestRepository, RefundRequestRepository>();
+			services.AddTransient<IVaccineRecordRepository, VaccineRecordRepository>();
+			services.AddTransient<IWalletTransactionRepository, WalletTransactionRepository>();
+			services.AddTransient<INotificationRepository, NotificationRepository>();
+			services.AddTransient<IVaccinationReminderRepository, VaccinationReminderRepository>();
 
-            //DI Unit of Work
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+			//DI Unit of Work
+			services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

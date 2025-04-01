@@ -1,8 +1,9 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { ChildDetailRequest, ChildDetailResponse } from "../interfaces/Child.ts";
 import {apiChildRegister, apiChildUpdate, apiGetChildById, apiGetMyChilds} from "../apis/apiChild.ts";
-import { notification } from "antd";
+// import { notification } from "antd";
 import { uploadImageToCloudinary } from "../utils/cloudinary.ts";
+import {toast} from "react-toastify";
 
 export const useMyChilds = () => {
     const [myChilds, setMyChilds] = useState<ChildDetailResponse[]>([]);
@@ -11,15 +12,17 @@ export const useMyChilds = () => {
 
     const fetchMyChilds = async () => {
         setLoading(true);
-        try {
-            const { isSuccess, result } = await apiGetMyChilds();
-            if (isSuccess) setMyChilds(result);
-        } catch (err) {
-            setError("Error Fetching My Children Data");
-            console.error(err);
-        } finally {
-            setLoading(false);
+
+        const response = await apiGetMyChilds();
+
+        if (!response.isSuccess) {
+            setError(response.errorMessages.length > 0 ? response.errorMessages[0] : "Unknown error");
+        } else if (response.result) {
+            setMyChilds(response.result);
+        } else {
+            setMyChilds([]);
         }
+            setLoading(false);
     };
 
     useEffect(() => {
@@ -29,6 +32,29 @@ export const useMyChilds = () => {
     // Trả về `refetch` để gọi lại khi cần
     return { myChilds, loading, error, refetch: fetchMyChilds };
 };
+
+export const useGetChildsByUserId = () => {
+    const [childs, setChilds] = useState<ChildDetailResponse[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    const fetchChilds = async (userId: string) => {
+        setLoading(true);
+
+        const response = await apiGetMyChilds(userId);
+
+        if (!response.isSuccess) {
+            setError(response.errorMessages.length > 0 ? response.errorMessages[0] : "Unknown error");
+        } else if (response.result) {
+            setChilds(response.result);
+        } else {
+            setChilds([]);
+        }
+        setLoading(false);
+    };
+
+    return { childs, loading, error, fetchChilds };
+}
 
 export const useChildDetail = (childId: number) => {
     const [childDetail, setChildDetail] = useState<ChildDetailResponse>();
@@ -71,6 +97,7 @@ export const useChildForm = (refetch: () => void) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isSucessfull, setIsSuccessfull] = useState<boolean | null>(null);
 
     const updateForm = useCallback(
         (key: keyof typeof form, value: any) => setForm((prev) => ({ ...prev, [key]: value })),
@@ -96,7 +123,7 @@ export const useChildForm = (refetch: () => void) => {
         const file = e.target.files[0];
 
         if (file.size > 5 * 1024 * 1024) {
-            return notification.error({ message: "Ảnh vượt quá dung lượng cho phép (5MB)." });
+            return toast.error("Ảnh vượt quá dung lượng cho phép (5MB).");
         }
 
         e.target.value = ""; // Reset input file để đảm bảo sự kiện thay đổi luôn được kích hoạt
@@ -117,22 +144,26 @@ export const useChildForm = (refetch: () => void) => {
 
     const handleSubmit = async (isUpdate: boolean, event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("Disconme" + form)
-
+        setIsSuccessfull(null);
         setError(null);
         const validationError = validateForm();
         if (validationError) return setError(validationError);
-        console.log("nihaoma" + form.selectedImage)
 
         setIsLoading(true);
 
         try {
             let imageUrl = form.imageUrl;
-            console.log("Form object: ", form.selectedImage);
             if (form.selectedImage) {
-                console.log( "Ninini " + form.selectedImage)
                 imageUrl = await uploadImageToCloudinary(form.selectedImage);
                 if (!imageUrl) throw new Error("Lỗi tải ảnh lên");
+            }else {
+                if (!imageUrl) {
+                    if (form.selectedGender?.value === "Male") {
+                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742345394/mhkyilwl3aa6qmabesvr.jpg";
+                    }else {
+                        imageUrl = "https://res.cloudinary.com/dchh42alp/image/upload/v1742345393/zwofzhjeyyoif4vlibav.jpg";
+                    }
+                }
             }
 
             const requestData: ChildDetailRequest = {
@@ -152,13 +183,16 @@ export const useChildForm = (refetch: () => void) => {
 
             if (!response.isSuccess) throw new Error(response.errorMessages || "Lỗi xảy ra, vui lòng thử lại.");
             updateForm("imageUrl", imageUrl);
-            notification.success({ message: isUpdate ? "Cập nhật thành công!" : "Đăng ký thành công!" });
+            toast.success(isUpdate ? "Cập nhật thành công!" : "Đăng ký thành công!" );
+            // notification.success({ message: isUpdate ? "Cập nhật thành công!" : "Đăng ký thành công!" });
+            setIsSuccessfull(true);
             if (isUpdate) {
                 refetch();
             }
 
         } catch (err: any) {
-            notification.error({ message: "Lỗi", description: err.message || "Có lỗi xảy ra, vui lòng thử lại." });
+            toast.error(err.message || "Có lỗi xảy ra, vui lòng thử lại." );
+            // notification.error({ message: "Lỗi", description: err.message || "Có lỗi xảy ra, vui lòng thử lại." });
             setError(err.message);
         } finally {
             setIsLoading(false);
@@ -169,6 +203,7 @@ export const useChildForm = (refetch: () => void) => {
         form,
         isLoading,
         error,
+        isSucessfull,
         updateForm,
         formatDateForInput,
         handleDateChange,

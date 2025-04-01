@@ -1,12 +1,14 @@
 ﻿using ChildVaccineSystem.Common.Helper;
 using ChildVaccineSystem.Data.DTO.Auth;
-using ChildVaccineSystem.Data.DTO;
 using ChildVaccineSystem.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using ChildVaccineSystem.Data.DTO.User;
+using ChildVaccineSystem.ServiceContract.Interfaces;
+using ChildVaccineSystem.Service.Services;
 
 namespace ChildVaccineSystem.API.Controllers
 {
@@ -18,93 +20,113 @@ namespace ChildVaccineSystem.API.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly APIResponse _response;
+		private readonly IWalletService _walletService;
+		private readonly APIResponse _response;
+        private readonly IUserService _userService;
 
-        public AdminController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, APIResponse response)
+        public AdminController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IWalletService walletService, APIResponse response, IUserService userService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _walletService = walletService;
             _response = response;
+            _userService = userService;
         }
 
         [HttpPost("create-account")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> CreateAccount([FromBody] RegisterAccountDTO model)
         {
-            if (model == null || string.IsNullOrEmpty(model.Password))
+            var (success, message, errors) = await _userService.CreateUserAsync(model);
+
+            var response = new APIResponse();
+
+            if (!success)
             {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Invalid user data.");
-                return BadRequest(_response);
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.IsSuccess = false;
+                response.ErrorMessages = errors ?? new List<string> { message ?? "Lỗi không xác định." };
+                return BadRequest(response);
             }
 
-            if (!await _roleManager.RoleExistsAsync(model.Role))
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Role '{model.Role}' does not exist.");
-                return BadRequest(_response);
-            }
-
-            var user = new User
-            {
-                UserName = model.UserName,
-                Email = model.Email,
-                FullName = model.FullName,
-                Address = model.Address,
-                PhoneNumber = model.PhoneNumber,
-                DateOfBirth = model.DateOfBirth,
-                EmailConfirmed = true,
-                IsActive = true
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages = result.Errors.Select(e => e.Description).ToList();
-                return BadRequest(_response);
-            }
-
-            await _userManager.AddToRoleAsync(user, model.Role);
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            _response.Result = $"Account created successfully with role '{model.Role}'";
-            return Ok(_response);
+            response.StatusCode = HttpStatusCode.OK;
+            response.IsSuccess = true;
+            response.Result = message;
+            return Ok(response);
         }
 
         [HttpGet("getAllUsers")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            _response.Result = _userManager.Users.ToList();
-            return Ok(_response);
-        }
+            var users = _userManager.Users.ToList();
 
-        [HttpGet("admin/GetUserById/{id}")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> GetUserById(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            var userWithRoles = new List<object>();
+
+            foreach (var user in users)
             {
-                _response.StatusCode = HttpStatusCode.NotFound;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
-                return NotFound(_response);
+                var roles = await _userManager.GetRolesAsync(user);
+
+                userWithRoles.Add(new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.FullName,
+                    user.Email,
+                    user.Address,
+                    user.DateOfBirth,
+                    user.IsActive,
+                    user.PhoneNumber,
+                    Roles = roles
+                });
             }
 
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            _response.Result = user;
-            return Ok(_response);
+            var response = new
+            {
+                StatusCode = HttpStatusCode.OK,
+                IsSuccess = true,
+                ErrorMessages = new List<string>(),
+                Result = userWithRoles
+            };
+
+            return Ok(response);
         }
 
-        [HttpDelete("DeleteUser/{id}")]
+		[HttpGet("admin/GetUserById/{id}")]
+		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+		public async Task<IActionResult> GetUserById(string id)
+		{
+			var user = await _userManager.FindByIdAsync(id);
+			if (user == null)
+			{
+				_response.StatusCode = HttpStatusCode.NotFound;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add("Không tìm thấy người dùng");
+				return NotFound(_response);
+			}
+
+			var roles = await _userManager.GetRolesAsync(user);
+
+			var userData = new
+			{
+				user.Id,
+				user.UserName,
+				user.FullName,
+				user.Email,
+				user.Address,
+				user.DateOfBirth,
+				user.IsActive,
+				user.PhoneNumber,
+				Roles = roles
+			};
+
+			_response.StatusCode = HttpStatusCode.OK;
+			_response.IsSuccess = true;
+			_response.Result = userData;
+			return Ok(_response);
+		}
+
+		[HttpDelete("DeleteUser/{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -113,7 +135,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
+                _response.ErrorMessages.Add("Không tìm thấy người dùng");
                 return NotFound(_response);
             }
 
@@ -122,48 +144,86 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Failed to delete user");
+                _response.ErrorMessages.Add("Không thể xóa người dùng");
                 return BadRequest(_response);
             }
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = "User deleted successfully";
-            return Ok(_response);
-        }
-        [HttpPut("UpdateUser")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> UpdateUser([FromBody] UserDTO model)
-        {
-            var user = await _userManager.FindByIdAsync(model.Id);
-            if (user == null)
-            {
-                _response.StatusCode = HttpStatusCode.NotFound;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
-                return NotFound(_response);
-            }
-
-            user.FullName = model.FullName;
-            user.Address = model.Address;
-            user.DateOfBirth = model.DateOfBirth;
-
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Failed to update user");
-                return BadRequest(_response);
-            }
-
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            _response.Result = "User updated successfully";
+            _response.Result = "Người dùng đã được xóa thành công";
             return Ok(_response);
         }
 
-        [HttpPut("activate/{id}")]
+
+		[HttpPut("UpdateUser")]
+		[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+		public async Task<IActionResult> UpdateUser([FromBody] UserDTO model)
+		{
+			var user = await _userManager.FindByIdAsync(model.Id);
+			if (user == null)
+			{
+				_response.StatusCode = HttpStatusCode.NotFound;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add("Không tìm thấy người dùng");
+				return NotFound(_response);
+			}
+
+			user.UserName = model.UserName;
+			user.FullName = model.FullName;
+			user.Address = model.Address;
+			user.DateOfBirth = model.DateOfBirth;
+
+			// Cập nhật vai trò nếu được truyền vào
+			if (!string.IsNullOrWhiteSpace(model.Role))
+			{
+				var existingRoles = await _userManager.GetRolesAsync(user);
+
+				// Xóa các role hiện tại
+				var removeResult = await _userManager.RemoveFromRolesAsync(user, existingRoles);
+				if (!removeResult.Succeeded)
+				{
+					_response.StatusCode = HttpStatusCode.BadRequest;
+					_response.IsSuccess = false;
+					_response.ErrorMessages.Add("Không thể xóa vai trò hiện tại của người dùng");
+					return BadRequest(_response);
+				}
+
+				// Kiểm tra role mới có tồn tại không
+				if (!await _roleManager.RoleExistsAsync(model.Role))
+				{
+					_response.StatusCode = HttpStatusCode.BadRequest;
+					_response.IsSuccess = false;
+					_response.ErrorMessages.Add($"Vai trò '{model.Role}' không tồn tại");
+					return BadRequest(_response);
+				}
+
+				var addResult = await _userManager.AddToRoleAsync(user, model.Role);
+				if (!addResult.Succeeded)
+				{
+					_response.StatusCode = HttpStatusCode.BadRequest;
+					_response.IsSuccess = false;
+					_response.ErrorMessages.Add("Không thể thêm vai trò mới cho người dùng");
+					return BadRequest(_response);
+				}
+			}
+
+			var result = await _userManager.UpdateAsync(user);
+			if (!result.Succeeded)
+			{
+				_response.StatusCode = HttpStatusCode.BadRequest;
+				_response.IsSuccess = false;
+				_response.ErrorMessages.Add("Không thể cập nhật người dùng");
+				return BadRequest(_response);
+			}
+
+			_response.StatusCode = HttpStatusCode.OK;
+			_response.IsSuccess = true;
+			_response.Result = "Người dùng đã cập nhật thành công";
+			return Ok(_response);
+		}
+
+
+		[HttpPut("activate/{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> ActivateUser(string id)
         {
@@ -172,7 +232,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
+                _response.ErrorMessages.Add("Không tìm thấy người dùng");
                 return NotFound(_response);
             }
 
@@ -181,7 +241,7 @@ namespace ChildVaccineSystem.API.Controllers
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = "User activated successfully";
+            _response.Result = "Người dùng đã được kích hoạt thành công";
             return Ok(_response);
         }
 
@@ -194,7 +254,7 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("User not found");
+                _response.ErrorMessages.Add("Không tìm thấy người dùng");
                 return NotFound(_response);
             }
 
@@ -203,11 +263,11 @@ namespace ChildVaccineSystem.API.Controllers
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = "User deactivated successfully";
+            _response.Result = "Người dùng đã bị vô hiệu hóa thành công";
             return Ok(_response);
         }
         [HttpGet("getAllDoctors")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Staff")]
         public async Task<IActionResult> GetAllDoctors()
         {
             try
@@ -217,7 +277,7 @@ namespace ChildVaccineSystem.API.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("Role 'Doctor' does not exist.");
+                    _response.ErrorMessages.Add("Không tồn tại vai trò 'Bác sĩ'.");
                     return NotFound(_response);
                 }
 
@@ -233,7 +293,8 @@ namespace ChildVaccineSystem.API.Controllers
                     Address = user.Address,
                     DateOfBirth = user.DateOfBirth,
                     IsActive = user.IsActive,
-                    Role = "Doctor"
+                    Role = "Doctor",
+                    ImageUrl = user.ImageUrl
                 }).ToList();
 
                 _response.StatusCode = HttpStatusCode.OK;
@@ -245,11 +306,36 @@ namespace ChildVaccineSystem.API.Controllers
             {
                 _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add($"Error retrieving doctors: {ex.Message}");
+                _response.ErrorMessages.Add($"Lỗi khi tìm kiếm bác sĩ: {ex.Message}");
                 return StatusCode((int)HttpStatusCode.InternalServerError, _response);
             }
         }
 
+        [HttpGet("getAllRoles")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Staff")]
+        public async Task<IActionResult> GetAllRoles()
+        {
+            try
+            {
+                var roles = _roleManager.Roles.Select(role => new
+                {
+                    role.Name,
+                    role.Id
+                }).ToList();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = roles;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add($"Lỗi khi truy xuất vai trò: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            }
+        }
 
     }
 }

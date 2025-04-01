@@ -1,0 +1,255 @@
+.booking-calendar-container{
+
+  padding-top: 40px; /* padding-top, padding-left/right, padding-bottom */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto; /* Centering */
+
+  .calendar-select-status {
+    display: flex;
+    justify-content: flex-end; // This will push the select to the right
+    align-items: center;
+    margin-bottom: 5px;
+
+    .ant-select {
+      width: 150px;
+    }
+  }
+}
+
+
+
+.booking-details-modal {
+
+  .ant-modal-content {
+
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    // Modal header styling
+    .ant-modal-header {
+      color: #2a388f;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+
+      .ant-modal-title {
+        color: #2a388f;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+    }
+
+    // Modal body styling
+    .ant-modal-body {
+      padding: 20px;
+
+    }
+  }
+
+  // Booking list item styling
+  .booking-list-item {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0.1, 0.1, 0.1, 0.4);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    // Typography
+    .booking-details {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+
+      .label {
+        font-weight: 600;
+        color: #2a388f;
+        margin-right: 10px;
+      }
+
+      .value {
+        font-size: 1rem;
+        color: #333;
+      }
+
+      // Special styling for certain fields
+      .booking-id {
+        font-size: 1.1rem;
+        color: #2a388f;
+        font-weight: 700;
+      }
+
+      .total-price {
+        color: #FFB400;
+        font-weight: 600;
+      }
+    }
+
+  }
+}
+
+// feedback-display.scss
+.feedback-container {
+  text-align: center;
+  background-color: #f0f2f5;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &__rating {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &-icon {
+      font-size: 40px;
+      color: #FFB400;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+  }
+
+  &__comment-label {
+    color: #2a388f;
+    font-size: 18px;
+    margin: 0;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  &__comment-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #e1e1e1;
+
+    &-text {
+      color: #333;
+      font-size: 16px;
+      margin-top: 8px;
+    }
+  }
+
+  &__date-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 12px 16px;
+
+    &-label {
+      color: #2a388f;
+      font-size: 16px;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    &-value {
+      color: #666;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+
+  .feedback-container__actions{
+    margin-top: 10px;
+    text-align: right;
+
+    .update-feedback-button{
+      margin-right: 10px;
+      background-color: #52c41a;
+
+      &:hover{
+        color: #52c41a;
+        background-color: white;
+      }
+    }
+
+  }
+}
+
+
+.booking-actions {
+  .feedback-button {
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 100%;
+    background-color: #2a388f;
+    border-color: #2a388f;
+    border-radius: 6px;
+    font-weight: 600;
+
+    &:hover {
+      background-color: white;
+      color: #2a388f;
+    }
+  }
+
+  .Pending-Button{
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 100%;
+    background-color: #faad14;
+    border-color: #faad14;
+    border-radius: 6px;
+    font-weight: 600;
+
+    &:hover {
+      background-color: white;
+      color: #FFB400;
+    }
+  }
+
+  .Refund-button{
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 100%;
+    background-color: #FD7E14;
+    border-color: #FD7E14;
+    border-radius: 6px;
+    font-weight: 600;
+
+    &:hover {
+      background-color: white;
+      color: #FD7E14;
+    }
+
+  }
+
+  .Cancel-button{
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 100%;
+    background-color: #ff4d4f;
+    border-radius: 6px;
+    font-weight: 600;
+    color: white;
+
+  }
+
+  .vaccine-record-button{
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 100%;
+    background-color: #52c41a;
+    border-color: #52c41a;
+    border-radius: 6px;
+    font-weight: 600;
+
+    &:hover {
+      background-color: white;
+      color: #52c41a;
+    }
+  }
+}
+
+

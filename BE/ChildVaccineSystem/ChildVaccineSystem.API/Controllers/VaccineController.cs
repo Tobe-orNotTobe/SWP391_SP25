@@ -50,7 +50,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.NotFound;
-				_response.ErrorMessages.Add("Vaccine not found");
+				_response.ErrorMessages.Add("Không tìm thấy vắc xin");
 				return NotFound(_response);
 			}
 
@@ -69,7 +69,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.BadRequest;
-				_response.ErrorMessages.Add("Create failure");
+				_response.ErrorMessages.Add("Tạo thất bại");
 				return NotFound(_response);
 			}
 
@@ -100,7 +100,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.NotFound;
-				_response.ErrorMessages.Add("Vaccine not found");
+				_response.ErrorMessages.Add("Không tìm thấy vắc xin");
 				return NotFound(_response);
 			}
 
@@ -118,7 +118,7 @@ namespace ChildVaccineSystem.API.Controllers
 			{
 				_response.IsSuccess = false;
 				_response.StatusCode = HttpStatusCode.NotFound;
-				_response.ErrorMessages.Add("Vaccine not found");
+				_response.ErrorMessages.Add("Không tìm thấy vắc xin");
 				return NotFound(_response);
 			}
 

@@ -1,113 +1,163 @@
-
 .homeContainer {
-    padding: 0; /* padding-top, padding-left/right, padding-bottom */
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto; /* Centering */
+  padding: 0;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* Carousel Section */
 .carouselContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .ImgSlider {
-    width: 100%;
-    height: 600px;
-    border-radius: 2px; /* Optional: rounded corners for images */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: shadow effect */
+  width: 100%;
+  height: 600px;
+  border-radius: 2px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Brief Content Section */
 .briefContent {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    min-height: 50vh; /* Minimum height equal to the screen height */
-    background-color: #2A388F; /* Blue color */
-    color: white;
-    padding: 20px;
-    box-sizing: border-box; /* Ensure padding does not exceed dimensions */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-height: 50vh;
+  background-color: #2A388F;
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .briefSmallContent {
-    margin-top: 40px;
-    margin-left: 70px;
-    display: flex;
-    gap: 20px;
+  margin-top: 40px;
+  margin-left: 70px;
+  display: flex;
+  gap: 20px;
 }
 
 .briefFullContent {
-    text-align: right;
+  text-align: right;
 }
 
 .briefFullContent a {
-    color: white;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .briefContentText {
-    flex: 1;
+  flex: 1;
 }
 
 .briefContentText h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
 .briefContentText p {
-    font-size: 16px;
-    line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .briefContentImage {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .briefContentImage img {
-    max-width: 80%;
-    height: auto;
-    border-radius: 8px;
+  max-width: 80%;
+  height: auto;
+  border-radius: 8px;
 }
 
-.vaccineListContainer {
-    padding-top: 20px;
+/* Section containers */
+.vaccineListContainer,
+.serviceListContainer,
+.newsListContainer {
+  padding-top: 30px;
+  margin-bottom: 40px;
 }
 
+/* Title Header with Divider */
 .titleHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 0;
-    color: #2A388F;
-  
-    h2 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: bold;
-    }
-  
-    span {
-      font-size: 16px;
-      
-      a {
-        text-decoration: none;
-        color: #2A388F; 
-        font-weight: 500;
-        
-        &:hover {
-          text-decoration: underline;
-        }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 15px 0;
+  margin-bottom: 5px;
+  color: #2A388F;
+  position: relative;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  span {
+    font-size: 16px;
+
+    a {
+      text-decoration: none;
+      color: #2A388F;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
       }
     }
   }
+}
 
-.newsIntro {
-    margin-top: 10px;
-    background-color: #fcfbfb;
+/* Divider line after title header */
+.titleHeader + hr {
+  height: 1px;
+  background-color: #2A388F;
+  border: none;
+  margin: 0 0 20px 0;
+  opacity: 0.7;
+}
+
+/* Specifically for news section */
+.newsListContainer hr {
+  background-color: #000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .briefContent {
+    padding-right: 40px !important;
+    padding-left: 40px !important;
+  }
+
+  .briefSmallContent {
+    margin-left: 0;
+    flex-direction: column;
+  }
+
+  .briefContentImage {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ImgSlider {
+    height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ImgSlider {
+    height: 300px;
+  }
 }

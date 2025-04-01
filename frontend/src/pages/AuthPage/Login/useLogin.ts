@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate} from "react-router-dom";
-import { LoginRequest } from "../../../interfaces/Auth";
-import { apiLogIn } from "../../../apis/apiAuth";
+import {LoginGoogleRequest, LoginGoogleResponse, LoginRequest} from "../../../interfaces/Account.ts";
+import {apiLogIn, apiLogInGoogle} from "../../../apis/apiAccount.ts";
 import {AxiosError} from "axios";
-import { notification } from "antd";
+import { toast } from "react-toastify";
+import {decodeToken} from "../../../utils/decodeToken.ts";
+import { auth, provider, signInWithPopup } from "../../../utils/firebase.ts";
+import {User} from "firebase/auth"
 
 export const useLogin = () => {
     const [username, setUsername] = useState<string>("");
@@ -26,9 +29,7 @@ export const useLogin = () => {
         
         if (!username || !password) {
             setError("Tài khoản và mật khẩu không được để trống");
-            notification.error({
-                message:"Đăng Nhập Thất Bại"
-            })
+            toast.error("Đăng nhập thất bại! Tài khoản và mật khẩu không được để trống.");
             return;
         }
 
@@ -37,35 +38,62 @@ export const useLogin = () => {
 
         try {
             const response = await apiLogIn(data);
-            if (response.token) {
-                localStorage.setItem("token", response.token);
-                console.log("Login Successful", response);
+            if (response.result) {
+                localStorage.setItem("token", response.result.token);
 
-                notification.success({
-                    message: "Đăng nhập thành công",
-                });
+                // Cảnh báo: Lưu refreshToken vào localStorage không an toàn, cần thảo luận với BE
+                localStorage.setItem("refreshToken", response.result.refeshToken);
+
+                toast.success("Đăng nhập thành công!");
 
                 setIsLoading(false);
+
+                // Giải mã token để lấy role
+                const decoded = decodeToken(response.result.token);
+
+                if (!decoded) {
+                    toast.error("Token không hợp lệ!");
+                    return;
+                }
+
+                const userRole = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+                let redirectPath = "/homepage";
+                switch (userRole) {
+                    case "Admin":
+                        redirectPath = "/homepage";
+                        break;
+                    case "Manager":
+                        redirectPath = "/manager/dashboard";
+                        break;
+                    case "Staff":
+                        redirectPath = "/staff/assignDoctor";
+                        break;
+                    case "Doctor":
+                        redirectPath = "/doctor/vaccination-schedule";
+                        break;
+                    case "Customer":
+                        redirectPath = "/homepage";
+                        break;
+                    default:
+                        toast.error("Vai trò không hợp lệ!");
+                        return;
+                }
+
                 setIsRedirecting(true);
 
                 setTimeout(() => {
                     setIsRedirecting(false);
-                    navigate("/homepage");
-                }, 5000); 
+                    navigate(redirectPath);
+                }, 2000);
             }
+
         } catch (error : unknown) {
             if (error instanceof AxiosError) {
-
-                notification.error({
-                    message: "Đăng Nhập Thất Bại",
-                    description: error.response?.data?.error || "Lỗi không xác định từ server",
-                });
+                toast.error(`${error.response?.data?.errorMessages || "Lỗi không xác định từ server"}`);
             } else {
                 console.error("Lỗi không xác định:", error);
-                notification.error({
-                    message: "Lỗi không xác định",
-                    description: "Vui lòng thử lại sau.",
-                });
+                toast.error("Lỗi không xác định, vui lòng thử lại sau.");
             }
         } finally {
             setIsLoading(false);
@@ -86,13 +114,83 @@ export const useLogin = () => {
     };
 };
 
-export const useLoginGoogle = () => {
+export const useAuthGoogle = () => {
 
-    const handleGoogleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-    }
+    const [user, setUser] = useState<User | null>(null);
+    const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
+    const [isGoogleRedirecting, setGoogleIsRedirecting] = useState<boolean>(false);
+    const [googleError, setGoogleError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
-    return {handleGoogleLogin}
+    // Hàm đăng nhập
+    const handleLoginGoogle = async () => {
+        setGoogleError(null);
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const idToken = await result.user.getIdToken(); // Lấy idToken từ user
+            setUser(result.user);
+            // console.log("User:", result.user);
+            // console.log("ID Token:", idToken);
+            setIsGoogleLoading(true);
 
+            const data: LoginGoogleRequest = {
+                idToken: idToken
+            }
+
+            if (idToken) {
+                const response: LoginGoogleResponse = await apiLogInGoogle(data);
+                // toast.success(response.message);
+                localStorage.setItem("token", response.result.token);
+
+                setIsGoogleLoading(false);
+
+                const decoded = decodeToken(response.result.token);
+
+                if (!decoded) {
+                    toast.error("Token không hợp lệ!");
+                    return;
+                }
+
+                const userRole = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+                let redirectPath = "/homepage";
+                switch (userRole) {
+                    case "Admin":
+                        redirectPath = "/homepage";
+                        break;
+                    case "Manager":
+                        redirectPath = "/manager/dashboard";
+                        break;
+                    case "Staff":
+                        redirectPath = "/staff/assignDoctor";
+                        break;
+                    case "Doctor":
+                        redirectPath = "/doctor/vaccination-schedule";
+                        break;
+                    case "Customer":
+                        redirectPath = "/homepage";
+                        break;
+                    default:
+                        toast.error("Vai trò không hợp lệ!");
+                        return;
+                }
+                toast.success("Đăng nhập thành công!");
+                localStorage.setItem("isGoogleLogin", "true")
+
+                setGoogleIsRedirecting(true);
+
+                setTimeout(() => {
+                    setGoogleIsRedirecting(false);
+                    navigate(redirectPath);
+                }, 2000);
+
+
+            }
+        } catch (error) {
+            console.error("Lỗi đăng nhập:", error);
+        }
+    };
+
+    return {isGoogleLoading, isGoogleRedirecting, googleError, handleLoginGoogle, user}
 
 }

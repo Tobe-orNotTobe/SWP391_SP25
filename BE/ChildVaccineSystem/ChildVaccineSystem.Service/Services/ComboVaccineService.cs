@@ -10,44 +10,43 @@ using ChildVaccineSystem.ServiceContract.Interfaces;
 
 namespace ChildVaccineSystem.Service.Services
 {
-	public class ComboVaccineService : IComboVaccineService
-	{
-		private readonly IUnitOfWork _unitOfWork;
-		private readonly IMapper _mapper;
+    public class ComboVaccineService : IComboVaccineService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-		public ComboVaccineService(IUnitOfWork unitOfWork, IComboVaccineRepository comboVaccineRepository, IVaccineRepository vaccineRepository, IMapper mapper)
-		{
-			_unitOfWork = unitOfWork;
-			_mapper = mapper;
-		}
+        public ComboVaccineService(IUnitOfWork unitOfWork, IComboVaccineRepository comboVaccineRepository, IVaccineRepository vaccineRepository, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
 
-		public async Task<IEnumerable<ComboVaccineDTO>> GetAllAsync()
-		{
-			var combos = await _unitOfWork.ComboVaccines.GetAll();
-			return _mapper.Map<IEnumerable<ComboVaccineDTO>>(combos);
-		}
+        public async Task<IEnumerable<ComboVaccineDTO>> GetAllAsync()
+        {
+            var combos = await _unitOfWork.ComboVaccines.GetAll();
+            return _mapper.Map<IEnumerable<ComboVaccineDTO>>(combos);
+        }
 
-		public async Task<ComboVaccineDTO> GetByIdAsync(int id)
-		{
-			var combo = await _unitOfWork.ComboVaccines.GetById(id);
-			if (combo == null)
-				throw new Exception("ComboVaccine not found.");
-			return _mapper.Map<ComboVaccineDTO>(combo);
-		}
+        public async Task<ComboVaccineDTO> GetByIdAsync(int id)
+        {
+            var combo = await _unitOfWork.ComboVaccines.GetById(id);
+            if (combo == null)
+                throw new Exception("ComboVaccine không tìm thấy.");
+            return _mapper.Map<ComboVaccineDTO>(combo);
+        }
 
         public async Task<ComboVaccineDTO> CreateAsync(CreateComboVaccineDTO comboDto)
         {
-            comboDto.VaccineIds = comboDto.VaccineIds.Distinct().ToList();
-
             var combo = _mapper.Map<ComboVaccine>(comboDto);
 
-            combo.ComboDetails = comboDto.VaccineIds
-                .Select(vaccineId => new ComboDetail
+            combo.ComboDetails = comboDto.Vaccines
+                .Select(vaccine => new ComboDetail
                 {
                     ComboId = combo.ComboId,
-                    VaccineId = vaccineId
-                })
-                .ToList();
+                    VaccineId = vaccine.VaccineId,
+                    Order = vaccine.Order,
+                    IntervalDays = vaccine.IntervalDays
+                }).ToList();
 
             var createdCombo = await _unitOfWork.ComboVaccines.AddAsync(combo);
             await _unitOfWork.CompleteAsync();
@@ -57,35 +56,22 @@ namespace ChildVaccineSystem.Service.Services
         }
 
 
+
         public async Task<ComboVaccineDTO> UpdateAsync(int id, UpdateComboVaccineDTO comboDto)
         {
             var existingCombo = await _unitOfWork.ComboVaccines.GetById(id);
             if (existingCombo == null) return null;
 
-            if (comboDto.VaccineIds.Distinct().Count() != comboDto.VaccineIds.Count)
-            {
-                throw new Exception("Combo Vaccine cannot contain duplicate vaccines. Please remove duplicate entries and try again.");
-            }
+            _unitOfWork.ComboDetails.RemoveRange(existingCombo.ComboDetails);
 
-            var existingVaccineIds = existingCombo.ComboDetails.Select(cd => cd.VaccineId).ToList();
-
-            var newVaccines = comboDto.VaccineIds.Except(existingVaccineIds).ToList();
-
-            if (!newVaccines.Any())
-            {
-                throw new Exception("No new vaccines added. Please update with different vaccines.");
-            }
-
-            existingCombo.ComboDetails.Clear();
-
-            foreach (var vaccineId in comboDto.VaccineIds)
-            {
-                existingCombo.ComboDetails.Add(new ComboDetail
+            existingCombo.ComboDetails = comboDto.Vaccines
+                .Select(vaccine => new ComboDetail
                 {
                     ComboId = existingCombo.ComboId,
-                    VaccineId = vaccineId
-                });
-            }
+                    VaccineId = vaccine.VaccineId,
+                    Order = vaccine.Order,
+                    IntervalDays = vaccine.IntervalDays
+                }).ToList();
 
             _mapper.Map(comboDto, existingCombo);
 

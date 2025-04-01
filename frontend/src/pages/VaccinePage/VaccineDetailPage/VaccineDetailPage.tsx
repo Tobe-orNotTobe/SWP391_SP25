@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useVaccineDetailById } from "./useVaccineDetail.ts";
+import {Link, useParams} from "react-router-dom";
+import {useVaccineDetailById} from "../../../hooks/useVaccine.ts";
 import { Card, Spin} from "antd";
 import Footer from "../../../components/Footer/Footer.tsx";
 import CustomerNavbar from "../../../components/Navbar/CustomerNavbar/CustomerNavbar.tsx";
@@ -8,11 +8,16 @@ import FloatingButtons from "../../../components/FloatingButton/FloatingButtons.
 import "./VaccineDetailPage.scss";
 
 const VaccineDetailPage: React.FC = () => {
-  const { vaccine, loading } = useVaccineDetailById();
+
+  const {id} = useParams();
+  const {vaccineDetail, loading} = useVaccineDetailById(Number(id));
+  const {vaccineDetail: VaccineDetailParent} = useVaccineDetailById(Number(vaccineDetail?.isParentId));
 
   if (loading) return (
       <div className="loading-container">
-        <Spin tip="Đang tải dữ liệu..." size="large" />
+        <div className="loading-wrapper">
+          <Spin tip="Đang tải dữ liệu..." size="large" />
+        </div>
       </div>
   );
 
@@ -25,42 +30,55 @@ const VaccineDetailPage: React.FC = () => {
             <span className="separator">»</span>
             <span>Thông tin sản phẩm vaccine</span>
             <span className="separator">»</span>
-            <span className="last">Vắc xin {vaccine?.name}</span>
+            <span className="last">Vắc xin {vaccineDetail?.name}</span>
           </div>
 
           <div className="vaccine-Title">
-            <h1 className="gt-vaccine-title ">Thông tin chi tiết của vaccine {vaccine?.name}</h1>
+            <h1 className="gt-vaccine-title ">Thông tin chi tiết của vaccine {vaccineDetail?.name}</h1>
           </div>
 
           <div className="vaccineDetailContent">
             <div className="vaccineDetailLeft">
               <Card className="vaccine-left-card">
                 <img
-                    src={`/images/${vaccine?.image}`}
-                    alt={vaccine?.name}
+                    src={`${vaccineDetail?.image}`}
+                    alt={vaccineDetail?.name}
                     className="vaccineImage"
                 />
-                <h1>Vắc Xin {vaccine?.name}</h1>
+                <h1>Vắc Xin {vaccineDetail?.name}</h1>
 
                 <p>
                   <strong>Trạng thái:</strong>
-                  <span className={vaccine?.status ? "status-available" : "status-unavailable"}>
-                  {vaccine?.status ? "Có sẵn" : "Không có sẵn"}
-                </span>
+                  <span className={vaccineDetail?.status ? "status-available" : "status-unavailable"}>
+                      {vaccineDetail?.status ? "Có sẵn" : "Không có sẵn"}
+                    </span>
                 </p>
 
                 <p>
                   <strong>Cần thiết:</strong>
-                  {vaccine?.isNecessary ? "Có" : "Không"}
+                  {vaccineDetail?.isNecessary ? "Có" : "Không"}
+                </p>
+                {VaccineDetailParent && (
+                    <p>
+                      <strong style={{color: "#2A388F"}}>Cần tiêm trước Vaccine {VaccineDetailParent?.name}</strong>
+                    </p>
+                )}
+                <p>
+                  <strong>{vaccineDetail?.isNecessary ? "Được" : "Không"}</strong> chích kèm các vaccine khác
+                </p>
+
+                <p>
+                  <strong>Số mũi tiêm: </strong> {vaccineDetail?.injectionsCount}
                 </p>
 
                 <p>
                   <strong>Giá:</strong>
-                  <span style={{ color: "#2A388F", fontWeight: "600" }}>
-                  {vaccine?.price.toLocaleString()} VND
-                </span>
+                  <span style={{color: "#2A388F", fontWeight: "600"}}>
+                        {vaccineDetail?.price.toLocaleString()} VND
+                  </span>
                 </p>
               </Card>
+
             </div>
 
             <div className="vaccineDetailRight">
@@ -71,32 +89,26 @@ const VaccineDetailPage: React.FC = () => {
                 <div className="numbered-detail-section">
                   <div className="section-number">1</div>
                   <strong>Nhà sản xuất:</strong>
-                  <div className="detail-content">{vaccine?.manufacturer}</div>
+                  <div className="detail-content">{vaccineDetail?.manufacturer}</div>
                 </div>
 
                 <div className="numbered-detail-section">
                   <div className="section-number">2</div>
                   <strong>Vị trí tiêm:</strong>
-                  <div className="detail-content">{vaccine?.injectionSite}</div>
-                </div>
-
-                <div className="numbered-detail-section">
-                  <div className="section-number">3</div>
-                  <strong>Số mũi tiêm:</strong>
-                  <div className="detail-content">{vaccine?.injectionsCount}</div>
+                  <div className="detail-content">{vaccineDetail?.injectionSite}</div>
                 </div>
 
                 <div className="numbered-detail-section">
                   <div className="section-number">4</div>
                   <strong>Bảo quản:</strong>
-                  <div className="detail-content">{vaccine?.preserve}</div>
+                  <div className="detail-content">{vaccineDetail?.preserve}</div>
                 </div>
 
                 <div className="numbered-detail-section">
                   <div className="section-number">5</div>
                   <strong>Mô tả:</strong>
                   <div className="detail-content"
-                       dangerouslySetInnerHTML={{__html: vaccine?.description ?? ""}}
+                       dangerouslySetInnerHTML={{__html: vaccineDetail?.description ?? ""}}
                   />
                 </div>
 
@@ -104,7 +116,7 @@ const VaccineDetailPage: React.FC = () => {
                   <div className="section-number">6</div>
                   <strong>Phòng bệnh:</strong>
                   <div className="detail-content"
-                       dangerouslySetInnerHTML={{__html: vaccine?.diseasePrevented ?? ""}}
+                       dangerouslySetInnerHTML={{__html: vaccineDetail?.diseasePrevented ?? ""}}
                   />
                 </div>
 
@@ -112,7 +124,7 @@ const VaccineDetailPage: React.FC = () => {
                   <div className="section-number">7</div>
                   <strong>Ghi chú:</strong>
                   <div className="detail-content"
-                       dangerouslySetInnerHTML={{__html: vaccine?.notes ?? ""}}
+                       dangerouslySetInnerHTML={{__html: vaccineDetail?.notes ?? ""}}
                   />
                 </div>
 
@@ -120,7 +132,7 @@ const VaccineDetailPage: React.FC = () => {
                   <div className="section-number">8</div>
                   <strong>Phản ứng phụ:</strong>
                   <div className="detail-content"
-                       dangerouslySetInnerHTML={{__html: vaccine?.sideEffect ?? ""}}
+                       dangerouslySetInnerHTML={{__html: vaccineDetail?.sideEffect ?? ""}}
                   />
                 </div>
 
@@ -128,7 +140,7 @@ const VaccineDetailPage: React.FC = () => {
                   <div className="section-number">9</div>
                   <strong>Tương tác thuốc:</strong>
                   <div className="detail-content"
-                       dangerouslySetInnerHTML={{__html: vaccine?.vaccineInteractions ?? ""}}
+                       dangerouslySetInnerHTML={{__html: vaccineDetail?.vaccineInteractions ?? ""}}
                   />
                 </div>
 
@@ -136,7 +148,7 @@ const VaccineDetailPage: React.FC = () => {
                   <div className="section-number">10</div>
                   <strong>Tác dụng không mong muốn:</strong>
                   <div className="detail-content"
-                       dangerouslySetInnerHTML={{__html: vaccine?.undesirableEffects ?? ""}}
+                       dangerouslySetInnerHTML={{__html: vaccineDetail?.undesirableEffects ?? ""}}
                   />
                 </div>
               </Card>
@@ -144,8 +156,8 @@ const VaccineDetailPage: React.FC = () => {
           </div>
         </div>
 
-        <FloatingButtons />
-        <Footer />
+        <FloatingButtons/>
+        <Footer/>
       </>
   );
 };

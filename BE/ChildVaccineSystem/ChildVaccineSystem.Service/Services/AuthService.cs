@@ -44,16 +44,21 @@ namespace ChildVaccineSystem.Service.Services
             }
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password))
-                throw new Exception("Invalid username or password!");
+                throw new Exception("Tên người dùng hoặc mật khẩu không hợp lệ!");
 
             if (!user.EmailConfirmed)
-                throw new Exception("Email is not confirmed. Please confirm your email to login.");
+                throw new Exception("Email chưa được xác nhận. Vui lòng xác nhận email của bạn để đăng nhập.");
 
             var token = GenerateJwtToken(user);
             var refreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            await _userManager.UpdateAsync(user);
+
             return new LoginResponseDTO
             {
                 Token = token,
+                RefeshToken = refreshToken
             };
         }
 
@@ -62,34 +67,34 @@ namespace ChildVaccineSystem.Service.Services
         {
             // Validate if email is null or empty
             if (string.IsNullOrWhiteSpace(dto.Email) || !dto.Email.Contains("@"))
-                throw new Exception("Invalid email address.");
+                throw new Exception("Địa chỉ email không hợp lệ.");
 
             // Validate if username is null or empty
             if (string.IsNullOrWhiteSpace(dto.UserName))
-                throw new Exception("Username cannot be empty.");
+                throw new Exception("Tên người dùng không được để trống.");
 
             // Validate phone number format
             if (string.IsNullOrWhiteSpace(dto.PhoneNumber) || !IsValidPhoneNumber(dto.PhoneNumber))
-                throw new Exception("Invalid phone number format. Phone number must start with 0 and be at most 10 digits long.");
+                throw new Exception("Định dạng số điện thoại không hợp lệ. Số điện thoại phải bắt đầu bằng số 0 và dài tối đa 10 chữ số.");
 
             // Check if email already exists
             var userExists = await _userManager.FindByEmailAsync(dto.Email);
             if (userExists != null)
-                throw new Exception("Email already exists.");
+                throw new Exception("Email đã tồn tại.");
 
             // Check if username already exists
             var usernameExists = await _userManager.FindByNameAsync(dto.UserName);
             if (usernameExists != null)
-                throw new Exception("Username already exists.");
+                throw new Exception("Tên người dùng đã tồn tại.");
 
             // Check if phone number already exists
             var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber == dto.PhoneNumber);
             if (phoneExists)
-                throw new Exception("Phone number already exists.");
+                throw new Exception("Số điện thoại đã tồn tại.");
 
             // Validate password complexity (at least 6 characters as an example)
             if (string.IsNullOrWhiteSpace(dto.Password) || dto.Password.Length < 6)
-                throw new Exception("Password must be at least 6 characters long, including at least 1 uppercase letter, 1 lowercase letter, 1 special character, and 1 numeric character.");
+                throw new Exception("Mật khẩu phải dài ít nhất 6 ký tự, bao gồm ít nhất 1 chữ cái viết hoa, 1 chữ cái viết thường, 1 ký tự đặc biệt và 1 số.");
 
             // Assign default role as "Customer"
             string defaultRole = "Customer";
@@ -107,7 +112,7 @@ namespace ChildVaccineSystem.Service.Services
             if (!result.Succeeded)
             {
                 var errors = string.Join("; ", result.Errors.Select(e => e.Description));
-                throw new Exception($"User registration failed: {errors}");
+                throw new Exception($"Đăng ký người dùng không thành công: {errors}");
             }
 
             // Check if "Customer" role exists, if not, create it
@@ -117,7 +122,7 @@ namespace ChildVaccineSystem.Service.Services
                 if (!roleResult.Succeeded)
                 {
                     var roleErrors = string.Join("; ", roleResult.Errors.Select(e => e.Description));
-                    throw new Exception($"Role creation failed: {roleErrors}");
+                    throw new Exception($"Tạo vai trò không thành công: {roleErrors}");
                 }
             }
 
@@ -145,7 +150,13 @@ namespace ChildVaccineSystem.Service.Services
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-                throw new Exception("User not found.");
+                throw new Exception("Không tìm thấy người dùng.");
+
+            // Check if the email is already confirmed
+            if (user.EmailConfirmed)
+            {
+                throw new Exception("Email đã được xác nhận.");
+            }
 
             string decodedToken = Uri.UnescapeDataString(token).Replace(" ", "+");
 
@@ -154,7 +165,7 @@ namespace ChildVaccineSystem.Service.Services
             if (!result.Succeeded)
             {
                 var errors = string.Join("; ", result.Errors.Select(e => e.Description));
-                throw new Exception($"Email confirmation failed: {errors}");
+                throw new Exception($"Xác nhận email không thành công: {errors}");
             }
 
             return result.Succeeded;
@@ -163,25 +174,33 @@ namespace ChildVaccineSystem.Service.Services
 
         public async Task<LoginResponseDTO> RefreshTokenAsync(string refreshToken)
         {
-            // Mock logic to validate the refresh token
-            var user = await _userManager.FindByIdAsync(refreshToken); // Ensure to change this as per your storage logic
+            // Tìm người dùng thông qua refreshToken (refreshToken được lưu trữ trong cơ sở dữ liệu)
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
             if (user == null)
-                throw new Exception("Invalid refresh token.");
+                throw new Exception("Refresh Token không hợp lệ.");
 
+            // Tạo lại access token và refresh token mới
             var newToken = GenerateJwtToken(user);
             var newRefreshToken = GenerateRefreshToken();
 
+            // Cập nhật refresh token mới cho người dùng trong cơ sở dữ liệu
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            // Trả về thông tin bao gồm token mới và refresh token mới
             return new LoginResponseDTO
             {
                 Token = newToken,
+                RefeshToken = newRefreshToken
             };
         }
+
 
         public async Task<bool> ForgetPasswordAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-                throw new Exception("User not found.");
+                throw new Exception("Không tìm thấy người dùng.");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -201,7 +220,7 @@ namespace ChildVaccineSystem.Service.Services
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                return (false, "User not found.");
+                return (false, "Không tìm thấy người dùng.");
             }
 
             var resetResult = await _userManager.ResetPasswordAsync(user, token, newPassword);
@@ -210,14 +229,14 @@ namespace ChildVaccineSystem.Service.Services
             {
                 // Capture detailed error messages
                 var errors = string.Join("; ", resetResult.Errors.Select(e => e.Description));
-                return (false, $"Password reset failed: {errors}");
+                return (false, $"Đặt lại mật khẩu không thành công: {errors}");
             }
 
-            return (true, "Password has been reset successfully.");
+            return (true, "Mật khẩu đã được đặt lại thành công.");
         }
 
 
-        private string GenerateJwtToken(User user)
+        public string GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
             {
@@ -252,5 +271,7 @@ namespace ChildVaccineSystem.Service.Services
         {
             return Task.CompletedTask;
         }
+
+
     }
 }

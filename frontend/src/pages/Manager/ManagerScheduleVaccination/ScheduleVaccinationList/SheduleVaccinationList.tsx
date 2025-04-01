@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Table, Modal } from "antd";
+import React, {useState} from "react";
+import { Button, Table, Modal, Input } from "antd";
 import ManagerLayout from "../../../../components/Layout/ManagerLayout/ManagerLayout";
 import { useVaccinationSchedule } from "./useVaccinationSchedule";
 import { VaccinationSchedule } from "../../../../interfaces/Vaccine";
@@ -15,6 +15,10 @@ const ScheduleVaccinationList: React.FC = () => {
    
     const {vaccinationSchedule, loading} = useVaccinationScheduleDetail()
 
+
+    const [searchText, setSearchText] = useState<string>("");
+
+
     const {
         deletingId,
         selectedSchedule,
@@ -26,17 +30,19 @@ const ScheduleVaccinationList: React.FC = () => {
         handleModalClose,
     } = useVaccinationSchedule();
 
-    
+
     const columns = [
         {
             title: "Mã Lịch",
             dataIndex: "scheduleId",
             key: "scheduleId",
+            sorter: (a :VaccinationSchedule, b :VaccinationSchedule) => a.scheduleId - b.scheduleId,
         },
         {
             title: "Độ tuổi (Từ - Đến)",
-            render: (record: VaccinationSchedule) => `${record.ageRangeStart} - ${record.ageRangeEnd} tháng`,
             key: "ageRange",
+            render: (record: VaccinationSchedule) => `${record.ageRangeStart} - ${record.ageRangeEnd} tuổi`,
+            sorter: (a :VaccinationSchedule, b : VaccinationSchedule) => a.ageRangeStart - b.ageRangeStart,
         },
         {
             title: "Ghi chú",
@@ -54,9 +60,9 @@ const ScheduleVaccinationList: React.FC = () => {
                     <Button onClick={() => handleEdit(record.scheduleId)} className="edit-button">
                         <FiEdit2 /> Chỉnh sửa
                     </Button>
-                    <Button 
-                        loading={deletingId === record.scheduleId} 
-                        onClick={() => handleDelete(record.scheduleId)} 
+                    <Button
+                        loading={deletingId === record.scheduleId}
+                        onClick={() => handleDelete(record.scheduleId)}
                         className="delete-button"
                         danger
                     >
@@ -67,6 +73,20 @@ const ScheduleVaccinationList: React.FC = () => {
         },
     ];
 
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(e.target.value.toLowerCase());
+    };
+
+// Kiểm tra dữ liệu có hợp lệ không
+    const scheduleList = Array.isArray(vaccinationSchedule) ? vaccinationSchedule : [];
+
+// Lọc dữ liệu dựa trên tìm kiếm
+    const filteredData = scheduleList.filter(
+        (item) =>
+            item.scheduleId.toString().includes(searchText) ||  // Tìm theo mã lịch
+            item.notes.toLowerCase().includes(searchText)        // Tìm theo ghi chú
+    );
+
     return (
         <ManagerLayout>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
@@ -75,10 +95,15 @@ const ScheduleVaccinationList: React.FC = () => {
                     <TiPlusOutline /> Thêm lịch tiêm cho Vaccine
                 </Button>
             </div>
-
+            <Input.Search
+                placeholder="🔍 Tìm kiếm theo Mã Lịch hoặc Ghi chú..."
+                onChange={handleSearch}
+                style={{ marginBottom: 16, width: 350 }}
+                allowClear
+            />
             <Table
                 columns={columns}
-                dataSource={vaccinationSchedule}
+                dataSource={filteredData}
                 loading={loading}
                 rowKey="scheduleId"
                 pagination={{ pageSize: 10 }}

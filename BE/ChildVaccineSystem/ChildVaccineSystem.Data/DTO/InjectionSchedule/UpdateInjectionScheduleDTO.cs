@@ -10,8 +10,8 @@ namespace ChildVaccineSystem.Data.DTO.InjectionSchedule
 	public class UpdateInjectionScheduleDTO
 	{
 		[Required]
-		[Range(1, int.MaxValue, ErrorMessage = "Dose number must be positive")]
-		public int DoseNumber { get; set; }
+		[Range(1, int.MaxValue, ErrorMessage = "Injection number must be positive")]
+		public int InjectionNumber { get; set; }
 
 		[Required]
 		[Range(0, int.MaxValue, ErrorMessage = "Injection month must be non-negative")]
