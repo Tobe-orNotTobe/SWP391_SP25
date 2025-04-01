@@ -39,6 +39,7 @@ import moment from "moment";
 import dayjs, { Dayjs } from "dayjs";
 import { BookingDetail, BookingResult } from "../../interfaces/Booking.ts";
 import { ColumnType } from 'antd/es/table';
+import {exportPDF} from "../../utils/exportPDF.ts";
 
 const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
@@ -629,6 +630,7 @@ function AssignPage() {
           "Completed",
           "Cancelled",
           "RequestRefund",
+          "Pending",
         ];
         const shouldHideButtons = hiddenButtonStatuses.includes(record.status);
 
@@ -665,6 +667,10 @@ function AssignPage() {
     },
   ];
 
+
+  const handleExportPDF  = ( selectedBooking : any, vacccineRecord: any)=> {
+    exportPDF(selectedBooking, vacccineRecord)
+  }
   return (
     <Staff1Layout>
       <h1>Phân công bác sĩ</h1>
@@ -775,12 +781,20 @@ function AssignPage() {
 
       {/* Modal chi tiết */}
       <Modal
-        open={modalIsOpen}
-        onCancel={closeModal}
-        footer={null}
-        width={900}
-        centered
-        className="vaccination-modal"
+          open={modalIsOpen}
+          onCancel={closeModal}
+          footer={
+            selectedBooking?.status === "Completed" ? (
+                <div style={{ textAlign: "right" }}>
+                  <Button type="primary" onClick={() => handleExportPDF(selectedBooking, vaccineRecordDetails)}>
+                    Xuất Hồ Sơ Tiêm Chủng
+                  </Button>
+                </div>
+            ) : null
+          }
+          width={900}
+          centered
+          className="vaccination-modal"
       >
         <div className="modal-content">
           <h2 className="modal-title">Chi Tiết Đặt Lịch</h2>
@@ -836,25 +850,27 @@ function AssignPage() {
                   </p>
                 </div>
 
-                {selectedBooking.bookingDetails.length > 0 && comboDetails.length === 0 && (
-                  <div className="combo-section">
-                    <h3>Chi Tiết Vaccine</h3>
-                    {selectedBooking.bookingDetails.map((vaccine) => (
-                      <div key={vaccine.vaccineId} className="vaccine-item">
-                        <p>
-                          <strong>Tên Vaccine:</strong> {vaccine.vaccineName}
-                        </p>
-                        <p>
-                          <strong>Ngày tiêm:</strong> {moment(vaccine.injectionDate).format("DD/MM/YYYY")}
-                        </p>
-                        <p>
-                          <strong>Giá:</strong>{" "}
-                          {vaccine.price?.toLocaleString()} VNĐ
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                {selectedBooking.bookingDetails.length > 0 &&
+                  comboDetails.length === 0 && (
+                    <div className="combo-section">
+                      <h3>Chi Tiết Vaccine</h3>
+                      {selectedBooking.bookingDetails.map((vaccine) => (
+                        <div key={vaccine.vaccineId} className="vaccine-item">
+                          <p>
+                            <strong>Tên Vaccine:</strong> {vaccine.vaccineName}
+                          </p>
+                          <p>
+                            <strong>Ngày tiêm:</strong>{" "}
+                            {moment(vaccine.injectionDate).format("DD/MM/YYYY")}
+                          </p>
+                          <p>
+                            <strong>Giá:</strong>{" "}
+                            {vaccine.price?.toLocaleString()} VNĐ
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
               </div>
               {selectedBooking.status === "Completed" &&
                 vaccineRecordDetails && (

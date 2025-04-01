@@ -67,7 +67,7 @@ class NotificationService {
   public async startConnection(): Promise<void> {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.log('No token available, not connecting to notification hub');
+      // console.log('No token available, not connecting to notification hub');
       return Promise.resolve();
     }
 
@@ -87,7 +87,7 @@ class NotificationService {
 
     this.connectionPromise = this.connection!.start()
       .then(() => {
-        console.log('SignalR Connected successfully.');
+        // console.log('SignalR Connected successfully.');
         this.reconnectAttempts = 0;
         this.isConnecting = false;
       })

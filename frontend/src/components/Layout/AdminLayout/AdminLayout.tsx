@@ -58,6 +58,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             label: <Link to="/admin/account">Quản lý Account</Link>
         },
         {
+            key: 'notification',
+            icon: <CiUser />,
+            label: <Link to="/admin/notification">Quản lý Thông báo</Link>
+        },
+        {
             key: 'blog',
             icon: <MedicineBoxOutlined />,
             label: 'Quản lý Blog',  // Không dùng <Link> ở đây vì nó có submenu

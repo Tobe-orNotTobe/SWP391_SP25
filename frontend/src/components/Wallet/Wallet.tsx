@@ -56,8 +56,7 @@ const Wallet: React.FC = () => {
             dataIndex: 'amount',
             key: 'amount',
             render: (amount: number, record: WalletHistoryUserDetail) => {
-                const isPositive = record.transactionType === "Nạp tiền" ||
-                    (record.transactionType === "Chuyển khoản" && amount > 0);
+                const isPositive = record.transactionType === "Nạp tiền" || record.transactionType === "Hoàn tiền";
                 return (
                     <Text
                         style={{
@@ -151,7 +150,7 @@ const Wallet: React.FC = () => {
     const transactionTabItems = [
         { key: "All", label: "Tất cả" },
         { key: "Nạp tiền", label: "Nạp tiền" },
-        { key: "Thanh toán lịch hẹn", label: "Thanh toán" },
+        { key: "Thanh toán lịch hẹn", label: "Thanh toán lịch hẹn" },
         { key: "Hoàn tiền", label: "Hoàn tiền" },
 
     ];

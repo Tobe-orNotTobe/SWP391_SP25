@@ -1,0 +1,139 @@
+.term-container-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+  font-family: 'Roboto', sans-serif;
+
+  // Breadcrumb navigation styling
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 10px;
+
+    a {
+      color: #2A388F;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #1a237e;
+        text-decoration: underline;
+      }
+    }
+
+    .separator {
+      margin: 0 8px;
+      color: #6D6E70;
+    }
+
+    .last {
+      color: #6D6E70;
+      font-weight: 500;
+    }
+  }
+
+  // Page title styling
+  .term-title {
+    padding: 15px 0 20px;
+    border-bottom: 2px solid #2A388F;
+    margin-bottom: 30px;
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #2A388F;
+      margin: 0;
+      position: relative;
+
+    }
+  }
+
+  // Terms content styling
+  .term-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    h2 {
+      color: #2A388F;
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e0e0e0;
+      position: relative;
+
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        width: 40px;
+        height: 3px;
+        background-color: #FF9800;
+      }
+
+      &:not(:first-child) {
+        margin-top: 40px;
+      }
+    }
+
+    p {
+      margin: 12px 0;
+      line-height: 1.6;
+      color: #424242;
+      font-size: 16px;
+      padding-left: 20px;
+      position: relative;
+
+      &:before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: #2A388F;
+        font-weight: bold;
+      }
+    }
+
+    // Policy sections
+    .policy-section {
+      background-color: #f9f9f9;
+      border-left: 4px solid #2A388F;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 0 4px 4px 0;
+
+      h3 {
+        color: #2A388F;
+        font-size: 18px;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .term-container-wrapper {
+    padding: 25px 15px 40px;
+
+    .term-title h1 {
+      font-size: 26px;
+    }
+
+    .term-content {
+      padding: 20px;
+
+      h2 {
+        font-size: 20px;
+      }
+
+      p {
+        font-size: 15px;
+      }
+    }
+  }
+}

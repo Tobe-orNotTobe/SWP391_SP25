@@ -9,6 +9,26 @@ export interface NotificationType {
     relatedEntityType: string | null;
     relatedEntityId: number | null;
   }
+
+  export interface NotificationResponse {
+      notificationId: string;
+      userId: string;
+      userName: string;
+      userEmail: string;
+      message: string;
+      createdAt: string;
+      isRead: boolean;
+      type: string;
+      relatedEntityType: string;
+      relatedEntityId: number | null;
+}
+
+export interface UpdateNotificationRequest {
+    message: string;
+    type: string;
+    relatedEntityType: string;
+    relatedEntityId: number | null;
+}
   
   export interface NotificationResponse {
     statusCode: number;

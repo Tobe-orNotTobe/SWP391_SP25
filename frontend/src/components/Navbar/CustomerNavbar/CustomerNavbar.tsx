@@ -85,7 +85,7 @@ const CustomerNavbar: React.FC = () => {
 
                         {/* Dropdown for Cẩm Nang */}
                         <li className="cusNavDropdown">
-                            <Link to="/handbook" className="cusNavItem">Cẩm Nang</Link>
+                            <Link to="#" className="cusNavItem">Cẩm Nang</Link>
                             <ul className="cusNavDropdown-menu">
                                 <li><Link to="/handbook/before" className="cusNavDropdown-link">Trước Khi Tiêm Chủng</Link></li>
                                 <li><Link to="/handbook/process" className="cusNavDropdown-link">Quy trình tiêm chủng</Link></li>
