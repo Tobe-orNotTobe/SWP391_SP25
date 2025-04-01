@@ -352,16 +352,16 @@ const BookingHistory: React.FC = () => {
                                 Xem Feedback
                             </Button>
 
-                            <Button
-                                type="primary"
-                                className="vaccine-record-button"
-                                onClick={() => {
-                                    setBkId(record.bookingId);
-                                    setVaccineRecordModal(true);
-                                }}
-                            >
-                                Xem Vaccine Record
-                            </Button>
+                            {/*<Button*/}
+                            {/*    type="primary"*/}
+                            {/*    className="vaccine-record-button"*/}
+                            {/*    onClick={() => {*/}
+                            {/*        setBkId(record.bookingId);*/}
+                            {/*        setVaccineRecordModal(true);*/}
+                            {/*    }}*/}
+                            {/*>*/}
+                            {/*    Xem Vaccine Record*/}
+                            {/*</Button>*/}
                         </>
                     )}
                 </div>

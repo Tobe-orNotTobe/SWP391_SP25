@@ -135,7 +135,7 @@ export const useWalletLogic = () => {
         switch (type) {
             case 'Nạp tiền':
                 return 'Nạp tiền';
-            case 'Thanh toán lịch hẹn':
+            case 'Thanh toán':
                 return amount < 0 ? 'Thanh toán' : '';
             case 'Hoàn tiền':
                 return 'Hoàn tiền';
