@@ -576,9 +576,12 @@ const BookingForm = () => {
                               />
                               <div className="vaccine-info">
                                 <h4>{vaccinePackage.comboName}</h4>
-                                <p className="description">
-                                  {vaccinePackage.description}
-                                </p>
+                                <p
+                                  className="description"
+                                  dangerouslySetInnerHTML={{
+                                    __html: vaccinePackage.description,
+                                  }}
+                                ></p>
                                 <p className="price">
                                   Giá:{" "}
                                   {vaccinePackage.totalPrice?.toLocaleString(
@@ -627,9 +630,12 @@ const BookingForm = () => {
                               />
                               <div className="vaccine-info">
                                 <h4>{vaccine.name}</h4>
-                                <p className="description">
-                                  {vaccine.description}
-                                </p>
+                                <p
+                                  className="description"
+                                  dangerouslySetInnerHTML={{
+                                    __html: vaccine.description,
+                                  }}
+                                ></p>
                                 <p className="price">
                                   Giá: {vaccine.price?.toLocaleString("vi-VN")}{" "}
                                   vnđ
