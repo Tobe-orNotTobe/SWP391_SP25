@@ -147,11 +147,11 @@ const BookingForStaff = () => {
     }
   }, [selectedChild]);
 
-const isChecking = useRef(false);
+  const isChecking = useRef(false);
   const checkParentVaccineForSelection = async (vaccineId: string) => {
     if (isChecking.current) return; // Ngăn chặn gọi lại
     isChecking.current = true;
-    
+
     try {
       const response = await apiCheckParentVaccine([Number(vaccineId)]);
       if (response.result && response.result.length > 0) {
@@ -161,14 +161,14 @@ const isChecking = useRef(false);
         // ]);
         showConfirmationModal(response.result, vaccineId);
         console.log("Checking");
-        }
+      }
     } catch (error) {
-        console.error("Error checking parent vaccine:", error);
-        toast.error("Không thể kiểm tra vaccine yêu cầu trước đó.");
+      console.error("Error checking parent vaccine:", error);
+      toast.error("Không thể kiểm tra vaccine yêu cầu trước đó.");
     } finally {
-        isChecking.current = false; // Reset flag sau khi hoàn tất
+      isChecking.current = false; // Reset flag sau khi hoàn tất
     }
-};
+  };
 
   const showConfirmationModal = (messages: string[], vaccineId: string) => {
     Modal.confirm({
@@ -264,13 +264,15 @@ const isChecking = useRef(false);
     price?: number
   ) => {
     setSelectedVaccines((prevSelected) => {
-      const isAlreadySelected = prevSelected.some(item => item.id === vaccineId);
+      const isAlreadySelected = prevSelected.some(
+        (item) => item.id === vaccineId
+      );
       let newSelection: SelectedVaccine[];
 
       if (isAlreadySelected) {
         // Remove vaccine and update parent checks
         // setParentVaccineChecks(prev => prev.filter(check => check.vaccineId !== vaccineId));
-        newSelection = prevSelected.filter(item => item.id !== vaccineId);
+        newSelection = prevSelected.filter((item) => item.id !== vaccineId);
       } else {
         // Add new vaccine
         newSelection = [
@@ -622,9 +624,12 @@ const isChecking = useRef(false);
                                 />
                                 <div className="vaccine-info">
                                   <h4>{vaccinePackage.comboName}</h4>
-                                  <p className="description">
-                                    {vaccinePackage.description}
-                                  </p>
+                                  <p
+                                    className="description"
+                                    dangerouslySetInnerHTML={{
+                                      __html: vaccinePackage.description,
+                                    }}
+                                  ></p>
                                   <p className="price">
                                     Giá:{" "}
                                     {vaccinePackage.totalPrice?.toLocaleString(
@@ -673,9 +678,12 @@ const isChecking = useRef(false);
                                 />
                                 <div className="vaccine-info">
                                   <h4>{vaccine.name}</h4>
-                                  <p className="description">
-                                    {vaccine.description}
-                                  </p>
+                                  <p
+                                    className="description"
+                                    dangerouslySetInnerHTML={{
+                                      __html: vaccine.description,
+                                    }}
+                                  ></p>
                                   <p className="price">
                                     Giá:{" "}
                                     {vaccine.price?.toLocaleString("vi-VN")} vnđ
