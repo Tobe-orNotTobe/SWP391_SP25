@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification, Spin, Modal } from "antd";
+import { Spin, Modal } from "antd";
 import {
   Parent,
   Child,
@@ -9,7 +9,6 @@ import {
 } from "../../interfaces/VaccineRegistration.ts";
 import { apiBooking, apiCheckParentVaccine } from "../../apis/apiBooking";
 import { apiPostVNPayTransaction } from "../../apis/apiTransaction";
-import { IsLoginSuccessFully } from "../../validations/IsLogginSuccessfully";
 import { apiGetMyChilds } from "../../apis/apiChild.ts";
 import {
   useVaccineDetail,
@@ -39,15 +38,10 @@ interface SelectedVaccine {
 
 const BookingForStaff = () => {
   const navigate = useNavigate();
-  const { username, sub } = IsLoginSuccessFully();
 
   // State for vaccination form
   const [isFormSplit, setIsFormSplit] = useState(false);
-  const [parentInfo, setParentInfo] = useState<Parent>({
-    customerCode: sub,
-    parentName: username || "Không rõ",
-    children: [],
-  });
+  const [parentInfo, setParentInfo] = useState<Parent>();
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [formLoading, setFormLoading] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
@@ -147,11 +141,11 @@ const BookingForStaff = () => {
     }
   }, [selectedChild]);
 
-const isChecking = useRef(false);
+  const isChecking = useRef(false);
   const checkParentVaccineForSelection = async (vaccineId: string) => {
     if (isChecking.current) return; // Ngăn chặn gọi lại
     isChecking.current = true;
-    
+
     try {
       const response = await apiCheckParentVaccine([Number(vaccineId)]);
       if (response.result && response.result.length > 0) {
@@ -161,14 +155,14 @@ const isChecking = useRef(false);
         // ]);
         showConfirmationModal(response.result, vaccineId);
         console.log("Checking");
-        }
+      }
     } catch (error) {
-        console.error("Error checking parent vaccine:", error);
-        toast.error("Không thể kiểm tra vaccine yêu cầu trước đó.");
+      console.error("Error checking parent vaccine:", error);
+      toast.error("Không thể kiểm tra vaccine yêu cầu trước đó.");
     } finally {
-        isChecking.current = false; // Reset flag sau khi hoàn tất
+      isChecking.current = false; // Reset flag sau khi hoàn tất
     }
-};
+  };
 
   const showConfirmationModal = (messages: string[], vaccineId: string) => {
     Modal.confirm({
@@ -235,17 +229,11 @@ const isChecking = useRef(false);
       if (paymentResponse.isSuccess) {
         window.location.href = paymentResponse.result?.paymentUrl;
       } else {
-        notification.error({
-          message: "Lỗi",
-          description: "Không lấy được đường dẫn thanh toán.",
-        });
+        toast.warning("Không lấy được đường dẫn thanh toán.");
       }
     } catch (error: any) {
       console.error("Error submitting booking:", error);
-      notification.error({
-        message: "Lỗi",
-        description: error.toString(),
-      });
+      toast.warning(error.toString());
     } finally {
       setFormLoading(false);
     }
@@ -264,13 +252,15 @@ const isChecking = useRef(false);
     price?: number
   ) => {
     setSelectedVaccines((prevSelected) => {
-      const isAlreadySelected = prevSelected.some(item => item.id === vaccineId);
+      const isAlreadySelected = prevSelected.some(
+        (item) => item.id === vaccineId
+      );
       let newSelection: SelectedVaccine[];
 
       if (isAlreadySelected) {
         // Remove vaccine and update parent checks
         // setParentVaccineChecks(prev => prev.filter(check => check.vaccineId !== vaccineId));
-        newSelection = prevSelected.filter(item => item.id !== vaccineId);
+        newSelection = prevSelected.filter((item) => item.id !== vaccineId);
       } else {
         // Add new vaccine
         newSelection = [
@@ -337,18 +327,12 @@ const isChecking = useRef(false);
     event.preventDefault();
 
     if (!selectedChild) {
-      notification.warning({
-        message: "Cảnh báo",
-        description: "Vui lòng chọn trẻ để đặt lịch.",
-      });
+      toast.warning("Vui lòng chọn trẻ để đặt lịch.");
       return;
     }
 
     if (bookingDetails.length === 0) {
-      notification.warning({
-        message: "Cảnh báo",
-        description: "Vui lòng chọn ít nhất một vaccine.",
-      });
+      toast.warning("Vui lòng chọn ít nhất một vaccine.");
       return;
     }
 
@@ -408,7 +392,6 @@ const isChecking = useRef(false);
                       </button>
                     </div>
                   </div>
-
                   {parentInfo && (
                     <div className="parent-info">
                       <h3>Thông tin phụ huynh</h3>
@@ -421,7 +404,6 @@ const isChecking = useRef(false);
                       </p>
                     </div>
                   )}
-
                   {parentInfo && parentInfo.children.length > 0 ? (
                     <div className="registered-children">
                       <h3>Danh sách trẻ</h3>
@@ -441,25 +423,19 @@ const isChecking = useRef(false);
                                 checked={
                                   selectedChild?.childId === child.childId
                                 }
-                                onChange={() => {
-                                  if (
+                                onChange={() =>
+                                  handleSelectChild(
                                     selectedChild?.childId === child.childId
-                                  ) {
-                                    handleSelectChild(null);
-                                  } else {
-                                    handleSelectChild(child);
-                                  }
-                                }}
+                                      ? null
+                                      : child
+                                  )
+                                }
                               />
                               <div className="child-info">
                                 <div>
                                   <Avatar
                                     size={64}
-                                    src={
-                                      child.imageUrl
-                                        ? child.imageUrl
-                                        : undefined
-                                    }
+                                    src={child.imageUrl || undefined}
                                     icon={
                                       !child.imageUrl ? <UserOutlined /> : null
                                     }
@@ -491,7 +467,7 @@ const isChecking = useRef(false);
                         Đăng ký thêm trẻ
                       </button>
                     </div>
-                  ) : (
+                  ) : parentInfo?.children?.length === 0 ? ( // Kiểm tra nếu parentInfo tồn tại nhưng không có trẻ
                     <div className="no-children-found">
                       <p>Không có trẻ nào được đăng ký.</p>
                       <button
@@ -502,8 +478,8 @@ const isChecking = useRef(false);
                         Đăng ký thêm trẻ
                       </button>
                     </div>
-                  )}
-
+                  ) : null}{" "}
+                  {/* Nếu không có parentInfo, không hiển thị gì */}
                   {selectedChild && selectedVaccines.length > 0 && (
                     <div className="selected-vaccines-section">
                       <h3>Vaccine đã chọn</h3>
@@ -622,9 +598,12 @@ const isChecking = useRef(false);
                                 />
                                 <div className="vaccine-info">
                                   <h4>{vaccinePackage.comboName}</h4>
-                                  <p className="description">
-                                    {vaccinePackage.description}
-                                  </p>
+                                  <p
+                                    className="description"
+                                    dangerouslySetInnerHTML={{
+                                      __html: vaccinePackage.description,
+                                    }}
+                                  ></p>
                                   <p className="price">
                                     Giá:{" "}
                                     {vaccinePackage.totalPrice?.toLocaleString(
@@ -673,9 +652,12 @@ const isChecking = useRef(false);
                                 />
                                 <div className="vaccine-info">
                                   <h4>{vaccine.name}</h4>
-                                  <p className="description">
-                                    {vaccine.description}
-                                  </p>
+                                  <p
+                                    className="description"
+                                    dangerouslySetInnerHTML={{
+                                      __html: vaccine.description,
+                                    }}
+                                  ></p>
                                   <p className="price">
                                     Giá:{" "}
                                     {vaccine.price?.toLocaleString("vi-VN")} vnđ
