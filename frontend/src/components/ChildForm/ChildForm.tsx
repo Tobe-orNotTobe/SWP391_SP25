@@ -114,9 +114,10 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
                            type="date"
                            value={formatDateForInput(form.birthDate)}
                            onChange={handleDateChange}
+                           min={new Date(new Date().setFullYear(new Date().getFullYear() - 16))
+                               .toISOString().split("T")[0]}
                            max={new Date().toISOString().split("T")[0]}
                            required/>
-
 
                     <label className="childRegistrationLabel">Giới tính</label>
 
@@ -144,13 +145,21 @@ const ChildForm: React.FC<ChildFormProps> = ({ isUpdate = false, defaultValues, 
                     <div style={{display: "flex", justifyContent: "space-between"}}>
                         <div style={{paddingRight: "10px"}}>
                             <label className="childRegistrationLabel">Chiều cao</label>
-                            <input className="childRegistrationInput" type="number" placeholder="Chiều cao (cm)"
-                                   value={form.height} onChange={handleHeightChange} min={0} required/>
+                            <input className="childRegistrationInput"
+                                   type="number"
+                                   placeholder="Chiều cao (cm)"
+                                   value={form.height} onChange={handleHeightChange}
+                                   min={0}
+                                   max={200}
+                                   required/>
                         </div>
                         <div>
                             <label className="childRegistrationLabel">Cân nặng</label>
                             <input className="childRegistrationInput" type="number" placeholder="Cân nặng (kg)"
-                                   value={form.weight} onChange={handleWeightChange} min={0} required/>
+                                   value={form.weight} onChange={handleWeightChange}
+                                   min={0}
+                                   max={100}
+                                   required/>
                         </div>
                     </div>
 
